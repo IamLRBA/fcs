@@ -1,5 +1,5 @@
 
-# MysticalPIECES - Online Thrift Store
+# MysticalPIECES - Online Thrift 
 
 A modern, interactive e-commerce platform for curated thrift fashion. MysticalPIECES offers a unique shopping experience with carefully selected vintage and second-hand items across multiple categories.
 
