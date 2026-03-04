@@ -193,6 +193,40 @@
     border-radius: var(--hero-frame-radius);
   }
 
+  /* More transparent glass variant (mobile menu, desktop settings dropdown) */
+  .hero-glass-more-transparent {
+    background-color: rgb(255 255 255 / 0.02);
+  }
+
+  .hero-glass-more-transparent .hero-glass-frame-overlay {
+    background-color: rgb(255 255 255 / 0.015);
+  }
+
+  .dark .hero-glass-more-transparent {
+    background-color: rgb(25 25 25 / 0.02);
+  }
+
+  .dark .hero-glass-more-transparent .hero-glass-frame-overlay {
+    background-color: rgb(255 255 255 / 0.008);
+  }
+
+  /* Light mode: different shades for depth (no shadows) */
+  .menu-inner-light-depth {
+    background-color: rgb(250 250 250);
+  }
+
+  .dark .menu-inner-light-depth {
+    background-color: rgb(38 38 38);
+  }
+
+  .settings-inner-light-depth {
+    background-color: rgb(248 247 246);
+  }
+
+  .dark .settings-inner-light-depth {
+    background-color: rgb(38 38 38);
+  }
+
   /* Text colors for unified backgrounds */
   .text-on-unified {
     @apply text-neutral-900;
@@ -543,6 +577,24 @@
     --btn-surface: rgba(255, 255, 255, 0.06);
   }
 
+  /* Go Home hover = Continue Shopping default (primary non-hover look) */
+  .btn-secondary.btn-hover-primary-filled:hover,
+  .btn-secondary.btn-hover-primary-filled:focus-visible {
+    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
+    --btn-surface: rgba(111, 78, 55, 0.06);
+    --btn-surface-hover: rgba(111, 78, 55, 0.06);
+    --btn-text-color: var(--color-accent-700);
+    --btn-text-hover: var(--color-accent-700);
+  }
+
+  .dark .btn-secondary.btn-hover-primary-filled:hover,
+  .dark .btn-secondary.btn-hover-primary-filled:focus-visible {
+    --btn-text-color: var(--color-accent-100);
+    --btn-surface: rgba(255, 255, 255, 0.04);
+    --btn-surface-hover: rgba(255, 255, 255, 0.04);
+    --btn-text-hover: var(--color-accent-100);
+  }
+
   .btn-primary.btn-hover-secondary-filled:hover,
   .btn-primary.btn-hover-secondary-filled:focus-visible,
   .btn-outline.btn-hover-secondary-filled:hover,
@@ -628,6 +680,27 @@
   animation: heroDividerSlide 4s ease-in-out infinite;
 }
 
+  /* Faded-end line divider (matches footer); use in dropdowns etc. */
+  .divider-faded {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(38, 36, 36, 0.3) 50%, transparent 100%);
+    margin: 0.25rem 0;
+  }
+
+  .dark .divider-faded {
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  }
+
+  /* Remove focus ring and tap highlight on navbar/menu icon buttons (hamburger, settings) */
+  .nav-icon-no-focus,
+  .nav-icon-no-focus:focus,
+  .nav-icon-no-focus:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   .portal-card::before {
     /* stylelint-disable-next-line property-no-unknown */
     content: '';
@@ -653,8 +726,20 @@
   }
 
   .navbar-search-input {
-    @apply w-64 pl-4 pr-4 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/80 backdrop-blur-sm;
+    max-width: 168px;
+    width: 11rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border: var(--input-border-width) solid var(--color-input-border);
+    border-radius: 0.5rem;
     font-size: 16px; /* Prevent iOS zoom on focus */
+  }
+  .navbar-search-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary-500);
+    border-color: transparent;
   }
   
   @media (min-width: 640px) {
@@ -1022,8 +1107,36 @@
 }
 
 .dark .navbar-search-input {
-  @apply bg-neutral-800/80 border-neutral-600 text-neutral-100;
+  @apply text-primary-100 placeholder-primary-400/80;
+  border-color: var(--color-input-border);
 }
+
+  /* Input overlay – slightly dark in light mode, darker in dark mode; text visible in both; border from variables */
+  .input-overlay,
+  input.input-overlay,
+  textarea.input-overlay {
+    background-color: rgba(0, 0, 0, 0.06);
+    color: var(--color-neutral-850, #262424);
+    border: var(--input-border-width) solid var(--color-input-border);
+    border-radius: 0.5rem;
+  }
+  .input-overlay::placeholder,
+  input.input-overlay::placeholder,
+  textarea.input-overlay::placeholder {
+    color: var(--color-neutral-500, #808080);
+  }
+  .dark .input-overlay,
+  .dark input.input-overlay,
+  .dark textarea.input-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: var(--color-primary-100, #EFE9E0);
+    border-color: var(--color-input-border);
+  }
+  .dark .input-overlay::placeholder,
+  .dark input.input-overlay::placeholder,
+  .dark textarea.input-overlay::placeholder {
+    color: rgba(238, 233, 224, 0.6);
+  }
 
 .dark .search-suggestions {
   @apply bg-neutral-800 border-neutral-600;

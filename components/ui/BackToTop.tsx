@@ -66,7 +66,7 @@ export default function BackToTop() {
             className="btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm"
             aria-label="Back to top"
           >
-            <span className="text-lg font-medium group-hover:-translate-y-0.5 transition-transform duration-300">⇑</span>
+            <span className="text-lg font-medium group-hover:-translate-y-0.5 transition-transform duration-300 text-primary-800 dark:text-primary-400">⇑</span>
           </motion.button>
         </motion.div>
       )}

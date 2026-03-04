@@ -197,19 +197,11 @@ export default function FeaturedCollections() {
                   className="group relative w-full sm:min-w-[280px] h-full flex flex-col"
                 >
                   {/* Outer glass frame (same style as hero image containers) */}
-                  <div className="hero-glass-frame relative w-full h-full flex flex-col flex-1 min-h-0 backdrop-blur-lg">
+                  <div className="hero-glass-frame relative w-full h-full flex flex-col flex-1 min-h-0 backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
                     <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                     <motion.div
-                      className="relative z-10 flex-1 min-h-0 flex flex-col bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40"
-                    whileHover={{
-                      boxShadow: "0 20px 40px rgba(139, 69, 19, 0.2)"
-                    }}
+                      className="relative z-10 flex-1 min-h-0 flex flex-col bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-xl shadow-md transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40"
                   >
-                    {/* Animated background gradient on hover */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-primary-50 to-accent-50 dark:from-primary-700/30 dark:to-accent-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      initial={false}
-                    />
 
                     {/* Category badge with animation */}
                     <motion.div
@@ -347,14 +339,6 @@ export default function FeaturedCollections() {
                         </Link>
                       </motion.div>
                     </div>
-
-                    {/* Shine effect on hover */}
-                    <motion.div
-                      className="absolute inset-0 -z-10 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100"
-                      initial={{ x: '-100%' }}
-                      whileHover={{ x: '100%' }}
-                      transition={{ duration: 0.6 }}
-                    />
                   </motion.div>
                   </div>
                 </motion.div>

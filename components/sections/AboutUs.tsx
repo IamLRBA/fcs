@@ -128,14 +128,23 @@ export default function AboutUs() {
             <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
               We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
             </p>
-            <div className="inline-flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 bg-primary-100 dark:bg-primary-900/30 px-4 sm:px-6 py-3 rounded-full">
-              <span className="text-primary-800 dark:text-primary-100 font-semibold text-sm sm:text-base">Our Core:</span>
-              <span
-                className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
-                style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
+            <div className="hero-glass-frame relative inline-block backdrop-blur-lg rounded-full">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="relative z-10 inline-flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm"
               >
-                Hidden treasures reveal a timeless style
-              </span>
+                <span className="text-primary-800 dark:text-primary-100 font-semibold">Our Core:</span>
+                <span
+                  className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
+                  style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
+                >
+                  Hidden treasures reveal a timeless style
+                </span>
+              </motion.div>
             </div>
           </div>
         </motion.div>
@@ -151,9 +160,10 @@ export default function AboutUs() {
           <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8">ᗰEET Oᑌᖇ ᑕEO</h3>
           
           <div className="max-w-2xl mx-auto">
-            <div className="relative group">
-              {/* CEO Card */}
-              <div className="bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
+            <div className="relative group hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center w-full">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              {/* CEO Card - inner like hero animated image */}
+              <div className="relative z-10 w-full bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <Image
                     src="/assets/images/team/lrba.jpg"
@@ -209,7 +219,9 @@ export default function AboutUs() {
                 onMouseEnter={() => setHoveredMember(member.id)}
                 onMouseLeave={() => setHoveredMember(null)}
               >
-                <div className="bg-primary-800/10 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20 relative overflow-hidden">
+                <div className="relative hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                  <div className="relative z-10 w-full bg-primary-800/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20 relative overflow-hidden">
                   {/* Member Image */}
                   <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-primary-200">
                     <Image
@@ -318,6 +330,7 @@ export default function AboutUs() {
                     <div className="w-2 h-2 bg-accent-400 rounded-full"></div>
                   </div>
                 </div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -364,15 +377,18 @@ export default function AboutUs() {
                 transition={{ duration: 0.8, delay: 0.2 * index }}
                 className={`group ${index % 2 === 0 ? 'text-left' : 'text-right'}`}
               >
-                <div className={`flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mb-6 group-hover:scale-110 transition-transform duration-300 ${index % 2 === 0 ? 'ml-0 mr-auto' : 'mr-0 ml-auto'}`}>
-                  <Image 
-                    src={value.image} 
-                    alt={`${value.title} value icon`}
-                    width={96}
-                    height={96}
-                    className="w-24 h-24 object-cover rounded-xl mx-auto"
-                    loading="lazy"
-                  />
+                <div className={`flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl inline-flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 ${index % 2 === 0 ? 'ml-0 mr-auto' : 'mr-0 ml-auto'}`}>
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                  <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8 flex items-center justify-center">
+                    <Image 
+                      src={value.image} 
+                      alt={`${value.title} value icon`}
+                      width={96}
+                      height={96}
+                      className="w-24 h-24 object-cover rounded-xl"
+                      loading="lazy"
+                    />
+                  </div>
                 </div>
                 <div className={`${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
                   <div className={`text-6xl font-bold text-primary-400 dark:text-primary-300 mb-4 ${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
@@ -429,16 +445,19 @@ export default function AboutUs() {
                     ? 'flex-row space-x-12 md:flex-row md:space-x-12'
                     : 'flex-row-reverse space-x-reverse space-x-12 md:flex-row-reverse md:space-x-reverse md:space-x-12'
                 }`}>
-                  {/* Image Container */}
-                  <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
-                    <Image 
-                      src={mission.image} 
-                      alt={`${mission.title} mission icon`}
-                      width={96}
-                      height={96}
-                      className="w-24 h-24 object-cover rounded-xl"
-                      loading="lazy"
-                    />
+                  {/* Image Container - same spacing as Stats impact icon */}
+                  <div className="flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                    <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8 flex items-center justify-center">
+                      <Image 
+                        src={mission.image} 
+                        alt={`${mission.title} mission icon`}
+                        width={96}
+                        height={96}
+                        className="w-24 h-24 object-cover rounded-xl"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
                   
                   {/* Content */}

@@ -177,8 +177,11 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 md:p-8 shadow-xl dark:shadow-xl"
+              className="w-full"
             >
+              <div className="hero-glass-frame relative backdrop-blur-lg">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+              <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 md:p-8 shadow-xl dark:shadow-xl">
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Order Details</h2>
               
               {cart.length === 0 ? (
@@ -217,6 +220,8 @@ export default function CheckoutPage() {
                   ))}
                 </div>
               )}
+              </div>
+              </div>
             </motion.div>
 
             {/* Customer Information Form */}
@@ -225,8 +230,11 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               onSubmit={handleSubmit}
-              className="mt-8 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-8 shadow-xl dark:shadow-xl"
+              className="mt-8 w-full"
             >
+              <div className="hero-glass-frame relative backdrop-blur-lg">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+              <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-8 shadow-xl dark:shadow-xl">
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Customer Information</h2>
               
               <div className="space-y-6">
@@ -239,7 +247,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-4 py-3 bg-white dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Enter your full name"
                   />
                   {errors.fullName && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.fullName}</p>}
@@ -254,7 +262,7 @@ export default function CheckoutPage() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-white dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="your.email@example.com"
                   />
                   {errors.email && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.email}</p>}
@@ -269,7 +277,7 @@ export default function CheckoutPage() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 bg-white dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="+256 700 000 000"
                   />
                   {errors.phone && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.phone}</p>}
@@ -284,7 +292,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={formData.street}
                     onChange={(e) => setFormData({ ...formData, street: e.target.value })}
-                    className="w-full px-4 py-3 bg-white dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Street, Building, House Number"
                   />
                   {errors.street && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.street}</p>}
@@ -299,7 +307,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-4 py-3 bg-white dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Kampala, Mukono, etc."
                   />
                   {errors.city && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.city}</p>}
@@ -311,14 +319,14 @@ export default function CheckoutPage() {
                     Delivery Option
                   </label>
                   <div className="space-y-3">
-                    <label className="flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg cursor-pointer hover:bg-neutral-100 dark:hover:bg-primary-800/50 transition-colors">
+                    <label className="flex items-center space-x-3 p-4 bg-neutral-100 dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg cursor-pointer hover:bg-neutral-200 dark:hover:bg-primary-800/50 transition-colors">
                       <input
                         type="radio"
                         name="delivery"
                         value="kampala"
                         checked={formData.deliveryOption === 'kampala'}
                         onChange={(e) => setFormData({ ...formData, deliveryOption: e.target.value as 'kampala' | 'outside' })}
-                        className="w-4 h-4 text-primary-500"
+                        className="w-4 h-4 text-primary-600 dark:text-primary-500 accent-primary-600 dark:accent-primary-400"
                       />
                       <div className="flex-1">
                         <p className="text-neutral-900 dark:text-white font-medium">Kampala (Free Delivery)</p>
@@ -326,14 +334,14 @@ export default function CheckoutPage() {
                       </div>
                     </label>
                     
-                    <label className="flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg cursor-pointer hover:bg-neutral-100 dark:hover:bg-primary-800/50 transition-colors">
+                    <label className="flex items-center space-x-3 p-4 bg-neutral-100 dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg cursor-pointer hover:bg-neutral-200 dark:hover:bg-primary-800/50 transition-colors">
                       <input
                         type="radio"
                         name="delivery"
                         value="outside"
                         checked={formData.deliveryOption === 'outside'}
                         onChange={(e) => setFormData({ ...formData, deliveryOption: e.target.value as 'kampala' | 'outside' })}
-                        className="w-4 h-4 text-primary-500"
+                        className="w-4 h-4 text-primary-600 dark:text-primary-500 accent-primary-600 dark:accent-primary-400"
                       />
                       <div className="flex-1">
                         <p className="text-neutral-900 dark:text-primary-50 font-medium">Outside Kampala</p>
@@ -352,10 +360,12 @@ export default function CheckoutPage() {
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     rows={4}
-                    className="w-full px-4 py-3 bg-white dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 resize-none"
+                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 resize-none"
                     placeholder="Any special instructions for delivery..."
                   />
                 </div>
+              </div>
+              </div>
               </div>
             </motion.form>
           </div>
@@ -366,8 +376,11 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="sticky top-24 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 shadow-xl dark:shadow-xl"
+              className="sticky top-24 w-full"
             >
+              <div className="hero-glass-frame relative backdrop-blur-lg">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+              <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 shadow-xl dark:shadow-xl">
               <h2 className="text-xl font-bold text-neutral-900 dark:text-primary-50 mb-4">Order Summary</h2>
               
               <div className="space-y-4 pb-4 border-b border-neutral-200 dark:border-primary-600/50">
@@ -399,6 +412,8 @@ export default function CheckoutPage() {
               <p className="text-neutral-600 dark:text-primary-400 text-sm text-center mt-4">
                 ✓ Pay on Delivery Available
               </p>
+              </div>
+              </div>
             </motion.div>
           </div>
         </div>
