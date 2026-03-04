@@ -187,7 +187,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">
-      <div className="container-custom">
+      <div className="container-custom mt-12">
         <div className="flex items-center justify-between mb-8">
           <motion.div
             animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
@@ -209,47 +209,50 @@ export default function AdminDashboard() {
         <h1 className="text-4xl font-bold text-primary-800 dark:text-primary-100 mb-8">Admin Dashboard</h1>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Products</p>
-                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalProducts}</p>
+        <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl mb-8 max-w-6xl mx-auto">
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 p-4">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white/95 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Products</p>
+                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalProducts}</p>
+                </div>
+                <Package className="w-12 h-12 text-primary-600 dark:text-primary-400" />
               </div>
-              <Package className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-            </div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
-                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalOrders}</p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-neutral-50 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
+                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalOrders}</p>
+                </div>
+                <ShoppingCart className="w-12 h-12 text-primary-600 dark:text-primary-400" />
               </div>
-              <ShoppingCart className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-            </div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</p>
-                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">UGX {stats.totalRevenue.toLocaleString()}</p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-neutral-100 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</p>
+                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">UGX {stats.totalRevenue.toLocaleString()}</p>
+                </div>
+                <DollarSign className="w-12 h-12 text-primary-600 dark:text-primary-400" />
               </div>
-              <DollarSign className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-            </div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Sold</p>
-                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalItemsSold}</p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-neutral-200/80 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Sold</p>
+                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalItemsSold}</p>
+                </div>
+                <BarChart3 className="w-12 h-12 text-primary-600 dark:text-primary-400" />
               </div>
-              <BarChart3 className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
 
         {/* Add Product Button */}
-        <div className="mb-6">
+        <div className="mb-6 max-w-6xl mx-auto">
           <button
             onClick={() => setShowAddForm(!showAddForm)}
             className="btn btn-outline btn-hover-secondary-filled flex items-center space-x-2"
@@ -264,11 +267,14 @@ export default function AdminDashboard() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-neutral-800 rounded-xl p-8 shadow-lg mb-8"
+            className="mb-8 max-w-6xl mx-auto"
           >
-            <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Add New Product</h2>
-            <form onSubmit={handleAddProduct} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Add New Product</h2>
+                <form onSubmit={handleAddProduct} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Product Name *</label>
                   <input
@@ -391,56 +397,58 @@ export default function AdminDashboard() {
                     className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
                   />
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Product Images *</label>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">First image will be the main display image. Others will appear as thumbnails in the product modal.</p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageUpload}
-                  className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white mb-3"
-                />
-                {productImages.length > 0 && (
-                  <div className="grid grid-cols-4 gap-4 mt-4">
-                    {productImages.map((img, index) => (
-                      <div key={index} className="relative group">
-                        <img src={img} alt={`Product image ${index + 1}`} className="w-full h-32 object-cover rounded-lg border-2 border-primary-500" />
-                        {index === 0 && (
-                          <span className="absolute top-1 left-1 px-2 py-1 bg-primary-600 text-white text-xs rounded">Main</span>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ))}
                   </div>
-                )}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Product Images *</label>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">First image will be the main display image. Others will appear as thumbnails in the product modal.</p>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageUpload}
+                      className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white mb-3"
+                    />
+                    {productImages.length > 0 && (
+                      <div className="grid grid-cols-4 gap-4 mt-4">
+                        {productImages.map((img, index) => (
+                          <div key={index} className="relative group">
+                            <img src={img} alt={`Product image ${index + 1}`} className="w-full h-32 object-cover rounded-lg border-2 border-primary-500" />
+                            {index === 0 && (
+                              <span className="absolute top-1 left-1 px-2 py-1 bg-primary-600 text-white text-xs rounded">Main</span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => removeImage(index)}
+                              className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Description *</label>
+                    <textarea
+                      required
+                      rows={4}
+                      value={newProduct.description}
+                      onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                      className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
+                    Add Product
+                  </button>
+                </form>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Description *</label>
-                <textarea
-                  required
-                  rows={4}
-                  value={newProduct.description}
-                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                />
-              </div>
-              <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
-                Add Product
-              </button>
-            </form>
+            </div>
           </motion.div>
         )}
 
         {/* Remove Product Section */}
-        <div className="mb-6">
+        <div className="mb-6 max-w-6xl mx-auto">
           <button
             onClick={() => setShowRemoveForm(!showRemoveForm)}
             className="btn btn-danger flex items-center space-x-2"
@@ -454,103 +462,113 @@ export default function AdminDashboard() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-neutral-800 rounded-xl p-8 shadow-lg mb-8"
+            className="mb-8 max-w-6xl mx-auto"
           >
-            <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Remove Product</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Select Product *</label>
-                <select
-                  value={selectedRemoveProduct?.id || ''}
-                  onChange={(e) => {
-                    const product = products.find(p => p.id === e.target.value)
-                    setSelectedRemoveProduct(product || null)
-                  }}
-                  className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                >
-                  <option value="">Select a product...</option>
-                  {products.map(product => (
-                    <option key={product.id} value={product.id}>
-                      {product.name} - {product.category} / {product.section} - UGX {product.price_ugx.toLocaleString()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {selectedRemoveProduct && (
-                <>
-                  <div className="p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
-                    <p className="font-medium">{selectedRemoveProduct.name}</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{selectedRemoveProduct.brand} • {selectedRemoveProduct.category} / {selectedRemoveProduct.section}</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">Price: UGX {selectedRemoveProduct.price_ugx.toLocaleString()}</p>
-                  </div>
+            <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Remove Product</h2>
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Reason for Removal *</label>
+                    <label className="block text-sm font-medium mb-2">Select Product *</label>
                     <select
-                      value={removeReason}
-                      onChange={(e) => setRemoveReason(e.target.value as 'Product Bought' | 'Mistakenly Posted')}
+                      value={selectedRemoveProduct?.id || ''}
+                      onChange={(e) => {
+                        const product = products.find(p => p.id === e.target.value)
+                        setSelectedRemoveProduct(product || null)
+                      }}
                       className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
                     >
-                      <option value="">Select reason...</option>
-                      <option value="Product Bought">Product Bought</option>
-                      <option value="Mistakenly Posted">Mistakenly Posted</option>
+                      <option value="">Select a product...</option>
+                      {products.map(product => (
+                        <option key={product.id} value={product.id}>
+                          {product.name} - {product.category} / {product.section} - UGX {product.price_ugx.toLocaleString()}
+                        </option>
+                      ))}
                     </select>
                   </div>
-                  {removeReason && (
-                    <button
-                      onClick={() => handleDeleteProduct(selectedRemoveProduct.id, selectedRemoveProduct.category, selectedRemoveProduct.section, removeReason)}
-                      className="btn btn-danger w-full"
-                    >
-                      Remove Product
-                    </button>
+                  {selectedRemoveProduct && (
+                    <>
+                      <div className="p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
+                        <p className="font-medium">{selectedRemoveProduct.name}</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">{selectedRemoveProduct.brand} • {selectedRemoveProduct.category} / {selectedRemoveProduct.section}</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Price: UGX {selectedRemoveProduct.price_ugx.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Reason for Removal *</label>
+                        <select
+                          value={removeReason}
+                          onChange={(e) => setRemoveReason(e.target.value as 'Product Bought' | 'Mistakenly Posted')}
+                          className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
+                        >
+                          <option value="">Select reason...</option>
+                          <option value="Product Bought">Product Bought</option>
+                          <option value="Mistakenly Posted">Mistakenly Posted</option>
+                        </select>
+                      </div>
+                      {removeReason && (
+                        <button
+                          onClick={() => handleDeleteProduct(selectedRemoveProduct.id, selectedRemoveProduct.category, selectedRemoveProduct.section, removeReason)}
+                          className="btn btn-danger w-full"
+                        >
+                          Remove Product
+                        </button>
+                      )}
+                    </>
                   )}
-                </>
-              )}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
 
         {/* Products List */}
-        <div className="bg-white dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
-          <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">All Products ({products.length})</h2>
-          {products.length === 0 ? (
-            <p className="text-neutral-600 dark:text-neutral-400">No products yet. Add your first product!</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-4">Name</th>
-                    <th className="text-left p-4">Category</th>
-                    <th className="text-left p-4">Price</th>
-                    <th className="text-left p-4">Stock</th>
-                    <th className="text-left p-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product) => (
-                    <tr key={product.id} className="border-b">
-                      <td className="p-4">{product.name}</td>
-                      <td className="p-4">{product.category} / {product.section}</td>
-                      <td className="p-4">UGX {product.price_ugx.toLocaleString()}</td>
-                      <td className="p-4">{product.stock_qty}</td>
-                      <td className="p-4">
-                        <button
-                          onClick={() => {
-                            setSelectedRemoveProduct(product)
-                            setRemoveReason('')
-                            setShowRemoveForm(true)
-                          }}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div className="max-w-6xl mx-auto">
+          <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
+            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+            <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
+              <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">All Products ({products.length})</h2>
+              {products.length === 0 ? (
+                <p className="text-neutral-600 dark:text-neutral-400">No products yet. Add your first product!</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-4">Name</th>
+                        <th className="text-left p-4">Category</th>
+                        <th className="text-left p-4">Price</th>
+                        <th className="text-left p-4">Stock</th>
+                        <th className="text-left p-4">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {products.map((product) => (
+                        <tr key={product.id} className="border-b">
+                          <td className="p-4">{product.name}</td>
+                          <td className="p-4">{product.category} / {product.section}</td>
+                          <td className="p-4">UGX {product.price_ugx.toLocaleString()}</td>
+                          <td className="p-4">{product.stock_qty}</td>
+                          <td className="p-4">
+                            <button
+                              onClick={() => {
+                                setSelectedRemoveProduct(product)
+                                setRemoveReason('')
+                                setShowRemoveForm(true)
+                              }}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

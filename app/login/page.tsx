@@ -126,7 +126,7 @@ export default function LoginPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-unified flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-unified flex items-center justify-center px-4 pt-32 pb-16">
       {/* Fixed Back Button */}
       <motion.div
         animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
@@ -139,13 +139,15 @@ export default function LoginPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="max-w-md w-full">
+      <div className="max-w-md w-full mt-12">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-8 border border-neutral-200 dark:border-neutral-700"
+          className="hero-glass-frame relative backdrop-blur-lg rounded-2xl"
         >
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+          <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-8 border border-neutral-200 dark:border-neutral-700">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">
               {isLogin ? 'Welcome Back' : 'Create Account'}
@@ -155,7 +157,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="flex items-center justify-center mb-6 bg-primary-50 dark:bg-neutral-700 rounded-lg p-1">
+          <div className="flex items-center justify-center mb-6 bg-primary-50/80 dark:bg-neutral-700 rounded-lg p-1">
             <button
               onClick={() => {
                 setIsLogin(true)
@@ -163,7 +165,7 @@ export default function LoginPage() {
               }}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
                 isLogin
-                  ? 'bg-white dark:bg-neutral-800 text-primary-700 dark:text-primary-200 shadow-sm'
+                  ? 'bg-white/95 dark:bg-neutral-800 text-primary-700 dark:text-primary-200 shadow-sm'
                   : 'text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
               }`}
             >
@@ -178,7 +180,7 @@ export default function LoginPage() {
               }}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
                 !isLogin
-                  ? 'bg-white dark:bg-neutral-800 text-primary-700 dark:text-primary-200 shadow-sm'
+                  ? 'bg-white/95 dark:bg-neutral-800 text-primary-700 dark:text-primary-200 shadow-sm'
                   : 'text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
               }`}
             >
@@ -433,6 +435,7 @@ export default function LoginPage() {
               Admin Login
             </Link>
           </div>
+        </div>
         </motion.div>
       </div>
     </div>
