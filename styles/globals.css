@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* Fonts loaded via <link> in app/layout.tsx to control referrer and avoid duplicate requests */
 @import './variables.css';
 
 /* stylelint-disable */
@@ -13,17 +12,17 @@
     @apply border-neutral-200;
   }
 
-  /* Suppress browser warnings for vendor prefixes */
-  /* These are valid vendor prefixes for cross-browser compatibility */
-  html {
-    /* Valid WebKit property for iOS Safari - prevents text inflation on mobile */
-    -webkit-text-size-adjust: 100%;
-    /* Valid IE/Edge property */
-    -ms-text-size-adjust: 100%;
-    /* Standard property - wrapped in @supports for browsers that support it */
+  /* text-size-adjust: only in supporting browsers to avoid parse errors in others */
+  @supports (-webkit-text-size-adjust: 100%) {
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
   }
-  
-  /* Only apply standard text-size-adjust if supported */
+  @supports (-ms-text-size-adjust: 100%) {
+    html {
+      -ms-text-size-adjust: 100%;
+    }
+  }
   @supports (text-size-adjust: 100%) {
     html {
       text-size-adjust: 100%;
@@ -45,11 +44,12 @@
     -webkit-appearance: none;
   }
   
-  /* Remove Firefox inner focus border - Firefox-specific pseudo-element */
-  /* Note: Non-Firefox browsers will show a warning for this, which is expected */
-  button::-moz-focus-inner {
-    border: 0;
-    padding: 0;
+  /* Firefox only: remove inner focus border (other browsers ignore this selector) */
+  @supports (-moz-appearance: none) {
+    button::-moz-focus-inner {
+      border: 0;
+      padding: 0;
+    }
   }
 
   /* Accessibility - Screen Reader Only */
@@ -101,6 +101,9 @@
   }
 
   html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
     scroll-behavior: smooth;
     -webkit-scroll-behavior: smooth;
   }
@@ -119,27 +122,33 @@
   }
 
   body {
+    margin: 0;
+    padding: 0;
     font-family: var(--font-family-primary);
-    background-color: var(--color-bg-primary);
+    background-color: transparent;
     color: var(--color-text-primary);
     font-feature-settings: 'rlig' 1, 'calt' 1;
     line-height: var(--leading-normal);
     font-weight: var(--font-weight-thin);
     -webkit-font-smoothing: antialiased;
-    /* Note: Non-Firefox browsers will show a warning for -moz-osx-font-smoothing, which is expected */
-    -moz-osx-font-smoothing: grayscale;
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Unified Background System */
+  @supports (-moz-osx-font-smoothing: grayscale) {
+    body {
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+
+  /* Unified Background System – transparent so blurred image shows through */
   .bg-unified {
-    @apply bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200;
+    @apply bg-gradient-to-br from-primary-50/55 via-primary-100/55 to-primary-200/55;
   }
 
   .dark .bg-unified {
-    @apply bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-800;
+    @apply bg-gradient-to-br from-neutral-950/25 via-neutral-900/25 to-neutral-800/25;
   }
 
   /* Unified Container/Card Styling */
@@ -1049,14 +1058,14 @@
 
 
 
-/* Dark mode body and main content styles */
+/* Dark mode body and main content styles – semi-transparent so blurred bg image shows */
 .dark body {
-  background-color: var(--color-bg-primary);
+  background-color: rgba(25, 25, 25, 0.48);
   color: var(--color-text-primary);
 }
 
 .dark main {
-  background-color: var(--color-bg-primary);
+  background-color: rgba(25, 25, 25, 0.48);
 }
 
 .dark .section {
@@ -1068,10 +1077,10 @@
   @apply text-neutral-400;
 }
 
-/* Dark mode footer styles */
+/* Dark mode footer styles – semi-transparent so blurred bg image shows */
 .dark footer {
   @apply border-neutral-700;
-  background: linear-gradient(to bottom, #191919, #252525) !important;
+  background: linear-gradient(to bottom, rgba(25, 25, 25, 0.48), rgba(37, 37, 37, 0.48)) !important;
 }
 
 .dark footer h3 {

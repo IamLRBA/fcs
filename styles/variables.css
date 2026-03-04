@@ -52,6 +52,8 @@
   --color-bg-tertiary: #EAE0C8;      /* Pearl */
   --color-bg-card: #F8F8F8;          /* Off White */
   --color-bg-overlay: rgba(38, 36, 36, 0.8); /* Deep Charcoal overlay */
+  /* Semi-transparent page overlay so blurred image background shows through */
+  --color-bg-page-overlay: rgba(254, 254, 254, 0.42);
 
   /* Border Colors - Light Mode */
   --color-border-primary: #E0E0E0;   /* Light Gray */
@@ -195,6 +197,8 @@
   --color-bg-tertiary: #252525;       /* Charcoal-2 */
   --color-bg-card: #262424;           /* Deep Charcoal */
   --color-bg-overlay: rgba(25, 25, 25, 0.9); /* Charcoal-4 overlay */
+  /* No overlay in dark mode – blurred bg image shows fully */
+  --color-bg-page-overlay: rgba(25, 25, 25, 0);
 
   /* Border Colors - Dark Mode */
   --color-border-primary: #404040;     /* Darker Gray */

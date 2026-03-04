@@ -33,20 +33,20 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo)
-    
+
     // Log detailed error information for debugging
     if (typeof window !== 'undefined') {
       console.error('Error name:', error.name)
       console.error('Error message:', error.message)
       console.error('Error stack:', error.stack)
       console.error('Component stack:', errorInfo.componentStack)
-      
+
       // Check if it's a hydration error
       if (error.message.includes('hydration') || error.message.includes('Hydration')) {
         console.warn('Hydration error detected - this is usually harmless and will resolve on retry')
       }
     }
-    
+
     // Here you could log to an error reporting service
     // e.g., Sentry, LogRocket, etc.
   }
@@ -105,4 +105,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children
   }
 }
-

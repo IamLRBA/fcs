@@ -47,21 +47,23 @@ export default function StructuredData() {
     },
   }
 
+  const safeJson = (obj: object) =>
+    JSON.stringify(obj).replace(/<\/script/gi, '<\\/script')
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(organizationSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(websiteSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(storeSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJson(storeSchema) }}
       />
     </>
   )
 }
-
