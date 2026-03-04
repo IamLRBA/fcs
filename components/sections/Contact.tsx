@@ -84,24 +84,24 @@ export default function Contact() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">First Name *</label>
-                  <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} required className="w-full px-4 py-3 border border-primary-500/30 dark:border-primary-500/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white/50 dark:bg-neutral-800/50 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400 backdrop-blur-sm" placeholder="Enter your first name" />
+                  <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="Enter your first name" />
                 </div>
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Last Name *</label>
-                  <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} required className="w-full px-4 py-3 border border-primary-500/30 dark:border-primary-500/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white/50 dark:bg-neutral-800/50 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400 backdrop-blur-sm" placeholder="Enter your last name" />
+                  <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="Enter your last name" />
                 </div>
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Email Address *</label>
-                <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full px-4 py-3 border border-primary-500/30 dark:border-primary-500/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white/50 dark:bg-neutral-800/50 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400 backdrop-blur-sm" placeholder="Enter your email address" />
+                <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="Enter your email address" />
               </div>
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Subject *</label>
-                <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleInputChange} required className="w-full px-4 py-3 border border-primary-500/30 dark:border-primary-500/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white/50 dark:bg-neutral-800/50 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400 backdrop-blur-sm" placeholder="What is this about?" />
+                <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="What is this about?" />
               </div>
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Message *</label>
-                <textarea id="message" name="message" value={formData.message} onChange={handleInputChange} required rows={5} className="w-full px-4 py-3 border border-primary-500/30 dark:border-primary-500/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 resize-none bg-white/50 dark:bg-neutral-800/50 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400 backdrop-blur-sm" placeholder="Tell us about your project or inquiry..." />
+                <textarea id="message" name="message" value={formData.message} onChange={handleInputChange} required rows={5} className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 resize-none" placeholder="Tell us about your project or inquiry..." />
               </div>
               <div>
                 <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-4">How would you like to be contacted? *</label>

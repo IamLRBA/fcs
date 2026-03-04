@@ -120,7 +120,7 @@ export default function CartPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-20"
           >
-            <ShoppingCart className="w-24 h-24 mx-auto text-neutral-300 dark:text-primary-500/30 mb-6" />
+            <ShoppingCart className="w-24 h-24 mx-auto text-primary-400/70 dark:text-primary-500/30 mb-6" />
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-4">Your cart is empty</h2>
             <p className="text-neutral-600 dark:text-primary-400 mb-8">Looks like you haven't added anything to your cart yet.</p>
             <Link 
@@ -140,8 +140,11 @@ export default function CartPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 overflow-hidden shadow-xl dark:shadow-xl"
+                  className="w-full"
                 >
+                  <div className="hero-glass-frame relative backdrop-blur-lg">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                  <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 overflow-hidden shadow-xl dark:shadow-xl">
                   <div className="flex flex-col sm:flex-row gap-4 p-6">
                     {/* Product Image */}
                     <div className="w-full sm:w-32 h-32 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
@@ -194,6 +197,8 @@ export default function CartPage() {
                       </p>
                     </div>
                   </div>
+                  </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -204,8 +209,11 @@ export default function CartPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="sticky top-24 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-6 shadow-xl dark:shadow-xl"
+                className="sticky top-24"
               >
+                <div className="hero-glass-frame relative backdrop-blur-lg">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-6 shadow-xl dark:shadow-xl">
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Order Summary</h2>
                 
                 <div className="space-y-4 pb-6 border-b border-neutral-200 dark:border-primary-600/50">
@@ -252,6 +260,8 @@ export default function CartPage() {
                       <p className="text-neutral-600 dark:text-neutral-300">Pay on delivery available. Your information is safe and secure.</p>
                     </div>
                   </div>
+                </div>
+                </div>
                 </div>
               </motion.div>
             </div>

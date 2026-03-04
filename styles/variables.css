@@ -61,6 +61,10 @@
   --color-border-accent: #6F4E37;     /* Coffee */
   --color-hero-frame-border: #c5c5c5; /* Very subtle dark border for hero glass frame (light mode) */
 
+  /* Input fields – border (used by .input-overlay and navbar search) */
+  --input-border-width: 1px;
+  --color-input-border: var(--color-border-primary);
+
   /* Hero glass frame (home & about hero image containers) */
   --hero-frame-border-width: 1px;
   --hero-frame-radius: 1rem;

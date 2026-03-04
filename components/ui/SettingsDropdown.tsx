@@ -9,7 +9,12 @@ import ThemeSwitcher from '@/components/ui/ThemeSwitcher'
 
 type Theme = 'light' | 'dark' | 'system'
 
-export default function SettingsDropdown() {
+interface SettingsDropdownProps {
+  /** When 'mobile', dropdown panel is centered and in-flow so the menu container expands when open */
+  variant?: 'desktop' | 'mobile'
+}
+
+export default function SettingsDropdown({ variant = 'desktop' }: SettingsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isThemeOpen, setIsThemeOpen] = useState(false)
   const [theme, setTheme] = useState<Theme>('system')
@@ -74,15 +79,14 @@ export default function SettingsDropdown() {
   const handleToggle = () => {
     const newIsOpen = !isOpen
     setIsOpen(newIsOpen)
-    // Spin clockwise when opening, counter-clockwise when closing
-    setRotation(prev => prev + (newIsOpen ? 360 : -360))
+    // Spin counter-clockwise when opening, clockwise when closing
+    setRotation(prev => prev + (newIsOpen ? -360 : 360))
   }
 
   const handleClose = () => {
     if (isOpen) {
       setIsOpen(false)
-      // Spin counter-clockwise when closing
-      setRotation(prev => prev - 360)
+      setRotation(prev => prev + 360)
     }
   }
 
@@ -98,6 +102,8 @@ export default function SettingsDropdown() {
     { value: 'system' as const, label: 'System', icon: Monitor, description: 'Follows your system preference' }
   ]
 
+  const isMobile = variant === 'mobile'
+
   return (
     <div className="relative">
       {mounted ? (
@@ -106,7 +112,7 @@ export default function SettingsDropdown() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleToggle}
-            className="w-10 h-10 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
+            className="nav-icon-no-focus w-10 h-10 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
             aria-label="Settings"
             aria-expanded={isOpen}
           >
@@ -123,21 +129,29 @@ export default function SettingsDropdown() {
           <AnimatePresence>
         {isOpen && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40"
-              onClick={handleClose}
-            />
+            {!isMobile && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-40"
+                onClick={handleClose}
+              />
+            )}
             
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 top-12 w-64 bg-white dark:bg-neutral-800 rounded-xl shadow-xl border border-gray-200 dark:border-neutral-700 z-50 overflow-hidden"
+              className={
+                isMobile
+                  ? 'relative mt-2 w-64 hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-xl shadow-xl z-10 overflow-hidden p-4 rounded-r-none'
+                  : 'absolute right-0 top-14 w-64 hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-xl shadow-xl z-50 overflow-hidden p-4 rounded-r-none'
+              }
             >
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              <div className={`relative z-10 overflow-hidden settings-inner-light-depth border border-gray-200 dark:border-neutral-700 ${isMobile ? 'rounded-lg rounded-r-none' : 'rounded-lg rounded-r-none'}`}>
               {/* Theme Section */}
               <div className="p-2">
                 <button
@@ -145,8 +159,8 @@ export default function SettingsDropdown() {
                   className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors"
                 >
                   <Palette className="w-5 h-5" />
-                  <span className="font-medium">Theme</span>
-                  <span className="ml-auto text-xs text-gray-500 dark:text-neutral-400">{theme.charAt(0).toUpperCase() + theme.slice(1)}</span>
+                  <span className="font-medium">Themes</span>
+                  <span className="ml-auto text-primary-600 dark:text-primary-400" aria-hidden>{isThemeOpen ? '⇑' : '⇓'}</span>
                 </button>
 
                 <AnimatePresence>
@@ -155,35 +169,37 @@ export default function SettingsDropdown() {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="overflow-hidden"
+                      className="overflow-hidden hero-glass-frame hero-glass-frame-compact backdrop-blur-lg rounded-lg mt-1 p-2.5"
                     >
-                      <div className="pl-4 pb-2 space-y-1">
-                        {themes.map((themeOption) => {
+                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                      <div className="relative z-10 rounded-md bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 pl-4 pr-2 py-2 space-y-0">
+                        {themes.map((themeOption, index) => {
                           const Icon = themeOption.icon
                           const isActive = theme === themeOption.value
-                          
                           return (
-                            <motion.button
-                              key={themeOption.value}
-                              whileHover={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
-                              whileTap={{ scale: 0.98 }}
-                              onClick={() => handleThemeChange(themeOption.value)}
-                              className={`w-full flex items-center space-x-2 p-2 rounded-lg transition-all ${
-                                isActive 
-                                  ? 'bg-primary-100 dark:bg-primary-700 text-primary-700 dark:text-primary-200' 
-                                  : 'text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700/50'
-                              }`}
-                            >
-                              <Icon className="w-4 h-4" />
-                              <span className="text-sm">{themeOption.label}</span>
-                              {isActive && (
-                                <motion.div
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  className="w-2 h-2 bg-primary-500 rounded-full ml-auto"
-                                />
-                              )}
-                            </motion.button>
+                            <div key={themeOption.value}>
+                              {index > 0 && <div className="divider-faded my-1" />}
+                              <motion.button
+                                whileHover={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => handleThemeChange(themeOption.value)}
+                                className={`w-full flex items-center space-x-2 p-2 rounded-lg transition-all ${
+                                  isActive 
+                                    ? 'bg-primary-100 dark:bg-primary-700 text-primary-700 dark:text-primary-200' 
+                                    : 'text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700/50'
+                                }`}
+                              >
+                                <Icon className="w-4 h-4" />
+                                <span className="text-sm">{themeOption.label}</span>
+                                {isActive && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="w-2 h-2 bg-primary-500 rounded-full ml-auto"
+                                  />
+                                )}
+                              </motion.button>
+                            </div>
                           )
                         })}
                       </div>
@@ -192,7 +208,7 @@ export default function SettingsDropdown() {
                 </AnimatePresence>
               </div>
 
-              <div className="border-t border-gray-200 dark:border-neutral-700"></div>
+              <div className="divider-faded mx-2" />
 
               {/* Account Section */}
               <div className="p-2">
@@ -208,6 +224,7 @@ export default function SettingsDropdown() {
                       <User className="w-5 h-5" />
                       <span className="font-medium">Account</span>
                     </button>
+                    <div className="divider-faded mx-0" />
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -228,6 +245,7 @@ export default function SettingsDropdown() {
                     <span className="font-medium">Login / Sign Up</span>
                   </button>
                 )}
+              </div>
               </div>
             </motion.div>
           </>

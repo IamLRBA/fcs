@@ -306,16 +306,19 @@ export default function ProductCategoryPage() {
             className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-1 md:mb-6"
           >
             {/* Main Product Image */}
-            <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-6 sm:p-8">
-              <img 
-                src={getMainProductImage(category)}
-                alt={`${categoryData.title} - Main Product Image`}
-                className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-xl"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = '/assets/images/placeholder.jpg'
-                }}
-              />
+            <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 sm:p-8">
+                <img 
+                  src={getMainProductImage(category)}
+                  alt={`${categoryData.title} - Main Product Image`}
+                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-xl"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.src = '/assets/images/placeholder.jpg'
+                  }}
+                />
+              </div>
             </div>
 
             {/* Title */}
@@ -398,7 +401,9 @@ export default function ProductCategoryPage() {
               transition={{ duration: 0.6 }}
               className="flex justify-center mb-8"
             >
-              <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-6 sm:p-8">
+            <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 sm:p-8">
                 <img 
                   src={getSubcategoryImage(category, section)}
                   alt={`${section} - ${categoryData.title}`}
@@ -409,6 +414,7 @@ export default function ProductCategoryPage() {
                   }}
                 />
               </div>
+            </div>
             </motion.div>
             
             <h2 className="text-4xl font-bold text-center mb-12 capitalize">
@@ -425,46 +431,51 @@ export default function ProductCategoryPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="w-full max-w-xs bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 hover:shadow-xl transition-all duration-300 group cursor-pointer"
+                  className="w-full max-w-xs transition-all duration-300 group cursor-pointer"
                   onClick={() => openProductModal(product)}
                 >
-                  {/* Product Image */}
-                  <div className="relative h-36 sm:h-44 md:h-52 lg:h-56 bg-primary-900/20 overflow-hidden">
-                    <img
-                      src={product.images[0] || '/assets/images/placeholder.jpg'}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = '/assets/images/placeholder.jpg'
-                      }}
-                    />
-                    {/* Condition Badge */}
-                    <div className="absolute top-2 left-2 px-3 py-1 bg-primary-500/90 text-neutral-850 dark:text-white text-xs font-semibold rounded-full">
-                      {product.condition}
-                    </div>
-                  </div>
+                  <div className="hero-glass-frame relative h-full backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                    <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col">
+                      {/* Product Image */}
+                      <div className="relative h-36 sm:h-44 md:h-52 lg:h-56 bg-primary-900/20 overflow-hidden">
+                        <img
+                          src={product.images[0] || '/assets/images/placeholder.jpg'}
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            target.src = '/assets/images/placeholder.jpg'
+                          }}
+                        />
+                        {/* Condition Badge */}
+                        <div className="absolute top-2 left-2 px-3 py-1 bg-primary-500/90 text-neutral-850 dark:text-white text-xs font-semibold rounded-full">
+                          {product.condition}
+                        </div>
+                      </div>
 
-                  {/* Product Info */}
-                  <div className="p-2 sm:p-3 md:p-4">
-                    <p className="text-primary-300 dark:text-primary-400 text-xs sm:text-sm mb-1 line-clamp-1">{product.brand}</p>
-                    <h3 className="text-sm sm:text-base md:text-lg font-bold text-neutral-850 dark:text-primary-50 mb-1 sm:mb-2 line-clamp-2">{product.name}</h3>
-                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 flex-wrap">
-                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-600 dark:text-primary-300">
-                        UGX {product.price_ugx.toLocaleString()}
-                      </span>
-                      {product.original_price && (
-                        <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 line-through">
-                          UGX {product.original_price.toLocaleString()}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-2 mt-2 sm:mt-3">
-                      <button className="btn btn-outline btn-hover-secondary-filled flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
-                        <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="hidden sm:inline">Quick View</span>
-                        <span className="sm:hidden">View</span>
-                      </button>
+                      {/* Product Info */}
+                      <div className="p-2 sm:p-3 md:p-4">
+                        <p className="text-primary-300 dark:text-primary-400 text-xs sm:text-sm mb-1 line-clamp-1">{product.brand}</p>
+                        <h3 className="text-sm sm:text-base md:text-lg font-bold text-neutral-850 dark:text-primary-50 mb-1 sm:mb-2 line-clamp-2">{product.name}</h3>
+                        <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 flex-wrap">
+                          <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-600 dark:text-primary-300">
+                            UGX {product.price_ugx.toLocaleString()}
+                          </span>
+                          {product.original_price && (
+                            <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 line-through">
+                              UGX {product.original_price.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2 mt-2 sm:mt-3">
+                          <button className="btn btn-outline btn-hover-secondary-filled flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
+                            <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Quick View</span>
+                            <span className="sm:hidden">View</span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -619,12 +630,16 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           background: rgba(255, 255, 255, 0.05);
         }
       `}</style>
+      <div
+        className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md sm:max-w-3xl md:max-w-5xl bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll border border-neutral-200 dark:border-neutral-700"
+        className="relative w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll border border-neutral-200 dark:border-neutral-700"
       >
         {/* Close Button */}
         <motion.button
@@ -773,6 +788,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           </div>
         </div>
       </motion.div>
+      </div>
 
       {/* Fullscreen Image Modal */}
       <AnimatePresence>

@@ -187,7 +187,7 @@ export default function OrderConfirmationPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-4 print:text-gray-900">
             Order Confirmed!
           </h1>
-          <p className="text-xl text-primary-200 dark:text-primary-300 print:text-gray-600 mb-2">
+          <p className="text-xl text-neutral-700 dark:text-primary-300 print:text-gray-600 mb-2">
             Thank you for your order. We've received your order and will process it shortly.
           </p>
           {notificationsSent && (
@@ -199,12 +199,16 @@ export default function OrderConfirmationPage() {
 
         {/* Order Receipt */}
         <motion.div
-          ref={receiptRef}
-          data-receipt
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl p-8 mx-auto max-w-2xl receipt-container border border-neutral-200 dark:border-neutral-700"
+          className="hero-glass-frame relative backdrop-blur-lg mx-auto max-w-2xl"
+        >
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+        <motion.div
+          ref={receiptRef}
+          data-receipt
+          className="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl p-8 receipt-container border border-neutral-200 dark:border-neutral-700"
           style={{
             fontFamily: 'system-ui, -apple-system, sans-serif'
           }}
@@ -369,6 +373,7 @@ export default function OrderConfirmationPage() {
             </div>
           </div>
         </motion.div>
+        </motion.div>
 
         {/* Action Buttons */}
         <motion.div
@@ -389,7 +394,7 @@ export default function OrderConfirmationPage() {
             <Package className="w-5 h-5" />
             <span>Continue Shopping</span>
           </Link>
-          <Link href="/" className="btn btn-secondary inline-flex items-center justify-center space-x-2">
+          <Link href="/" className="btn btn-secondary btn-hover-primary-filled inline-flex items-center justify-center space-x-2">
             <Home className="w-5 h-5" />
             <span>Go Home</span>
           </Link>
