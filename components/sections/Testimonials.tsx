@@ -299,6 +299,8 @@ export default function Testimonials() {
                   onClick={() => setSelectedTestimonial(testimonial)} 
                   style={{ width: `${cardWidth}px` }}
                 >
+                <div className="hero-glass-frame relative h-full flex flex-col backdrop-blur-lg">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="testimonial-content bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl p-4 sm:p-3 lg:p-5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
                   <div className="flex justify-center mb-2 sm:mb-1.5 lg:mb-2">
                     <div className="w-8 h-8 sm:w-6 sm:h-6 lg:w-7 lg:h-7 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
@@ -322,6 +324,7 @@ export default function Testimonials() {
                       <p className="author-role text-primary-600 dark:text-primary-300 text-xs sm:text-xs lg:text-xs">{testimonial.company}</p>
                     </div>
                   </div>
+                </div>
                 </div>
                 </motion.div>
               )
@@ -354,7 +357,9 @@ export default function Testimonials() {
               exit={{ opacity: 0 }} 
               onClick={() => setSelectedTestimonial(null)}
             >
-              <motion.div className="modal-content bg-white dark:bg-[#191919] rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()}>
+              <div className="hero-glass-frame relative max-w-lg w-full backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600" onClick={(e) => e.stopPropagation()}>
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              <motion.div className="modal-content bg-white dark:bg-[#191919] rounded-2xl p-6 w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
                 <button className="close-button absolute top-4 right-4 w-8 h-8 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:text-primary-600 dark:hover:text-primary-300" onClick={() => setSelectedTestimonial(null)}>
                   <X />
                 </button>
@@ -378,6 +383,7 @@ export default function Testimonials() {
                   </div>
                 </div>
               </motion.div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

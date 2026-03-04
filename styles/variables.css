@@ -64,9 +64,10 @@
   /* Hero glass frame (home & about hero image containers) */
   --hero-frame-border-width: 1px;
   --hero-frame-radius: 1rem;
-  --hero-frame-padding: 0.625rem;
-  --hero-frame-padding-md: 0.75rem;
-  --hero-frame-padding-lg: 0.875rem;
+  --hero-frame-padding: 1.5rem;
+  --hero-frame-padding-md: 1.5rem;
+  --hero-frame-padding-lg: 1.5rem;
+  --hero-frame-padding-compact: 0.75rem; /* Small cards (e.g. company logo slider) – same gap on all sides */
   --hero-frame-bg: rgb(255 255 255 / 0.04);
   --hero-frame-overlay: rgb(255 255 255 / 0.03);
 

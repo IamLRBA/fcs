@@ -184,6 +184,10 @@
     }
   }
 
+  .hero-glass-frame-compact {
+    padding: var(--hero-frame-padding-compact);
+  }
+
   .hero-glass-frame-overlay {
     background-color: var(--hero-frame-overlay);
     border-radius: var(--hero-frame-radius);
