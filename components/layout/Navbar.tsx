@@ -235,14 +235,22 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.nav initial={{ y: -100 }} animate={{ y: 0 }} className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg border-b border-neutral-200 dark:border-neutral-700' : 'bg-transparent'}`}>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`navbar-shell fixed top-0 left-4 right-0 lg:left-4 lg:right-4 z-50 transition-all duration-300 ${
+          isScrolled
+            ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg'
+            : 'bg-transparent'
+        }`}
+      >
         <div className="container-custom">
           <div className="flex items-center justify-between h-16 relative">
             {/* Left side - Logo */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center gap-1.5 group">
                 <LogoMark size={48} className="shrink-0 transition-transform duration-300 group-hover:scale-110" />
-                <MysticalPiecesWord className="text-xl text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300" />
+                <MysticalPiecesWord className="text-2xl text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300" />
               </Link>
             </div>
 
@@ -317,19 +325,26 @@ export default function Navbar() {
 
             {/* Right side - Search, Cart, Settings */}
             <div className="hidden lg:flex items-center space-x-8">
-              <div className="relative" ref={searchRef}>
+              <div className="relative ml-14" ref={searchRef}>
                 <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
                   <HiSearch className="w-5 h-5" />
                 </button>
                 {isSearchOpen && (
                   <form onSubmit={handleSearchSubmit} className="navbar-search-form inline-flex items-center">
-                    <div className="search-input-wrapper">
+                    <div className="search-input-wrapper w-40">
                       {isSearchOpen && (
                         <button type="button" onClick={clearSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors duration-200">
                           <HiX className="w-4 h-4" />
                         </button>
                       )}
-                      <input type="text" placeholder="Search fashion items" value={searchQuery} onChange={handleSearchChange} className={`navbar-search-input input-overlay ${isSearchOpen ? 'pl-10' : 'pl-4'}`} autoFocus />
+                      <input
+                        type="text"
+                        placeholder="Search items..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className={`navbar-search-input input-overlay ${isSearchOpen ? 'pl-10' : 'pl-4'}`}
+                        autoFocus
+                      />
                       {showSuggestions && (
                         <div className="absolute top-full left-0 mt-2 w-full min-w-[16rem] hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-lg overflow-hidden p-4 z-50">
                           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
@@ -401,7 +416,7 @@ export default function Navbar() {
               animate={{ x: 0 }} 
               exit={{ x: '100%' }} 
               transition={{ type: 'spring', stiffness: 300, damping: 30 }} 
-              className="fixed top-20 right-0 w-80 max-h-[calc(100vh-10rem)] hero-glass-frame hero-glass-more-transparent backdrop-blur-lg z-50 lg:hidden rounded-l-2xl rounded-r-none overflow-hidden flex flex-col p-4"
+              className="fixed top-20 right-0 w-[85vw] max-w-sm max-h-[calc(100vh-10rem)] hero-glass-frame hero-glass-more-transparent backdrop-blur-lg z-50 lg:hidden rounded-l-2xl rounded-r-none overflow-hidden flex flex-col p-4"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-l-2xl rounded-r-none" aria-hidden />
               <div className="relative z-10 rounded-l-xl rounded-r-none overflow-y-auto max-h-[calc(100vh-12rem)] menu-inner-light-depth shadow-2xl border border-gray-200 dark:border-neutral-700">
@@ -509,49 +524,69 @@ export default function Navbar() {
 
                 <div className="divider-faded my-4" />
 
-                {/* Mobile Search - row with icon + "Search", input appears below when open */}
-                <div className="relative" ref={searchRef}>
-                  <button
-                    type="button"
-                    onClick={() => { toggleSearch(); if (!isSearchOpen) setShowSuggestions(false) }}
-                    className="nav-icon-no-focus group flex items-center space-x-3 w-full px-4 py-3 rounded-xl transition-all duration-200 text-neutral-700 dark:text-neutral-300 hover:bg-gradient-to-r hover:from-neutral-100 hover:to-neutral-50 dark:hover:from-neutral-700 dark:hover:to-neutral-700/50"
+                {/* Mobile Search – centered, icon left, X inside input */}
+                <div className="relative flex justify-center px-4" ref={searchRef}>
+                  <form
+                    onSubmit={handleSearchSubmit}
+                    className="navbar-search-form flex items-center w-full max-w-md mx-auto"
                   >
-                    <div className="p-2 rounded-lg bg-transparent transition-colors duration-200">
-                      <HiSearch className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
-                    </div>
-                    <span className="font-light flex-1 text-left">Search</span>
-                  </button>
-                  {isSearchOpen && (
-                    <div className="flex flex-col items-center w-full pt-3 pb-1">
-                      <form onSubmit={handleSearchSubmit} className="navbar-search-form w-full max-w-md">
-                        <div className="search-input-wrapper relative flex items-center w-full rounded-xl overflow-visible border border-neutral-200 dark:border-neutral-600 bg-white/80 dark:bg-neutral-800/80">
-                          <input type="text" placeholder="Search fashion items" value={searchQuery} onChange={handleSearchChange} className={`navbar-search-input input-overlay flex-1 min-w-0 py-2.5 pl-4 pr-10 text-sm border-0 bg-transparent rounded-xl`} autoFocus />
-                          {searchQuery && (
-                            <button type="button" onClick={clearSearch} className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300" aria-label="Clear search">
-                              <HiX className="w-4 h-4" />
-                            </button>
-                          )}
-                          {showSuggestions && (
-                            <div className="absolute top-full left-0 right-0 mt-2 w-full hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-lg overflow-hidden p-4 z-50">
-                              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                              <div className="relative z-10 rounded-md bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 max-h-80 overflow-y-auto modal-scrollbar">
-                                {filteredSuggestions.length > 0 ? (
-                                  filteredSuggestions.map((item) => (
-                                    <div key={`${item.product.id}-${item.product.name}`} className="suggestion-item" onClick={() => handleSuggestionClick(item.href)}>
-                                      <span className="suggestion-category">{item.category} • {item.section}</span>
-                                      <span className="suggestion-title">{item.product.name} - {item.product.brand}</span>
-                                    </div>
-                                  ))
-                                ) : (
-                                  <div className="suggestion-item no-results">No Results for "{searchQuery}"</div>
-                                )}
+                    <button
+                      type="submit"
+                      className="nav-icon-no-focus shrink-0 p-2.5 mr-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                      aria-label="Search"
+                    >
+                      <HiSearch className="w-5 h-5" />
+                    </button>
+                    <div className="search-input-wrapper relative flex-1">
+                      <input
+                        type="text"
+                        placeholder="Search Items..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="navbar-search-input input-overlay w-full py-2.5 pl-4 pr-10 text-sm border-0 bg-white/80 dark:bg-neutral-800/80 rounded-xl"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={clearSearch}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+                          aria-label="Clear search"
+                        >
+                          <HiX className="w-4 h-4" />
+                        </button>
+                      )}
+                      {showSuggestions && (
+                        <div className="absolute top-full left-0 right-0 mt-2 w-full hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-lg overflow-hidden p-4 z-50">
+                          <div
+                            className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]"
+                            aria-hidden
+                          />
+                          <div className="relative z-10 rounded-md bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 max-h-80 overflow-y-auto modal-scrollbar">
+                            {filteredSuggestions.length > 0 ? (
+                              filteredSuggestions.map((item) => (
+                                <div
+                                  key={`${item.product.id}-${item.product.name}`}
+                                  className="suggestion-item"
+                                  onClick={() => handleSuggestionClick(item.href)}
+                                >
+                                  <span className="suggestion-category">
+                                    {item.category} • {item.section}
+                                  </span>
+                                  <span className="suggestion-title">
+                                    {item.product.name} - {item.product.brand}
+                                  </span>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="suggestion-item no-results">
+                                No Results for "{searchQuery}"
                               </div>
-                            </div>
-                          )}
+                            )}
+                          </div>
                         </div>
-                      </form>
+                      )}
                     </div>
-                  )}
+                  </form>
                 </div>
 
                 <div className="divider-faded my-4" />
@@ -581,13 +616,10 @@ export default function Navbar() {
 
                 <div className="divider-faded my-4" />
 
-                {/* Mobile Settings - aligned with other items, icon + "Settings" text */}
+                {/* Mobile Settings - icon only, aligned with other items */}
                 <div className="space-y-1">
-                  <div className="flex items-center space-x-3 px-4 py-3 rounded-xl text-neutral-700 dark:text-neutral-300">
-                    <div className="p-2 rounded-lg bg-transparent transition-colors duration-200">
-                      <SettingsDropdown variant="mobile" />
-                    </div>
-                    <span className="font-light flex-1 text-left">Settings</span>
+                  <div className="flex items-center justify-start px-4 py-3 rounded-xl text-neutral-700 dark:text-neutral-300">
+                    <SettingsDropdown variant="mobile" />
                   </div>
                 </div>
               </div>

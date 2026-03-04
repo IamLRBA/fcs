@@ -178,7 +178,7 @@ export default function Home() {
               />
 
               {/* Hero Section */}
-              <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+              <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12">
                 <div className="relative z-10 text-center">
                   <motion.div 
                     className="container-custom"

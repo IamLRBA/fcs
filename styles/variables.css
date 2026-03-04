@@ -63,7 +63,8 @@
 
   /* Input fields – border (used by .input-overlay and navbar search) */
   --input-border-width: 1px;
-  --color-input-border: var(--color-border-primary);
+  /* Prefer hero glass frame border for inputs so they visually match semi-transparent containers */
+  --color-input-border: var(--color-hero-frame-border);
 
   /* Hero glass frame (home & about hero image containers) */
   --hero-frame-border-width: 1px;
