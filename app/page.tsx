@@ -94,7 +94,6 @@ export default function Home() {
             transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
             className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-primary-300/30 to-primary-500/30 rounded-full blur-3xl"
           />
-          
           {/* Enhanced Particle System */}
           <div className="absolute inset-0 pointer-events-none">
             {[...Array(20)].map((_, i) => (

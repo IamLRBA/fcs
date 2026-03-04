@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { motion } from 'framer-motion'
 import BlurredImageBackground from './BlurredImageBackground'
 
 /**
@@ -49,6 +50,28 @@ export default function BackgroundOverlayPortal() {
           backgroundColor: 'var(--color-bg-page-overlay)',
         }}
       />
+      {/* Dark mode only: corner glows on top of overlay (same as home page) */}
+      <div
+        aria-hidden
+        className="hidden dark:block"
+        style={{
+          ...fullBleedStyle,
+          zIndex: 2,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }}
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          className="absolute -top-48 -right-48 w-[28rem] h-[28rem] bg-gradient-to-br from-accent-200/40 to-accent-400/40 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+          className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-primary-300/40 to-primary-500/40 rounded-full blur-3xl"
+        />
+      </div>
     </>,
     document.body
   )
