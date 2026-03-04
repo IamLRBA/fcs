@@ -257,27 +257,30 @@ export default function Home() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-8"
                   >
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.2 }}
-                      className="inline-flex items-center space-x-3 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3 rounded-full mb-6 shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm"
-                    >
-                      <motion.span
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    <div className="hero-glass-frame relative inline-block backdrop-blur-lg mb-6 rounded-full">
+                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="inline-flex items-center space-x-3 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm"
                       >
-                        ✧
-                      </motion.span>
-                      <span className="font-medium">Step into the portal to explore future-forward thrift finds</span>
-                      <motion.span
-                        animate={{ y: [0, 5, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        ⇓
-                      </motion.span>
-                    </motion.div>
+                        <motion.span
+                          animate={{ rotate: [0, 10, -10, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          ✧
+                        </motion.span>
+                        <span className="font-medium">Step into the portal to explore future-forward thrift finds</span>
+                        <motion.span
+                          animate={{ y: [0, 5, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          ⇓
+                        </motion.span>
+                      </motion.div>
+                    </div>
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}

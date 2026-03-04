@@ -28,22 +28,25 @@ export default function AnimatedImageBanner() {
           transition={{ duration: 0.8 }}
           className="relative max-w-7xl mx-auto flex justify-center"
         >
-          {/* Main image container with creative animations - matching missions/visions style */}
-          <motion.div
-            animate={{
-              rotateY: [0, 5, -5, 5, 0],
-              rotateX: [0, 2, -2, 2, 0],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              transform: `perspective(1000px) rotateY(${mousePosition.x}deg) rotateX(${mousePosition.y}deg)`
-            }}
-            className="relative flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-2"
-          >
+          {/* Outer frame - glassy container (values from variables.css + globals.css) */}
+          <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg flex items-center justify-center">
+            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+            {/* Main image container - slightly reduced size, original background */}
+            <motion.div
+              animate={{
+                rotateY: [0, 5, -5, 5, 0],
+                rotateX: [0, 2, -2, 2, 0],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              style={{
+                transform: `perspective(1000px) rotateY(${mousePosition.x}deg) rotateX(${mousePosition.y}deg)`
+              }}
+              className="relative z-10 flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-2"
+            >
             {/* Gradient overlay */}
             <motion.div
               animate={{
@@ -72,7 +75,7 @@ export default function AnimatedImageBanner() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[750px] md:h-[350px] lg:w-[920px] lg:h-[440px]"
+              className="relative w-[260px] h-[260px] sm:w-[320px] sm:h-[320px] md:w-[700px] md:h-[328px] lg:w-[860px] lg:h-[412px]"
             >
               <img
                 src="/assets/images/sections/home/hero-banner.jpg"
@@ -126,6 +129,7 @@ export default function AnimatedImageBanner() {
               />
             ))}
           </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>

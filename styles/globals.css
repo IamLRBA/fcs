@@ -164,6 +164,35 @@
     @apply hover:shadow-xl transition-all duration-300;
   }
 
+  /* Hero glass frame (home & about hero image outer container) */
+  .hero-glass-frame {
+    border: var(--hero-frame-border-width) solid var(--color-hero-frame-border);
+    border-radius: var(--hero-frame-radius);
+    padding: var(--hero-frame-padding);
+    background-color: var(--hero-frame-bg);
+  }
+
+  @media (min-width: 768px) {
+    .hero-glass-frame {
+      padding: var(--hero-frame-padding-md);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-glass-frame {
+      padding: var(--hero-frame-padding-lg);
+    }
+  }
+
+  .hero-glass-frame-compact {
+    padding: var(--hero-frame-padding-compact);
+  }
+
+  .hero-glass-frame-overlay {
+    background-color: var(--hero-frame-overlay);
+    border-radius: var(--hero-frame-radius);
+  }
+
   /* Text colors for unified backgrounds */
   .text-on-unified {
     @apply text-neutral-900;

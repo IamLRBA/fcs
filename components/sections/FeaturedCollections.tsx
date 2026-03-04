@@ -194,10 +194,13 @@ export default function FeaturedCollections() {
                     scale: 1.02,
                     transition: { duration: 0.3 }
                   }}
-                  className="group relative w-full sm:min-w-[280px]"
+                  className="group relative w-full sm:min-w-[280px] h-full flex flex-col"
                 >
-                  <motion.div
-                    className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40 h-full flex flex-col relative"
+                  {/* Outer glass frame (same style as hero image containers) */}
+                  <div className="hero-glass-frame relative w-full h-full flex flex-col flex-1 min-h-0 backdrop-blur-lg">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                    <motion.div
+                      className="relative z-10 flex-1 min-h-0 flex flex-col bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40"
                     whileHover={{
                       boxShadow: "0 20px 40px rgba(139, 69, 19, 0.2)"
                     }}
@@ -353,6 +356,7 @@ export default function FeaturedCollections() {
                       transition={{ duration: 0.6 }}
                     />
                   </motion.div>
+                  </div>
                 </motion.div>
               )
             })}
