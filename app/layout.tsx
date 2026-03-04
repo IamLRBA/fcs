@@ -3,12 +3,13 @@ import '../styles/globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import Providers from '@/components/layout/Providers'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
-import StructuredData from '@/components/StructuredData'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
+import StructuredData from '@/components/common/StructuredData'
 import SkipToContent from '@/components/ui/SkipToContent'
 import AccountPromptPopup from '@/components/ui/AccountPromptPopup'
 import BackToTop from '@/components/ui/BackToTop'
 import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
+import BackgroundOverlayPortal from '@/components/common/BackgroundOverlayPortal'
 
 export const metadata: Metadata = {
   title: 'MysticalPIECES — Future-Facing Thrift Fashion',
@@ -75,7 +76,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&family=Mrs+Saint+Delafield&family=Zen+Dots&display=swap"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800;900&family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&family=Mrs+Saint+Delafield&family=Zen+Dots&display=swap"
           rel="stylesheet"
           referrerPolicy="strict-origin-when-cross-origin"
         />
@@ -89,12 +90,15 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning>
         <Providers>
           <ErrorBoundary>
-            <SkipToContent />
-            <Navbar />
-            <main id="main-content">
-              {children}
-            </main>
-            <Footer />
+            <BackgroundOverlayPortal />
+            <div className="relative z-10 min-h-screen flex flex-col">
+              <SkipToContent />
+              <Navbar />
+              <main id="main-content" className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
             <AccountPromptPopup />
             <BackToTop />
             <KeyboardShortcuts />
