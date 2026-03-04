@@ -135,9 +135,11 @@ export default function AccountPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="container-custom">
+      <div className="container-custom mt-12">
 
-        <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700">
+        <div className="hero-glass-frame relative backdrop-blur-lg max-w-5xl mx-auto">
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+        <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700">
           {/* Header */}
           <div className="bg-neutral-50 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-600 p-8">
             <div className="flex items-center space-x-4">
@@ -202,23 +204,26 @@ export default function AccountPage() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Account Information</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
-                      <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                        <Mail className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                  <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl max-w-4xl mx-auto">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                      <div className="flex items-center space-x-3 p-4 bg-white/90 dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                        <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                          <Mail className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-neutral-600 dark:text-neutral-400">Email</p>
+                          <p className="font-medium text-neutral-900 dark:text-neutral-200">{user.email}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Email</p>
-                        <p className="font-medium text-neutral-900 dark:text-neutral-200">{user.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
-                      <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                        <Phone className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Phone</p>
-                        <p className="font-medium text-neutral-900 dark:text-neutral-200">{user.phone}</p>
+                      <div className="flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                        <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                          <Phone className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-neutral-600 dark:text-neutral-400">Phone</p>
+                          <p className="font-medium text-neutral-900 dark:text-neutral-200">{user.phone}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -226,27 +231,30 @@ export default function AccountPage() {
 
                 <div>
                   <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Quick Stats</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-6 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
-                      <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg w-fit mb-3">
-                        <Package className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                  <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl max-w-4xl mx-auto">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+                      <div className="p-6 bg-white/95 dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                        <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg w-fit mb-3">
+                          <Package className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{orders.length}</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
                       </div>
-                      <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{orders.length}</p>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
-                    </div>
-                    <div className="p-6 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
-                      <div className="p-3 bg-accent-100 dark:bg-accent-900/30 rounded-lg w-fit mb-3">
-                        <Star className="w-8 h-8 text-accent-600 dark:text-accent-400" />
+                      <div className="p-6 bg-neutral-50 dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                        <div className="p-3 bg-accent-100 dark:bg-accent-900/30 rounded-lg w-fit mb-3">
+                          <Star className="w-8 h-8 text-accent-600 dark:text-accent-400" />
+                        </div>
+                        <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.reviews?.length || 0}</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Reviews Written</p>
                       </div>
-                      <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.reviews?.length || 0}</p>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Reviews Written</p>
-                    </div>
-                    <div className="p-6 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
-                      <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg w-fit mb-3">
-                        <Eye className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                      <div className="p-6 bg-neutral-100 dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                        <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg w-fit mb-3">
+                          <Eye className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.lastViewedItems?.length || 0}</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Viewed</p>
                       </div>
-                      <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.lastViewedItems?.length || 0}</p>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Viewed</p>
                     </div>
                   </div>
                 </div>
@@ -261,58 +269,63 @@ export default function AccountPage() {
             )}
 
             {activeTab === 'orders' && (
-              <div>
-                <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">Order History</h2>
-                {orders.length === 0 ? (
-                  <div className="text-center py-12">
-                    <Package className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
-                    <p className="text-neutral-600 dark:text-neutral-400 mb-4">No orders yet</p>
-                    <Link href="/sections/shop" className="btn btn-outline btn-hover-secondary-filled">
-                      Start Shopping
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {orders.map((order) => (
-                      <motion.div
-                        key={order.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="border border-neutral-200 dark:border-neutral-700 rounded-lg p-6 hover:shadow-lg transition-shadow"
-                      >
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <h3 className="font-bold text-lg">Order {order.id}</h3>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                              {new Date(order.timestamp).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                            order.status === 'dispatched' ? 'bg-blue-100 text-blue-800' :
-                            order.status === 'confirmed' ? 'bg-primary-100 text-primary-800' :
-                            'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {order.status}
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                          <div>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Items</p>
-                            <p className="font-medium">{order.items.length}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Total</p>
-                            <p className="font-medium">UGX {order.total.toLocaleString()}</p>
-                          </div>
-                        </div>
-                        <Link href={`/order-confirmation?id=${order.id}`} className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                          View Details →
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Order History</h2>
+                <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl max-w-4xl mx-auto">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                  <div className="relative z-10 p-6">
+                    {orders.length === 0 ? (
+                      <div className="text-center py-10">
+                        <Package className="w-16 h-16 text-primary-400/80 mx-auto mb-4" />
+                        <p className="text-neutral-600 dark:text-neutral-400 mb-4">No orders yet</p>
+                        <Link href="/sections/shop" className="btn btn-outline btn-hover-secondary-filled">
+                          Start Shopping
                         </Link>
-                      </motion.div>
-                    ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {orders.map((order) => (
+                          <motion.div
+                            key={order.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white/95 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 hover:shadow-lg transition-shadow"
+                          >
+                            <div className="flex justify-between items-start mb-4">
+                              <div>
+                                <h3 className="font-bold text-lg">Order {order.id}</h3>
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                                  {new Date(order.timestamp).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                order.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                order.status === 'dispatched' ? 'bg-blue-100 text-blue-800' :
+                                order.status === 'confirmed' ? 'bg-primary-100 text-primary-800' :
+                                'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {order.status}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                              <div>
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400">Items</p>
+                                <p className="font-medium">{order.items.length}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400">Total</p>
+                                <p className="font-medium">UGX {order.total.toLocaleString()}</p>
+                              </div>
+                            </div>
+                            <Link href={`/order-confirmation?id=${order.id}`} className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                              View Details →
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             )}
 
@@ -320,84 +333,93 @@ export default function AccountPage() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Write a Review</h2>
-                  <form onSubmit={handleReviewSubmit} className="bg-primary-50 dark:bg-neutral-700 rounded-lg p-6">
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
-                        Rating
-                      </label>
-                      <div className="flex space-x-2">
-                        {[1, 2, 3, 4, 5].map((rating) => (
-                          <button
-                            key={rating}
-                            type="button"
-                            onClick={() => setReviewRating(rating)}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                              rating <= reviewRating
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-neutral-200 dark:bg-neutral-600 text-neutral-400'
-                            }`}
-                          >
-                            <Star className="w-5 h-5" />
-                          </button>
-                        ))}
+                  <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl max-w-3xl mx-auto">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                    <form onSubmit={handleReviewSubmit} className="relative z-10 bg-primary-50 dark:bg-neutral-700 rounded-xl p-6">
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
+                          Rating
+                        </label>
+                        <div className="flex space-x-2">
+                          {[1, 2, 3, 4, 5].map((rating) => (
+                            <button
+                              key={rating}
+                              type="button"
+                              onClick={() => setReviewRating(rating)}
+                              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                                rating <= reviewRating
+                                  ? 'bg-primary-600 text-white'
+                                  : 'bg-neutral-200 dark:bg-neutral-600 text-neutral-400'
+                              }`}
+                            >
+                              <Star className="w-5 h-5" />
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
-                        Your Review
-                      </label>
-                      <textarea
-                        value={reviewText}
-                        onChange={(e) => setReviewText(e.target.value)}
-                        rows={4}
-                        className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-800 dark:text-white"
-                        placeholder="Share your experience with MysticalPIECES..."
-                        required
-                      />
-                    </div>
-                    <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
-                      Submit Review
-                    </button>
-                  </form>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
+                          Your Review
+                        </label>
+                        <textarea
+                          value={reviewText}
+                          onChange={(e) => setReviewText(e.target.value)}
+                          rows={4}
+                          className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-800 dark:text-white"
+                          placeholder="Share your experience with MysticalPIECES..."
+                          required
+                        />
+                      </div>
+                      <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
+                        Submit Review
+                      </button>
+                    </form>
+                  </div>
                 </div>
 
                 <div>
                   <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Your Reviews</h2>
-                  {user.reviews && user.reviews.length > 0 ? (
-                    <div className="space-y-4">
-                      {user.reviews.map((review) => (
-                        <div key={review.id} className="border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center space-x-2">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`w-5 h-5 ${
-                                    i < review.rating
-                                      ? 'text-yellow-400 fill-current'
-                                      : 'text-neutral-300'
-                                  }`}
-                                />
-                              ))}
+                  <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl max-w-3xl mx-auto">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                    <div className="relative z-10">
+                      {user.reviews && user.reviews.length > 0 ? (
+                        <div className="space-y-4">
+                          {user.reviews.map((review) => (
+                            <div key={review.id} className="bg-white/95 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6">
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex items-center space-x-2">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={`w-5 h-5 ${
+                                        i < review.rating
+                                          ? 'text-yellow-400 fill-current'
+                                          : 'text-neutral-300'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                                  {new Date(review.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p className="text-neutral-700 dark:text-neutral-300">{review.text}</p>
+                              {review.productName && (
+                                <p className="text-sm text-primary-600 mt-2">Product: {review.productName}</p>
+                              )}
                             </div>
-                            <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                              {new Date(review.createdAt).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <p className="text-neutral-700 dark:text-neutral-300">{review.text}</p>
-                          {review.productName && (
-                            <p className="text-sm text-primary-600 mt-2">Product: {review.productName}</p>
-                          )}
+                          ))}
                         </div>
-                      ))}
+                      ) : (
+                        <p className="text-neutral-600 dark:text-neutral-400">No reviews yet</p>
+                      )}
                     </div>
-                  ) : (
-                    <p className="text-neutral-600 dark:text-neutral-400">No reviews yet</p>
-                  )}
+                  </div>
                 </div>
               </div>
             )}
           </div>
+        </div>
         </div>
 
         {/* Edit Profile Picture Modal */}

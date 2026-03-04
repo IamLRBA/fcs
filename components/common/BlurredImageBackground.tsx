@@ -35,7 +35,7 @@ export interface BlurredImageBackgroundProps {
 
 const defaultsLight = {
   imageOpacity: 0.75,
-  blur: 3.5,
+  blur: 2.5,
   brightness: 1,
   contrast: 1.05,
   saturate: 0.95,

@@ -325,7 +325,7 @@ export default function Navbar() {
 
             {/* Right side - Search, Cart, Settings */}
             <div className="hidden lg:flex items-center space-x-8">
-              <div className="relative ml-14" ref={searchRef}>
+              <div className="relative ml-10" ref={searchRef}>
                 <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
                   <HiSearch className="w-5 h-5" />
                 </button>
