@@ -59,6 +59,16 @@
   --color-border-primary: #E0E0E0;   /* Light Gray */
   --color-border-secondary: #C2B280; /* Ecru */
   --color-border-accent: #6F4E37;     /* Coffee */
+  --color-hero-frame-border: #c5c5c5; /* Very subtle dark border for hero glass frame (light mode) */
+
+  /* Hero glass frame (home & about hero image containers) */
+  --hero-frame-border-width: 1px;
+  --hero-frame-radius: 1rem;
+  --hero-frame-padding: 0.625rem;
+  --hero-frame-padding-md: 0.75rem;
+  --hero-frame-padding-lg: 0.875rem;
+  --hero-frame-bg: rgb(255 255 255 / 0.04);
+  --hero-frame-overlay: rgb(255 255 255 / 0.03);
 
   /* Shadow Colors */
   --color-shadow-light: rgba(38, 36, 36, 0.05);
@@ -204,6 +214,11 @@
   --color-border-primary: #404040;     /* Darker Gray */
   --color-border-secondary: #5A3E2D;  /* Dark Coffee */
   --color-border-accent: #EEE5DA;     /* Light Almond */
+  --color-hero-frame-border: #424242; /* Very subtle light border for hero glass frame (dark mode) */
+
+  /* Hero glass frame - Dark Mode */
+  --hero-frame-bg: rgb(25 25 25 / 0.05);
+  --hero-frame-overlay: rgb(255 255 255 / 0.015);
 
   /* Shadow Colors - Dark Mode */
   --color-shadow-light: rgba(0, 0, 0, 0.3);
