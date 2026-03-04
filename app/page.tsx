@@ -191,7 +191,7 @@ export default function Home() {
                       className="mb-8"
                     >
                       <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4">
-                        <LogoMark animated size={220} className="md:-mb-16 md:scale-[0.91]" />
+                        <LogoMark animated size={250} className="md:scale-[0.8] md:-mb-16" />
                         <div className="flex flex-col items-center gap-2 w-full">
                           <h1 className="text-3xl sm:text-4xl md:text-7xl font-light leading-tight mb-1">
                             <MysticalPiecesWord mysticalClassName="text-primary-800 dark:text-primary-100" piecesClassName="text-accent-600 dark:text-accent-400" />

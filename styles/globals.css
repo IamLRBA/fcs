@@ -1141,6 +1141,12 @@
     border: var(--input-border-width) solid var(--color-input-border) !important;
     border-radius: 0.5rem;
   }
+  /* Send us a message form – dark borders in light mode (match search input) */
+  :root .send-us-message-form .input-overlay,
+  :root .send-us-message-form input.input-overlay,
+  :root .send-us-message-form textarea.input-overlay {
+    border-color: #8a8a8a !important;
+  }
   .input-overlay::placeholder,
   input.input-overlay::placeholder,
   textarea.input-overlay::placeholder {

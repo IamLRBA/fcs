@@ -170,12 +170,13 @@ export default function FeaturedCollections() {
 
         {featuredProducts.length > 0 ? (
           <div className="flex justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-8 lg:gap-15 max-w-7xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-8 lg:gap-15 max-w-6xl mx-auto px-8">
             {featuredProducts.map((item, index) => {
               const { product, categoryName, categorySlug } = item
               const isAdding = addingToCart === product.id
               const isInCart = addedToCart.has(product.id) || CartManager.isProductInCart(product.id)
               const hasDiscount = product.original_price && product.original_price > product.price_ugx
+              const isLeftAligned = index % 2 === 0
 
               return (
                 <motion.div
@@ -194,7 +195,7 @@ export default function FeaturedCollections() {
                     scale: 1.02,
                     transition: { duration: 0.3 }
                   }}
-                  className="group relative w-full sm:min-w-[280px] h-full flex flex-col"
+                  className={`group relative w-[280px] sm:w-full sm:min-w-[280px] h-full flex flex-col ${isLeftAligned ? 'justify-self-start sm:justify-self-stretch' : 'justify-self-end sm:justify-self-stretch'}`}
                 >
                   {/* Outer glass frame (same style as hero image containers) */}
                   <div className="hero-glass-frame relative w-full h-full flex flex-col flex-1 min-h-0 backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
@@ -220,7 +221,7 @@ export default function FeaturedCollections() {
                     </motion.div>
 
                     <Link href={`/products/${categorySlug}`}>
-                      <div className="relative h-56 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+                      <div className="relative h-40 sm:h-44 md:h-40 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
                         <motion.img
                           src={product.images[0] || '/assets/images/placeholder.jpg'}
                           alt={product.name}
@@ -263,22 +264,22 @@ export default function FeaturedCollections() {
                       </div>
                     </Link>
 
-                    <div className="p-3 flex-1 flex flex-col relative z-10">
+                    <div className="p-2 flex-1 flex flex-col relative z-10">
                       <Link href={`/products/${categorySlug}`}>
                         <motion.div
                           whileHover={{ x: 5 }}
                           transition={{ duration: 0.2 }}
-                          className="mb-1"
+                          className="mb-0.5 sm:mb-0.5"
                         >
                           <p className="text-neutral-700 dark:text-primary-200 text-xs font-medium mb-0.5 line-clamp-1 group-hover:text-neutral-800 dark:group-hover:text-primary-100 transition-colors">{product.brand}</p>
-                          <h3 className="text-sm sm:text-base font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-100 transition-colors leading-tight">
+                          <h3 className="text-sm sm:text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-100 transition-colors leading-tight">
                             {product.name}
                           </h3>
                           <p className="text-neutral-600 dark:text-primary-300 text-xs mb-0.5 line-clamp-1 group-hover:text-neutral-700 dark:group-hover:text-primary-200 transition-colors">{product.sku}</p>
                         </motion.div>
                       </Link>
 
-                      <div className="mb-1.5 mt-auto">
+                      <div className="mb-1 sm:mb-1 mt-auto">
                         <motion.div
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
@@ -286,7 +287,7 @@ export default function FeaturedCollections() {
                           transition={{ delay: index * 0.1 + 0.6 }}
                           className="flex items-baseline space-x-1 flex-wrap"
                         >
-                          <span className="text-base sm:text-lg font-bold text-neutral-800 dark:text-white dark:drop-shadow-sm group-hover:text-neutral-900 dark:group-hover:text-accent-50 transition-colors">
+                          <span className="text-base sm:text-sm font-bold text-neutral-800 dark:text-white dark:drop-shadow-sm group-hover:text-neutral-900 dark:group-hover:text-accent-50 transition-colors">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
                           {hasDiscount && (
@@ -302,7 +303,7 @@ export default function FeaturedCollections() {
                         disabled={isAdding || isInCart || product.stock_qty === 0}
                         whileHover={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 1.02 } : undefined}
                         whileTap={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 0.98 } : undefined}
-                        className={`btn btn-outline btn-hover-secondary-filled w-full text-xs font-semibold justify-center gap-2 mb-3 py-2 ${
+                        className={`btn btn-outline btn-hover-secondary-filled w-full text-xs font-semibold justify-center gap-2 mb-2 sm:mb-2 py-1.5 sm:py-1.5 ${
                           isInCart || product.stock_qty === 0 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
                         }`}
                       >
@@ -326,7 +327,7 @@ export default function FeaturedCollections() {
                       <motion.div className="flex justify-center">
                         <Link
                           href={`/products/${categorySlug}`}
-                          className="btn btn-outline btn-hover-secondary-filled group/view-collection mt-2 text-xs font-semibold gap-1 px-4 py-2"
+                          className="btn btn-outline btn-hover-secondary-filled group/view-collection mt-1.5 sm:mt-1.5 text-xs font-semibold gap-1 px-3 sm:px-3 py-1.5 sm:py-1.5"
                         >
                           <span>View Collection</span>
                           <motion.span
