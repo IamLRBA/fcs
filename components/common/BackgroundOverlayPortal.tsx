@@ -50,6 +50,28 @@ export default function BackgroundOverlayPortal() {
           backgroundColor: 'var(--color-bg-page-overlay)',
         }}
       />
+      {/* Light mode only: dark corner glows on top of overlay */}
+      <div
+        aria-hidden
+        className="block dark:hidden"
+        style={{
+          ...fullBleedStyle,
+          zIndex: 2,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }}
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          className="absolute -top-48 -right-48 w-[32rem] h-[32rem] bg-gradient-to-br from-neutral-800/50 to-neutral-900/50 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+          className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-primary-800/30 to-primary-950/30 rounded-full blur-3xl"
+        />
+      </div>
       {/* Dark mode only: corner glows on top of overlay (same as home page) */}
       <div
         aria-hidden
