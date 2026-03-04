@@ -228,7 +228,9 @@ export default function FashionVideoSection() {
         <span className="text-primary-500">↻ ◁ |</span><span className="text-neutral-700 dark:text-primary-300">| ▷ ↺</span>
         </h2>
         
-        <div className="bg-gradient-to-br from-primary-50/80 to-primary-100/60 dark:from-white/10 dark:to-white/5 backdrop-blur-md rounded-3xl p-4 sm:p-6 md:p-8 border border-primary-200/40 dark:border-white/20 shadow-lg">
+        <div className="hero-glass-frame relative backdrop-blur-lg">
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+        <div className="bg-gradient-to-br from-primary-50/80 to-primary-100/60 dark:from-white/10 dark:to-white/5 backdrop-blur-md rounded-2xl p-4 sm:p-6 md:p-8 border border-primary-200/40 dark:border-white/20 shadow-lg">
           <div 
             ref={containerRef}
             className="relative aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden bg-black"
@@ -564,6 +566,7 @@ export default function FashionVideoSection() {
               ))}
             </Swiper>
           </div>
+        </div>
         </div>
       </motion.div>
 

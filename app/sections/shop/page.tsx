@@ -346,12 +346,15 @@ export default function ShopPage() {
             >
               <div className="flex flex-col items-center md:block">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">01</div>
-                <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
+                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <img 
                     src="/assets/images/sections/fashion/philosophy-1.jpg" 
                     alt="Mysticism" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
+                </div>
                 </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
@@ -373,12 +376,15 @@ export default function ShopPage() {
             >
               <div className="flex flex-col items-center md:block">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">02</div>
-                <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
+                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-400/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <img 
                     src="/assets/images/sections/fashion/philosophy-2.jpg" 
                     alt="Sustainability" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
+                </div>
                 </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
@@ -400,12 +406,15 @@ export default function ShopPage() {
             >
               <div className="flex flex-col items-center md:block">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">03</div>
-                <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
+                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-200/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <img 
                     src="/assets/images/sections/fashion/philosophy-3.jpg" 
                     alt="Self-Discovery" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
+                </div>
                 </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
@@ -437,6 +446,8 @@ export default function ShopPage() {
             <span className="text-neutral-700 dark:text-primary-300">Inspiration</span>
           </h2>
           
+          <div className="hero-glass-frame relative backdrop-blur-lg">
+            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
           <div className="glass-effect p-8 rounded-2xl">
             <div className="text-center mb-8">
               <h3 className="text-3xl font-bold mb-4 text-neutral-850 dark:text-primary-50">
@@ -519,6 +530,7 @@ export default function ShopPage() {
                 </p>
               </div>
             </div>
+          </div>
           </div>
         </motion.div>
       </section>
