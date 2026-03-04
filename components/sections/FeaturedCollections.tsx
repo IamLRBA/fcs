@@ -170,7 +170,7 @@ export default function FeaturedCollections() {
 
         {featuredProducts.length > 0 ? (
           <div className="flex justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-8 lg:gap-15 max-w-6xl mx-auto px-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-y-8 sm:gap-x-10 md:gap-8 lg:gap-15 max-w-6xl mx-auto px-8 sm:px-10 sm:justify-items-stretch">
             {featuredProducts.map((item, index) => {
               const { product, categoryName, categorySlug } = item
               const isAdding = addingToCart === product.id
@@ -195,7 +195,7 @@ export default function FeaturedCollections() {
                     scale: 1.02,
                     transition: { duration: 0.3 }
                   }}
-                  className={`group relative w-[280px] sm:w-full sm:min-w-[280px] h-full flex flex-col ${isLeftAligned ? 'justify-self-start sm:justify-self-stretch' : 'justify-self-end sm:justify-self-stretch'}`}
+                  className={`group relative w-[280px] sm:min-w-0 sm:w-full h-full flex flex-col ${isLeftAligned ? 'justify-self-start sm:justify-self-stretch' : 'justify-self-end sm:justify-self-stretch'}`}
                 >
                   {/* Outer glass frame (same style as hero image containers) */}
                   <div className="hero-glass-frame relative w-full h-full flex flex-col flex-1 min-h-0 backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
