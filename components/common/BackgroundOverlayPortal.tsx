@@ -36,21 +36,20 @@ export default function BackgroundOverlayPortal() {
     return null
   }
 
+  const overlayStyle: React.CSSProperties = {
+    ...fullBleedStyle,
+    zIndex: 1,
+    pointerEvents: 'none',
+    backgroundColor: 'var(--color-bg-page-overlay)',
+    display: 'block',
+  }
+
   return createPortal(
-    <>
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
       <div style={{ ...fullBleedStyle, zIndex: 0, overflow: 'hidden' }}>
         <BlurredImageBackground />
       </div>
-      <div
-        aria-hidden
-        style={{
-          ...fullBleedStyle,
-          zIndex: 1,
-          pointerEvents: 'none',
-          backgroundColor: 'var(--color-bg-page-overlay)',
-        }}
-      />
-      {/* Light mode only: dark corner glows on top of overlay */}
+      <span aria-hidden style={overlayStyle} />
       <div
         aria-hidden
         className="block dark:hidden"
@@ -72,7 +71,6 @@ export default function BackgroundOverlayPortal() {
           className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-primary-800/30 to-primary-950/30 rounded-full blur-3xl"
         />
       </div>
-      {/* Dark mode only: corner glows on top of overlay (same as home page) */}
       <div
         aria-hidden
         className="hidden dark:block"
@@ -94,7 +92,7 @@ export default function BackgroundOverlayPortal() {
           className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-primary-300/40 to-primary-500/40 rounded-full blur-3xl"
         />
       </div>
-    </>,
+    </div>,
     document.body
   )
 }
