@@ -81,7 +81,7 @@ export default function CartPage() {
         className="fixed top-20 left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/sections/shop" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="text-lg font-medium">⟸</span>
           <span className="text-sm font-medium">Continue Shopping</span>
         </Link>
@@ -243,7 +243,7 @@ export default function CartPage() {
 
                 <Link
                   href="/sections/shop"
-                  className="btn btn-primary btn-hover-secondary-filled w-full font-medium justify-center"
+                  className="focus-ring-none btn btn-primary btn-hover-secondary-filled w-full font-medium justify-center"
                 >
                   Continue Shopping
                 </Link>

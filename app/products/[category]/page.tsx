@@ -287,7 +287,7 @@ export default function ProductCategoryPage() {
         className="fixed top-20 left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop#our-products" className="group flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/sections/shop#our-products" className="focus-ring-none group flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
             ⟸
           </motion.span>
@@ -469,7 +469,7 @@ export default function ProductCategoryPage() {
                           )}
                         </div>
                         <div className="flex items-center space-x-2 mt-2 sm:mt-3">
-                          <button className="btn btn-outline btn-hover-secondary-filled flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
+                          <button className="focus-ring-none btn btn-outline btn-hover-secondary-filled flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
                             <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span className="hidden sm:inline">Quick View</span>
                             <span className="sm:hidden">View</span>

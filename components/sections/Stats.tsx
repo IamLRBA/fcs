@@ -183,7 +183,7 @@ export default function Stats() {
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">Oᑌᖇ <span className="text-accent-600 dark:text-accent-300">IᗰᑭᗩᑕT</span> Iᑎ ᑎᑌᗰᗷEᖇᔕ</h2>
           <p className="text-xl text-primary-600 dark:text-primary-300 max-w-3xl mx-auto leading-relaxed">Discover the impressive statistics that showcase our commitment to excellence, innovation, and client satisfaction across all our creative endeavors.</p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {statsData.map((stat, index) => (
             <StatCard key={index} stat={stat} index={index} />
           ))}

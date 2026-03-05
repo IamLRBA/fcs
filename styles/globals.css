@@ -722,6 +722,15 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Remove focus ring on links/buttons that should not show square outline when clicked */
+  .focus-ring-none,
+  .focus-ring-none:focus,
+  .focus-ring-none:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   .portal-card::before {
     /* stylelint-disable-next-line property-no-unknown */
     content: '';
@@ -1140,6 +1149,12 @@
     color: var(--color-neutral-850, #262424);
     border: var(--input-border-width) solid var(--color-input-border) !important;
     border-radius: 0.5rem;
+  }
+  /* Send us a message form – dark borders in light mode (match search input) */
+  :root .send-us-message-form .input-overlay,
+  :root .send-us-message-form input.input-overlay,
+  :root .send-us-message-form textarea.input-overlay {
+    border-color: #8a8a8a !important;
   }
   .input-overlay::placeholder,
   input.input-overlay::placeholder,

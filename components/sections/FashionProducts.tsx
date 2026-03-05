@@ -153,11 +153,11 @@ export default function FashionProducts() {
             return (
               <motion.div key={s.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className={`flex flex-col ${isRight ? 'items-end' : 'items-start'}`}>
                 <div className={`flex flex-col space-y-6 ${isRight ? 'items-end' : 'items-start'}`}>
-                  <Link href={`/products/${s.slug}`} className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'} group cursor-pointer`}>
+                  <Link href={`/products/${s.slug}`} className={`focus-ring-none flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'} group cursor-pointer`}>
                     <div className="text-6xl font-bold text-neutral-700 dark:text-primary-400">{s.number}</div>
                     <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300">{s.title}</h3>
                   </Link>
-                  <Link href={`/products/${s.slug}`} className={`block w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[352px] md:h-[352px] aspect-square flex-shrink-0 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:scale-[1.02] transition-all duration-300`}>
+                  <Link href={`/products/${s.slug}`} className={`focus-ring-none block w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[352px] md:h-[352px] aspect-square flex-shrink-0 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:scale-[1.02] transition-all duration-300`}>
                     <div className="hero-glass-frame relative w-full h-full backdrop-blur-lg">
                       <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                     <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl w-full h-full flex items-center justify-center p-6">
@@ -169,7 +169,7 @@ export default function FashionProducts() {
                   </Link>
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
                     <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mt-2 max-w-md">{s.description}</p>
-                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
+                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="focus-ring-none btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
                       <span>{expandedId === s.id ? 'Minimize Categories' : 'Select Categories'}</span>
                       <AnimatePresence mode="wait">{expandedId === s.id ? <motion.div key="m" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}><Minus size={20} /></motion.div> : <motion.div key="p" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}><Plus size={20} /></motion.div>}</AnimatePresence>
                     </motion.button>
@@ -178,6 +178,7 @@ export default function FashionProducts() {
                 <AnimatePresence>
                   {expandedId === s.id && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
+                      <div className="dark" role="presentation">
                       <div className="bg-primary-800/30 dark:bg-primary-900/40 rounded-xl p-3 sm:p-6 border border-primary-500/20 dark:border-primary-400/30">
                         {/* Thumbnail Images */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4 justify-items-center">
@@ -189,11 +190,11 @@ export default function FashionProducts() {
                               <Link 
                                 key={thumbIndex}
                                 href={`/products/${s.slug}#${subcategory.slug}`}
-                                className="relative group"
+                                className="focus-ring-none relative group"
                                 onMouseEnter={() => setHoveredThumbnail({ serviceId: s.id, thumbIndex })}
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
-                                <div className="bg-primary-900/20 rounded-lg h-24 w-24 sm:h-40 sm:w-40 md:h-48 md:w-48 flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
+                                <div className="bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
                             <img 
                               src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
                               alt={`${subcategory.name} - ${s.title}`}
@@ -241,22 +242,23 @@ export default function FashionProducts() {
                             )
                           })}
                         </div>
+                      </div>
+                      </div>
                         
-                        {/* Quote Section */}
-                        <div className="mt-2 pt-4 border-t border-primary-500/20">
+                        {/* Quote Section - outside dark wrapper so light mode uses text-neutral-500 */}
+                        <div className="mt-2 pt-2 pb-2 px-3 sm:pt-4 sm:px-6 sm:pb-6 border-t border-primary-500/20 bg-primary-800/30 dark:bg-primary-900/40 rounded-b-xl border-x border-b border-primary-500/20 dark:border-primary-400/30">
                           <blockquote className="text-center max-w-full sm:max-w-md md:max-w-lg mx-auto">
-                            <Quote className="w-8 h-8 mx-auto mb-4 text-primary-400/50" />
-                            <p className="text-neutral-700 dark:text-primary-400 italic text-lg md:text-xl mb-3">
+                            <Quote className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 sm:mb-4 text-primary-700 dark:text-primary-400/50" />
+                            <p className="text-primary-700 dark:text-primary-400 italic text-sm sm:text-lg md:text-xl mb-2 sm:mb-3">
                               {s.quote.text}
                             </p>
                             <span 
-                              className="text-neutral-700 dark:text-primary-300 text-sm font-medium inline-block"
+                              className="text-primary-700 dark:text-primary-300 text-xs sm:text-sm font-medium inline-block"
                             >
                               — {s.quote.author}
                             </span>
                           </blockquote>
                         </div>
-                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

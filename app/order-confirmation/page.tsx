@@ -154,7 +154,7 @@ export default function OrderConfirmationPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Not Found</h1>
           <p className="text-primary-300 dark:text-primary-400 mb-8">We couldn't find an order with that ID.</p>
-          <Link href="/products/shirts" className="btn btn-primary">
+          <Link href="/products/shirts" className="focus-ring-none btn btn-primary">
             Continue Shopping
           </Link>
         </div>
@@ -385,16 +385,16 @@ export default function OrderConfirmationPage() {
           <button
             onClick={handleDownloadReceipt}
             disabled={isDownloading}
-            className="btn btn-outline inline-flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="focus-ring-none btn btn-outline inline-flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-5 h-5" />
             <span>{isDownloading ? 'Downloading...' : 'Download Receipt'}</span>
           </button>
-          <Link href="/products/shirts" className="btn btn-primary inline-flex items-center justify-center space-x-2">
+          <Link href="/products/shirts" className="focus-ring-none btn btn-primary inline-flex items-center justify-center space-x-2">
             <Package className="w-5 h-5" />
             <span>Continue Shopping</span>
           </Link>
-          <Link href="/" className="btn btn-secondary btn-hover-primary-filled inline-flex items-center justify-center space-x-2">
+          <Link href="/" className="focus-ring-none btn btn-secondary btn-hover-primary-filled inline-flex items-center justify-center space-x-2">
             <Home className="w-5 h-5" />
             <span>Go Home</span>
           </Link>

@@ -28,10 +28,10 @@ export default function AnimatedImageBanner() {
           transition={{ duration: 0.8 }}
           className="relative max-w-7xl mx-auto flex justify-center"
         >
-          {/* Outer frame - glassy container (values from variables.css + globals.css) */}
-          <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg flex items-center justify-center">
+          {/* Outer frame - glassy container; size sets the "length", padding gives equal gap */}
+          <div className="hero-glass-frame relative w-[calc(80vw+3rem)] max-w-[380px] h-[308px] sm:w-[calc(85vw+3rem)] sm:max-w-[560px] sm:h-[428px] md:w-[900px] md:h-[380px] lg:w-[1100px] lg:h-[460px] mx-auto md:flex-shrink-0 backdrop-blur-lg flex items-center justify-center">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-            {/* Main image container - slightly reduced size, original background */}
+            {/* Brown container - fills glass with equal inset (1.5rem = padding) */}
             <motion.div
               animate={{
                 rotateY: [0, 5, -5, 5, 0],
@@ -45,7 +45,7 @@ export default function AnimatedImageBanner() {
               style={{
                 transform: `perspective(1000px) rotateY(${mousePosition.x}deg) rotateX(${mousePosition.y}deg)`
               }}
-              className="relative z-10 flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-2"
+              className="absolute inset-6 z-10 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl"
             >
             {/* Gradient overlay */}
             <motion.div
@@ -64,7 +64,7 @@ export default function AnimatedImageBanner() {
               className="absolute inset-0 z-10 pointer-events-none"
             />
 
-            {/* Image - matching missions/visions ratio */}
+            {/* Image wrapper - fills brown with equal inset (0.5rem) so equal gap to glass on all sides */}
             <motion.div
               animate={{
                 scale: [0.95, 1, 0.95],
@@ -75,12 +75,18 @@ export default function AnimatedImageBanner() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="relative w-[260px] h-[260px] sm:w-[320px] sm:h-[320px] md:w-[700px] md:h-[328px] lg:w-[860px] lg:h-[412px]"
+              className="absolute inset-2 min-w-0 min-h-0 overflow-hidden rounded-lg"
             >
               <img
                 src="/assets/images/sections/home/hero-banner.jpg"
                 alt="Creative Banner"
-                className="w-full h-full object-cover rounded-xl"
+                className="absolute inset-0 rounded-xl block"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                }}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
                   target.src = '/assets/images/placeholder.jpg'

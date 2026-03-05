@@ -54,7 +54,7 @@ export default function Contact() {
           <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">Any questions about our fashion collection? Need styling advice? Contact us and we're here to help you find answers.</p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {contactInfo.map((info, index) => {
             const Icon = info.icon as any
             return (
@@ -80,7 +80,7 @@ export default function Contact() {
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
           <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl p-8 shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
             <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8 text-center">ᔕEᑎᗪ ᑌᔕ ᗩ ᗰEᔕᔕᗩGE</h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="send-us-message-form space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">First Name *</label>
