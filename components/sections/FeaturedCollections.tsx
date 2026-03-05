@@ -220,7 +220,7 @@ export default function FeaturedCollections() {
                       </motion.span>
                     </motion.div>
 
-                    <Link href={`/products/${categorySlug}`}>
+                    <Link href={`/products/${categorySlug}`} className="focus-ring-none">
                       <div className="relative h-40 sm:h-44 md:h-40 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
                         <motion.img
                           src={product.images[0] || '/assets/images/placeholder.jpg'}
@@ -265,7 +265,7 @@ export default function FeaturedCollections() {
                     </Link>
 
                     <div className="p-2 flex-1 flex flex-col relative z-10">
-                      <Link href={`/products/${categorySlug}`}>
+                      <Link href={`/products/${categorySlug}`} className="focus-ring-none">
                         <motion.div
                           whileHover={{ x: 5 }}
                           transition={{ duration: 0.2 }}
@@ -303,7 +303,7 @@ export default function FeaturedCollections() {
                         disabled={isAdding || isInCart || product.stock_qty === 0}
                         whileHover={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 1.02 } : undefined}
                         whileTap={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 0.98 } : undefined}
-                        className={`btn btn-outline btn-hover-secondary-filled w-full text-xs font-semibold justify-center gap-2 mb-2 sm:mb-2 py-1.5 sm:py-1.5 ${
+                        className={`focus-ring-none btn btn-outline btn-hover-secondary-filled w-full text-xs font-semibold justify-center gap-2 mb-2 sm:mb-2 py-1.5 sm:py-1.5 ${
                           isInCart || product.stock_qty === 0 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
                         }`}
                       >
@@ -327,7 +327,7 @@ export default function FeaturedCollections() {
                       <motion.div className="flex justify-center">
                         <Link
                           href={`/products/${categorySlug}`}
-                          className="btn btn-outline btn-hover-secondary-filled group/view-collection mt-1.5 sm:mt-1.5 text-xs font-semibold gap-1 px-3 sm:px-3 py-1.5 sm:py-1.5"
+                          className="focus-ring-none btn btn-outline btn-hover-secondary-filled group/view-collection mt-1.5 sm:mt-1.5 text-xs font-semibold gap-1 px-3 sm:px-3 py-1.5 sm:py-1.5"
                         >
                           <span>View Collection</span>
                           <motion.span

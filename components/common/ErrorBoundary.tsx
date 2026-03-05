@@ -93,7 +93,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <RefreshCw className="w-4 h-4" />
                 Try Again
               </button>
-              <Link href="/" className="btn btn-secondary">
+              <Link href="/" className="focus-ring-none btn btn-secondary">
                 Go Home
               </Link>
             </div>

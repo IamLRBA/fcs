@@ -154,7 +154,7 @@ export default function CheckoutPage() {
         className="fixed top-20 left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/products/shirts" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="text-lg font-medium">⟸</span>
           <span className="text-sm font-medium">Back to Shopping</span>
         </Link>

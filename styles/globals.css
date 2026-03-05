@@ -722,6 +722,15 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Remove focus ring on links/buttons that should not show square outline when clicked */
+  .focus-ring-none,
+  .focus-ring-none:focus,
+  .focus-ring-none:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   .portal-card::before {
     /* stylelint-disable-next-line property-no-unknown */
     content: '';

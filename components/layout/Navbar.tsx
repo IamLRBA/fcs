@@ -295,7 +295,7 @@ export default function Navbar() {
                           const active = isActive(item.href)
                           const Icon = active ? item.solidIcon : item.outlineIcon
                           return (
-                            <Link key={item.name} href={item.href} className={`flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 dark:hover:bg-neutral-700/50 transition-all duration-200 ${active ? 'text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-neutral-700/30' : 'text-neutral-600 dark:text-neutral-300'}`}>
+                            <Link key={item.name} href={item.href} className={`focus-ring-none flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 dark:hover:bg-neutral-700/50 transition-all duration-200 ${active ? 'text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-neutral-700/30' : 'text-neutral-600 dark:text-neutral-300'}`}>
                               <Icon className="w-4 h-4 transition-colors" />
                               <span className="font-light">{item.name}</span>
                             </Link>
@@ -326,14 +326,14 @@ export default function Navbar() {
             {/* Right side - Search, Cart, Settings */}
             <div className="hidden lg:flex items-center space-x-8">
               <div className="relative ml-10" ref={searchRef}>
-                <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
+                <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="focus-ring-none p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
                   <HiSearch className="w-5 h-5" />
                 </button>
                 {isSearchOpen && (
                   <form onSubmit={handleSearchSubmit} className="navbar-search-form inline-flex items-center">
                     <div className="search-input-wrapper w-40">
                       {isSearchOpen && (
-                        <button type="button" onClick={clearSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors duration-200">
+                        <button type="button" onClick={clearSearch} className="focus-ring-none absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors duration-200">
                           <HiX className="w-4 h-4" />
                         </button>
                       )}
@@ -505,7 +505,7 @@ export default function Navbar() {
                                 key={item.name}
                                 href={item.href}
                                 onClick={closeMenu}
-                                className={`group flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
+                                className={`focus-ring-none group flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
                                   active
                                     ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'
                                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/50'
@@ -549,7 +549,7 @@ export default function Navbar() {
                         <button
                           type="button"
                           onClick={clearSearch}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+                          className="focus-ring-none absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
                           aria-label="Clear search"
                         >
                           <HiX className="w-4 h-4" />
