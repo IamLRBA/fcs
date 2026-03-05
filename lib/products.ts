@@ -15,6 +15,11 @@ export interface Product {
   condition: string
   sku: string
   stock_qty: number
+  /**
+   * When false, the product is hidden from public listings but remains in the catalog for admins.
+   * When undefined, it is treated as active (visible).
+   */
+  isActive?: boolean
 }
 
 export interface BoughtProduct {
@@ -47,20 +52,24 @@ export class ProductManager {
   static addProduct(product: Product): boolean {
     try {
       const productsData = this.getProducts()
+      const productToSave: Product = {
+        ...product,
+        isActive: product.isActive ?? true
+      }
       
-      if (!productsData.products[product.category]) {
-        productsData.products[product.category] = {
-          title: product.category.charAt(0).toUpperCase() + product.category.slice(1),
+      if (!productsData.products[productToSave.category]) {
+        productsData.products[productToSave.category] = {
+          title: productToSave.category.charAt(0).toUpperCase() + productToSave.category.slice(1),
           description: '',
           subcategories: {}
         }
       }
       
-      if (!productsData.products[product.category].subcategories[product.section]) {
-        productsData.products[product.category].subcategories[product.section] = []
+      if (!productsData.products[productToSave.category].subcategories[productToSave.section]) {
+        productsData.products[productToSave.category].subcategories[productToSave.section] = []
       }
       
-      productsData.products[product.category].subcategories[product.section].push(product)
+      productsData.products[productToSave.category].subcategories[productToSave.section].push(productToSave)
       this.saveProducts(productsData)
       return true
     } catch (error) {
@@ -123,6 +132,38 @@ export class ProductManager {
     })
     
     return allProducts
+  }
+
+  /**
+   * Update an existing product in its current category/section.
+   * Returns true if the product was found and updated.
+   */
+  static updateProduct(updatedProduct: Product): boolean {
+    try {
+      const productsData = this.getProducts()
+      const categoryData = productsData.products[updatedProduct.category]
+      if (!categoryData || !categoryData.subcategories?.[updatedProduct.section]) {
+        return false
+      }
+
+      const list: Product[] = categoryData.subcategories[updatedProduct.section]
+      const index = list.findIndex((p: Product) => p.id === updatedProduct.id)
+      if (index === -1) return false
+
+      // Preserve active flag defaulting to true when omitted
+      const nextProduct: Product = {
+        ...list[index],
+        ...updatedProduct,
+        isActive: updatedProduct.isActive ?? list[index].isActive ?? true
+      }
+
+      list[index] = nextProduct
+      this.saveProducts(productsData)
+      return true
+    } catch (error) {
+      console.error('Error updating product:', error)
+      return false
+    }
   }
 }
 

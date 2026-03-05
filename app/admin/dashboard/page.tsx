@@ -4,47 +4,18 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Plus, Trash2, Package, DollarSign, ShoppingCart, Users, BarChart3, LogOut, X, Image as ImageIcon, Maximize2, Minimize2 } from 'lucide-react'
+import { Package, DollarSign, ShoppingCart, BarChart3, LogOut } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
-import { ProductManager, type Product, type BoughtProduct } from '@/lib/products'
+import { ProductManager, type Product } from '@/lib/products'
 import { OrderManager, type Order } from '@/lib/cart'
 
 const categories = ['shirts', 'tees', 'coats', 'pants-and-shorts', 'footwear', 'accessories']
-const subcategoriesMap: Record<string, string[]> = {
-  'shirts': ['gentle', 'checked', 'textured', 'denim'],
-  'tees': ['plain', 'graphic', 'collared', 'sporty'],
-  'coats': ['sweater', 'hoodie', 'coat', 'jacket'],
-  'pants-and-shorts': ['gentle', 'denim', 'cargo', 'sporty'],
-  'footwear': ['gentle', 'sneakers', 'sandals', 'boots'],
-  'accessories': ['rings-necklaces', 'shades-glasses', 'bracelets-watches', 'decor']
-}
-
-const conditions = ['Like New', 'Good', 'Fair', 'Worn']
 
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const [orders, setOrders] = useState<Order[]>([])
-  const [showAddForm, setShowAddForm] = useState(false)
-  const [showRemoveForm, setShowRemoveForm] = useState(false)
-  const [selectedRemoveProduct, setSelectedRemoveProduct] = useState<Product | null>(null)
-  const [removeReason, setRemoveReason] = useState<'Product Bought' | 'Mistakenly Posted' | ''>('')
-  const [productImages, setProductImages] = useState<string[]>([]) // Base64 images
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    brand: '',
-    category: 'shirts',
-    section: 'gentle',
-    price_ugx: '',
-    original_price: '',
-    sizes: [] as string[],
-    colors: [] as string[],
-    images: [] as string[],
-    description: '',
-    condition: 'Like New',
-    sku: '',
-    stock_qty: ''
-  })
+  const [showBackButton, setShowBackButton] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -84,81 +55,9 @@ export default function AdminDashboard() {
     })
   }
 
-  const removeImage = (index: number) => {
-    setProductImages(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const handleAddProduct = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (productImages.length === 0) {
-      alert('Please add at least one product image')
-      return
-    }
-
-    const product: Product = {
-      id: `${newProduct.category}-${newProduct.section}-${Date.now()}`,
-      name: newProduct.name,
-      brand: newProduct.brand,
-      category: newProduct.category,
-      section: newProduct.section,
-      price_ugx: parseInt(newProduct.price_ugx),
-      original_price: newProduct.original_price ? parseInt(newProduct.original_price) : undefined,
-      sizes: newProduct.sizes,
-      colors: newProduct.colors,
-      images: productImages, // Use uploaded images (first image is main display)
-      description: newProduct.description,
-      condition: newProduct.condition,
-      sku: newProduct.sku || `${newProduct.category.substring(0, 3).toUpperCase()}-${newProduct.section.substring(0, 3).toUpperCase()}-${Date.now().toString().slice(-3)}`,
-      stock_qty: parseInt(newProduct.stock_qty) || 1
-    }
-
-    if (ProductManager.addProduct(product)) {
-      alert('Product added successfully!')
-      setShowAddForm(false)
-      setProductImages([])
-      setNewProduct({
-        name: '',
-        brand: '',
-        category: 'shirts',
-        section: 'gentle',
-        price_ugx: '',
-        original_price: '',
-        sizes: [],
-        colors: [],
-        images: [],
-        description: '',
-        condition: 'Like New',
-        sku: '',
-        stock_qty: ''
-      })
-      loadData()
-    } else {
-      alert('Error adding product')
-    }
-  }
-
-  const handleDeleteProduct = (productId: string, category: string, section: string, reason: 'Product Bought' | 'Mistakenly Posted') => {
-    if (confirm(`Are you sure you want to remove this product? Reason: ${reason}`)) {
-      if (ProductManager.deleteProduct(productId, category, section, reason)) {
-        alert(`Product removed successfully!${reason === 'Product Bought' ? ' It has been added to bought products.' : ''}`)
-        setShowRemoveForm(false)
-        setSelectedRemoveProduct(null)
-        setRemoveReason('')
-        loadData()
-      } else {
-        alert('Error removing product')
-      }
-    }
-  }
-
   const handleLogout = () => {
     AuthManager.adminLogout()
     router.push('/')
-  }
-
-  if (!isAdmin) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
   const boughtProducts = ProductManager.getBoughtProducts()
@@ -170,9 +69,7 @@ export default function AdminDashboard() {
     boughtProducts: boughtProducts.length
   }
 
-  const [showBackButton, setShowBackButton] = useState(true)
-
-  // Show/hide back button based on scroll position
+  // Show/hide back button based on scroll position (run for all renders to keep hook order stable)
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop
@@ -187,390 +84,209 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">
-      <div className="container-custom mt-12">
-        <div className="flex items-center justify-between mb-8">
-          <motion.div
-            animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
-            transition={{ duration: 0.3 }}
-            className="pointer-events-none"
-            style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
-          >
-            <Link href="/" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-              <span className="text-base font-medium">⟸</span>
-              <span className="text-sm font-medium">Back to Home</span>
-            </Link>
-          </motion.div>
-          <button onClick={handleLogout} className="flex items-center space-x-2 text-red-600 hover:text-red-700">
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </button>
+      {!isAdmin ? (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-neutral-800 dark:text-neutral-100">Loading...</div>
         </div>
+      ) : (
+        <div className="container-custom mt-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8">
+            <motion.div
+              animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+              transition={{ duration: 0.3 }}
+              className="pointer-events-none"
+              style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
+            >
+              <Link href="/" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+                <span className="text-base font-medium">⟸</span>
+                <span className="text-sm font-medium">Back to Home</span>
+              </Link>
+            </motion.div>
+          </div>
 
-        <h1 className="text-4xl font-bold text-primary-800 dark:text-primary-100 mb-8">Admin Dashboard</h1>
+          {/* Main container - semi-transparent like account page */}
+          <div className="hero-glass-frame relative backdrop-blur-lg w-full rounded-2xl">
+            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+            <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-800 dark:text-primary-100 mb-6 sm:mb-8 text-center">Admin Dashboard</h1>
 
-        {/* Stats */}
-        <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl mb-8 max-w-6xl mx-auto">
-          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 p-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white/95 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Products</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalProducts}</p>
+              {/* Stats - section with darker shades in light mode */}
+              <div className="hero-glass-frame relative backdrop-blur-lg rounded-xl sm:rounded-2xl mb-6 sm:mb-8">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 p-3 sm:p-4">
+                  <h2 className="text-lg sm:text-xl font-bold text-primary-800 dark:text-primary-100 mb-4 text-center">Overview</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 justify-items-center sm:justify-items-stretch">
+              {/* Total Products */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Total Products</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalProducts}</p>
+                    </div>
+                    <Package className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <Package className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-neutral-50 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalOrders}</p>
+              </motion.div>
+
+              {/* Total Orders */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-300/50 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalOrders}</p>
+                    </div>
+                    <ShoppingCart className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <ShoppingCart className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-neutral-100 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">UGX {stats.totalRevenue.toLocaleString()}</p>
+              </motion.div>
+
+              {/* Total Revenue */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-200/70 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</p>
+                      <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary-800 dark:text-primary-200">
+                        UGX {stats.totalRevenue.toLocaleString()}
+                      </p>
+                    </div>
+                    <DollarSign className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <DollarSign className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-neutral-200/80 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Sold</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalItemsSold}</p>
+              </motion.div>
+
+              {/* Items Sold */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-300/50 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Items Sold</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalItemsSold}</p>
+                    </div>
+                    <BarChart3 className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <BarChart3 className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
 
-        {/* Add Product Button */}
-        <div className="mb-6 max-w-6xl mx-auto">
-          <button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="btn btn-outline btn-hover-secondary-filled flex items-center space-x-2"
+        {/* Products - single CTA to products list page */}
+        <div className="mb-6 sm:mb-8 flex justify-center">
+          <Link
+            href="/admin/products"
+            className="focus-ring-none btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2"
           >
-            <Plus className="w-5 h-5" />
-            <span>{showAddForm ? 'Cancel' : 'Add New Product'}</span>
-          </button>
+            <Package className="w-5 h-5" />
+            <span>Products</span>
+          </Link>
         </div>
 
-        {/* Add Product Form */}
-        {showAddForm && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 max-w-6xl mx-auto"
-          >
-            <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Add New Product</h2>
-                <form onSubmit={handleAddProduct} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Product Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Brand *</label>
-                  <input
-                    type="text"
-                    required
-                    value={newProduct.brand}
-                    onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Category *</label>
-                  <select
-                    required
-                    value={newProduct.category}
-                    onChange={(e) => {
-                      setNewProduct({ ...newProduct, category: e.target.value, section: subcategoriesMap[e.target.value]?.[0] || '' })
-                    }}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  >
-                    {categories.map(cat => (
-                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Subcategory *</label>
-                  <select
-                    required
-                    value={newProduct.section}
-                    onChange={(e) => setNewProduct({ ...newProduct, section: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  >
-                    {subcategoriesMap[newProduct.category]?.map(sub => (
-                      <option key={sub} value={sub}>{sub.charAt(0).toUpperCase() + sub.slice(1)}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Price (UGX) *</label>
-                  <input
-                    type="number"
-                    required
-                    value={newProduct.price_ugx}
-                    onChange={(e) => setNewProduct({ ...newProduct, price_ugx: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Original Price (UGX)</label>
-                  <input
-                    type="number"
-                    value={newProduct.original_price}
-                    onChange={(e) => setNewProduct({ ...newProduct, original_price: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Sizes (comma-separated) *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="S, M, L, XL"
-                    value={newProduct.sizes.join(', ')}
-                    onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Colors (comma-separated) *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Red, Blue, Black"
-                    value={newProduct.colors.join(', ')}
-                    onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value.split(',').map(c => c.trim()).filter(c => c) })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Condition *</label>
-                  <select
-                    required
-                    value={newProduct.condition}
-                    onChange={(e) => setNewProduct({ ...newProduct, condition: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  >
-                    {conditions.map(cond => (
-                      <option key={cond} value={cond}>{cond}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Stock Quantity *</label>
-                  <input
-                    type="number"
-                    required
-                    value={newProduct.stock_qty}
-                    onChange={(e) => setNewProduct({ ...newProduct, stock_qty: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">SKU</label>
-                  <input
-                    type="text"
-                    value={newProduct.sku}
-                    onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
-                    placeholder="Auto-generated if empty"
-                    className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                  />
-                </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Product Images *</label>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">First image will be the main display image. Others will appear as thumbnails in the product modal.</p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageUpload}
-                      className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white mb-3"
-                    />
-                    {productImages.length > 0 && (
-                      <div className="grid grid-cols-4 gap-4 mt-4">
-                        {productImages.map((img, index) => (
-                          <div key={index} className="relative group">
-                            <img src={img} alt={`Product image ${index + 1}`} className="w-full h-32 object-cover rounded-lg border-2 border-primary-500" />
-                            {index === 0 && (
-                              <span className="absolute top-1 left-1 px-2 py-1 bg-primary-600 text-white text-xs rounded">Main</span>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => removeImage(index)}
-                              className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              {/* Analytics - charts */}
+              <div className="hero-glass-frame relative backdrop-blur-lg rounded-xl sm:rounded-2xl mb-6 sm:mb-8">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 p-4 sm:p-6">
+                  <h2 className="text-lg sm:text-xl font-bold text-primary-800 dark:text-primary-100 mb-4 text-center">Analytics</h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl p-4">
+                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                      <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800/80 rounded-xl p-4 border border-neutral-300/80 dark:border-neutral-700">
+                        <h3 className="text-sm font-semibold text-primary-800 dark:text-primary-200 mb-4 text-center">Products by category</h3>
+                        <div className="space-y-3">
+                          {categories.map((cat, i) => {
+                            const count = products.filter(p => p.category === cat).length
+                            const maxCount = Math.max(1, ...categories.map(c => products.filter(p => p.category === c).length))
+                            const pct = (count / maxCount) * 100
+                            return (
+                              <div key={cat} className="flex items-center gap-3">
+                                <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300 w-24 truncate capitalize">{cat.replace(/-/g, ' ')}</span>
+                                <div className="flex-1 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${pct}%` }}
+                                    transition={{ duration: 0.8, delay: i * 0.05 }}
+                                    className="h-full rounded-full bg-gradient-to-r from-primary-500 to-primary-600 dark:from-primary-500 dark:to-primary-400"
+                                  />
+                                </div>
+                                <span className="text-sm font-medium text-primary-800 dark:text-primary-200 w-8 text-right">{count}</span>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl p-4">
+                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                      <div className="relative z-10 bg-neutral-300/50 dark:bg-neutral-800/80 rounded-xl p-4 border border-neutral-300/80 dark:border-neutral-700">
+                        <h3 className="text-sm font-semibold text-primary-800 dark:text-primary-200 mb-4 text-center">Revenue & orders</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-1">Total revenue</p>
+                            <motion.div
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.5 }}
+                              className="text-2xl font-bold text-primary-700 dark:text-primary-300"
                             >
-                              <X className="w-3 h-3" />
-                            </button>
+                              UGX {stats.totalRevenue.toLocaleString()}
+                            </motion.div>
                           </div>
-                        ))}
+                          <div className="h-2 rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: orders.length > 0 ? `${Math.min(100, (stats.totalOrders / 20) * 100)}%` : '0%' }}
+                              transition={{ duration: 1, ease: 'easeOut' }}
+                              className="h-full rounded-full bg-gradient-to-r from-primary-600 to-accent-500 dark:from-primary-500 dark:to-accent-400"
+                            />
+                          </div>
+                          <p className="text-xs text-neutral-600 dark:text-neutral-400">Orders: {stats.totalOrders}</p>
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Description *</label>
-                    <textarea
-                      required
-                      rows={4}
-                      value={newProduct.description}
-                      onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                    />
-                  </div>
-                  <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
-                    Add Product
-                  </button>
-                </form>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Remove Product Section */}
-        <div className="mb-6 max-w-6xl mx-auto">
-          <button
-            onClick={() => setShowRemoveForm(!showRemoveForm)}
-            className="btn btn-danger flex items-center space-x-2"
-          >
-            <Trash2 className="w-5 h-5" />
-            <span>{showRemoveForm ? 'Cancel' : 'Remove Product'}</span>
-          </button>
-        </div>
-
-        {showRemoveForm && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 max-w-6xl mx-auto"
-          >
-            <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Remove Product</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Select Product *</label>
-                    <select
-                      value={selectedRemoveProduct?.id || ''}
-                      onChange={(e) => {
-                        const product = products.find(p => p.id === e.target.value)
-                        setSelectedRemoveProduct(product || null)
-                      }}
-                      className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                    >
-                      <option value="">Select a product...</option>
-                      {products.map(product => (
-                        <option key={product.id} value={product.id}>
-                          {product.name} - {product.category} / {product.section} - UGX {product.price_ugx.toLocaleString()}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  {selectedRemoveProduct && (
-                    <>
-                      <div className="p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
-                        <p className="font-medium">{selectedRemoveProduct.name}</p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">{selectedRemoveProduct.brand} • {selectedRemoveProduct.category} / {selectedRemoveProduct.section}</p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Price: UGX {selectedRemoveProduct.price_ugx.toLocaleString()}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Reason for Removal *</label>
-                        <select
-                          value={removeReason}
-                          onChange={(e) => setRemoveReason(e.target.value as 'Product Bought' | 'Mistakenly Posted')}
-                          className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
-                        >
-                          <option value="">Select reason...</option>
-                          <option value="Product Bought">Product Bought</option>
-                          <option value="Mistakenly Posted">Mistakenly Posted</option>
-                        </select>
-                      </div>
-                      {removeReason && (
-                        <button
-                          onClick={() => handleDeleteProduct(selectedRemoveProduct.id, selectedRemoveProduct.category, selectedRemoveProduct.section, removeReason)}
-                          className="btn btn-danger w-full"
-                        >
-                          Remove Product
-                        </button>
-                      )}
-                    </>
-                  )}
                 </div>
               </div>
-            </div>
-          </motion.div>
-        )}
 
-        {/* Products List */}
-        <div className="max-w-6xl mx-auto">
-          <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
-            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-            <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">All Products ({products.length})</h2>
-              {products.length === 0 ? (
-                <p className="text-neutral-600 dark:text-neutral-400">No products yet. Add your first product!</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-4">Name</th>
-                        <th className="text-left p-4">Category</th>
-                        <th className="text-left p-4">Price</th>
-                        <th className="text-left p-4">Stock</th>
-                        <th className="text-left p-4">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {products.map((product) => (
-                        <tr key={product.id} className="border-b">
-                          <td className="p-4">{product.name}</td>
-                          <td className="p-4">{product.category} / {product.section}</td>
-                          <td className="p-4">UGX {product.price_ugx.toLocaleString()}</td>
-                          <td className="p-4">{product.stock_qty}</td>
-                          <td className="p-4">
-                            <button
-                              onClick={() => {
-                                setSelectedRemoveProduct(product)
-                                setRemoveReason('')
-                                setShowRemoveForm(true)
-                              }}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-5 h-5" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+              {/* Logout at bottom */}
+              <div className="flex justify-center pt-4 pb-2">
+                <button
+                  onClick={handleLogout}
+                  className="focus-ring-none flex items-center gap-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+
           </div>
         </div>
       </div>
+      )}
     </div>
   )
 }

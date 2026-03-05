@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, Lock, User, Phone, Eye, EyeOff, Image as ImageIcon, Camera } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
+import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -147,13 +148,13 @@ export default function LoginPage() {
           className="hero-glass-frame relative backdrop-blur-lg rounded-2xl"
         >
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-          <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-8 border border-neutral-200 dark:border-neutral-700">
+          <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-8 border border-neutral-200 dark:border-neutral-700 login-form">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">
               {isLogin ? 'Welcome Back' : 'Create Account'}
             </h1>
             <p className="text-primary-600 dark:text-primary-300">
-              {isLogin ? 'Sign in to your account' : 'Join FusionCRAFT STUDIOS'}
+              {isLogin ? 'Sign in to your account' : <>Join <MysticalPiecesWord /></>}
             </p>
           </div>
 
@@ -209,7 +210,7 @@ export default function LoginPage() {
                       required
                       value={loginData.email}
                       onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                      className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -226,7 +227,7 @@ export default function LoginPage() {
                       required
                       value={loginData.password}
                       onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                      className="w-full pl-10 pr-12 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                      className="input-overlay w-full pl-10 pr-12 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="Enter your password"
                     />
                     <button
@@ -279,7 +280,7 @@ export default function LoginPage() {
                       required
                       value={signupData.fullName}
                       onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                      className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="John Doe"
                     />
                   </div>
@@ -296,7 +297,7 @@ export default function LoginPage() {
                       required
                       value={signupData.email}
                       onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                      className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -313,7 +314,7 @@ export default function LoginPage() {
                       required
                       value={signupData.phone}
                       onChange={(e) => setSignupData({ ...signupData, phone: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                      className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="+256 755 915 549"
                     />
                   </div>
@@ -377,7 +378,7 @@ export default function LoginPage() {
                       required
                       value={signupData.password}
                       onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                      className="w-full pl-10 pr-12 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                      className="input-overlay w-full pl-10 pr-12 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="At least 6 characters"
                     />
                     <button
@@ -401,7 +402,7 @@ export default function LoginPage() {
                       required
                       value={signupData.confirmPassword}
                       onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                      className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="Re-enter password"
                     />
                   </div>

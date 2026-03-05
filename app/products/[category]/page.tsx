@@ -383,7 +383,10 @@ export default function ProductCategoryPage() {
 
       {/* Products Grid by Section */}
       <div className="max-w-7xl mx-auto px-4 pb-20">
-        {productsBySection.map(([section, products]) => (
+        {productsBySection.map(([section, products]) => {
+          const visibleProducts = products.filter((product: any) => product.isActive !== false)
+          if (visibleProducts.length === 0) return null
+          return (
           <motion.section
             key={section}
             id={section}
@@ -424,7 +427,7 @@ export default function ProductCategoryPage() {
             </h2>
             
             <div className="grid gap-4 md:gap-6 lg:gap-8 justify-items-center [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-              {products.map((product: Product, index: number) => (
+              {visibleProducts.map((product: Product, index: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -437,8 +440,8 @@ export default function ProductCategoryPage() {
                   <div className="hero-glass-frame relative h-full backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
                     <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                     <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col">
-                      {/* Product Image */}
-                      <div className="relative h-36 sm:h-44 md:h-52 lg:h-56 bg-primary-900/20 overflow-hidden">
+                      {/* Product Image - square area */}
+                      <div className="relative w-full aspect-square bg-primary-900/20 overflow-hidden">
                         <img
                           src={product.images[0] || '/assets/images/placeholder.jpg'}
                           alt={product.name}
@@ -448,29 +451,29 @@ export default function ProductCategoryPage() {
                             target.src = '/assets/images/placeholder.jpg'
                           }}
                         />
-                        {/* Condition Badge */}
-                        <div className="absolute top-2 left-2 px-3 py-1 bg-primary-500/90 text-neutral-850 dark:text-white text-xs font-semibold rounded-full">
+                        {/* Condition Badge - lighter bg + darker text in light mode */}
+                        <div className="absolute top-2 left-2 px-3 py-1 bg-primary-100 dark:bg-primary-500/90 text-primary-800 dark:text-white text-xs font-semibold rounded-full">
                           {product.condition}
                         </div>
                       </div>
 
                       {/* Product Info */}
-                      <div className="p-2 sm:p-3 md:p-4">
-                        <p className="text-primary-300 dark:text-primary-400 text-xs sm:text-sm mb-1 line-clamp-1">{product.brand}</p>
-                        <h3 className="text-sm sm:text-base md:text-lg font-bold text-neutral-850 dark:text-primary-50 mb-1 sm:mb-2 line-clamp-2">{product.name}</h3>
-                        <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 flex-wrap">
-                          <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-600 dark:text-primary-300">
+                      <div className="p-2">
+                        <p className="text-primary-700 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.brand}</p>
+                        <h3 className="text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2">{product.name}</h3>
+                        <div className="flex items-center space-x-1 mb-1 flex-wrap">
+                          <span className="text-base sm:text-sm font-bold text-primary-600 dark:text-primary-300">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
                           {product.original_price && (
-                            <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 line-through">
+                            <span className="text-xs text-neutral-600 dark:text-neutral-400 line-through">
                               UGX {product.original_price.toLocaleString()}
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center space-x-2 mt-2 sm:mt-3">
-                          <button className="focus-ring-none btn btn-outline btn-hover-secondary-filled flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
-                            <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <div className="flex items-center space-x-2 mt-1.5">
+                          <button className="focus-ring-none btn btn-outline btn-hover-secondary-filled flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2">
+                            <ShoppingCart className="w-4 h-4" />
                             <span className="hidden sm:inline">Quick View</span>
                             <span className="sm:hidden">View</span>
                           </button>
@@ -482,7 +485,8 @@ export default function ProductCategoryPage() {
               ))}
             </div>
           </motion.section>
-        ))}
+          )
+        })}
       </div>
 
       {/* Product Modal */}
@@ -646,7 +650,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           whileHover={{ scale: 1.1 }}
           whileTap={{ rotate: 180, scale: 0.95 }}
           onClick={onClose}
-          className="absolute top-0.2 right-1 z-20 p-0 w-fit"
+          className="focus-ring-none absolute top-0.2 right-1 z-20 p-0 w-fit"
           aria-label="Close modal"
         >
           <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
@@ -691,7 +695,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 )}
                 <div
                   ref={thumbnailRef}
-                  className="thumbnail-row flex items-center justify-center md:justify-start gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3 px-2 md:px-0"
+                  className="thumbnail-row flex items-center justify-start gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3 pl-4 pr-4 md:pl-0 md:pr-0"
                   style={{ scrollbarWidth: 'thin' }}
                 >
                   {product.images.map((img, index) => (
@@ -726,7 +730,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           <div className="flex flex-col">
             <div className="space-y-4">
               <div>
-                <p className="text-neutral-600 dark:text-primary-400 text-sm mb-1">{product.brand} • {product.sku}</p>
+                <p className="text-primary-700 dark:text-primary-400 text-sm mb-1">{product.brand} • {product.sku}</p>
                 <h2 className="text-3xl font-bold text-neutral-900 dark:text-primary-50 mb-1">{product.name}</h2>
                 <div className="flex items-center flex-wrap gap-2 mb-3">
                   <span className="text-3xl font-bold text-primary-600 dark:text-primary-300">
@@ -739,7 +743,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="px-3 py-1 bg-primary-100 dark:bg-primary-600/30 text-primary-700 dark:text-primary-300 text-sm rounded-full">
+                  <span className="px-3 py-1 bg-primary-100 dark:bg-primary-600/30 text-primary-800 dark:text-primary-300 text-sm rounded-full">
                     {product.condition}
                   </span>
                 </div>
