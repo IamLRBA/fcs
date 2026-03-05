@@ -187,8 +187,8 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">
-      <div className="container-custom mt-12">
-        <div className="flex items-center justify-between mb-8">
+      <div className="container-custom mt-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8">
           <motion.div
             animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
             transition={{ duration: 0.3 }}
@@ -206,53 +206,100 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        <h1 className="text-4xl font-bold text-primary-800 dark:text-primary-100 mb-8">Admin Dashboard</h1>
-
-        {/* Stats */}
-        <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl mb-8 max-w-6xl mx-auto">
+        {/* Main container - semi-transparent like account page */}
+        <div className="hero-glass-frame relative backdrop-blur-lg w-full rounded-2xl">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 p-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white/95 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Products</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalProducts}</p>
+          <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-800 dark:text-primary-100 mb-6 sm:mb-8 text-center sm:text-left">Admin Dashboard</h1>
+
+        {/* Stats - section with darker shades in light mode */}
+        <div className="hero-glass-frame relative backdrop-blur-lg rounded-xl sm:rounded-2xl mb-6 sm:mb-8">
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+          <div className="relative z-10 p-3 sm:p-4">
+            <h2 className="text-lg sm:text-xl font-bold text-primary-800 dark:text-primary-100 mb-4 text-center sm:text-left">Overview</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 justify-items-center sm:justify-items-stretch">
+              {/* Total Products */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Total Products</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalProducts}</p>
+                    </div>
+                    <Package className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <Package className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-neutral-50 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalOrders}</p>
+              </motion.div>
+
+              {/* Total Orders */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-300/50 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalOrders}</p>
+                    </div>
+                    <ShoppingCart className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <ShoppingCart className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-neutral-100 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">UGX {stats.totalRevenue.toLocaleString()}</p>
+              </motion.div>
+
+              {/* Total Revenue */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-200/70 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</p>
+                      <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary-800 dark:text-primary-200">
+                        UGX {stats.totalRevenue.toLocaleString()}
+                      </p>
+                    </div>
+                    <DollarSign className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <DollarSign className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-neutral-200/80 dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Sold</p>
-                  <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalItemsSold}</p>
+              </motion.div>
+
+              {/* Items Sold */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl w-full max-w-xs sm:max-w-none text-center sm:text-left"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative z-10 bg-neutral-300/50 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                      <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Items Sold</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalItemsSold}</p>
+                    </div>
+                    <BarChart3 className="w-10 h-10 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                  </div>
                 </div>
-                <BarChart3 className="w-12 h-12 text-primary-600 dark:text-primary-400" />
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
 
         {/* Add Product Button */}
-        <div className="mb-6 max-w-6xl mx-auto">
+        <div className="mb-4 sm:mb-6 flex justify-center sm:justify-start">
           <button
             onClick={() => setShowAddForm(!showAddForm)}
             className="btn btn-outline btn-hover-secondary-filled flex items-center space-x-2"
@@ -267,12 +314,12 @@ export default function AdminDashboard() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 max-w-6xl mx-auto"
+            className="mb-6 sm:mb-8"
           >
-            <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
+            <div className="hero-glass-frame relative backdrop-blur-lg rounded-xl sm:rounded-2xl">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Add New Product</h2>
+              <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 md:p-8 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                <h2 className="text-xl sm:text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4 sm:mb-6 text-center sm:text-left">Add New Product</h2>
                 <form onSubmit={handleAddProduct} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -438,7 +485,7 @@ export default function AdminDashboard() {
                       className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
                     />
                   </div>
-                  <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
+                  <button type="submit" className="btn btn-outline btn-hover-secondary-filled w-full sm:w-auto">
                     Add Product
                   </button>
                 </form>
@@ -448,7 +495,7 @@ export default function AdminDashboard() {
         )}
 
         {/* Remove Product Section */}
-        <div className="mb-6 max-w-6xl mx-auto">
+        <div className="mb-4 sm:mb-6 flex justify-center sm:justify-start">
           <button
             onClick={() => setShowRemoveForm(!showRemoveForm)}
             className="btn btn-danger flex items-center space-x-2"
@@ -462,13 +509,13 @@ export default function AdminDashboard() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 max-w-6xl mx-auto"
+            className="mb-6 sm:mb-8"
           >
-            <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
+            <div className="hero-glass-frame relative backdrop-blur-lg rounded-xl sm:rounded-2xl">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Remove Product</h2>
-                <div className="space-y-4">
+              <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 md:p-8 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+                <h2 className="text-xl sm:text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4 sm:mb-6 text-center sm:text-left">Remove Product</h2>
+                <div className="space-y-4 text-center sm:text-left">
                   <div>
                     <label className="block text-sm font-medium mb-2">Select Product *</label>
                     <select
@@ -489,7 +536,7 @@ export default function AdminDashboard() {
                   </div>
                   {selectedRemoveProduct && (
                     <>
-                      <div className="p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
+                      <div className="p-4 bg-neutral-300/40 dark:bg-neutral-700 rounded-lg">
                         <p className="font-medium">{selectedRemoveProduct.name}</p>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">{selectedRemoveProduct.brand} • {selectedRemoveProduct.category} / {selectedRemoveProduct.section}</p>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">Price: UGX {selectedRemoveProduct.price_ugx.toLocaleString()}</p>
@@ -523,13 +570,13 @@ export default function AdminDashboard() {
         )}
 
         {/* Products List */}
-        <div className="max-w-6xl mx-auto">
-          <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
+        <div>
+          <div className="hero-glass-frame relative backdrop-blur-lg rounded-xl sm:rounded-2xl">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-            <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">All Products ({products.length})</h2>
+            <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800 rounded-xl p-4 sm:p-6 md:p-8 shadow-lg border border-neutral-300/80 dark:border-neutral-700">
+              <h2 className="text-xl sm:text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4 sm:mb-6 text-center sm:text-left">All Products ({products.length})</h2>
               {products.length === 0 ? (
-                <p className="text-neutral-600 dark:text-neutral-400">No products yet. Add your first product!</p>
+                <p className="text-neutral-600 dark:text-neutral-400 text-center sm:text-left">No products yet. Add your first product!</p>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -568,6 +615,9 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
           </div>
         </div>
       </div>

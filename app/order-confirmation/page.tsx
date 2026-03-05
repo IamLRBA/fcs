@@ -153,7 +153,7 @@ export default function OrderConfirmationPage() {
       <div className="min-h-screen flex items-center justify-center bg-unified">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Not Found</h1>
-          <p className="text-primary-300 dark:text-primary-400 mb-8">We couldn't find an order with that ID.</p>
+          <p className="text-primary-700 dark:text-primary-400 mb-8">We couldn't find an order with that ID.</p>
           <Link href="/products/shirts" className="focus-ring-none btn btn-primary">
             Continue Shopping
           </Link>
@@ -197,77 +197,85 @@ export default function OrderConfirmationPage() {
           )}
         </motion.div>
 
-        {/* Order Receipt */}
+        {/* Order Receipt - semi-transparent glass container for details */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="hero-glass-frame relative backdrop-blur-lg mx-auto max-w-2xl"
+          className="hero-glass-frame relative backdrop-blur-lg mx-auto max-w-2xl rounded-2xl sm:rounded-3xl"
         >
-          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <motion.div
-          ref={receiptRef}
-          data-receipt
-          className="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl p-8 receipt-container border border-neutral-200 dark:border-neutral-700"
-          style={{
-            fontFamily: 'system-ui, -apple-system, sans-serif'
-          }}
-        >
-          {/* Receipt Header */}
-          <div className="text-center mb-8 pb-6 border-b-2 border-gray-200 dark:border-neutral-600">
-            <div className="mb-4">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-primary-100 mb-2" style={{ letterSpacing: '0.5px' }}>
-                <MysticalPiecesWord />
-              </h1>
-              <p className="text-gray-600 dark:text-primary-300 text-sm">Mystical Thrift Fashion & Soulful Style Curators</p>
-            </div>
-            <div className="flex justify-between items-center text-sm text-gray-600 dark:text-primary-300">
-              <div className="text-left">
-                <p className="font-semibold text-gray-900 dark:text-primary-100">Order Receipt</p>
-                <p className="mt-1 dark:text-primary-300">{order.id}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold text-gray-900 dark:text-primary-100">Date</p>
-                <p className="mt-1 dark:text-primary-300">
-                  {new Date(order.timestamp).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+          <motion.div
+            ref={receiptRef}
+            data-receipt
+            className="bg-white dark:bg-neutral-800 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 receipt-container border border-neutral-200 dark:border-neutral-700"
+            style={{
+              fontFamily: 'system-ui, -apple-system, sans-serif'
+            }}
+          >
+            {/* Receipt Header */}
+            <div className="text-center mb-8 pb-6 border-b-2 border-gray-200 dark:border-neutral-600">
+              <div className="mb-4">
+                <h1
+                  className="text-3xl font-bold text-gray-900 dark:text-primary-100 mb-2"
+                  style={{ letterSpacing: '0.5px' }}
+                >
+                  <MysticalPiecesWord />
+                </h1>
+                <p className="text-gray-600 dark:text-primary-300 text-sm">
+                  Mystical Thrift Fashion & Soulful Style Curators
                 </p>
               </div>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm text-gray-600 dark:text-primary-300">
+                <div className="text-left w-full sm:w-auto">
+                  <p className="font-semibold text-gray-900 dark:text-primary-100">Order Receipt</p>
+                  <p className="mt-1 dark:text-primary-300 break-all">{order.id}</p>
+                </div>
+                <div className="text-left sm:text-right w-full sm:w-auto">
+                  <p className="font-semibold text-gray-900 dark:text-primary-100">Date</p>
+                  <p className="mt-1 dark:text-primary-300">
+                    {new Date(order.timestamp).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Customer Information */}
-          <div className="mb-6 pb-6 border-b border-gray-200 dark:border-neutral-600">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-primary-100 mb-3 uppercase tracking-wide text-sm">
-              Customer Information
-            </h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-primary-300">Name:</span>
-                <span className="text-gray-900 dark:text-primary-100 font-medium">{order.customer.fullName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-primary-300">Phone:</span>
-                <span className="text-gray-900 dark:text-primary-100 font-medium">{order.customer.phone}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-primary-300">Email:</span>
-                <span className="text-gray-900 dark:text-primary-100 font-medium text-xs">{order.customer.email}</span>
-              </div>
-              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-neutral-700">
-                <p className="text-gray-600 dark:text-primary-300 text-xs mb-1">Delivery Address:</p>
-                <p className="text-gray-900 dark:text-primary-100 font-medium text-sm">
-                  {order.customer.address.street}<br />
-                  {order.customer.address.city}
-                </p>
+            {/* Customer Information */}
+            <div className="mb-6 pb-6 border-b border-gray-200 dark:border-neutral-600">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-primary-100 mb-3 uppercase tracking-wide text-sm">
+                Customer Information
+              </h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-gray-600 dark:text-primary-300">Name:</span>
+                  <span className="text-gray-900 dark:text-primary-100 font-medium">{order.customer.fullName}</span>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-gray-600 dark:text-primary-300">Phone:</span>
+                  <span className="text-gray-900 dark:text-primary-100 font-medium">{order.customer.phone}</span>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-gray-600 dark:text-primary-300">Email:</span>
+                  <span className="text-gray-900 dark:text-primary-100 font-medium text-xs break-all">
+                    {order.customer.email}
+                  </span>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-neutral-700">
+                  <p className="text-gray-600 dark:text-primary-300 text-xs mb-1">Delivery Address:</p>
+                  <p className="text-gray-900 dark:text-primary-100 font-medium text-sm">
+                    {order.customer.address.street}
+                    <br />
+                    {order.customer.address.city}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Order Items */}
           <div className="mb-6">
