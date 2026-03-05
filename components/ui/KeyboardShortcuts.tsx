@@ -154,7 +154,7 @@ export default function KeyboardShortcuts() {
           damping: 25,
           delay: 0.1
         }}
-        className="hidden md:block fixed bottom-8 left-8 z-50"
+        className="hidden sm:block fixed bottom-8 left-8 z-50"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
@@ -164,7 +164,7 @@ export default function KeyboardShortcuts() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
-              className="hidden md:block absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-primary-900 dark:bg-primary-100 text-primary-50 dark:text-primary-900 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none border border-primary-400/40"
+              className="hidden sm:block absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-primary-900 dark:bg-primary-100 text-primary-50 dark:text-primary-900 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none border border-primary-400/40"
             >
               Keyboard Shortcuts
               <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-primary-900 dark:border-r-primary-100"></div>
@@ -198,46 +198,64 @@ export default function KeyboardShortcuts() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
+              onClick={() => setIsOpen(false)}
               className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
-              <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-                <div className="sticky top-0 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-                  <div className="flex items-center space-x-3">
-                    <Keyboard className="w-6 h-6 text-primary-600" />
-                    <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Keyboard Shortcuts</h2>
+              {/* Semi-transparent outer container (like product modal) - main content sits inside */}
+              <div
+                className="hero-glass-frame relative w-full max-w-2xl max-h-[80vh] flex flex-col backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 rounded-2xl shadow-2xl overflow-hidden border border-neutral-200/80 dark:border-neutral-600"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                {/* Main container inside the semi-transparent frame (like product modal inner) */}
+                <div className="relative z-10 flex flex-col flex-1 min-h-0 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 overflow-y-auto max-h-[80vh]">
+                  {/* Header section - semi-transparent container, slightly darker shade in light mode */}
+                  <div className="flex-shrink-0 hero-glass-frame hero-glass-frame-compact backdrop-blur-sm bg-neutral-100/90 dark:bg-neutral-800/95 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-t-2xl opacity-50" aria-hidden />
+                    <div className="relative z-10 flex items-center space-x-3">
+                      <Keyboard className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                      <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Keyboard Shortcuts</h2>
+                    </div>
+                    <button
+                      onClick={() => setIsOpen(false)}
+                      className="focus-ring-none relative z-10 p-2 hover:bg-neutral-200/80 dark:bg-transparent dark:hover:bg-transparent rounded-lg transition-colors"
+                      aria-label="Close"
+                    >
+                      <X className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors"
-                  >
-                    <X className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
-                  </button>
-                </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {shortcuts.map((shortcut) => (
-                      <div
-                        key={shortcut.key}
-                        className="flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-700"
-                      >
-                        <span className="text-sm text-neutral-700 dark:text-neutral-300">{shortcut.description}</span>
-                        <div className="flex items-center space-x-1">
-                          {shortcut.keys.map((key, index) => (
-                            <span key={index} className="flex items-center">
-                              {index > 0 && <span className="mx-1 text-neutral-400">or</span>}
-                              <kbd className="px-2 py-1 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded text-xs font-mono text-neutral-800 dark:text-neutral-200 shadow-sm">
-                                {key}
-                              </kbd>
-                            </span>
-                          ))}
+                  {/* Shortcuts grid section */}
+                  <div className="p-6 flex-1 min-h-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {shortcuts.map((shortcut) => (
+                        <div
+                          key={shortcut.key}
+                          className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm bg-neutral-200/70 dark:bg-neutral-900/80 rounded-xl p-4 border border-neutral-300/80 dark:border-neutral-700"
+                        >
+                          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-xl opacity-60" aria-hidden />
+                          <div className="relative z-10 flex items-center justify-between">
+                            <span className="text-sm text-neutral-700 dark:text-neutral-300">{shortcut.description}</span>
+                            <div className="flex items-center space-x-1">
+                              {shortcut.keys.map((key, index) => (
+                                <span key={index} className="flex items-center">
+                                  {index > 0 && <span className="mx-1 text-neutral-400">or</span>}
+                                  <kbd className="px-2 py-1 bg-white/90 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded text-xs font-mono text-neutral-800 dark:text-neutral-200 shadow-sm">
+                                    {key}
+                                  </kbd>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-700">
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
-                      Press <kbd className="px-2 py-1 bg-neutral-100 dark:bg-neutral-700 rounded text-xs">Esc</kbd> to close
-                    </p>
+                      ))}
+                    </div>
+                    {/* Footer section - semi-transparent, slightly darker shade in light mode */}
+                    <div className="hero-glass-frame hero-glass-frame-compact relative mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-700 backdrop-blur-sm bg-neutral-100/80 dark:bg-neutral-800/80 rounded-xl px-6 pb-6">
+                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-xl opacity-50" aria-hidden />
+                      <p className="relative z-10 text-sm text-neutral-600 dark:text-neutral-400 text-center">
+                        Press <kbd className="px-2 py-1 bg-neutral-200/90 dark:bg-neutral-700 rounded text-xs">Esc</kbd> to close
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
