@@ -70,12 +70,13 @@ export default function AdminProductsPage() {
   const loadProducts = () => setProducts(ProductManager.getAllProductsArray())
 
   const query = searchQuery.toLowerCase().trim()
-  const filteredProducts = query
+  const filtered = query
     ? products.filter(p => {
         const text = [p.name, p.brand, p.category, p.section, p.sku].join(' ').toLowerCase()
         return text.includes(query)
       })
     : products
+  const filteredProducts = [...filtered].sort((a, b) => (a.name || '').localeCompare(b.name || ''))
   const suggestions = query ? filteredProducts.slice(0, 8) : []
 
   const handleDelete = (product: Product, reason: 'Product Bought' | 'Mistakenly Posted') => {
@@ -99,7 +100,7 @@ export default function AdminProductsPage() {
     }
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setImages: (urls: string[]) => void) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setImages: React.Dispatch<React.SetStateAction<string[]>>) => {
     const files = Array.from(e.target.files || [])
     files.forEach(file => {
       if (!file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) return
@@ -145,18 +146,8 @@ export default function AdminProductsPage() {
   const removeImage = (index: number) => setProductImages(prev => prev.filter((_, i) => i !== index))
 
   return (
-    <div className="min-h-screen bg-unified pt-24 pb-20">
-      <div className="container-custom mt-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-          <Link
-            href="/admin/dashboard"
-            className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100"
-          >
-            <span className="text-base font-medium">⟸</span>
-            <span className="text-sm font-medium">Back to Dashboard</span>
-          </Link>
-        </div>
-
+    <div className="admin-products-page min-h-screen pt-4">
+      <div className="container-custom mt-1 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl overflow-hidden">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
@@ -253,19 +244,21 @@ export default function AdminProductsPage() {
                 ) : (
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-neutral-300/80 dark:border-neutral-600">
-                        <th className="text-left p-3 text-sm font-semibold">Image</th>
-                        <th className="text-left p-3 text-sm font-semibold">Name</th>
-                        <th className="text-left p-3 text-sm font-semibold">Price</th>
-                        <th className="text-left p-3 text-sm font-semibold">Stock</th>
-                        <th className="text-left p-3 text-sm font-semibold">Label</th>
-                        <th className="text-left p-3 text-sm font-semibold">Status</th>
-                        <th className="text-left p-3 text-sm font-semibold">Actions</th>
+                      <tr className="border-b border-neutral-300/80 dark:border-neutral-600 bg-neutral-300/80 dark:bg-neutral-700/50">
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">No.</th>
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Image</th>
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Name</th>
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Price</th>
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Stock</th>
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Label</th>
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Status</th>
+                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredProducts.map((product) => (
+                      {filteredProducts.map((product, index) => (
                         <tr key={product.id} className="border-b border-neutral-200/80 dark:border-neutral-700 hover:bg-neutral-200/40 dark:hover:bg-neutral-700/30">
+                          <td className="p-3 text-neutral-600 dark:text-neutral-400">{index + 1}</td>
                           <td className="p-3">
                             <div className="w-12 h-12 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex-shrink-0">
                               <img
@@ -285,21 +278,14 @@ export default function AdminProductsPage() {
                               {product.isActive !== false ? 'Active' : 'Inactive'}
                             </span>
                           </td>
-                          <td className="p-3 flex items-center gap-2">
+                          <td className="p-3">
                             <button
                               type="button"
                               onClick={() => setDetailsProduct(product)}
-                              className="focus-ring-none text-primary-600 dark:text-primary-400 hover:underline inline-flex items-center gap-1 text-sm"
+                              className="focus-ring-none p-2 rounded-lg text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors"
+                              title="Details"
                             >
-                              <Eye className="w-4 h-4" /> Details
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(product, 'Mistakenly Posted')}
-                              className="focus-ring-none text-red-600 hover:text-red-700 p-1"
-                              title="Delete"
-                            >
-                              <Trash2 className="w-4 h-4" />
+                              <Eye className="w-5 h-5" />
                             </button>
                           </td>
                         </tr>
@@ -313,47 +299,58 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      {/* Details modal */}
+      {/* Details modal – matches product page quick-view (glass + inner card + floating close) */}
       <AnimatePresence>
         {detailsProduct && !editingProduct && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
             onClick={() => setDetailsProduct(null)}
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+            <div
+              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
-              className="hero-glass-frame relative backdrop-blur-lg rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-xl overflow-y-auto max-h-[90vh]">
-                <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-700">
-                  <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Product details</h2>
-                  <button type="button" onClick={() => setDetailsProduct(null)} className="focus-ring-none p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="p-4 space-y-4">
-                  <div className="flex justify-center">
-                    <div className="w-40 h-40 rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-700">
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
+              >
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setDetailsProduct(null)}
+                  className="focus-ring-none absolute top-2 right-2 z-20 p-0 w-fit"
+                  aria-label="Close"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
+                    <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
+                  </div>
+                </motion.button>
+                <div className="flex flex-col sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-5 sm:gap-6 pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 overflow-y-auto flex-1 min-h-0">
+                  <div className="flex-shrink-0">
+                    <div className="relative h-56 sm:h-64 md:h-72 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden">
                       <img src={detailsProduct.images?.[0] || '/assets/images/placeholder.jpg'} alt={detailsProduct.name} className="w-full h-full object-cover" />
                     </div>
                   </div>
-                  <p className="font-semibold text-lg text-neutral-900 dark:text-neutral-100">{detailsProduct.name}</p>
-                  <p className="text-sm text-primary-700 dark:text-primary-400">{detailsProduct.brand}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{detailsProduct.category} / {detailsProduct.section}</p>
-                  <p className="text-sm">UGX {detailsProduct.price_ugx?.toLocaleString?.()}</p>
-                  <p className="text-sm">Stock: {detailsProduct.stock_qty}</p>
-                  <p className="text-sm">Condition: {detailsProduct.condition}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{detailsProduct.description}</p>
-                  <p className="text-sm">Status: {detailsProduct.isActive !== false ? 'Active' : 'Inactive'}</p>
+                  <div className="flex flex-col min-w-0">
+                    <p className="text-primary-700 dark:text-primary-400 text-sm mb-1">{detailsProduct.brand} • {detailsProduct.sku || '—'}</p>
+                    <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-2">{detailsProduct.name}</h2>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">{detailsProduct.category} / {detailsProduct.section}</p>
+                    <p className="text-lg font-semibold text-primary-600 dark:text-primary-300 mb-2">UGX {detailsProduct.price_ugx?.toLocaleString?.()}</p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300">Stock: {detailsProduct.stock_qty} • Condition: {detailsProduct.condition}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2">Status: {detailsProduct.isActive !== false ? 'Active' : 'Inactive'}</p>
+                    {detailsProduct.description && (
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-3 leading-relaxed">{detailsProduct.description}</p>
+                    )}
+                  </div>
                 </div>
-                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-3">
+                <div className="pt-4 mt-auto border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex flex-wrap gap-3 flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => setEditingProduct({ ...detailsProduct })}
@@ -369,207 +366,254 @@ export default function AdminProductsPage() {
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Edit modal */}
+      {/* Edit modal – matches product page quick-view (glass + inner card + floating close) */}
       <AnimatePresence>
         {editingProduct && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-3 sm:p-4"
             onClick={() => setEditingProduct(null)}
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+            <div
+              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
-              className="hero-glass-frame relative backdrop-blur-lg rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-xl overflow-y-auto max-h-[90vh] p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Edit product</h2>
-                  <button type="button" onClick={() => setEditingProduct(null)} className="focus-ring-none p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <form onSubmit={(e) => { e.preventDefault(); handleUpdate(editingProduct) }} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Image</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file && file.type.startsWith('image/')) {
-                          const reader = new FileReader()
-                          reader.onloadend = () => setEditingProduct(prev => prev ? { ...prev, images: [...(prev.images || []).slice(0, 0), reader.result as string, ...(prev.images || []).slice(1)] } : null)
-                          reader.readAsDataURL(file)
-                        }
-                      }}
-                      className="w-full text-sm"
-                    />
-                    {editingProduct.images?.[0] && (
-                      <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden">
-                        <img src={editingProduct.images[0]} alt="Preview" className="w-full h-full object-cover" />
-                      </div>
-                    )}
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
+              >
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setEditingProduct(null)}
+                  className="focus-ring-none absolute top-2 right-2 z-20 p-0 w-fit"
+                  aria-label="Close"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
+                    <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Name *</label>
-                    <input
-                      type="text"
-                      required
-                      value={editingProduct.name}
-                      onChange={(e) => setEditingProduct(prev => prev ? { ...prev, name: e.target.value } : null)}
-                      className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Price (UGX) *</label>
-                    <input
-                      type="number"
-                      required
-                      value={editingProduct.price_ugx}
-                      onChange={(e) => setEditingProduct(prev => prev ? { ...prev, price_ugx: parseInt(e.target.value) || 0 } : null)}
-                      className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Stock *</label>
-                    <input
-                      type="number"
-                      required
-                      value={editingProduct.stock_qty}
-                      onChange={(e) => setEditingProduct(prev => prev ? { ...prev, stock_qty: parseInt(e.target.value) || 0 } : null)}
-                      className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Visible in shop</label>
-                    <label className="flex items-center gap-2 cursor-pointer">
+                </motion.button>
+                <form onSubmit={(e) => { e.preventDefault(); handleUpdate(editingProduct) }} className="flex flex-col min-h-0 flex-1 overflow-hidden">
+                  <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
+                    <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Edit product</h2>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Image</label>
                       <input
-                        type="checkbox"
-                        checked={editingProduct.isActive !== false}
-                        onChange={(e) => setEditingProduct(prev => prev ? { ...prev, isActive: e.target.checked } : null)}
-                        className="rounded"
+                        id="edit-img"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file && file.type.startsWith('image/')) {
+                            const reader = new FileReader()
+                            reader.onloadend = () => setEditingProduct(prev => prev ? { ...prev, images: [...(prev.images || []).slice(0, 0), reader.result as string, ...(prev.images || []).slice(1)] } : null)
+                            reader.readAsDataURL(file)
+                          }
+                        }}
                       />
-                      <span className="text-sm">Active (show on site)</span>
-                    </label>
+                      <label htmlFor="edit-img" className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 cursor-pointer">
+                        Browse
+                      </label>
+                      {editingProduct.images?.[0] && (
+                        <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-700">
+                          <img src={editingProduct.images[0]} alt="Preview" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Name *</label>
+                      <input
+                        type="text"
+                        required
+                        value={editingProduct.name}
+                        onChange={(e) => setEditingProduct(prev => prev ? { ...prev, name: e.target.value } : null)}
+                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Price (UGX) *</label>
+                      <div className="flex items-center gap-2">
+                        <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, price_ugx: Math.max(0, (prev.price_ugx || 0) - 1000) } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
+                        <input
+                          type="number"
+                          required
+                          min={0}
+                          value={editingProduct.price_ugx}
+                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, price_ugx: parseInt(e.target.value) || 0 } : null)}
+                          className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center"
+                        />
+                        <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, price_ugx: (prev.price_ugx || 0) + 1000 } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Stock *</label>
+                      <div className="flex items-center gap-2">
+                        <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, stock_qty: Math.max(0, (prev.stock_qty || 0) - 1) } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
+                        <input
+                          type="number"
+                          required
+                          min={0}
+                          value={editingProduct.stock_qty}
+                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, stock_qty: Math.max(0, parseInt(e.target.value) || 0) } : null)}
+                          className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center"
+                        />
+                        <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, stock_qty: (prev.stock_qty || 0) + 1 } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Visible in shop</label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={editingProduct.isActive !== false}
+                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, isActive: e.target.checked } : null)}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Active (show on site)</span>
+                      </label>
+                    </div>
                   </div>
-                  <div className="flex gap-3 pt-2">
+                  <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex gap-3 flex-shrink-0">
                     <button type="submit" className="btn btn-outline btn-hover-secondary-filled">Save changes</button>
                     <button type="button" onClick={() => setEditingProduct(null)} className="btn btn-outline">Cancel</button>
                   </div>
                 </form>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Add product modal */}
+      {/* Add product modal – matches product page quick-view (glass + inner card + floating close) */}
       <AnimatePresence>
         {showAddModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
             onClick={() => setShowAddModal(false)}
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+            <div
+              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
-              className="hero-glass-frame relative backdrop-blur-lg rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-neutral-100/95 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-xl overflow-y-auto max-h-[90vh] p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Add new product</h2>
-                  <button type="button" onClick={() => setShowAddModal(false)} className="focus-ring-none p-2 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700">
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <form onSubmit={handleAddProduct} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Name *</label>
-                      <input required value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Brand *</label>
-                      <input required value={newProduct.brand} onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Category *</label>
-                      <select required value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value, section: subcategoriesMap[e.target.value]?.[0] || '' })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
-                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Subcategory *</label>
-                      <select required value={newProduct.section} onChange={(e) => setNewProduct({ ...newProduct, section: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
-                        {subcategoriesMap[newProduct.category]?.map(s => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Price (UGX) *</label>
-                      <input required type="number" value={newProduct.price_ugx} onChange={(e) => setNewProduct({ ...newProduct, price_ugx: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Stock *</label>
-                      <input required type="number" value={newProduct.stock_qty} onChange={(e) => setNewProduct({ ...newProduct, stock_qty: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Condition *</label>
-                      <select value={newProduct.condition} onChange={(e) => setNewProduct({ ...newProduct, condition: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
-                        {conditions.map(c => <option key={c} value={c}>{c}</option>)}
-                      </select>
-                    </div>
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
+              >
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowAddModal(false)}
+                  className="focus-ring-none absolute top-2 right-2 z-20 p-0 w-fit"
+                  aria-label="Close"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
+                    <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Images *</label>
-                    <input type="file" accept="image/*" multiple onChange={(e) => handleImageUpload(e, setProductImages)} className="w-full text-sm mb-2" />
-                    {productImages.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {productImages.map((img, i) => (
-                          <div key={i} className="relative">
-                            <img src={img} alt="" className="w-16 h-16 object-cover rounded-lg" />
-                            <button type="button" onClick={() => removeImage(i)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">×</button>
-                          </div>
-                        ))}
+                </motion.button>
+                <form onSubmit={handleAddProduct} className="flex flex-col min-h-0 flex-1 overflow-hidden">
+                  <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
+                    <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Add new product</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Name *</label>
+                        <input required value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
                       </div>
-                    )}
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Brand *</label>
+                        <input required value={newProduct.brand} onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Category *</label>
+                        <select required value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value, section: subcategoriesMap[e.target.value]?.[0] || '' })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
+                          {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Subcategory *</label>
+                        <select required value={newProduct.section} onChange={(e) => setNewProduct({ ...newProduct, section: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
+                          {subcategoriesMap[newProduct.category]?.map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Price (UGX) *</label>
+                        <div className="flex items-center gap-2">
+                          <button type="button" onClick={() => setNewProduct(p => ({ ...p, price_ugx: String(Math.max(0, (parseInt(p.price_ugx) || 0) - 1000)) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
+                          <input required type="number" min={0} value={newProduct.price_ugx} onChange={(e) => setNewProduct({ ...newProduct, price_ugx: e.target.value })} className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center" />
+                          <button type="button" onClick={() => setNewProduct(p => ({ ...p, price_ugx: String((parseInt(p.price_ugx) || 0) + 1000) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Stock *</label>
+                        <div className="flex items-center gap-2">
+                          <button type="button" onClick={() => setNewProduct(p => ({ ...p, stock_qty: String(Math.max(0, (parseInt(p.stock_qty) || 0) - 1)) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
+                          <input required type="number" min={0} value={newProduct.stock_qty} onChange={(e) => setNewProduct({ ...newProduct, stock_qty: e.target.value })} className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center" />
+                          <button type="button" onClick={() => setNewProduct(p => ({ ...p, stock_qty: String((parseInt(p.stock_qty) || 0) + 1) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Condition *</label>
+                        <select value={newProduct.condition} onChange={(e) => setNewProduct({ ...newProduct, condition: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
+                          {conditions.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Images *</label>
+                      <input id="add-imgs" type="file" accept="image/*" multiple onChange={(e) => handleImageUpload(e, setProductImages)} className="hidden" />
+                      <label htmlFor="add-imgs" className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 cursor-pointer">
+                        Browse
+                      </label>
+                      {productImages.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {productImages.map((img, i) => (
+                            <div key={i} className="relative">
+                              <img src={img} alt="" className="w-16 h-16 object-cover rounded-lg" />
+                              <button type="button" onClick={() => removeImage(i)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">×</button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Description *</label>
+                      <textarea required rows={3} value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Sizes (comma-separated)</label>
+                      <input value={newProduct.sizes.join(', ')} onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" placeholder="S, M, L" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Colors (comma-separated)</label>
+                      <input value={newProduct.colors.join(', ')} onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value.split(',').map(c => c.trim()).filter(Boolean) })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" placeholder="Red, Blue" />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Description *</label>
-                    <textarea required rows={3} value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Sizes (comma-separated)</label>
-                    <input value={newProduct.sizes.join(', ')} onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" placeholder="S, M, L" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Colors (comma-separated)</label>
-                    <input value={newProduct.colors.join(', ')} onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value.split(',').map(c => c.trim()).filter(Boolean) })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" placeholder="Red, Blue" />
-                  </div>
-                  <div className="flex gap-3 pt-2">
+                  <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex gap-3 flex-shrink-0">
                     <button type="submit" className="btn btn-outline btn-hover-secondary-filled">Add product</button>
                     <button type="button" onClick={() => setShowAddModal(false)} className="btn btn-outline">Cancel</button>
                   </div>
                 </form>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

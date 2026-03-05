@@ -9,6 +9,8 @@ export interface User {
   profileImage?: string
   lastViewedItems?: string[]
   reviews?: Review[]
+  /** When false, user cannot log in. Admin-only. */
+  isActive?: boolean
 }
 
 export interface Review {
@@ -57,7 +59,8 @@ export class AuthManager {
       createdAt: new Date().toISOString(),
       profileImage,
       lastViewedItems: [],
-      reviews: []
+      reviews: [],
+      isActive: true
     }
 
     // Store user with password (in production, hash passwords!)
@@ -81,6 +84,9 @@ export class AuthManager {
 
     if (!userData) {
       return { success: false, error: 'Invalid email or password' }
+    }
+    if (userData.isActive === false) {
+      return { success: false, error: 'Account is deactivated. Contact support.' }
     }
 
     const { password: _, ...user } = userData
@@ -235,5 +241,47 @@ export class AuthManager {
     if (typeof window === 'undefined') return false
     return localStorage.getItem(this.ADMIN_KEY) === 'true'
   }
+
+  /** Admin: set user active/inactive. */
+  static setUserActive(userId: string, active: boolean): boolean {
+    return this.updateUser(userId, { isActive: active })
+  }
+
+  /** Admin: delete user by id. */
+  static deleteUser(userId: string): boolean {
+    if (typeof window === 'undefined') return false
+    const users = this.getUsers().filter((u: any) => u.id !== userId)
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users))
+    const current = this.getCurrentUser()
+    if (current?.id === userId) this.logout()
+    window.dispatchEvent(new CustomEvent('authStateChanged'))
+    return true
+  }
+
+  /** Admin: set new password for user. */
+  static resetUserPassword(userId: string, newPassword: string): boolean {
+    const users = this.getUsers()
+    const u = users.find((x: any) => x.id === userId)
+    if (!u) return false
+    u.password = newPassword
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users))
+    return true
+  }
+
+  /** Admin: restore a previously deleted user (used for undo). */
+  static restoreUser(rawUser: any): boolean {
+    if (typeof window === 'undefined') return false
+    const users = this.getUsers()
+    if (users.find((u: any) => u.id === rawUser.id)) return false
+    users.push(rawUser)
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users))
+    window.dispatchEvent(new CustomEvent('authStateChanged'))
+    return true
+  }
+}
+
+/** Named export for restoreUser (undo delete). */
+export function restoreUser(rawUser: any): boolean {
+  return AuthManager.restoreUser(rawUser)
 }
 
