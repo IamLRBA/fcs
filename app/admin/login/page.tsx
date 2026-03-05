@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-unified flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-unified flex items-center justify-center px-4 py-20">
       {/* Fixed Back Button */}
       <motion.div
         animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
@@ -59,13 +59,14 @@ export default function AdminLoginPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="max-w-md w-full">
-
+      <div className="max-w-md w-full mt-10 sm:mt-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-8 border border-neutral-200 dark:border-neutral-700"
+          className="hero-glass-frame relative backdrop-blur-lg rounded-2xl"
         >
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+          <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-6 sm:p-8 border border-neutral-200 dark:border-neutral-700">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <Shield className="w-8 h-8 text-white" />
@@ -90,7 +91,7 @@ export default function AdminLoginPage() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                  className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                   placeholder="Enter username"
                 />
               </div>
@@ -107,7 +108,7 @@ export default function AdminLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-700 dark:text-white"
+                  className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                   placeholder="Enter password"
                 />
               </div>
@@ -133,6 +134,7 @@ export default function AdminLoginPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
           </form>
+          </div>
         </motion.div>
       </div>
     </div>

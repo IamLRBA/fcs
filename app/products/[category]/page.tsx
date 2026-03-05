@@ -383,7 +383,10 @@ export default function ProductCategoryPage() {
 
       {/* Products Grid by Section */}
       <div className="max-w-7xl mx-auto px-4 pb-20">
-        {productsBySection.map(([section, products]) => (
+        {productsBySection.map(([section, products]) => {
+          const visibleProducts = products.filter((product: any) => product.isActive !== false)
+          if (visibleProducts.length === 0) return null
+          return (
           <motion.section
             key={section}
             id={section}
@@ -424,7 +427,7 @@ export default function ProductCategoryPage() {
             </h2>
             
             <div className="grid gap-4 md:gap-6 lg:gap-8 justify-items-center [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-              {products.map((product: Product, index: number) => (
+              {visibleProducts.map((product: Product, index: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -482,7 +485,8 @@ export default function ProductCategoryPage() {
               ))}
             </div>
           </motion.section>
-        ))}
+          )
+        })}
       </div>
 
       {/* Product Modal */}
