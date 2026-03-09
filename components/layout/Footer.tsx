@@ -66,7 +66,7 @@ export default function Footer() {
           opacity: 0.78;
         }
         .dark .footer::after {
-          background: linear-gradient(to bottom, #191919, #252525);
+          background: linear-gradient(to bottom, var(--color-neutral-950), var(--color-neutral-800));
           opacity: 0.76;
         }
         .footer-inner-outer {

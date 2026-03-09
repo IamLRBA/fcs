@@ -51,9 +51,9 @@ export default function AnimatedImageBanner() {
             <motion.div
               animate={{
                 background: [
-                  'linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(139, 69, 19, 0.3) 100%)',
-                  'linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(139, 69, 19, 0.1) 100%)',
-                  'linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(139, 69, 19, 0.3) 100%)'
+                  'linear-gradient(135deg, rgb(var(--color-brand-glow-rgb) / 0.1) 0%, rgb(var(--color-brand-glow-rgb) / 0.3) 100%)',
+                  'linear-gradient(135deg, rgb(var(--color-brand-glow-rgb) / 0.3) 0%, rgb(var(--color-brand-glow-rgb) / 0.1) 100%)',
+                  'linear-gradient(135deg, rgb(var(--color-brand-glow-rgb) / 0.1) 0%, rgb(var(--color-brand-glow-rgb) / 0.3) 100%)'
                 ]
               }}
               transition={{
@@ -98,9 +98,9 @@ export default function AnimatedImageBanner() {
             <motion.div
               animate={{
                 boxShadow: [
-                  '0 0 30px rgba(139, 69, 19, 0.3)',
-                  '0 0 50px rgba(139, 69, 19, 0.5)',
-                  '0 0 30px rgba(139, 69, 19, 0.3)'
+                  '0 0 30px rgb(var(--color-brand-glow-rgb) / 0.3)',
+                  '0 0 50px rgb(var(--color-brand-glow-rgb) / 0.5)',
+                  '0 0 30px rgb(var(--color-brand-glow-rgb) / 0.3)'
                 ]
               }}
               transition={{
