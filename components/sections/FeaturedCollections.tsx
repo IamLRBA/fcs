@@ -230,7 +230,7 @@ export default function FeaturedCollections() {
                             whileInView={{ scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
-                            className="absolute bottom-3 right-3 px-2 py-1 bg-accent-500 text-neutral-850 dark:text-white text-xs font-bold rounded-full shadow-lg"
+                            className="absolute bottom-3 right-3 px-2 py-1 bg-accent-500 text-white text-xs font-bold rounded-full shadow-lg"
                           >
                             {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
                           </motion.div>
