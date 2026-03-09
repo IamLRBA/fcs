@@ -2,7 +2,7 @@
 
 import AboutUs from '@/components/sections/AboutUs'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
+import Button from '@/components/ui/Button'
 
 export default function AboutUsPage() {
   return (
@@ -25,13 +25,10 @@ export default function AboutUsPage() {
             <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto mb-8">
               Dive into our portal and feel future-forward thrift fashion in motion.
             </p>
-            <Link
-              href="/sections/shop"
-              className="btn btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
-            >
+            <Button href="/sections/shop" variant="filled" size="md" className="inline-flex items-center space-x-2 group">
               <span>view the ᔕᕼOᑭ portal</span>
               <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-2xl leading-none">⟹</span>
-            </Link>
+            </Button>
           </motion.div>
         </div>
       </section>

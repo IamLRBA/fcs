@@ -5,6 +5,7 @@ import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { HiMiniShoppingBag } from 'react-icons/hi2'
+import Button from '@/components/ui/Button'
 
 const portals = [
   {
@@ -130,16 +131,17 @@ export default function PortalNavigation() {
                   {portal.title}
                 </h3>
 
-                {/* Explore Portal Button - Hidden by default, shown on hover */}
+                {/* Explore: primary-style button, shine on group hover */}
                 <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 mb-2">
-                  <div className={`btn btn-outline inline-flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300 shadow-2xl ${
-                    portal.id === 3 || portal.id === 5
-                      ? 'bg-gray-900/20 border-gray-900/30 text-gray-900 hover:bg-gray-900/30'
-                      : 'bg-gray-300/20 border-gray-300/30 text-gray-300 hover:bg-gray-300/30'
-                  }`}>
+                  <Button
+                    variant="default"
+                    shineOnGroupHover
+                    type="button"
+                    className="portal-explore-btn inline-flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300 shadow-2xl"
+                  >
                     <span className="font-medium">Explore</span>
                     <span className="font-medium">⟹</span>
-                  </div>
+                  </Button>
                 </div>
               </div>
             </div>

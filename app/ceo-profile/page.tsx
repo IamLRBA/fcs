@@ -24,6 +24,8 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import EducationalJourney from '@/components/sections/EducationalJourney'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 export default function CEOProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -134,24 +136,19 @@ export default function CEOProfile() {
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -50 }}
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120 }}
         transition={{ duration: 0.3 }}
-        className="fixed top-20 left-8 z-50 pointer-events-none"
+        className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/about-us" className="group flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-          <motion.div
-            whileHover={{ x: -5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <span className="text-2xl">⟸</span>
-          </motion.div>
+        <Link href="/about-us" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back to About Us</span>
         </Link>
       </motion.div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-28 md:pt-36">
+      <section className="relative min-h-screen flex items-center justify-center pt-32 md:pt-40">
         <motion.div
           style={{ y, opacity, scale }}
           className="text-center z-20 px-4"
@@ -292,11 +289,11 @@ export default function CEOProfile() {
                           ? 'text-left' // Left aligned - both mobile and desktop
                           : 'text-right' // Right aligned - both mobile and desktop
                       }`}>
-                        <button
+                        <Button
+                          variant="default"
+                          size="sm"
                           onClick={() => toggleSkill(skill.category)}
-                          className={`btn btn-outline btn-hover-secondary-filled text-sm font-medium gap-2 inline-flex items-center ${
-                            index % 2 === 0 ? 'justify-start' : 'justify-end ml-auto'
-                          }`}
+                          className={`gap-2 ${index % 2 === 0 ? 'justify-start' : 'justify-end ml-auto'}`}
                         >
                          <span>
                            {expandedSkills[skill.category] ? 'Read Less' : 'Read More'}
@@ -322,7 +319,7 @@ export default function CEOProfile() {
                              </motion.div>
                            )}
                          </div>
-                       </button>
+                       </Button>
                        
                        {/* Expandable Content */}
                        <AnimatePresence>
@@ -408,19 +405,12 @@ export default function CEOProfile() {
             </div>
             
             {/* Navigation Arrows */}
-            <button
-              onClick={prevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
-            >
+            <Button variant="default" size="icon" onClick={prevImage} className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center">
               <span className="text-2xl">⟸</span>
-            </button>
-            
-            <button
-              onClick={nextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
-            >
+            </Button>
+            <Button variant="default" size="icon" onClick={nextImage} className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center">
               <span className="text-2xl">⟹</span>
-            </button>
+            </Button>
 
             {/* Thumbnails */}
             {galleryImages.length > 1 && (
@@ -532,52 +522,36 @@ export default function CEOProfile() {
               <Mail className="w-8 h-8 text-primary-600 mx-auto mb-3" />
               <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
-              <a
-                href="mailto:jerrylarubafestus@gmail.com"
-                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
-              >
+              <Button href="mailto:jerrylarubafestus@gmail.com" variant="default" className="inline-flex items-center justify-center px-6">
                 Email Me
-              </a>
+              </Button>
             </div>
 
             <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <Phone className="w-8 h-8 text-primary-600 mx-auto mb-3" />
               <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256774948086</p>
-              <a
-                href="tel:+256774948086"
-                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
-              >
+              <Button href="tel:+256774948086" variant="default" className="inline-flex items-center justify-center px-6">
                 Call Me
-              </a>
+              </Button>
             </div>
 
             <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <IconBrandWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
               <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256755915549</p>
-              <a
-                href="https://wa.me/256755915549"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
-              >
+              <Button href="https://wa.me/256755915549" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
                 Message Me
-              </a>
+              </Button>
             </div>
 
             <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <MapPin className="w-8 h-8 text-primary-600 mx-auto mb-3" />
               <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
-              <a
-                href="https://maps.google.com/?q=Kampala,Uganda"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
-              >
+              <Button href="https://maps.google.com/?q=Kampala,Uganda" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
                 Find Me
-                </a>
+              </Button>
             </div>
           </div>
         </motion.div>
@@ -601,14 +575,7 @@ export default function CEOProfile() {
               className="relative flex items-center justify-center w-full h-full p-8"
               onClick={(e) => e.stopPropagation()}
             >
-              <motion.button
-                whileTap={{ rotate: 360, scale: 0.9 }}
-                onClick={closeImageModal}
-                className="absolute top-6 right-6 text-white/80 hover:text-white transition-all duration-200 z-10"
-                aria-label="Close photo"
-              >
-                <X className="w-7 h-7" />
-              </motion.button>
+              <ModalCloseButton onClose={closeImageModal} className="absolute top-6 right-6 z-10 flex-shrink-0" aria-label="Close photo" />
               
               <img
                 src={galleryImages[selectedImage]}

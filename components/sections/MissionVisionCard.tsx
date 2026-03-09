@@ -3,6 +3,7 @@
 import { useState, ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Minus } from 'lucide-react'
+import Button from '@/components/ui/Button'
 
 interface MissionVisionCardProps {
   item: {
@@ -36,9 +37,11 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
       </div>
       <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">{item.title}</h4>
       
-      <button
+      <Button
+        variant={isExpanded ? 'filled' : 'default'}
+        size="sm"
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`btn ${isExpanded ? 'btn-secondary' : 'btn-primary'} gap-2 text-sm mb-4`}
+        className="gap-2 mb-4"
       >
         <span className="font-medium">
           {isExpanded ? 'Hide Statement' : 'Show Statement'}
@@ -48,7 +51,7 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
         ) : (
           <Plus className="w-4 h-4" />
         )}
-      </button>
+      </Button>
       
       <motion.div
         initial={{ opacity: 0, height: 0 }}

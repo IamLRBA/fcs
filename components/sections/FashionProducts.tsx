@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Plus, Minus, Quote } from 'lucide-react'
 import Link from 'next/link'
+import Button from '@/components/ui/Button'
 
 interface ProductSubcategory {
   name: string
@@ -169,10 +170,12 @@ export default function FashionProducts() {
                   </Link>
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
                     <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mt-2 max-w-md">{s.description}</p>
-                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="focus-ring-none btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
-                      <span>{expandedId === s.id ? 'Minimize Categories' : 'Select Categories'}</span>
-                      <AnimatePresence mode="wait">{expandedId === s.id ? <motion.div key="m" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}><Minus size={20} /></motion.div> : <motion.div key="p" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}><Plus size={20} /></motion.div>}</AnimatePresence>
-                    </motion.button>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button variant="default" size="sm" onClick={() => toggle(s.id)} className="inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
+                        <span>{expandedId === s.id ? 'Minimize Categories' : 'Select Categories'}</span>
+                        <AnimatePresence mode="wait">{expandedId === s.id ? <motion.span key="m" className="inline-flex items-center shrink-0" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}><Minus size={20} /></motion.span> : <motion.span key="p" className="inline-flex items-center shrink-0" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}><Plus size={20} /></motion.span>}</AnimatePresence>
+                      </Button>
+                    </motion.div>
                   </motion.div>
                 </div>
                 <AnimatePresence>
@@ -231,7 +234,7 @@ export default function FashionProducts() {
                                         initial={{ y: 10, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{ delay: 0.15 }}
-                                        className="btn btn-outline btn-hover-secondary-filled flex items-center justify-center text-center px-3 py-1 md:px-6 md:py-2 text-xs md:text-sm font-medium"
+                                        className="btn-unified inline-flex items-center justify-center text-center px-3 py-1 md:px-6 md:py-2 text-xs md:text-sm font-medium pointer-events-none"
                                       >
                                         View Collection
                                       </motion.div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart, ArrowRight, Sparkles } from 'lucide-react'
+import Button from '@/components/ui/Button'
 import { CartManager, type CartItem } from '@/lib/cart'
 
 interface Product {
@@ -298,36 +299,42 @@ export default function FeaturedCollections() {
                         </motion.div>
                       </div>
 
-                      <motion.button
-                        onClick={() => handleAddToCart(product)}
-                        disabled={isAdding || isInCart || product.stock_qty === 0}
+                      <motion.div
                         whileHover={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 1.02 } : undefined}
                         whileTap={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 0.98 } : undefined}
-                        className={`focus-ring-none btn btn-outline btn-hover-secondary-filled w-full text-xs font-semibold justify-center gap-2 mb-2 sm:mb-2 py-1.5 sm:py-1.5 ${
-                          isInCart || product.stock_qty === 0 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
-                        }`}
+                        className={`mb-2 sm:mb-2 ${isInCart || product.stock_qty === 0 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
                       >
-                        <motion.div
-                          animate={isAdding ? { rotate: 360 } : {}}
-                          transition={{ duration: 0.5, repeat: isAdding ? Infinity : 0 }}
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => handleAddToCart(product)}
+                          disabled={isAdding || isInCart || product.stock_qty === 0}
+                          className="w-full text-xs font-semibold justify-center gap-2 py-1.5 sm:py-1.5"
                         >
-                          <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </motion.div>
-                        <span>
-                          {isAdding
-                            ? 'Adding...'
-                            : isInCart
-                            ? 'In Cart'
-                            : product.stock_qty === 0
-                            ? 'Out of Stock'
-                            : 'Add to Cart'}
-                        </span>
-                      </motion.button>
+                          <motion.div
+                            animate={isAdding ? { rotate: 360 } : {}}
+                            transition={{ duration: 0.5, repeat: isAdding ? Infinity : 0 }}
+                          >
+                            <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </motion.div>
+                          <span>
+                            {isAdding
+                              ? 'Adding...'
+                              : isInCart
+                              ? 'In Cart'
+                              : product.stock_qty === 0
+                              ? 'Out of Stock'
+                              : 'Add to Cart'}
+                          </span>
+                        </Button>
+                      </motion.div>
 
                       <motion.div className="flex justify-center">
-                        <Link
+                        <Button
                           href={`/products/${categorySlug}`}
-                          className="focus-ring-none btn btn-outline btn-hover-secondary-filled group/view-collection mt-1.5 sm:mt-1.5 text-xs font-semibold gap-1 px-3 sm:px-3 py-1.5 sm:py-1.5"
+                          variant="default"
+                          size="sm"
+                          className="group/view-collection mt-1.5 sm:mt-1.5 text-xs font-semibold gap-1 px-3 sm:px-3 py-1.5 sm:py-1.5"
                         >
                           <span>View Collection</span>
                           <motion.span
@@ -337,7 +344,7 @@ export default function FeaturedCollections() {
                           >
                             ⟹
                           </motion.span>
-                        </Link>
+                        </Button>
                       </motion.div>
                     </div>
                   </motion.div>

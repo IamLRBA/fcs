@@ -160,7 +160,7 @@ export default function SettingsDropdown({ variant = 'desktop' }: SettingsDropdo
                 >
                   <Palette className="w-5 h-5" />
                   <span className="font-medium">Themes</span>
-                  <span className="ml-auto text-primary-600 dark:text-primary-400" aria-hidden>{isThemeOpen ? '⇑' : '⇓'}</span>
+                  <span className="btn-unified-circle btn-unified-circle-sm ml-auto inline-flex items-center justify-center flex-shrink-0" aria-hidden>{isThemeOpen ? '⇑' : '⇓'}</span>
                 </button>
 
                 <AnimatePresence>

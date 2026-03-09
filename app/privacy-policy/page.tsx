@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Shield, Eye, Lock, Users, FileText } from 'lucide-react'
-import Link from 'next/link'
+import Button from '@/components/ui/Button'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 
 export default function PrivacyPolicy() {
@@ -154,12 +154,9 @@ export default function PrivacyPolicy() {
           transition={{ duration: 0.6, delay: 1.0 }}
           className="text-center mt-12"
         >
-          <Link
-            href="/"
-            className="btn btn-secondary inline-flex items-center justify-center px-8"
-          >
+          <Button href="/" variant="filled" className="inline-flex items-center justify-center px-8">
             Return to Homepage
-          </Link>
+          </Button>
         </motion.div>
       </main>
     </div>

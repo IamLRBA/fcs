@@ -7,6 +7,8 @@ import { useParams } from 'next/navigation'
 import { ShoppingCart, X, Maximize2, Minimize, ChevronLeft, ChevronRight, Quote } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import { ProductManager } from '@/lib/products'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { AuthManager } from '@/lib/auth'
 // Import products data - We'll need to create a proper data structure
 // For now, using mock data inline
@@ -282,21 +284,19 @@ export default function ProductCategoryPage() {
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -50 }}
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120 }}
         transition={{ duration: 0.3 }}
-        className="fixed top-20 left-8 z-50 pointer-events-none"
+        className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop#our-products" className="focus-ring-none group flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-          <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
-            ⟸
-          </motion.span>
+        <Link href="/sections/shop#our-products" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back to Shop</span>
         </Link>
       </motion.div>
 
       {/* Hero Section */}
-      <section className="relative text-center pt-8 pb-12 md:pt-12 md:pb-20 px-4 overflow-hidden">
+      <section className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4 overflow-hidden">
         <div className="relative max-w-6xl mx-auto">
           {/* Main Product Image and Title */}
           <motion.div
@@ -368,13 +368,15 @@ export default function ProductCategoryPage() {
               ).join(' ')
               
               return (
-                <button
+                <Button
                   key={section}
+                  variant={selectedSection === section ? 'filled' : 'default'}
+                  size="sm"
                   onClick={() => scrollToSection(section)}
-                  className={`btn ${selectedSection === section ? 'btn-secondary' : 'btn-primary'} text-sm sm:text-base justify-center`}
+                  className="text-sm sm:text-base justify-center"
                 >
                   {displayName}
-                </button>
+                </Button>
               )
             })}
           </motion.div>
@@ -472,11 +474,11 @@ export default function ProductCategoryPage() {
                           )}
                         </div>
                         <div className="flex items-center space-x-2 mt-1.5">
-                          <button className="focus-ring-none btn btn-outline btn-hover-secondary-filled flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2">
+                          <Button variant="default" size="sm" className="flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2" onClick={(e) => { e.stopPropagation(); openProductModal(product) }}>
                             <ShoppingCart className="w-4 h-4" />
                             <span className="hidden sm:inline">Quick View</span>
                             <span className="sm:hidden">View</span>
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -646,17 +648,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         className="relative w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll border border-neutral-200 dark:border-neutral-700"
       >
         {/* Close Button */}
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ rotate: 180, scale: 0.95 }}
-          onClick={onClose}
-          className="focus-ring-none absolute top-0.2 right-1 z-20 p-0 w-fit"
-          aria-label="Close modal"
-        >
-          <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
-            <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
-          </div>
-        </motion.button>
+        <ModalCloseButton onClose={onClose} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close modal" />
 
         <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-10 pt-10 sm:pt-8 md:pt-6 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
           {/* Image Gallery */}
@@ -776,18 +768,18 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
 
             {/* Add to Cart Button */}
             <div className="pt-5 mt-5 border-t border-neutral-200 dark:border-primary-600/40">
-              <button
+              <Button
+                variant="default"
+                size="md"
                 onClick={addToCart}
                 disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
-                className={`btn btn-outline btn-hover-secondary-filled w-full text-lg font-semibold justify-center gap-2 ${
-                  isAddingToCart || addedToCart || isInCart || product.stock_qty === 0 ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
-                }`}
+                className={`w-full justify-center gap-2 ${isAddingToCart || addedToCart || isInCart || product.stock_qty === 0 ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''}`}
               >
                 <ShoppingCart className="w-5 h-5" />
                 <span>
                   {isAddingToCart ? 'Adding...' : (addedToCart || isInCart) ? 'Already in Cart' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
                 </span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>

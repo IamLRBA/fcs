@@ -8,6 +8,8 @@ import { Package, Trash2, X, Plus, Pencil, Eye } from 'lucide-react'
 import { HiSearch, HiX } from 'react-icons/hi'
 import { AuthManager } from '@/lib/auth'
 import { ProductManager, type Product } from '@/lib/products'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 const categories = ['shirts', 'tees', 'coats', 'pants-and-shorts', 'footwear', 'accessories']
 const subcategoriesMap: Record<string, string[]> = {
@@ -225,14 +227,16 @@ export default function AdminProductsPage() {
 
             {/* Add product button */}
             <div className="flex justify-center mb-6">
-              <button
+              <Button
                 type="button"
+                variant="default"
+                size="md"
                 onClick={() => setShowAddModal(true)}
-                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2"
+                className="inline-flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Add product
-              </button>
+              </Button>
             </div>
 
             {/* Table */}
@@ -320,18 +324,7 @@ export default function AdminProductsPage() {
                 exit={{ scale: 0.95, opacity: 0 }}
                 className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
               >
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setDetailsProduct(null)}
-                  className="focus-ring-none absolute top-2 right-2 z-20 p-0 w-fit"
-                  aria-label="Close"
-                >
-                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
-                    <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
-                  </div>
-                </motion.button>
+                <ModalCloseButton onClose={() => setDetailsProduct(null)} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close" />
                 <div className="flex flex-col sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-5 sm:gap-6 pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 overflow-y-auto flex-1 min-h-0">
                   <div className="flex-shrink-0">
                     <div className="relative h-56 sm:h-64 md:h-72 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden">
@@ -351,20 +344,12 @@ export default function AdminProductsPage() {
                   </div>
                 </div>
                 <div className="pt-4 mt-auto border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex flex-wrap gap-3 flex-shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setEditingProduct({ ...detailsProduct })}
-                    className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2"
-                  >
+                  <Button type="button" variant="default" size="md" onClick={() => setEditingProduct({ ...detailsProduct })} className="inline-flex items-center gap-2">
                     <Pencil className="w-4 h-4" /> Edit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(detailsProduct, 'Mistakenly Posted')}
-                    className="btn btn-danger inline-flex items-center gap-2"
-                  >
+                  </Button>
+                  <Button type="button" variant="filled" size="md" onClick={() => handleDelete(detailsProduct, 'Mistakenly Posted')} className="inline-flex items-center gap-2 !border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white">
                     <Trash2 className="w-4 h-4" /> Delete
-                  </button>
+                  </Button>
                 </div>
               </motion.div>
             </div>
@@ -393,18 +378,7 @@ export default function AdminProductsPage() {
                 exit={{ scale: 0.95, opacity: 0 }}
                 className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
               >
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setEditingProduct(null)}
-                  className="focus-ring-none absolute top-2 right-2 z-20 p-0 w-fit"
-                  aria-label="Close"
-                >
-                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
-                    <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
-                  </div>
-                </motion.button>
+                <ModalCloseButton onClose={() => setEditingProduct(null)} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close" />
                 <form onSubmit={(e) => { e.preventDefault(); handleUpdate(editingProduct) }} className="flex flex-col min-h-0 flex-1 overflow-hidden">
                   <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
                     <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Edit product</h2>
@@ -424,9 +398,9 @@ export default function AdminProductsPage() {
                           }
                         }}
                       />
-                      <label htmlFor="edit-img" className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 cursor-pointer">
+                      <Button type="button" variant="default" size="sm" onClick={() => document.getElementById('edit-img')?.click()} className="inline-flex items-center gap-2">
                         Browse
-                      </label>
+                      </Button>
                       {editingProduct.images?.[0] && (
                         <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-700">
                           <img src={editingProduct.images[0]} alt="Preview" className="w-full h-full object-cover" />
@@ -487,8 +461,8 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex gap-3 flex-shrink-0">
-                    <button type="submit" className="btn btn-outline btn-hover-secondary-filled">Save changes</button>
-                    <button type="button" onClick={() => setEditingProduct(null)} className="btn btn-outline">Cancel</button>
+                    <Button type="submit" variant="default">Save changes</Button>
+                    <Button type="button" variant="default" onClick={() => setEditingProduct(null)}>Cancel</Button>
                   </div>
                 </form>
               </motion.div>
@@ -518,18 +492,7 @@ export default function AdminProductsPage() {
                 exit={{ scale: 0.95, opacity: 0 }}
                 className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
               >
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowAddModal(false)}
-                  className="focus-ring-none absolute top-2 right-2 z-20 p-0 w-fit"
-                  aria-label="Close"
-                >
-                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
-                    <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
-                  </div>
-                </motion.button>
+                <ModalCloseButton onClose={() => setShowAddModal(false)} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close" />
                 <form onSubmit={handleAddProduct} className="flex flex-col min-h-0 flex-1 overflow-hidden">
                   <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
                     <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Add new product</h2>
@@ -580,9 +543,9 @@ export default function AdminProductsPage() {
                     <div>
                       <label className="block text-sm font-medium mb-1">Images *</label>
                       <input id="add-imgs" type="file" accept="image/*" multiple onChange={(e) => handleImageUpload(e, setProductImages)} className="hidden" />
-                      <label htmlFor="add-imgs" className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 cursor-pointer">
+                      <Button type="button" variant="default" size="sm" onClick={() => document.getElementById('add-imgs')?.click()} className="inline-flex items-center gap-2">
                         Browse
-                      </label>
+                      </Button>
                       {productImages.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                           {productImages.map((img, i) => (
@@ -608,8 +571,8 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex gap-3 flex-shrink-0">
-                    <button type="submit" className="btn btn-outline btn-hover-secondary-filled">Add product</button>
-                    <button type="button" onClick={() => setShowAddModal(false)} className="btn btn-outline">Cancel</button>
+                    <Button type="submit" variant="default">Add product</Button>
+                    <Button type="button" variant="default" onClick={() => setShowAddModal(false)}>Cancel</Button>
                   </div>
                 </form>
               </motion.div>

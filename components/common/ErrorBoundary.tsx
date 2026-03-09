@@ -3,6 +3,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
 import { AlertCircle, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
+import Button from '@/components/ui/Button'
 
 interface Props {
   children: ReactNode
@@ -86,16 +87,17 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
             )}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button
+              <Button
+                variant="default"
                 onClick={this.handleReset}
-                className="btn btn-primary inline-flex items-center justify-center gap-2"
+                className="inline-flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 Try Again
-              </button>
-              <Link href="/" className="focus-ring-none btn btn-secondary">
+              </Button>
+              <Button href="/" variant="filled">
                 Go Home
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

@@ -66,6 +66,11 @@
   /* Prefer hero glass frame border for inputs so they visually match semi-transparent containers */
   --color-input-border: var(--color-hero-frame-border);
 
+  /* Reusable button (1px borders, glass/filled variants) */
+  --button-border-width: 1px;
+  --color-button-glass: rgb(255 255 255 / 0.12);
+  --color-button-hover-fill: rgb(111 78 55 / 0.5);
+
   /* Hero glass frame (home & about hero image containers) */
   --hero-frame-border-width: 1px;
   --hero-frame-radius: 1rem;
@@ -221,6 +226,10 @@
   --color-border-secondary: #5A3E2D;  /* Dark Coffee */
   --color-border-accent: #EEE5DA;     /* Light Almond */
   --color-hero-frame-border: #424242; /* Very subtle light border for hero glass frame (dark mode) */
+
+  /* Reusable button - Dark Mode (lighter fill for non-hero buttons) */
+  --color-button-glass: rgb(255 255 255 / 0.06);
+  --color-button-hover-fill: rgb(238 229 218 / 0.55);
 
   /* Hero glass frame - Dark Mode */
   --hero-frame-bg: rgb(25 25 25 / 0.05);

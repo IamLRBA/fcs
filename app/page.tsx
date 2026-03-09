@@ -16,6 +16,7 @@ import Contact from '@/components/sections/Contact'
 import AnimatedImageBanner from '@/components/sections/AnimatedImageBanner'
 import LogoMark from '@/components/ui/LogoMark'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import Button from '@/components/ui/Button'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -200,19 +201,23 @@ export default function Home() {
                             Wear the unseen future. Feel the divine in every thread.
                           </p>
                         </div>
-                        <div className="flex flex-row gap-2 sm:gap-4 justify-center items-center">
-                          <button 
+                        <div className="hero-cta-buttons flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center items-center">
+                          <Button
+                            variant="default"
+                            size="lg"
+                            className="text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
                             onClick={() => scrollToSection('portals-section')}
-                            className="btn btn-primary btn-hover-secondary-filled text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
                           >
                             ᗪIᐯE Iᑎ ᑎOᗯ
-                          </button>
-                          <button 
+                          </Button>
+                          <Button
+                            variant="filled"
+                            size="lg"
+                            className="text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
                             onClick={() => scrollToSection('contact-section')}
-                            className="btn btn-secondary btn-hover-primary-outline text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
                           >
                             GET Iᑎ TOᑌᑕᕼ
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </motion.div>

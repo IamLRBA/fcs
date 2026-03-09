@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Lock, User, Shield } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
+import Button from '@/components/ui/Button'
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState('')
@@ -49,17 +50,17 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-unified flex items-center justify-center px-4 py-20">
       {/* Fixed Back Button */}
       <motion.div
-        animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120, y: showBackButton ? 0 : -20 }}
         transition={{ duration: 0.3 }}
-        className="fixed top-20 left-8 z-50 pointer-events-none"
+        className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-          <span className="text-base font-medium">⟸</span>
+        <Link href="/" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="max-w-md w-full mt-10 sm:mt-16">
+      <div className="max-w-md w-full mt-10 sm:mt-16 pt-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -124,15 +125,15 @@ export default function AdminLoginPage() {
               </motion.div>
             )}
 
-          <button
+          <Button
             type="submit"
+            variant="default"
+            size="md"
             disabled={loading}
-            className={`btn btn-outline btn-hover-secondary-filled w-full justify-center text-base font-semibold ${
-              loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
-            }`}
+            className={`w-full justify-center ${loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''}`}
           >
             {loading ? 'Signing in...' : 'Sign In'}
-          </button>
+          </Button>
           </form>
           </div>
         </motion.div>

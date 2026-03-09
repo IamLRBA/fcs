@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
 import { IconBrandWhatsapp } from '@tabler/icons-react'
+import Button from '@/components/ui/Button'
 
 const contactInfo = [
   { title: 'EᗰᗩIᒪ', subtitle: 'jerrylarubafestus@gmail.com', icon: Mail, buttonText: 'Email Us', action: () => window.open('mailto:jerrylarubafestus@gmail.com', '_blank'), color: 'from-primary-500 to-primary-600' },
@@ -65,9 +66,9 @@ export default function Contact() {
                   <Icon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">{info.title}</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">{info.subtitle}</p>
-                  <button onClick={info.action} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6">
+                  <Button variant="default" onClick={info.action} className="inline-flex items-center justify-center px-6">
                     {info.buttonText}
-                  </button>
+                  </Button>
                 </div>
                 </div>
               </motion.div>
@@ -117,17 +118,19 @@ export default function Contact() {
                 </div>
               </div>
               <div className="text-center">
-                <button
+                <Button
                   type="submit"
+                  variant="default"
+                  size="md"
                   disabled={isSubmitting}
-                  className={`btn btn-outline btn-hover-secondary-filled text-lg px-8 py-4 inline-flex items-center space-x-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`inline-flex items-center space-x-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {isSubmitting ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div><span>Sending...</span></>) : (
                     <>
                       {contactMethod === 'email' ? (<><Mail className="w-5 h-5" /><span>Send Email</span></>) : (<><IconBrandWhatsapp className="w-5 h-5" /><span>Send Message</span></>)}
                     </>
                   )}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

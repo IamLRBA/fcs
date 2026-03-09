@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Users, X, Key, Trash2, UserCheck, UserX } from 'lucide-react'
 import { AuthManager, restoreUser } from '@/lib/auth'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 type UserRow = {
   id: string
@@ -264,9 +266,7 @@ export default function AdminAccountsPage() {
             <div className="relative z-10 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-2xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-primary-800 dark:text-primary-100">Reset password</h2>
-                <button type="button" onClick={() => setResetUserId(null)} className="focus-ring-none p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
-                  <X className="w-5 h-5" />
-                </button>
+                <ModalCloseButton onClose={() => setResetUserId(null)} aria-label="Close" />
               </div>
               <input
                 type="password"
@@ -276,10 +276,10 @@ export default function AdminAccountsPage() {
                 className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white mb-4"
               />
               <div className="flex gap-3">
-                <button type="button" onClick={() => submitResetPassword(resetUserId)} className="btn btn-outline btn-hover-secondary-filled">
+                <Button type="button" variant="default" onClick={() => submitResetPassword(resetUserId)}>
                   Set password
-                </button>
-                <button type="button" onClick={() => setResetUserId(null)} className="btn btn-outline">Cancel</button>
+                </Button>
+                <Button type="button" variant="default" onClick={() => setResetUserId(null)}>Cancel</Button>
               </div>
             </div>
           </motion.div>
@@ -307,33 +307,19 @@ export default function AdminAccountsPage() {
               <div className="relative z-10 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-bold text-primary-800 dark:text-primary-100">Delete account</h2>
-                  <button
-                    type="button"
-                    onClick={() => setPendingDeleteUser(null)}
-                    className="focus-ring-none p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+                  <ModalCloseButton onClose={() => setPendingDeleteUser(null)} aria-label="Close" />
                 </div>
                 <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-4">
                   Are you sure you want to delete this account?
                 </p>
                 <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={confirmDeleteUser}
-                    className="btn btn-danger inline-flex items-center gap-2"
-                  >
+                  <Button type="button" variant="filled" onClick={confirmDeleteUser} className="inline-flex items-center gap-2 !border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white">
                     <Trash2 className="w-4 h-4" />
                     <span>Delete</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPendingDeleteUser(null)}
-                    className="btn btn-outline"
-                  >
+                  </Button>
+                  <Button type="button" variant="default" onClick={() => setPendingDeleteUser(null)}>
                     Cancel
-                  </button>
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -365,20 +351,12 @@ export default function AdminAccountsPage() {
                   The account was deleted. Would you like to undo this action?
                 </p>
                 <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={handleUndoDelete}
-                    className="btn btn-outline btn-hover-secondary-filled"
-                  >
+                  <Button type="button" variant="default" onClick={handleUndoDelete}>
                     Undo
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowUndoModal(false)}
-                    className="btn btn-outline"
-                  >
+                  </Button>
+                  <Button type="button" variant="default" onClick={() => setShowUndoModal(false)}>
                     Close
-                  </button>
+                  </Button>
                 </div>
               </div>
             </motion.div>

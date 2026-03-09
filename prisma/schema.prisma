@@ -1,0 +1,235 @@
+// MysticalPIECES — PostgreSQL schema for clothing ecommerce
+// Prisma schema: products, users, orders, reviews, admin, product images
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // Optional: set DIRECT_URL for connection poolers (e.g. Vercel). Use same as DATABASE_URL for local.
+  // directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum OrderStatus {
+  pending
+  confirmed
+  dispatched
+  delivered
+}
+
+enum DeliveryOption {
+  kampala
+  outside
+}
+
+enum RemovalReason {
+  PRODUCT_BOUGHT
+  MISTAKENLY_POSTED
+}
+
+// ---------------------------------------------------------------------------
+// User (customer)
+// ---------------------------------------------------------------------------
+
+model User {
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  fullName             String    @map("full_name")
+  phone                String
+  passwordHash         String    @map("password_hash")
+  profileImageUrl      String?   @map("profile_image_url")
+  isActive             Boolean   @default(true) @map("is_active")
+  lastViewedProductIds String[]  @default([]) @map("last_viewed_product_ids")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  orders  Order[]
+  reviews Review[]
+
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Admin (separate from customers; no hardcoded credentials)
+// ---------------------------------------------------------------------------
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("admin_users")
+}
+
+// ---------------------------------------------------------------------------
+// Category (slug, title, description for shop structure)
+// ---------------------------------------------------------------------------
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+// ---------------------------------------------------------------------------
+// Product (clothing catalog: sizes, colors, stock)
+// ---------------------------------------------------------------------------
+
+model Product {
+  id                String   @id @default(cuid())
+  name              String
+  brand             String
+  category          String
+  section           String
+  description       String
+  condition         String
+  sku               String   @unique
+  priceUgx          Int      @map("price_ugx")
+  originalPriceUgx  Int?     @map("original_price_ugx")
+  stockQty          Int      @default(0) @map("stock_qty")
+  sizes             String[]
+  colors            String[]
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  images    ProductImage[]
+  orderItems OrderItem[]
+  reviews   Review[]
+  removals   ProductRemoval[]
+
+  @@index([category])
+  @@index([section])
+  @@index([isActive])
+  @@index([category, section])
+  @@index([createdAt])
+  @@map("products")
+}
+
+// ---------------------------------------------------------------------------
+// Product images (multiple per product, ordered)
+// ---------------------------------------------------------------------------
+
+model ProductImage {
+  id         String   @id @default(cuid())
+  productId  String   @map("product_id")
+  url        String
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+// ---------------------------------------------------------------------------
+// Order (customer snapshot + delivery)
+// ---------------------------------------------------------------------------
+
+model Order {
+  id               String         @id @default(cuid())
+  userId           String?        @map("user_id")
+  status           OrderStatus    @default(pending)
+  deliveryOption   DeliveryOption @map("delivery_option")
+  subtotalUgx     Int            @map("subtotal_ugx")
+  deliveryFeeUgx   Int            @map("delivery_fee_ugx")
+  totalUgx         Int            @map("total_ugx")
+  notes            String?
+  customerFullName String         @map("customer_full_name")
+  customerEmail    String         @map("customer_email")
+  customerPhone    String         @map("customer_phone")
+  addressStreet    String         @map("address_street")
+  addressCity      String         @map("address_city")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  user  User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("orders")
+}
+
+// ---------------------------------------------------------------------------
+// Order line item (snapshot: name, sku, price at order time)
+// ---------------------------------------------------------------------------
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String   @map("order_id")
+  productId   String?  @map("product_id")
+  productName String   @map("product_name")
+  sku         String
+  size        String?
+  color       String?
+  quantity    Int      @default(1)
+  priceUgx    Int      @map("price_ugx")
+  imageUrl    String?  @map("image_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+// ---------------------------------------------------------------------------
+// Review (product-specific or general testimonial)
+// ---------------------------------------------------------------------------
+
+model Review {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  productId   String?  @map("product_id")
+  productName String?  @map("product_name")
+  text        String
+  rating      Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([productId])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
+// ---------------------------------------------------------------------------
+// Product removal audit (replaces localStorage bought_products)
+// ---------------------------------------------------------------------------
+
+model ProductRemoval {
+  id              String        @id @default(cuid())
+  productId       String?       @map("product_id")
+  productSnapshot Json?         @map("product_snapshot")
+  reason          RemovalReason
+  removedAt       DateTime      @default(now()) @map("removed_at")
+
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([removedAt])
+  @@index([reason])
+  @@map("product_removals")
+}
