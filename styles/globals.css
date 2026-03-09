@@ -499,9 +499,22 @@
     border-style: solid;
     border-color: var(--color-hero-frame-border);
     box-sizing: border-box;
+    box-shadow: none !important;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     @apply relative overflow-hidden inline-flex items-center justify-center rounded-full tracking-wide font-light transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-unified:hover,
+  .btn-unified:focus-visible,
+  .btn-unified-filled:hover,
+  .btn-unified-filled:focus-visible,
+  .btn-unified-circle,
+  .btn-unified-circle:hover,
+  .btn-unified-circle:focus-visible,
+  .btn-unified-circle-sm,
+  .nav-button,
+  .nav-button:hover {
+    box-shadow: none;
   }
   .btn-unified {
     background: var(--color-button-glass);
@@ -558,6 +571,7 @@
     border-style: solid;
     border-color: var(--color-hero-frame-border);
     box-sizing: border-box;
+    box-shadow: none !important;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     background: var(--color-button-glass);

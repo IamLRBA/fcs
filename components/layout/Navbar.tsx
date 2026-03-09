@@ -606,7 +606,7 @@ export default function Navbar() {
                       <motion.span 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-white text-xs font-light rounded-full w-7 h-7 flex items-center justify-center shadow-lg"
+                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-white text-xs font-light rounded-full w-7 h-7 flex items-center justify-center"
                       >
                         {cartCount > 99 ? '99+' : cartCount}
                       </motion.span>

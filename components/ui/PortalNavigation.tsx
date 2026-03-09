@@ -137,7 +137,7 @@ export default function PortalNavigation() {
                     variant="default"
                     shineOnGroupHover
                     type="button"
-                    className="portal-explore-btn inline-flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300 shadow-2xl"
+                    className="portal-explore-btn inline-flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300"
                   >
                     <span className="font-medium">Explore</span>
                     <span className="font-medium">⟹</span>

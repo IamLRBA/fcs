@@ -337,7 +337,7 @@ export default function Testimonials() {
           <Button
             variant="default"
             size="icon"
-            className="nav-button w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center"
+            className="nav-button w-12 h-12 flex items-center justify-center"
             onClick={handlePrev}
           >
             ⟸
@@ -345,7 +345,7 @@ export default function Testimonials() {
           <Button
             variant="default"
             size="icon"
-            className="nav-button w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center"
+            className="nav-button w-12 h-12 flex items-center justify-center"
             onClick={handleNext}
           >
             ⟹

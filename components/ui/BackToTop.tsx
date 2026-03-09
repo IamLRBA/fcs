@@ -62,7 +62,7 @@ export default function BackToTop() {
           <Button
             variant="circle"
             onClick={scrollToTop}
-            className="focus-ring-none shadow-lg hover:shadow-xl transition-all duration-300"
+            className="focus-ring-none transition-all duration-300"
             aria-label="Back to top"
           >
             <span className="text-lg font-medium">⇑</span>
