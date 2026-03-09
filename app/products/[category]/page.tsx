@@ -429,7 +429,9 @@ export default function ProductCategoryPage() {
             </h2>
             
             <div className="grid gap-4 md:gap-6 lg:gap-8 justify-items-center [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-              {visibleProducts.map((product: Product, index: number) => (
+              {visibleProducts.map((product: Product, index: number) => {
+                const hasDiscount = product.original_price && product.original_price > product.price_ugx
+                return (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -453,17 +455,19 @@ export default function ProductCategoryPage() {
                             target.src = '/assets/images/placeholder.jpg'
                           }}
                         />
-                        {/* Condition Badge - lighter bg + darker text in light mode */}
-                        <div className="absolute top-2 left-2 px-3 py-1 bg-primary-100 dark:bg-primary-500/90 text-primary-800 dark:text-white text-xs font-semibold rounded-full">
-                          {product.condition}
-                        </div>
+                        {/* Discount Badge */}
+                        {hasDiscount && (
+                          <div className="absolute top-2 left-2 px-2 py-1 bg-accent-500 text-white text-xs font-bold rounded-full">
+                            {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
+                          </div>
+                        )}
                       </div>
 
                       {/* Product Info */}
-                      <div className="p-2">
+                      <div className="p-2 text-center">
                         <p className="text-primary-700 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.brand}</p>
                         <h3 className="text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2">{product.name}</h3>
-                        <div className="flex items-center space-x-1 mb-1 flex-wrap">
+                        <div className="flex items-center justify-center space-x-1 mb-1 flex-wrap">
                           <span className="text-base sm:text-sm font-bold text-primary-600 dark:text-primary-300">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
@@ -484,7 +488,7 @@ export default function ProductCategoryPage() {
                     </div>
                   </div>
                 </motion.div>
-              ))}
+              )})}
             </div>
           </motion.section>
           )
@@ -733,11 +737,6 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       UGX {product.original_price.toLocaleString()}
                     </span>
                   )}
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="px-3 py-1 bg-primary-100 dark:bg-primary-600/30 text-primary-800 dark:text-primary-300 text-sm rounded-full">
-                    {product.condition}
-                  </span>
                 </div>
               </div>
 
