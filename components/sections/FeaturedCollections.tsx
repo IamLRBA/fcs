@@ -205,22 +205,6 @@ export default function FeaturedCollections() {
                       className="relative z-10 flex-1 min-h-0 flex flex-col bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-xl shadow-md transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40"
                   >
 
-                    {/* Category badge with animation */}
-                    <motion.div
-                      initial={{ x: -20, opacity: 0 }}
-                      whileInView={{ x: 0, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 + 0.3 }}
-                      className="absolute top-3 left-3 z-10"
-                    >
-                      <motion.span
-                        whileHover={{ scale: 1.1 }}
-                        className="px-2.5 py-1 bg-primary-600/90 backdrop-blur-sm text-neutral-850 dark:text-white text-xs font-semibold rounded-full shadow-lg"
-                      >
-                        {categoryName}
-                      </motion.span>
-                    </motion.div>
-
                     <Link href={`/products/${categorySlug}`} className="focus-ring-none">
                       <div className="relative h-40 sm:h-44 md:h-40 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
                         <motion.img
@@ -240,17 +224,6 @@ export default function FeaturedCollections() {
                           whileHover={{ opacity: 1 }}
                           transition={{ duration: 0.3 }}
                         />
-                        {product.condition && (
-                          <motion.div
-                            initial={{ scale: 0, rotate: -180 }}
-                            whileInView={{ scale: 1, rotate: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 + 0.4, type: "spring" }}
-                            className="absolute top-3 right-3 px-2 py-1 bg-white/90 backdrop-blur-sm text-primary-800 text-xs font-semibold rounded-full shadow-lg"
-                          >
-                            {product.condition}
-                          </motion.div>
-                        )}
                         {hasDiscount && (
                           <motion.div
                             initial={{ scale: 0 }}
@@ -265,28 +238,26 @@ export default function FeaturedCollections() {
                       </div>
                     </Link>
 
-                    <div className="p-2 flex-1 flex flex-col relative z-10">
+                    <div className="px-2 pt-1.5 pb-2 flex-1 flex flex-col relative z-10">
                       <Link href={`/products/${categorySlug}`} className="focus-ring-none">
                         <motion.div
                           whileHover={{ x: 5 }}
                           transition={{ duration: 0.2 }}
-                          className="mb-0.5 sm:mb-0.5"
+                          className="mb-0 text-center"
                         >
-                          <p className="text-neutral-700 dark:text-primary-200 text-xs font-medium mb-0.5 line-clamp-1 group-hover:text-neutral-800 dark:group-hover:text-primary-100 transition-colors">{product.brand}</p>
-                          <h3 className="text-sm sm:text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-100 transition-colors leading-tight">
+                          <h3 className="text-sm sm:text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-100 transition-colors leading-tight">
                             {product.name}
                           </h3>
-                          <p className="text-neutral-600 dark:text-primary-300 text-xs mb-0.5 line-clamp-1 group-hover:text-neutral-700 dark:group-hover:text-primary-200 transition-colors">{product.sku}</p>
                         </motion.div>
                       </Link>
 
-                      <div className="mb-1 sm:mb-1 mt-auto">
+                      <div className="mt-1.5 mb-1 sm:mb-1">
                         <motion.div
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           viewport={{ once: true }}
                           transition={{ delay: index * 0.1 + 0.6 }}
-                          className="flex items-baseline space-x-1 flex-wrap"
+                          className="flex items-baseline justify-center space-x-1 flex-wrap"
                         >
                           <span className="text-base sm:text-sm font-bold text-neutral-800 dark:text-white dark:drop-shadow-sm group-hover:text-neutral-900 dark:group-hover:text-accent-50 transition-colors">
                             UGX {product.price_ugx.toLocaleString()}

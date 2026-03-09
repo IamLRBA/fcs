@@ -17,7 +17,7 @@ export default function Footer() {
             const Icon = social.icon as any
             return (
               <motion.div key={social.name} className="social-link" whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }}>
-                <Button variant="circle" href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.name}>
+                <Button variant="circle" href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.name} className="focus-ring-none">
                   <Icon size={24} />
                 </Button>
               </motion.div>
@@ -26,10 +26,10 @@ export default function Footer() {
         </div>
         <div className="footer-divider"></div>
         <div className="copyright-section">
-          <Link href="/" className="footer-logo group">
+          <Link href="/" className="focus-ring-none footer-logo group">
             <LogoMark size={140} className="transition-transform duration-300 group-hover:scale-110" />
           </Link>
-          <Link href="/" className="tagline brand-name leading-tight inline-block hover:opacity-90 transition-opacity">
+          <Link href="/" className="focus-ring-none tagline brand-name leading-tight inline-block hover:opacity-90 transition-opacity">
             <MysticalPiecesWord /> 
           </Link>
           <div className="footer-inner-outer relative backdrop-blur-lg rounded-2xl p-4 sm:p-6 w-full max-w-2xl border border-neutral-200/80 dark:border-neutral-600/80 overflow-hidden">
@@ -41,11 +41,11 @@ export default function Footer() {
               <p className="copyright m-0">
                 © {new Date().getFullYear()} <MysticalPiecesWord /> . All rights reserved.
               </p>
-              <p className="copyright2 m-0">Designed by <Button variant="circle" href="https://github.com/IamLRBA" target="_blank" rel="noopener noreferrer" className="align-middle ml-1" aria-label="LRBA on GitHub">ᒪᖇᗷᗩ</Button></p>
+              <p className="copyright2 m-0">Designed by <Button variant="circle" href="https://github.com/IamLRBA" target="_blank" rel="noopener noreferrer" className="focus-ring-none align-middle ml-1" aria-label="LRBA on GitHub">ᒪᖇᗷᗩ</Button></p>
               <div className="legal-links">
-            <Link href="/privacy-policy" className="legal-link">Privacy Policy</Link>
+            <Link href="/privacy-policy" className="focus-ring-none legal-link">Privacy Policy</Link>
             <span className="separator">•</span>
-            <Link href="/terms-conditions" className="legal-link">Terms & Conditions</Link>
+            <Link href="/terms-conditions" className="focus-ring-none legal-link">Terms & Conditions</Link>
               </div>
               </div>
             </div>
