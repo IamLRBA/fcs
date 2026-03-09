@@ -579,7 +579,7 @@ export default function FashionVideoSection() {
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: #C2B280;
+          background: var(--color-primary-300);
           cursor: pointer;
         }
         
@@ -587,7 +587,7 @@ export default function FashionVideoSection() {
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: #C2B280;
+          background: var(--color-primary-300);
           cursor: pointer;
           border: none;
         }
@@ -615,7 +615,7 @@ export default function FashionVideoSection() {
           width: auto;
           height: auto;
           border: none;
-          color: #C2B280;
+          color: var(--color-primary-300);
           z-index: 10;
         }
         
@@ -625,12 +625,12 @@ export default function FashionVideoSection() {
         }
 
         .video-swiper .swiper-pagination-bullet {
-          background: #C2B280;
+          background: var(--color-primary-300);
           opacity: 0.6;
           transition: background-color 0.3s ease, opacity 0.3s ease;
         }
         .video-swiper .swiper-pagination-bullet-active {
-          background: #C2B280;
+          background: var(--color-primary-300);
           opacity: 1;
         }
       `}</style>

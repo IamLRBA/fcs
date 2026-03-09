@@ -333,7 +333,7 @@ export default function Navbar() {
                   <form onSubmit={handleSearchSubmit} className="navbar-search-form inline-flex items-center shrink-0">
                     <div className="search-input-wrapper w-40">
                       {isSearchOpen && (
-                        <button type="button" onClick={clearSearch} className="focus-ring-none absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors duration-200">
+                        <button type="button" onClick={clearSearch} className="focus-ring-none absolute right-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors duration-200">
                           <HiX className="w-4 h-4" />
                         </button>
                       )}
@@ -342,7 +342,7 @@ export default function Navbar() {
                         placeholder="Search items..."
                         value={searchQuery}
                         onChange={handleSearchChange}
-                        className={`navbar-search-input input-overlay ${isSearchOpen ? 'pl-10' : 'pl-4'}`}
+                        className={`navbar-search-input input-overlay pl-4 ${isSearchOpen ? 'pr-10' : ''}`}
                         autoFocus
                       />
                       {showSuggestions && (

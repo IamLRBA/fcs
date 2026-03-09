@@ -39,6 +39,9 @@
   --color-accent-800: #453025;   /* Darker Coffee */
   --color-accent-900: #30221C;   /* Darkest Coffee */
 
+  /* Brand accent (glow / FX) – used by animated banners */
+  --color-brand-glow-rgb: 139 69 19;    /* Saddle-brown accent, as RGB triplet */
+
   /* Text Colors - Light Mode */
   --color-text-primary: #262424;     /* Deep Charcoal */
   --color-text-secondary: #252525;   /* Charcoal-2 */

@@ -365,7 +365,7 @@ export default function Testimonials() {
             >
               <div className="hero-glass-frame relative max-w-lg w-full backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600" onClick={(e) => e.stopPropagation()}>
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <motion.div className="modal-content bg-white dark:bg-[#191919] rounded-2xl p-6 w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
+              <motion.div className="modal-content bg-white dark:bg-neutral-950 rounded-2xl p-6 w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
                 <ModalCloseButton onClose={() => setSelectedTestimonial(null)} className="absolute top-4 right-4 flex-shrink-0" aria-label="Close" />
                 <div className="testimonial-content">
                   <p className="testimonial-text text-primary-700 dark:text-primary-200 text-base leading-relaxed mb-4 text-center">
