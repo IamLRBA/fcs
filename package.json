@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.2",
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "@sendgrid/mail": "^8.1.6",
@@ -20,6 +21,7 @@
     "lucide-react": "^0.541.0",
     "next": "latest",
     "nodemailer": "^7.0.11",
+    "prisma": "^6.19.2",
     "react": "latest",
     "react-dom": "latest",
     "react-icons": "^5.5.0",

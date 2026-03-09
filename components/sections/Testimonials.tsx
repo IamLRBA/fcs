@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { renderWithMysticalPieces } from '@/components/ui/MysticalPiecesWord'
 
 interface Testimonial {
@@ -332,18 +334,22 @@ export default function Testimonials() {
           </motion.div>
         </div>
         <div className="mobile-nav-buttons flex justify-center mt-8 space-x-4">
-          <button
-            className="nav-button w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
+          <Button
+            variant="default"
+            size="icon"
+            className="nav-button w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center"
             onClick={handlePrev}
           >
             ⟸
-          </button>
-          <button
-            className="nav-button w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
+          </Button>
+          <Button
+            variant="default"
+            size="icon"
+            className="nav-button w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center"
             onClick={handleNext}
           >
             ⟹
-          </button>
+          </Button>
         </div>
         <AnimatePresence>
           {selectedTestimonial && (
@@ -360,9 +366,7 @@ export default function Testimonials() {
               <div className="hero-glass-frame relative max-w-lg w-full backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600" onClick={(e) => e.stopPropagation()}>
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
               <motion.div className="modal-content bg-white dark:bg-[#191919] rounded-2xl p-6 w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
-                <button className="close-button absolute top-4 right-4 w-8 h-8 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:text-primary-600 dark:hover:text-primary-300" onClick={() => setSelectedTestimonial(null)}>
-                  <X />
-                </button>
+                <ModalCloseButton onClose={() => setSelectedTestimonial(null)} className="absolute top-4 right-4 flex-shrink-0" aria-label="Close" />
                 <div className="testimonial-content">
                   <p className="testimonial-text text-primary-700 dark:text-primary-200 text-base leading-relaxed mb-4 text-center">
                     &ldquo;{renderWithMysticalPieces(selectedTestimonial.fullText, `modal-${selectedTestimonial.id}`)}&rdquo;

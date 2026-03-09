@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -9,6 +9,8 @@ import { AuthManager } from '@/lib/auth'
 import { OrderManager, type Order } from '@/lib/cart'
 import type { User as UserType, Review } from '@/lib/auth'
 import { AnimatePresence } from 'framer-motion'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 export default function AccountPage() {
   const [user, setUser] = useState<UserType | null>(null)
@@ -21,6 +23,7 @@ export default function AccountPage() {
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
   const [showBackButton, setShowBackButton] = useState(true)
   const router = useRouter()
+  const profileFileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const currentUser = AuthManager.getCurrentUser()
@@ -125,17 +128,17 @@ export default function AccountPage() {
     <div className="min-h-screen bg-unified pt-24 pb-20">
       {/* Fixed Back Button */}
       <motion.div
-        animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120, y: showBackButton ? 0 : -20 }}
         transition={{ duration: 0.3 }}
         className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-          <span className="text-base font-medium">⟸</span>
+        <Link href="/" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="container-custom mt-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <div className="container-custom mt-12 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
 
         <div className="hero-glass-frame relative backdrop-blur-lg w-full">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
@@ -155,16 +158,15 @@ export default function AccountPage() {
                     <span className="text-primary-600 dark:text-primary-400">{user.fullName.charAt(0).toUpperCase()}</span>
                   )}
                 </div>
-                <button
-                  onClick={() => {
-                    setShowEditProfile(true)
-                    setProfileImage(user.profileImage || '')
-                  }}
-                  className="absolute bottom-0 right-0 w-8 h-8 bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-400 rounded-full flex items-center justify-center border-2 border-white dark:border-neutral-800 transition-colors shadow-md"
+                <Button
+                  variant="filled"
+                  size="icon"
+                  onClick={() => { setShowEditProfile(true); setProfileImage(user.profileImage || '') }}
+                  className="absolute bottom-0 right-0 w-8 h-8 min-w-0 rounded-full border-2 border-white dark:border-neutral-800 shadow-md"
                   title="Edit profile picture"
                 >
                   <Camera className="w-4 h-4 text-white" />
-                </button>
+                </Button>
               </div>
               <div className="flex-1 min-w-0">
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-100 break-words">{user.fullName}</h1>
@@ -290,9 +292,9 @@ export default function AccountPage() {
                       <div className="text-center py-8 sm:py-10">
                         <Package className="w-12 h-12 sm:w-16 sm:h-16 text-primary-400/80 mx-auto mb-3 sm:mb-4" />
                         <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 mb-3 sm:mb-4">No orders yet</p>
-                        <Link href="/sections/shop" className="btn btn-outline btn-hover-secondary-filled text-sm sm:text-base">
+                        <Button href="/sections/shop" variant="default" size="sm" className="text-sm sm:text-base">
                           Start Shopping
-                        </Link>
+                        </Button>
                       </div>
                     ) : (
                       <div className="space-y-3 sm:space-y-4 flex flex-col items-center sm:items-stretch">
@@ -331,13 +333,15 @@ export default function AccountPage() {
                                   <p className="font-medium">UGX {order.total.toLocaleString()}</p>
                                 </div>
                               </div>
-                              <Link
+                              <Button
                                 href={`/order-confirmation?id=${order.id}`}
-                                className="focus-ring-none btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium mt-1.5"
+                                variant="default"
+                                size="sm"
+                                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium mt-1.5"
                               >
                                 <span>View Details</span>
                                 <span className="text-base leading-none">⟹</span>
-                              </Link>
+                              </Button>
                             </div>
                           </motion.div>
                         ))}
@@ -389,9 +393,9 @@ export default function AccountPage() {
                           required
                         />
                       </div>
-                      <button type="submit" className="btn btn-outline btn-hover-secondary-filled w-full sm:w-auto">
+                      <Button type="submit" variant="default" size="md" className="w-full sm:w-auto">
                         Submit Review
-                      </button>
+                      </Button>
                     </form>
                   </div>
                 </div>
@@ -462,12 +466,7 @@ export default function AccountPage() {
                   <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100">
                     Edit Profile Picture
                   </h2>
-                  <button
-                    onClick={() => setShowEditProfile(false)}
-                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
+                  <ModalCloseButton onClose={() => setShowEditProfile(false)} className="flex-shrink-0" aria-label="Close" />
                 </div>
 
                 <div className="flex flex-col items-center space-y-6">
@@ -479,13 +478,9 @@ export default function AccountPage() {
                           alt="Profile preview"
                           className="w-32 h-32 rounded-full object-cover border-4 border-primary-200 dark:border-neutral-600"
                         />
-                        <button
-                          type="button"
-                          onClick={handleRemoveImage}
-                          className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                        >
+                        <Button type="button" variant="filled" size="icon" onClick={handleRemoveImage} className="absolute -top-2 -right-2 w-8 h-8 min-w-0 !border-red-500 !bg-red-500 hover:!bg-red-600">
                           <X className="w-4 h-4" />
-                        </button>
+                        </Button>
                       </div>
                     ) : (
                       <div className="w-32 h-32 rounded-full bg-primary-100 dark:bg-neutral-700 border-4 border-dashed border-primary-300 dark:border-neutral-600 flex items-center justify-center">
@@ -495,39 +490,22 @@ export default function AccountPage() {
                   </div>
 
                   <div className="w-full">
-                    <label className="cursor-pointer block">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                      />
-                      <div className="btn btn-outline btn-hover-secondary-filled w-full justify-center">
-                        {profileImage ? 'Change Photo' : 'Upload Photo'}
-                      </div>
-                    </label>
+                    <input ref={profileFileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    <Button variant="default" size="md" type="button" onClick={() => profileFileInputRef.current?.click()} className="w-full justify-center">
+                      {profileImage ? 'Change Photo' : 'Upload Photo'}
+                    </Button>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2 text-center">
                       Max 5MB, JPG/PNG
                     </p>
                   </div>
 
                   <div className="flex space-x-4 w-full">
-                    <button
-                      onClick={() => {
-                        setShowEditProfile(false)
-                        setProfileImage(user.profileImage || '')
-                        setProfileImageFile(null)
-                      }}
-                      className="btn btn-outline btn-hover-secondary-filled flex-1 justify-center"
-                    >
+                    <Button variant="default" size="md" onClick={() => { setShowEditProfile(false); setProfileImage(user.profileImage || ''); setProfileImageFile(null) }} className="flex-1 justify-center">
                       Cancel
-                    </button>
-                    <button
-                      onClick={handleSaveProfile}
-                      className="btn btn-primary btn-hover-secondary-filled flex-1 justify-center"
-                    >
+                    </Button>
+                    <Button variant="filled" size="md" onClick={handleSaveProfile} className="flex-1 justify-center">
                       Save Changes
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </motion.div>

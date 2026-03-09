@@ -248,7 +248,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 relative">
             {/* Left side - Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center gap-1.5 group">
+              <Link href="/" className="focus-ring-none flex items-center gap-1.5 group">
                 <LogoMark size={48} className="shrink-0 transition-transform duration-300 group-hover:scale-110" />
                 <MysticalPiecesWord className="text-2xl text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300" />
               </Link>
@@ -279,7 +279,7 @@ export default function Navbar() {
                     return <PortalIcon className="w-4 h-4 transition-colors" />
                   })()}
                   <span className="font-light">Portal</span>
-                  <span className="text-sm">⇓</span>
+                  <span className="btn-unified-circle btn-unified-circle-sm inline-flex items-center justify-center flex-shrink-0">⇓</span>
                   {portalItems.some(item => isActive(item.href)) ? (
                     <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
                   ) : (
@@ -325,12 +325,12 @@ export default function Navbar() {
 
             {/* Right side - Search, Cart, Settings */}
             <div className="hidden lg:flex items-center space-x-8">
-              <div className="relative ml-10" ref={searchRef}>
-                <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="focus-ring-none p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
+              <div className={`relative ml-10 flex items-center ${isSearchOpen ? 'gap-2' : ''}`} ref={searchRef}>
+                <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="focus-ring-none shrink-0 p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center" type={isSearchOpen ? 'submit' : 'button'}>
                   <HiSearch className="w-5 h-5" />
                 </button>
                 {isSearchOpen && (
-                  <form onSubmit={handleSearchSubmit} className="navbar-search-form inline-flex items-center">
+                  <form onSubmit={handleSearchSubmit} className="navbar-search-form inline-flex items-center shrink-0">
                     <div className="search-input-wrapper w-40">
                       {isSearchOpen && (
                         <button type="button" onClick={clearSearch} className="focus-ring-none absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors duration-200">
@@ -366,10 +366,10 @@ export default function Navbar() {
                   </form>
                 )}
               </div>
-              <Link href="/cart" className="relative p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200">
+              <Link href="/cart" className="focus-ring-none relative p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200">
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-1 -right-1 bg-primary-600 dark:bg-primary-500 text-neutral-850 dark:text-primary-50 text-xs font-light rounded-full w-5 h-5 flex items-center justify-center">
+                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-1 -right-1 bg-primary-600 dark:bg-primary-500 text-white text-xs font-light rounded-full w-5 h-5 flex items-center justify-center">
                     {cartCount > 99 ? '99+' : cartCount}
                   </motion.span>
                 )}
@@ -377,7 +377,7 @@ export default function Navbar() {
               <SettingsDropdown />
             </div>
 
-            <button onClick={() => setIsOpen(!isOpen)} className="nav-icon-no-focus lg:hidden absolute right-0 p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center">
+            <button onClick={() => setIsOpen(!isOpen)} className="focus-ring-none lg:hidden absolute right-0 p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center" aria-label="Menu">
               <div className="relative w-6 h-5 flex flex-col justify-between">
                 <motion.span
                   animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
@@ -479,7 +479,7 @@ export default function Navbar() {
                         <motion.span 
                           animate={{ rotate: isPortalsOpen ? 180 : 0 }}
                           transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="text-primary-600 dark:text-primary-400"
+                          className="btn-unified-circle btn-unified-circle-sm inline-flex items-center justify-center flex-shrink-0 text-primary-600 dark:text-primary-400"
                         >
                           ⇓
                         </motion.span>
@@ -606,7 +606,7 @@ export default function Navbar() {
                       <motion.span 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-neutral-850 dark:text-white text-xs font-light rounded-full w-7 h-7 flex items-center justify-center shadow-lg"
+                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-white text-xs font-light rounded-full w-7 h-7 flex items-center justify-center shadow-lg"
                       >
                         {cartCount > 99 ? '99+' : cartCount}
                       </motion.span>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Button from '@/components/ui/Button'
 
 export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false)
@@ -58,16 +59,14 @@ export default function BackToTop() {
             )}
           </AnimatePresence>
 
-          {/* Button */}
-          <motion.button
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
+          <Button
+            variant="circle"
             onClick={scrollToTop}
-            className="focus-ring-none btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm"
+            className="focus-ring-none shadow-lg hover:shadow-xl transition-all duration-300"
             aria-label="Back to top"
           >
-            <span className="text-lg font-medium group-hover:-translate-y-0.5 transition-transform duration-300 text-primary-800 dark:text-primary-400">⇑</span>
-          </motion.button>
+            <span className="text-lg font-medium">⇑</span>
+          </Button>
         </motion.div>
       )}
     </AnimatePresence>

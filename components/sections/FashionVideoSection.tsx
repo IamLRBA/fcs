@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, FreeMode } from 'swiper/modules'
 import { Play, Pause, Volume2, VolumeX, Maximize, Settings, SkipBack, SkipForward } from 'lucide-react'
+import Button from '@/components/ui/Button'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -300,7 +301,9 @@ export default function FashionVideoSection() {
                     </svg>
                   </div>
                   <p className="text-white text-sm sm:text-lg mb-3 sm:mb-4 px-2">{videoError}</p>
-                  <button
+                  <Button
+                    variant="default"
+                    size="sm"
                     onClick={() => {
                       setVideoError(null)
                       setIsLoading(true)
@@ -308,10 +311,10 @@ export default function FashionVideoSection() {
                       setSelectedVideo({ ...selectedVideo, src: '' })
                       setTimeout(() => setSelectedVideo({ ...selectedVideo, src: currentSrc }), 100)
                     }}
-                    className="btn btn-outline btn-hover-secondary-filled justify-center text-xs sm:text-base px-3 py-1.5 sm:px-4 sm:py-2"
+                    className="justify-center text-xs sm:text-base px-3 py-1.5 sm:px-4 sm:py-2 !text-white !border-white hover:!bg-white/20 hover:!text-white"
                   >
                     Retry
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

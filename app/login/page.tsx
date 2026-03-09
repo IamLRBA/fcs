@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, Lock, User, Phone, Eye, EyeOff, Image as ImageIcon, Camera } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import Button from '@/components/ui/Button'
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -30,6 +31,7 @@ export default function LoginPage() {
   })
   
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -130,17 +132,17 @@ export default function LoginPage() {
     <div className="min-h-screen bg-unified flex items-center justify-center px-4 pt-32 pb-16">
       {/* Fixed Back Button */}
       <motion.div
-        animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120, y: showBackButton ? 0 : -20 }}
         transition={{ duration: 0.3 }}
-        className="fixed top-20 left-8 z-50 pointer-events-none"
+        className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-          <span className="text-base font-medium">⟸</span>
+        <Link href="/" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="max-w-md w-full mt-12">
+      <div className="max-w-md w-full mt-12 pt-16">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -158,35 +160,23 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="flex items-center justify-center mb-6 bg-primary-50/80 dark:bg-neutral-700 rounded-lg p-1">
-            <button
-              onClick={() => {
-                setIsLogin(true)
-                setError('')
-              }}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-                isLogin
-                  ? 'bg-white/95 dark:bg-neutral-800 text-primary-700 dark:text-primary-200 shadow-sm'
-                  : 'text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
-              }`}
+          <div className="flex items-center justify-center mb-6 bg-primary-50/80 dark:bg-neutral-700 rounded-lg p-1 gap-1">
+            <Button
+              variant={isLogin ? 'filled' : 'default'}
+              size="sm"
+              onClick={() => { setIsLogin(true); setError('') }}
+              className="flex-1 !rounded-md"
             >
               Login
-            </button>
-            <button
-              onClick={() => {
-                setIsLogin(false)
-                setError('')
-                setProfileImage('')
-                setProfileImageFile(null)
-              }}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-                !isLogin
-                  ? 'bg-white/95 dark:bg-neutral-800 text-primary-700 dark:text-primary-200 shadow-sm'
-                  : 'text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300'
-              }`}
+            </Button>
+            <Button
+              variant={!isLogin ? 'filled' : 'default'}
+              size="sm"
+              onClick={() => { setIsLogin(false); setError(''); setProfileImage(''); setProfileImageFile(null) }}
+              className="flex-1 !rounded-md"
             >
               Sign Up
-            </button>
+            </Button>
           </div>
 
           <AnimatePresence mode="wait">
@@ -230,13 +220,15 @@ export default function LoginPage() {
                       className="input-overlay w-full pl-10 pr-12 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="Enter your password"
                     />
-                    <button
+                    <Button
                       type="button"
+                      variant="default"
+                      size="icon"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-400 hover:text-primary-600"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 min-w-0 !border-0 !bg-transparent shadow-none"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -250,15 +242,15 @@ export default function LoginPage() {
                   </motion.div>
                 )}
 
-                <button
+                <Button
                   type="submit"
+                  variant="default"
+                  size="md"
                   disabled={loading}
-                  className={`btn btn-outline btn-hover-secondary-filled w-full justify-center text-base font-semibold ${
-                    loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
-                  }`}
+                  className={`w-full justify-center ${loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''}`}
                 >
                   {loading ? 'Signing in...' : 'Sign In'}
-                </button>
+                </Button>
               </motion.form>
             ) : (
               <motion.form
@@ -334,13 +326,15 @@ export default function LoginPage() {
                             alt="Profile preview"
                             className="w-20 h-20 rounded-full object-cover border-2 border-primary-200 dark:border-neutral-600"
                           />
-                          <button
+                          <Button
                             type="button"
+                            variant="filled"
+                            size="icon"
                             onClick={handleRemoveImage}
-                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                            className="absolute -top-2 -right-2 w-6 h-6 min-w-0 !border-red-500 !bg-red-500 hover:!bg-red-600"
                           >
                             ×
-                          </button>
+                          </Button>
                         </div>
                       ) : (
                         <div className="w-20 h-20 rounded-full bg-primary-100 dark:bg-neutral-700 border-2 border-dashed border-primary-300 dark:border-neutral-600 flex items-center justify-center">
@@ -349,16 +343,23 @@ export default function LoginPage() {
                       )}
                     </div>
                     <div className="flex-1">
-                      <label className="cursor-pointer">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                        />
-                        <div className="btn btn-outline btn-hover-secondary-filled justify-center px-6">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="login-profile-photo"
+                      />
+                      <label htmlFor="login-profile-photo" className="cursor-pointer block">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          type="button"
+                          className="w-full justify-center pointer-events-none"
+                          as="span"
+                        >
                           {profileImage ? 'Change Photo' : 'Upload Photo'}
-                        </div>
+                        </Button>
                       </label>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
                         Max 5MB, JPG/PNG
@@ -381,13 +382,15 @@ export default function LoginPage() {
                       className="input-overlay w-full pl-10 pr-12 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                       placeholder="At least 6 characters"
                     />
-                    <button
+                    <Button
                       type="button"
+                      variant="default"
+                      size="icon"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-400 hover:text-primary-600"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 min-w-0 !border-0 !bg-transparent shadow-none"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -418,15 +421,15 @@ export default function LoginPage() {
                   </motion.div>
                 )}
 
-                <button
+                <Button
                   type="submit"
+                  variant="default"
+                  size="md"
                   disabled={loading}
-                  className={`btn btn-outline btn-hover-secondary-filled w-full justify-center text-base font-semibold ${
-                    loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
-                  }`}
+                  className={`w-full justify-center ${loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''}`}
                 >
                   {loading ? 'Creating account...' : 'Create Account'}
-                </button>
+                </Button>
               </motion.form>
             )}
           </AnimatePresence>

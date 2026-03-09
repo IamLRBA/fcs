@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
+import Button from '@/components/ui/Button'
 import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
 import FashionVideoSection from '@/components/sections/FashionVideoSection'
 import FashionProducts from '@/components/sections/FashionProducts'
@@ -262,24 +263,19 @@ export default function ShopPage() {
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -50 }}
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120 }}
         transition={{ duration: 0.3 }}
-        className="fixed top-20 left-8 z-50 pointer-events-none"
+        className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/" className="focus-ring-none group flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-          <motion.div
-            whileHover={{ x: -5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <span className="text-lg font-medium">⟸</span>
-          </motion.div>
+        <Link href="/" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center relative">
+      <section className="min-h-screen flex items-center justify-center relative pt-20">
         <motion.div
           style={{ y, opacity }}
           className="text-center z-20 px-4"
@@ -463,18 +459,16 @@ export default function ShopPage() {
               {/* Mood Selector */}
               <div className="flex justify-center flex-wrap gap-3">
                 {Object.keys(moodboardData).map((mood) => (
-                  <button
+                  <Button
                     key={mood}
+                    variant={selectedMood === mood ? 'filled' : 'default'}
+                    size="sm"
                     onClick={() => changeMood(mood)}
                     disabled={isUpdatingImages}
-                    className={`btn transition-all duration-300 capitalize px-5 py-2 ${
-                      selectedMood === mood
-                        ? 'btn-secondary'
-                        : 'btn-outline btn-hover-secondary-filled'
-                    } ${isUpdatingImages ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`capitalize ${isUpdatingImages ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {mood}
-                  </button>
+                  </Button>
                 ))}
               </div>
               
@@ -569,15 +563,9 @@ export default function ShopPage() {
           <p className="text-xl text-neutral-700 dark:text-primary-300 mb-8">
             Explore our collection of thrifted treasures and for any questions, contact us!
           </p>
-          <Link href="/#contact-section">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn btn-outline btn-hover-secondary-filled text-lg px-8 py-4"
-            >
-              Contact Us
-            </motion.button>
-          </Link>
+          <Button href="/#contact-section" variant="default" size="md">
+            Contact Us
+          </Button>
         </motion.div>
       </section>
     </div>

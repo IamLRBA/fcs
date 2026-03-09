@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Keyboard } from 'lucide-react'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 interface Shortcut {
   key: string
@@ -171,16 +173,15 @@ export default function KeyboardShortcuts() {
             </motion.div>
           )}
         </AnimatePresence>
-        <motion.button
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
+        <Button
+          variant="circle"
           onClick={() => setIsOpen(true)}
-          className="btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm"
+          className="focus-ring-none shadow-lg hover:shadow-xl transition-all duration-300"
           aria-label="Keyboard shortcuts"
           title="Keyboard shortcuts (Ctrl + ?)"
         >
-          <Keyboard className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-        </motion.button>
+          <Keyboard className="w-5 h-5" />
+        </Button>
       </motion.div>
 
       {/* Keyboard Shortcuts Modal */}
@@ -216,13 +217,7 @@ export default function KeyboardShortcuts() {
                       <Keyboard className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                       <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Keyboard Shortcuts</h2>
                     </div>
-                    <button
-                      onClick={() => setIsOpen(false)}
-                      className="focus-ring-none relative z-10 p-2 hover:bg-neutral-200/80 dark:bg-transparent dark:hover:bg-transparent rounded-lg transition-colors"
-                      aria-label="Close"
-                    >
-                      <X className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
-                    </button>
+                    <ModalCloseButton onClose={() => setIsOpen(false)} className="relative z-10 flex-shrink-0" aria-label="Close" />
                   </div>
                   {/* Shortcuts grid section */}
                   <div className="p-6 flex-1 min-h-0">

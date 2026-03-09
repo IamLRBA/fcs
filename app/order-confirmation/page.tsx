@@ -9,6 +9,7 @@ import { downloadReceipt, generateReceiptImage } from '@/lib/utils/receipt-gener
 import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import Button from '@/components/ui/Button'
 
 export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null)
@@ -154,9 +155,9 @@ export default function OrderConfirmationPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Not Found</h1>
           <p className="text-primary-700 dark:text-primary-400 mb-8">We couldn't find an order with that ID.</p>
-          <Link href="/products/shirts" className="focus-ring-none btn btn-primary">
+          <Button href="/products/shirts" variant="filled">
             Continue Shopping
-          </Link>
+          </Button>
         </div>
       </div>
     )
@@ -388,24 +389,25 @@ export default function OrderConfirmationPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center mt-12 print:hidden"
+          className="hero-cta-buttons flex flex-col sm:flex-row gap-4 justify-center mt-12 print:hidden"
         >
-          <button
+          <Button
+            variant="default"
             onClick={handleDownloadReceipt}
             disabled={isDownloading}
-            className="focus-ring-none btn btn-outline inline-flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-5 h-5" />
             <span>{isDownloading ? 'Downloading...' : 'Download Receipt'}</span>
-          </button>
-          <Link href="/products/shirts" className="focus-ring-none btn btn-primary inline-flex items-center justify-center space-x-2">
+          </Button>
+          <Button href="/products/shirts" variant="filled" className="inline-flex items-center justify-center space-x-2">
             <Package className="w-5 h-5" />
             <span>Continue Shopping</span>
-          </Link>
-          <Link href="/" className="focus-ring-none btn btn-secondary btn-hover-primary-filled inline-flex items-center justify-center space-x-2">
+          </Button>
+          <Button href="/" variant="default" className="inline-flex items-center justify-center space-x-2">
             <Home className="w-5 h-5" />
             <span>Go Home</span>
-          </Link>
+          </Button>
         </motion.div>
       </div>
 

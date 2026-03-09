@@ -33,7 +33,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             href="/"
             className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors w-fit"
           >
-            <span className="text-base font-medium">⟸</span>
+            <span className="btn-unified-circle flex-shrink-0">⟸</span>
             <span className="text-sm font-medium">Back to Home</span>
           </Link>
           <button

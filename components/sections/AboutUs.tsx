@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import Link from 'next/link'
+import Button from '@/components/ui/Button'
 import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
@@ -186,13 +186,10 @@ export default function AboutUs() {
                 <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-2">ᒪᖇᗷᗩ</h4>
                 <p className="text-lg text-primary-700 dark:text-primary-300 mb-6">CEO & Founder</p>
                 
-                <Link 
-                  href="/ceo-profile"
-                  className="btn btn-outline inline-flex items-center space-x-2"
-                >
+                <Button href="/ceo-profile" variant="default" className="inline-flex items-center space-x-2">
                   <span>View Profile</span>
                   <ExternalLink className="w-4 h-4" />
-                </Link>
+                </Button>
               </div>
             </div>
           </div>

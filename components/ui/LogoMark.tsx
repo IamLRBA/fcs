@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
 import { useTheme } from '@/components/layout/ThemeProvider'
 
 type LogoMarkProps = {
@@ -12,25 +11,9 @@ type LogoMarkProps = {
 const LIGHT_LOGO_SRC = '/assets/images/branding/logo-light.png'
 const DARK_LOGO_SRC = '/assets/images/branding/logo-dark.png'
 
+/** Renders both theme logos and uses CSS dark:hidden / dark:block so the logo switches in sync with the document theme (same as BlurredImageBackground). */
 export default function LogoMark({ className, animated = false, size = 120 }: LogoMarkProps) {
-  const { theme, mounted } = useTheme()
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
-
-  useEffect(() => {
-    if (!mounted) return
-    
-    // Determine theme based on user preference
-    let newTheme: 'light' | 'dark'
-    if (theme === 'system') {
-      newTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    } else {
-      newTheme = theme === 'dark' ? 'dark' : 'light'
-    }
-    
-    setResolvedTheme(newTheme)
-  }, [theme, mounted])
-
-  const currentLogo = resolvedTheme === 'dark' ? DARK_LOGO_SRC : LIGHT_LOGO_SRC
+  const { mounted } = useTheme()
   const classes = ['logo-mark', animated ? 'logo-mark--animated' : '', className]
     .filter(Boolean)
     .join(' ')
@@ -50,13 +33,14 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
       }}
       aria-hidden="true"
     >
+      {/* Light logo – hidden in dark mode via wrapper so only one logo ever renders visibly */}
       <img
-        key={mounted ? `logo-${resolvedTheme}` : 'logo-ssr'}
-        src={mounted ? currentLogo : LIGHT_LOGO_SRC}
+        src={LIGHT_LOGO_SRC}
         alt="Mystical PIECES® logo"
         width={size}
         height={size}
         draggable={false}
+        className={mounted ? 'dark:hidden' : ''}
         style={{
           width: '100%',
           height: '100%',
@@ -66,6 +50,25 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
         }}
         loading="eager"
       />
+      {/* Dark logo – wrapper is display:none in light so the dark image never paints in light mode */}
+      <span className={mounted ? 'hidden dark:block absolute inset-0 w-full h-full' : 'hidden'}>
+        <img
+          src={DARK_LOGO_SRC}
+          alt=""
+          width={size}
+          height={size}
+          draggable={false}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            maxWidth: '100%',
+            maxHeight: '100%',
+          }}
+          loading="eager"
+          aria-hidden
+        />
+      </span>
     </div>
   )
 }

@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { X, User, AlertCircle } from 'lucide-react'
+import { User, AlertCircle } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
-import Link from 'next/link'
+import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 export default function AccountPromptPopup() {
   const [showPopup, setShowPopup] = useState(false)
@@ -78,12 +79,7 @@ export default function AccountPromptPopup() {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed bottom-8 right-8 bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl p-6 max-w-md z-50 border border-neutral-200 dark:border-neutral-700"
           >
-            <button
-              onClick={handleDismiss}
-              className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 dark:text-neutral-300 dark:hover:text-neutral-200 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <ModalCloseButton onClose={handleDismiss} className="absolute top-4 right-4 flex-shrink-0" aria-label="Close" />
             
             <div className="flex items-start space-x-4">
               <div className="w-12 h-12 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center flex-shrink-0">
@@ -103,19 +99,23 @@ export default function AccountPromptPopup() {
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <Link
+                  <Button
                     href="/login"
+                    variant="filled"
+                    size="md"
                     onClick={handleSignUp}
-                    className="btn btn-secondary flex-1 justify-center text-base font-semibold"
+                    className="flex-1 justify-center"
                   >
                     Sign Up Now
-                  </Link>
-                  <button
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="md"
                     onClick={handleDismiss}
-                    className="btn btn-primary flex-1 justify-center text-base font-semibold"
+                    className="flex-1 justify-center"
                   >
                     Maybe Later
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

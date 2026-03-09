@@ -492,6 +492,183 @@
     color: var(--color-neutral-400) !important;
   }
 
+  /* Unified reusable button: 1px border (matches settings dropdown semi-transparent container), glass/filled variants */
+  .btn-unified,
+  .btn-unified-filled {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-hero-frame-border);
+    box-sizing: border-box;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    @apply relative overflow-hidden inline-flex items-center justify-center rounded-full tracking-wide font-light transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-unified {
+    background: var(--color-button-glass);
+    color: var(--color-border-accent);
+  }
+  .btn-unified:hover,
+  .btn-unified:focus-visible {
+    background: var(--color-button-hover-fill);
+    color: var(--color-text-inverse);
+  }
+  /* Portal Explore button: lighter text in light mode (same as hover) */
+  .portal-explore-btn {
+    color: var(--color-text-inverse);
+  }
+  .dark .portal-explore-btn {
+    color: var(--color-border-accent);
+  }
+  /* Glass shine animation (left to right, then gone) on hover */
+  .btn-unified::before,
+  .btn-unified-filled::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    width: 60%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+  }
+  .btn-unified:hover::before,
+  .btn-unified:focus-visible::before,
+  .btn-unified-filled:hover::before,
+  .btn-unified-filled:focus-visible::before {
+    animation: btn-shine 0.7s ease-out forwards;
+  }
+  @keyframes btn-shine {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(250%);
+      opacity: 0;
+    }
+  }
+  /* Circle variant: same as .btn-unified (1px border, glass, hover, shine) – used by Button variant="circle" */
+  .btn-unified-circle {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-hero-frame-border);
+    box-sizing: border-box;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    background: var(--color-button-glass);
+    color: var(--color-border-accent);
+    @apply relative overflow-hidden inline-flex items-center justify-center rounded-full w-12 h-12 p-0 min-w-0 tracking-wide font-light transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-unified-circle:hover,
+  .btn-unified-circle:focus-visible {
+    background: var(--color-button-hover-fill);
+    color: var(--color-text-inverse);
+  }
+  .btn-unified-circle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    width: 60%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+  }
+  .btn-unified-circle:hover::before,
+  .btn-unified-circle:focus-visible::before {
+    animation: btn-shine 0.7s ease-out forwards;
+  }
+  /* Small circle for modals/dropdowns (X buttons, arrows) */
+  .btn-unified-circle-sm {
+    width: 2rem;
+    height: 2rem;
+    min-width: 2rem;
+    min-height: 2rem;
+    font-size: 0.875rem;
+  }
+  .btn-unified-circle-sm::before {
+    width: 55%;
+  }
+  /* Shine on parent group hover (e.g. portal Explore button) */
+  .group:hover .btn-unified-group-shine::before {
+    animation: btn-shine 0.7s ease-out forwards;
+  }
+  .btn-unified-filled {
+    background: var(--color-button-hover-fill);
+    color: var(--color-text-inverse);
+  }
+  .btn-unified-filled:hover,
+  .btn-unified-filled:focus-visible {
+    background: var(--color-button-glass);
+    color: var(--color-border-accent);
+  }
+
+  /* Dark mode: reduced darkness for unified buttons (lighter fill) */
+  .dark .btn-unified:hover,
+  .dark .btn-unified:focus-visible {
+    background: var(--color-button-hover-fill);
+  }
+  .dark .btn-unified-circle:hover,
+  .dark .btn-unified-circle:focus-visible {
+    background: var(--color-button-hover-fill);
+    color: var(--color-text-inverse);
+  }
+  /* When circle is inside a link (e.g. back arrow), hover parent to highlight circle */
+  a:hover .btn-unified-circle {
+    background: var(--color-button-hover-fill);
+    color: var(--color-text-inverse);
+  }
+  a:hover .btn-unified-circle::before {
+    animation: btn-shine 0.7s ease-out forwards;
+  }
+  .dark .btn-unified-filled {
+    background: var(--color-button-hover-fill);
+  }
+  /* Dark mode: button border = settings dropdown container (neutral-700, 1px) */
+  .dark .btn-unified,
+  .dark .btn-unified-filled,
+  .dark .btn-unified-circle {
+    border-width: 1px;
+    border-color: var(--color-neutral-700);
+  }
+  /* Hero, cart, checkout, order confirmation: dark mode same as light – outline vs filled, swap on hover */
+  .dark .hero-cta-buttons .btn-unified {
+    background: var(--color-button-glass);
+    color: var(--color-border-accent);
+    border-color: var(--color-neutral-700);
+  }
+  .dark .hero-cta-buttons .btn-unified-filled:hover,
+  .dark .hero-cta-buttons .btn-unified-filled:focus-visible {
+    border-color: var(--color-neutral-700);
+  }
+  .dark .hero-cta-buttons .btn-unified:hover,
+  .dark .hero-cta-buttons .btn-unified:focus-visible {
+    background: var(--color-border-accent);
+    color: var(--color-text-inverse);
+  }
+  .dark .hero-cta-buttons .btn-unified-filled {
+    background: var(--color-border-accent);
+    color: var(--color-text-inverse);
+    border-color: var(--color-neutral-700);
+  }
+  .dark .hero-cta-buttons .btn-unified-filled:hover,
+  .dark .hero-cta-buttons .btn-unified-filled:focus-visible {
+    background: var(--color-button-glass);
+    color: var(--color-border-accent);
+    border-color: var(--color-neutral-700);
+  }
+
   .dark .btn {
     --btn-text-color: var(--color-accent-200);
     --btn-surface: rgba(255, 255, 255, 0.06);
@@ -638,18 +815,44 @@
     --btn-text-hover: var(--color-text-primary);
   }
 
+  /* Circle buttons: same as primary – 1px border, glass default, same hover fill & text */
   .btn-circle {
-    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.4), rgba(168, 155, 111, 0.4), rgba(111, 78, 55, 0));
-    --btn-surface: rgba(111, 78, 55, 0.08);
-    --btn-surface-hover: rgba(111, 78, 55, 0.12);
-    --btn-text-color: var(--color-text-inverse);
+    --btn-surface: var(--color-button-glass);
+    --btn-surface-hover: var(--color-button-hover-fill);
+    --btn-text-color: var(--color-border-accent);
     --btn-text-hover: var(--color-text-inverse);
+    border: 1px solid var(--color-hero-frame-border);
+    box-sizing: border-box;
+    color: var(--color-border-accent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     @apply rounded-full p-2.5;
   }
-
   .dark .btn-circle {
-    --btn-surface: rgba(255, 255, 255, 0.08);
-    --btn-text-color: var(--color-text-inverse);
+    --btn-surface: var(--color-button-glass);
+    --btn-text-color: var(--color-border-accent);
+    color: var(--color-border-accent);
+  }
+  /* Glass shine (left to right) on circle buttons – same as unified buttons */
+  .btn-circle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    width: 60%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+  }
+  .btn-circle:hover::before,
+  .btn-circle:focus-visible::before {
+    animation: btn-shine 0.7s ease-out forwards;
   }
 
   /* Text Gradient */
@@ -752,7 +955,7 @@
   }
 
   .search-input-wrapper {
-    @apply relative;
+    @apply relative flex items-center;
   }
 
   .navbar-search-input {
@@ -760,8 +963,9 @@
     width: 11rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    height: 2.25rem;
     border: var(--input-border-width) solid var(--color-input-border);
     border-radius: 0.5rem;
     font-size: 16px; /* Prevent iOS zoom on focus */

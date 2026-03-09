@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart, Trash2 } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
+import Button from '@/components/ui/Button'
 
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -104,12 +105,9 @@ export default function CartPage() {
               </p>
             </div>
             {cart.length > 0 && (
-              <button
-                onClick={clearCart}
-                className="px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors duration-200"
-              >
+              <Button variant="default" size="sm" onClick={clearCart} className="!border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300">
                 Clear Cart
-              </button>
+              </Button>
             )}
           </div>
         </motion.div>
@@ -123,12 +121,9 @@ export default function CartPage() {
             <ShoppingCart className="w-24 h-24 mx-auto text-primary-400/70 dark:text-primary-500/30 mb-6" />
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-4">Your cart is empty</h2>
             <p className="text-neutral-600 dark:text-primary-400 mb-8">Looks like you haven't added anything to your cart yet.</p>
-            <Link 
-              href="/sections/shop"
-              className="inline-block btn btn-primary"
-            >
+            <Button href="/sections/shop" variant="filled" size="md">
               Start Shopping
-            </Link>
+            </Button>
           </motion.div>
         ) : (
           <div className="grid md:grid-cols-3 gap-8">
@@ -176,14 +171,16 @@ export default function CartPage() {
                           <span className="text-primary-700 dark:text-primary-300 text-sm">Single Piece</span>
                         </div>
 
-                        <button
+                        <Button
+                          variant="default"
+                          size="icon"
                           onClick={() => removeItem(index)}
                           disabled={isUpdating}
-                          className="p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors duration-200 disabled:opacity-50"
+                          className="w-10 h-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
                           aria-label="Remove item"
                         >
                           <Trash2 className="w-5 h-5" />
-                        </button>
+                        </Button>
                       </div>
                     </div>
 
@@ -234,19 +231,24 @@ export default function CartPage() {
                   </span>
                 </div>
 
-                <Link
-                  href="/checkout"
-                  className="btn btn-secondary btn-hover-primary-outline w-full text-lg font-semibold justify-center mb-4"
-                >
-                  Proceed to Checkout
-                </Link>
-
-                <Link
-                  href="/sections/shop"
-                  className="focus-ring-none btn btn-primary btn-hover-secondary-filled w-full font-medium justify-center"
-                >
-                  Continue Shopping
-                </Link>
+                <div className="hero-cta-buttons space-y-3">
+                  <Button
+                    href="/checkout"
+                    variant="filled"
+                    size="md"
+                    className="w-full justify-center"
+                  >
+                    Proceed to Checkout
+                  </Button>
+                  <Button
+                    href="/sections/shop"
+                    variant="default"
+                    size="md"
+                    className="w-full justify-center"
+                  >
+                    Continue Shopping
+                  </Button>
+                </div>
 
                 <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-primary-700/50">
                   <div className="flex items-start space-x-3 text-sm text-neutral-600 dark:text-primary-400">
