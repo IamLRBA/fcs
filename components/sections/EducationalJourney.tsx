@@ -41,10 +41,9 @@ export default function EducationalJourney() {
   const guideDotProgress = useTransform(scrollYProgress, [0, 0.8], [0, 1])
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      className="py-20 px-4 md:px-8 lg:px-16"
-      style={{ backgroundColor: 'var(--color-bg-secondary)' }}
+      className="py-20 px-4 md:px-8 lg:px-16 bg-transparent"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
@@ -54,11 +53,9 @@ export default function EducationalJourney() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 
-            className="text-4xl md:text-6xl font-bold mb-4"
-            style={{ color: 'var(--color-primary-800)' }}
-          >
-            <span className="text-primary-500">EᗪᑌᑕᗩTIOᑎᗩᒪ</span> ᒍOᑌᖇᑎEY
+          <h2 className="text-4xl md:text-6xl font-bold mb-4">
+            <span className="text-primary-500 dark:text-primary-400">EᗪᑌᑕᗩTIOᑎᗩᒪ</span>{' '}
+            <span className="text-primary-800 dark:text-primary-200">ᒍOᑌᖇᑎEY</span>
           </h2>
           <div 
             className="w-24 h-1 mx-auto rounded-full"
@@ -124,52 +121,39 @@ export default function EducationalJourney() {
                 transform: 'translateY(-50%)'
               }}
             >
-              <div 
-                className={`w-80 p-6 rounded-xl shadow-lg border transition-all duration-300 hover:shadow-xl ${
-                  index % 2 === 0 ? 'mr-auto' : 'ml-auto'
-                }`}
-                style={{ 
-                  backgroundColor: 'var(--color-bg-card)',
-                  borderColor: 'var(--color-neutral-200)'
-                }}
-              >
-                <div className="flex items-start space-x-4">
-                  <div className="text-6xl font-bold text-primary-400 mb-4 flex-shrink-0">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1">
-                    <div 
-                      className="text-sm font-medium mb-1"
-                      style={{ color: 'var(--color-accent-600)' }}
-                    >
-                      {item.period}
+              {/* Outer: semi-transparent glass shell; inner: compact card */}
+              <div className={`hero-glass-frame relative w-80 rounded-2xl backdrop-blur-lg overflow-hidden ${index % 2 === 0 ? 'mr-auto' : 'ml-auto'}`}>
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
+                <div
+                  className="relative w-full p-5 rounded-xl border border-primary-200/40 dark:border-primary-600/50 bg-primary-50/40 dark:bg-neutral-900/50 shadow-lg transition-all duration-300 hover:shadow-xl"
+                >
+                  <div className="flex items-start space-x-4">
+                    <div className="text-5xl font-bold text-primary-400 dark:text-primary-500 mb-2 flex-shrink-0 leading-none">
+                      {index + 1}
                     </div>
-                    <h3 
-                      className="text-lg font-semibold mb-2 text-primary-900 dark:text-primary-100"
-                    >
-                      {item.level}
-                    </h3>
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h4 
-                        className="text-base font-medium"
-                        style={{ color: 'var(--color-primary-700)' }}
-                      >
-                        {item.school}
-                      </h4>
-                      <div className="w-8 h-8 rounded-lg overflow-hidden border border-neutral-200">
-                        <img 
-                          src={`/assets/images/sections/ceo/school-${index + 1}.jpg`}
-                          alt={`${item.school} Badge`}
-                          className="w-full h-full object-cover"
-                        />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium mb-1 text-accent-600 dark:text-accent-400">
+                        {item.period}
                       </div>
+                      <h3 className="text-lg font-semibold mb-2 text-primary-900 dark:text-primary-100">
+                        {item.level}
+                      </h3>
+                      <div className="flex items-center flex-wrap gap-2 mb-2">
+                        <h4 className="text-base font-medium text-primary-700 dark:text-primary-300">
+                          {item.school}
+                        </h4>
+                        <div className="w-8 h-8 rounded-lg overflow-hidden border border-primary-200/60 dark:border-primary-600/60 flex-shrink-0">
+                          <img
+                            src={`/assets/images/sections/ceo/school-${index + 1}.jpg`}
+                            alt={`${item.school} Badge`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+                        {item.details}
+                      </p>
                     </div>
-                    <p 
-                      className="text-sm leading-relaxed"
-                      style={{ color: 'var(--color-neutral-600)' }}
-                    >
-                      {item.details}
-                    </p>
                   </div>
                 </div>
               </div>
@@ -237,50 +221,36 @@ export default function EducationalJourney() {
                 zIndex: education.length - index
               }}
             >
-              <div 
-                className="w-full p-4 rounded-xl shadow-lg border transition-all duration-300 hover:shadow-xl"
-                style={{ 
-                  backgroundColor: 'var(--color-bg-card)',
-                  borderColor: 'var(--color-neutral-200)'
-                }}
-              >
-                <div className="flex items-start space-x-3">
-                  <div className="text-4xl font-bold text-primary-400 mb-2 flex-shrink-0">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1">
-                    <div 
-                      className="text-xs font-medium mb-1"
-                      style={{ color: 'var(--color-accent-600)' }}
-                    >
-                      {item.period}
+              <div className="hero-glass-frame relative w-full rounded-2xl backdrop-blur-lg overflow-hidden">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
+                <div className="relative w-full p-4 rounded-xl border border-primary-200/40 dark:border-primary-600/50 bg-primary-50/40 dark:bg-neutral-900/50 shadow-lg transition-all duration-300 hover:shadow-xl">
+                  <div className="flex items-start space-x-3">
+                    <div className="text-3xl font-bold text-primary-400 dark:text-primary-500 flex-shrink-0 leading-none">
+                      {index + 1}
                     </div>
-                    <h3 
-                      className="text-base font-semibold mb-1 text-primary-900 dark:text-primary-100"
-                    >
-                      {item.level}
-                    </h3>
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h4 
-                        className="text-sm font-medium"
-                        style={{ color: 'var(--color-primary-700)' }}
-                      >
-                        {item.school}
-                      </h4>
-                      <div className="w-6 h-6 rounded-lg overflow-hidden border border-neutral-200">
-                        <img 
-                          src={`/assets/images/sections/ceo/school-${index + 1}.jpg`}
-                          alt={`${item.school} Badge`}
-                          className="w-full h-full object-cover"
-                        />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-medium mb-1 text-accent-600 dark:text-accent-400">
+                        {item.period}
                       </div>
+                      <h3 className="text-base font-semibold mb-1 text-primary-900 dark:text-primary-100">
+                        {item.level}
+                      </h3>
+                      <div className="flex items-center flex-wrap gap-2 mb-1">
+                        <h4 className="text-sm font-medium text-primary-700 dark:text-primary-300">
+                          {item.school}
+                        </h4>
+                        <div className="w-6 h-6 rounded-lg overflow-hidden border border-primary-200/60 dark:border-primary-600/60 flex-shrink-0">
+                          <img
+                            src={`/assets/images/sections/ceo/school-${index + 1}.jpg`}
+                            alt={`${item.school} Badge`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-xs leading-relaxed text-neutral-700 dark:text-neutral-300">
+                        {item.details}
+                      </p>
                     </div>
-                    <p 
-                      className="text-xs leading-relaxed"
-                      style={{ color: 'var(--color-neutral-600)' }}
-                    >
-                      {item.details}
-                    </p>
                   </div>
                 </div>
               </div>
