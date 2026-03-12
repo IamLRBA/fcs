@@ -8,7 +8,7 @@ import {
   Clock, 
   Star,
   Heart,
-  Target,
+  Globe,
 } from 'lucide-react'
 import Companies from './Companies'
 
@@ -194,7 +194,7 @@ export default function Stats() {
             <div className="inline-flex items-center space-x-4 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40">
               <Heart className="w-6 h-6 text-primary-600 dark:text-primary-300 animate-pulse" />
               <span className="text-primary-600 dark:text-primary-300 font-semibold">Trusted by creative professionals nationwide</span>
-              <Target className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" />
+              <Globe className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" strokeWidth={1.75} />
             </div>
           </div>
         </motion.div>
