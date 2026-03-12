@@ -125,7 +125,12 @@ export default function Contact() {
                   disabled={isSubmitting}
                   className={`inline-flex items-center space-x-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  {isSubmitting ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div><span>Sending...</span></>) : (
+                  {isSubmitting ? (
+                    <>
+                      <span className="inline-block w-5 h-5 rounded-md skeleton opacity-90" aria-hidden />
+                      <span>Sending…</span>
+                    </>
+                  ) : (
                     <>
                       {contactMethod === 'email' ? (<><Mail className="w-5 h-5" /><span>Send Email</span></>) : (<><IconBrandWhatsapp className="w-5 h-5" /><span>Send Message</span></>)}
                     </>

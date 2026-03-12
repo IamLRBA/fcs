@@ -26,10 +26,18 @@ export default function AccountPromptPopup() {
     
     // Show popup if user is not logged in and hasn't dismissed recently (24 hours)
     if (!isAuthenticated && !isDismissed) {
-      // Delay showing popup by 3 seconds
-      timer = setTimeout(() => {
-        setShowPopup(true)
-      }, 3000)
+      const showSoon = () => setShowPopup(true)
+      // First home load: show as soon as loading overlay finishes (hero already mounted behind)
+      try {
+        if (sessionStorage.getItem('mysticalpieces-home-reveal') === '1') {
+          sessionStorage.removeItem('mysticalpieces-home-reveal')
+          timer = setTimeout(showSoon, 100)
+        } else {
+          timer = setTimeout(showSoon, 3000)
+        }
+      } catch {
+        timer = setTimeout(showSoon, 3000)
+      }
     }
 
     // Listen for auth changes
@@ -73,20 +81,28 @@ export default function AccountPromptPopup() {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
             onClick={handleDismiss}
           />
+          {/* Small screens: horizontally centered; sm+: keep bottom-right (vertical unchanged) */}
+          <div className="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4 sm:justify-end sm:px-8 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-8 right-8 bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl p-6 max-w-md z-50 border border-neutral-200 dark:border-neutral-700"
+            className="pointer-events-auto w-full max-w-lg"
+            onClick={(e) => e.stopPropagation()}
           >
-            <ModalCloseButton onClose={handleDismiss} className="absolute top-4 right-4 flex-shrink-0" aria-label="Close" />
+            {/* Outer semi-transparent shell – same pattern as testimonials modal */}
+            <div className="hero-glass-frame relative backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl shadow-2xl">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              {/* Inner solid container for readable content */}
+              <div className="relative z-10 rounded-2xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6">
+            <ModalCloseButton onClose={handleDismiss} className="absolute top-4 right-4 flex-shrink-0 z-20" aria-label="Close" />
             
             <div className="flex items-start space-x-4">
               <div className="w-12 h-12 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center flex-shrink-0">
                 <User className="w-6 h-6 text-primary-600 dark:text-primary-300" />
               </div>
               
-              <div className="flex-1">
+              <div className="flex-1 min-w-0 pr-10">
                 <div className="flex items-center space-x-2 mb-2">
                   <AlertCircle className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                   <h3 className="text-lg font-bold text-primary-800 dark:text-neutral-100">
@@ -98,13 +114,14 @@ export default function AccountPromptPopup() {
                   Sign up to save your information, track orders, write reviews, and get personalized recommendations!
                 </p>
                 
-                <div className="flex flex-col sm:flex-row gap-2">
+                {/* Stacked + full width so labels stay on one line; gap gives clear separation */}
+                <div className="flex flex-col gap-3 mt-1 account-prompt-buttons">
                   <Button
                     href="/login"
                     variant="filled"
                     size="md"
                     onClick={handleSignUp}
-                    className="flex-1 justify-center"
+                    className="w-full justify-center whitespace-nowrap px-6 py-2.5"
                   >
                     Sign Up Now
                   </Button>
@@ -112,14 +129,17 @@ export default function AccountPromptPopup() {
                     variant="default"
                     size="md"
                     onClick={handleDismiss}
-                    className="flex-1 justify-center"
+                    className="w-full justify-center whitespace-nowrap px-6 py-2.5"
                   >
                     Maybe Later
                   </Button>
                 </div>
               </div>
             </div>
+              </div>
+            </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

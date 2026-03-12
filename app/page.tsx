@@ -6,7 +6,7 @@ import {
   useScroll, 
   useTransform 
 } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 import PortalNavigation from '@/components/ui/PortalNavigation'
 import FeaturedCollections from '@/components/sections/FeaturedCollections'
@@ -17,6 +17,8 @@ import AnimatedImageBanner from '@/components/sections/AnimatedImageBanner'
 import LogoMark from '@/components/ui/LogoMark'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import Button from '@/components/ui/Button'
+
+const VISITED_KEY = 'mysticalpieces-visited'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -51,28 +53,29 @@ export default function Home() {
   const testimonialsScale = useTransform(testimonialsScrollY, [0, 0.5, 1], [1, 1.05, 1])
   const progressBarScaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
 
+  /* Must be unconditional – was inside !isLoading branch and caused "fewer hooks than expected" */
+  const progressScaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return
+    const hasVisited = localStorage.getItem(VISITED_KEY)
+    if (!hasVisited) setIsLoading(true)
+  }, [])
+
   useEffect(() => {
-    // Set initial state for client-side rendering
-    setIsLoading(false)
-    setShowPortals(true)
-
-    // Check if this is the first visit only on the client
-    if (typeof window !== 'undefined') {
-      const hasVisited = localStorage.getItem('mysticalpieces-visited')
-      
-      if (!hasVisited) {
-        setIsLoading(true)
-        localStorage.setItem('mysticalpieces-visited', 'true')
-        
-        const timer = setTimeout(() => {
-          setIsLoading(false)
-          setTimeout(() => setShowPortals(true), 1000)
-        }, 3000)
-
-        return () => clearTimeout(timer)
-      }
+    if (typeof window === 'undefined') return
+    const hasVisited = localStorage.getItem(VISITED_KEY)
+    if (hasVisited) {
+      setIsLoading(false)
+      setShowPortals(true)
     }
   }, [])
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false)
+    localStorage.setItem(VISITED_KEY, 'true')
+    setShowPortals(true)
+  }
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -157,21 +160,21 @@ export default function Home() {
           />
         </div>
 
-        {/* Loading Screen - Only for first time visitors */}
+        {/* Loading overlay – first visit only; main content stays mounted underneath so hero is complete when overlay exits */}
         <AnimatePresence>
           {isLoading && (
-            <LoadingScreen onComplete={() => setIsLoading(false)} />
+            <LoadingScreen onComplete={handleLoadingComplete} />
           )}
         </AnimatePresence>
 
-        {/* Main Content */}
-        <AnimatePresence>
-          {!isLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
-            >
+        {/* Main Content – always mounted; hidden while loading so layout/hero are ready when overlay fades */}
+        <motion.div
+          className={isLoading ? 'opacity-0 pointer-events-none select-none' : 'opacity-100'}
+          initial={false}
+          animate={{ opacity: isLoading ? 0 : 1 }}
+          transition={{ duration: 0.5 }}
+          aria-hidden={isLoading}
+        >
               {/* Progress Bar */}
               <motion.div
                 className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 z-50 origin-left"
@@ -199,7 +202,7 @@ export default function Home() {
                           </h1>
                           <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full" />
                           <p className="text-lg text-primary-600 dark:text-primary-300 max-w-2xl">
-                            Wear the unseen future. Feel the divine in every thread.
+                            Mysticism, Anarchism & Self Discovery!
                           </p>
                         </div>
                         <div className="hero-cta-buttons flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center items-center">
@@ -331,9 +334,7 @@ export default function Home() {
               <div id="contact-section">
                 <Contact />
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        </motion.div>
       </main>
     </>
   )

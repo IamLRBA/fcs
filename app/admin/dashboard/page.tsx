@@ -7,6 +7,7 @@ import { Package, DollarSign, ShoppingCart, BarChart3 } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import { ProductManager, type Product } from '@/lib/products'
 import { OrderManager, type Order } from '@/lib/cart'
+import { SkeletonAdminDashboard } from '@/components/ui/Skeleton'
 
 const categories = ['shirts', 'tees', 'coats', 'pants-and-shorts', 'footwear', 'accessories']
 
@@ -42,9 +43,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen pb-20">
       {!isAdmin ? (
-        <div className="flex items-center justify-center h-full">
-          <div className="text-neutral-800 dark:text-neutral-100">Loading...</div>
-        </div>
+        <SkeletonAdminDashboard />
       ) : (
         <div className="container-custom mt-1 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
           {/* Main container - semi-transparent like account page */}

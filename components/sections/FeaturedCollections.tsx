@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart, ArrowRight, Sparkles } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { SkeletonFeaturedCollections } from '@/components/ui/Skeleton'
 import { CartManager, type CartItem } from '@/lib/cart'
 
 interface Product {
@@ -326,9 +327,7 @@ export default function FeaturedCollections() {
             </div>
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-primary-600 dark:text-primary-300">Loading featured collections...</p>
-          </div>
+          <SkeletonFeaturedCollections />
         )}
       </div>
     </section>

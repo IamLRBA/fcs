@@ -683,6 +683,19 @@
     border-color: var(--color-neutral-700);
   }
 
+  /* Account prompt popup: primary CTA (filled) matches default’s hover at rest, default’s normal on hover */
+  .dark .account-prompt-buttons .btn-unified-filled {
+    background: var(--color-button-hover-fill);
+    color: var(--color-text-inverse);
+    border-color: var(--color-neutral-700);
+  }
+  .dark .account-prompt-buttons .btn-unified-filled:hover,
+  .dark .account-prompt-buttons .btn-unified-filled:focus-visible {
+    background: var(--color-button-glass);
+    color: var(--color-border-accent);
+    border-color: var(--color-neutral-700);
+  }
+
   .dark .btn {
     --btn-text-color: var(--color-accent-200);
     --btn-surface: rgba(255, 255, 255, 0.06);
@@ -1657,9 +1670,84 @@
   @apply border-neutral-700 border-t-primary-500;
 }
 
-/* Dark mode skeleton loading */
+/* Skeleton loading – camouflage: blends with bg-unified / hero-glass (no flat gray boxes) */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.375rem;
+  /* Light: warm coffee tint + frosted glass so background image still reads through */
+  background-color: rgb(111 78 55 / 0.045);
+  border: 1px solid rgb(111 78 55 / 0.04);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Dark: same idea – low-opacity lift, not a solid slab */
 .dark .skeleton {
-  @apply bg-neutral-700;
+  background-color: rgb(255 255 255 / 0.035);
+  border: 1px solid rgb(255 255 255 / 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Shimmer: subtle warm pulse (light) – not a white band */
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 40%,
+    rgb(111 78 55 / 0.07) 50%,
+    rgb(194 178 128 / 0.12) 55%,
+    rgb(111 78 55 / 0.07) 60%,
+    transparent 75%,
+    transparent 100%
+  );
+  animation: skeleton-shimmer 2.2s ease-in-out infinite;
+}
+
+.dark .skeleton::after {
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 42%,
+    rgb(255 255 255 / 0.04) 50%,
+    rgb(255 255 255 / 0.09) 54%,
+    rgb(255 255 255 / 0.04) 58%,
+    transparent 72%,
+    transparent 100%
+  );
+  animation: skeleton-shimmer 2.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-text {
+  @apply skeleton h-4 w-full;
+}
+
+.skeleton-circle {
+  @apply skeleton rounded-full;
+}
+
+/* Optional wrapper: one soft panel instead of many hard-edged boxes (no extra blur – children already frosted) */
+.skeleton-panel {
+  background-color: rgb(111 78 55 / 0.025);
+  border: 1px solid rgb(111 78 55 / 0.04);
+  border-radius: 1rem;
+}
+
+.dark .skeleton-panel {
+  background-color: rgb(255 255 255 / 0.025);
+  border-color: rgb(255 255 255 / 0.04);
 }
 
 /* Dark mode progress bar */
