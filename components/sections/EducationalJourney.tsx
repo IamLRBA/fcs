@@ -155,7 +155,7 @@ export default function EducationalJourney() {
   return (
     <section
       ref={containerRef}
-      className="py-20 px-4 md:px-8 lg:px-16 bg-transparent"
+      className="pt-20 pb-10 px-4 md:px-8 lg:px-16 bg-transparent md:pb-12"
       aria-label="Educational journey timeline"
     >
       <div className="max-w-7xl mx-auto">
@@ -212,7 +212,7 @@ export default function EducationalJourney() {
                         <TimelineCard item={item} index={index} align="right" />
                       </div>
                       <div className="relative z-10 flex-shrink-0 w-12 flex justify-center">
-                        <div className="w-4 h-4 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100),0_0_20px_var(--color-accent-500)] dark:shadow-[0_0_0_4px_var(--color-neutral-900),0_0_20px_var(--color-accent-500)]" />
+                        <div className="w-4 h-4 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100)] dark:shadow-[0_0_0_4px_var(--color-neutral-900)]" />
                       </div>
                       <div className="flex-1" />
                     </>
@@ -220,7 +220,7 @@ export default function EducationalJourney() {
                     <>
                       <div className="flex-1" />
                       <div className="relative z-10 flex-shrink-0 w-12 flex justify-center">
-                        <div className="w-4 h-4 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100),0_0_20px_var(--color-accent-500)] dark:shadow-[0_0_0_4px_var(--color-neutral-900),0_0_20px_var(--color-accent-500)]" />
+                        <div className="w-4 h-4 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100)] dark:shadow-[0_0_0_4px_var(--color-neutral-900)]" />
                       </div>
                       <div className="flex-1 flex justify-start pl-8 lg:pl-12">
                         <TimelineCard item={item} index={index} align="left" />
@@ -233,43 +233,43 @@ export default function EducationalJourney() {
           </div>
         </div>
 
-        {/* Smaller screens — dot left of vertical spine; connector from card toward dot */}
+        {/* Smaller screens — dot left of spine; connector runs from spine to card */}
         <div className="md:hidden relative">
-          {/* Spine sits to the right of dots so dots read on the left side of the line */}
           <div
             className="absolute left-6 top-2 bottom-2 w-1 rounded-full bg-gradient-to-b from-primary-500 via-accent-500 to-primary-600 opacity-80"
             aria-hidden
           />
-          <div className="space-y-8 pl-2">
+          <div className="space-y-8 pl-0">
             {education.map((item, index) => (
               <TimelineRowMotion
                 key={index}
                 index={index}
                 reducedMotion={reducedMotion}
                 fromRight
-                className="relative flex min-h-[4rem] items-center justify-end pl-1"
+                className="relative flex min-h-[4rem] items-center"
               >
-                  {/* Dot left of the vertical spine — same ring + glow as desktop */}
-                  <div
-                    className="absolute left-3 top-1/2 z-10 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100),0_0_20px_var(--color-accent-500)] dark:shadow-[0_0_0_4px_var(--color-neutral-900),0_0_20px_var(--color-accent-500)]"
-                    aria-hidden
-                  />
-                  {/* Connector at vertical center of card + shorter card — same stub length/gradient as desktop */}
-                  <div className="relative ml-auto flex min-w-0 max-w-[90%] flex-col items-end pl-4">
-                    <div className="relative w-full max-w-[15rem] sm:max-w-[16rem]">
-                      {/* Line from card center (left edge) toward dot — mirrors desktop w-16 lg:w-24 */}
-                      <div
-                        className="pointer-events-none absolute left-0 top-1/2 z-0 h-0.5 w-16 -translate-y-1/2 rounded-full bg-gradient-to-l from-accent-500/60 to-transparent dark:from-accent-400/50 sm:w-20"
-                        style={{ transform: 'translate(-100%, -50%)' }}
-                        aria-hidden
-                      />
-                      <TimelineCard
-                        item={item}
-                        index={index}
-                        align="left"
-                        className="relative z-[1] ml-auto w-full max-w-none"
-                      />
-                    </div>
+                  {/* Left column: dot + space up to spine right edge so connector terminates at spine edge */}
+                  <div className="relative flex-shrink-0 w-[1.75rem] flex items-center justify-start pr-0">
+                    <div
+                      className="absolute left-0.5 top-1/2 z-10 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100)] dark:shadow-[0_0_0_4px_var(--color-neutral-900)]"
+                      aria-hidden
+                    />
+                  </div>
+                  {/* Connector: horizontal line from spine right edge to card */}
+                  <div className="relative flex-1 min-w-0 flex items-center">
+                    <div
+                      className="pointer-events-none absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent-500/60 to-transparent dark:from-accent-400/50"
+                      aria-hidden
+                    />
+                  </div>
+                  {/* Card — wider on larger small screens so gap to spine isn't too large */}
+                  <div className="relative flex-shrink-0 w-full max-w-[20rem] sm:max-w-[26rem]">
+                    <TimelineCard
+                      item={item}
+                      index={index}
+                      align="left"
+                      className="relative z-[1] w-full max-w-none"
+                    />
                   </div>
               </TimelineRowMotion>
             ))}

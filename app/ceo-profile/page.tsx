@@ -364,8 +364,8 @@ export default function CEOProfile() {
       {/* Educational Journey Section */}
       <EducationalJourney />
 
-      {/* Gallery Section — extra space below Educational Journey; title pushed lower */}
-      <section className="pt-24 md:pt-32 pb-36 px-4 mt-20 md:mt-28">
+      {/* Gallery Section — tighter gap below Educational Journey */}
+      <section className="pt-10 md:pt-14 pb-36 px-4 mt-6 md:mt-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -373,7 +373,7 @@ export default function CEOProfile() {
           viewport={{ once: true }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16 md:mb-24 mt-4 md:mt-8">
+          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16 md:mb-24 mt-0 md:mt-2">
             <span className="text-primary-800 dark:text-primary-200">ᑭᕼOTO</span>{' '}
             <span className="text-accent-600 dark:text-accent-400">GᗩᒪᒪEᖇY</span>
           </h2>
@@ -539,7 +539,7 @@ export default function CEOProfile() {
               GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span>
             </h2>
             <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto text-center">
-              Any questions about our fashion collection? Need styling advice? Contact us and we&apos;re here to help you find answers.
+              Any questions about me? Contact me and I'm here to help you find answers.
             </p>
           </motion.div>
 
@@ -564,7 +564,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
                   <Button href="mailto:jerrylarubafestus@gmail.com" variant="default" className="inline-flex items-center justify-center px-6">
-                    Email Us
+                    Email Me
                   </Button>
                 </div>
               </div>
@@ -584,7 +584,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 774 948 086</p>
                   <Button href="tel:+256774948086" variant="default" className="inline-flex items-center justify-center px-6">
-                    Call Us
+                    Call Me
                   </Button>
                 </div>
               </div>
@@ -604,7 +604,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 755 915 549</p>
                   <Button href="https://wa.me/256755915549" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
-                    Text Us
+                    Text Me
                   </Button>
                 </div>
               </div>
@@ -624,7 +624,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
                   <Button href="https://maps.google.com/?q=Kampala,Uganda" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
-                    Find Us
+                    Find Me
                   </Button>
                 </div>
               </div>
