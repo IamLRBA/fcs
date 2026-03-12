@@ -364,8 +364,8 @@ export default function CEOProfile() {
       {/* Educational Journey Section */}
       <EducationalJourney />
 
-      {/* Gallery Section */}
-      <section className="py-36 px-4 mt-12">
+      {/* Gallery Section — extra space below Educational Journey; title pushed lower */}
+      <section className="pt-24 md:pt-32 pb-36 px-4 mt-20 md:mt-28">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -373,7 +373,7 @@ export default function CEOProfile() {
           viewport={{ once: true }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-32">
+          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16 md:mb-24 mt-4 md:mt-8">
             <span className="text-primary-800 dark:text-primary-200">ᑭᕼOTO</span>{' '}
             <span className="text-accent-600 dark:text-accent-400">GᗩᒪᒪEᖇY</span>
           </h2>
@@ -393,15 +393,35 @@ export default function CEOProfile() {
                 border-radius: 9999px;
               }
             `}</style>
-            {/* Main Image — arrows + glass frame; frame shrink-wraps to image; arrows centered on this block only */}
+            {/* Main Image — small screens: full-width even glass (unchanged). md+: shrink-wrap to image like before. */}
             <div className="relative mb-8 w-full max-w-5xl mx-auto">
-              <Button type="button" variant="default" size="icon" onClick={prevImage} className="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
+              <Button type="button" variant="default" size="icon" onClick={prevImage} className="absolute left-0 sm:left-1 md:left-2 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
                 <span className="text-2xl">⟸</span>
               </Button>
-              <Button type="button" variant="default" size="icon" onClick={nextImage} className="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
+              <Button type="button" variant="default" size="icon" onClick={nextImage} className="absolute right-0 sm:right-1 md:right-2 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
                 <span className="text-2xl">⟹</span>
               </Button>
-              <div className="flex justify-center px-14 sm:px-16">
+              {/* Mobile/tablet portrait: full-width shell, even padding all around */}
+              <div className="mx-auto w-full max-w-4xl px-2 sm:px-0 md:hidden">
+                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-full overflow-hidden">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
+                  <div className="relative p-2 sm:p-3 rounded-2xl border border-primary-200/40 dark:border-primary-700/40">
+                    <div className="flex items-center justify-center">
+                      <img
+                        src={galleryImages[currentImageIndex]}
+                        alt={`CEO Image ${currentImageIndex + 1}`}
+                        className="max-w-full max-h-[600px] w-auto h-auto object-contain block mx-auto transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl"
+                        onClick={() => openImageModal(currentImageIndex)}
+                      />
+                    </div>
+                    <motion.button type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => openImageModal(currentImageIndex)} className="absolute top-3 right-3 p-2 text-primary-700 dark:text-primary-200 hover:text-primary-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200 focus-ring-none rounded-lg" aria-label="Expand photo">
+                      <Maximize2 className="w-6 h-6" />
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+              {/* Desktop (md+): shrink-wrap glass to image — same as before */}
+              <div className="hidden md:flex justify-center px-14 lg:px-16">
                 <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-full overflow-hidden inline-block">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
                   <div className="relative p-2 sm:p-3 rounded-2xl border border-primary-200/40 dark:border-primary-700/40 flex items-center justify-center">
@@ -411,14 +431,7 @@ export default function CEOProfile() {
                       className="max-w-[min(100vw-8rem,56rem)] max-h-[600px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl"
                       onClick={() => openImageModal(currentImageIndex)}
                     />
-                    <motion.button
-                      type="button"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => openImageModal(currentImageIndex)}
-                      className="absolute top-3 right-3 p-2 text-primary-700 dark:text-primary-200 hover:text-primary-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200 focus-ring-none rounded-lg"
-                      aria-label="Expand photo"
-                    >
+                    <motion.button type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => openImageModal(currentImageIndex)} className="absolute top-3 right-3 p-2 text-primary-700 dark:text-primary-200 hover:text-primary-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200 focus-ring-none rounded-lg" aria-label="Expand photo">
                       <Maximize2 className="w-6 h-6" />
                     </motion.button>
                   </div>
@@ -426,72 +439,77 @@ export default function CEOProfile() {
               </div>
             </div>
 
-            {/* Thumbnails */}
+            {/* Thumbnails — w-fit so container length follows thumbnail count; always center-aligned */}
             {galleryImages.length > 1 && (
-              <div className="hero-glass-frame relative w-full max-w-3xl mt-6 rounded-2xl backdrop-blur-lg overflow-hidden">
-                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
-                <div className="relative flex items-center justify-center gap-2 py-3 pl-2 pr-2 md:pl-3 md:pr-3">
-                {galleryImages.length > 3 && (
-                  <Button
-                    type="button"
-                    variant="circle"
-                    size="icon"
-                    onClick={() => scrollGalleryThumbnails('left')}
-                    className="flex-shrink-0 focus-ring-none z-10"
-                    aria-label="Scroll thumbnails left"
-                  >
-                    <span className="text-lg">⟸</span>
-                  </Button>
-                )}
-                <div
-                  ref={galleryThumbnailRef}
-                  className="gallery-thumbnail-row flex flex-1 min-w-0 items-center justify-center md:justify-start gap-2 md:gap-3 overflow-x-auto scroll-smooth py-2 px-1"
-                  style={{ scrollbarWidth: 'thin' }}
-                >
-                  {galleryImages.map((img, index) => (
-                    <button
-                      type="button"
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`flex flex-shrink-0 items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden transition-all duration-200 focus-ring-none outline-none ring-0 border-2 backdrop-blur-sm ${
-                        currentImageIndex === index
-                          ? 'border-primary-500 dark:border-primary-400 scale-105 bg-primary-100/40 dark:bg-neutral-800/60'
-                          : 'border-primary-200/50 dark:border-primary-600/40 hover:border-primary-400/80 bg-primary-50/30 dark:bg-neutral-900/40'
-                      }`}
-                      aria-label={`View photo ${index + 1}`}
-                    >
-                      <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover object-center rounded-lg" />
-                    </button>
-                  ))}
-                </div>
-                {galleryImages.length > 3 && (
-                  <Button
-                    type="button"
-                    variant="circle"
-                    size="icon"
-                    onClick={() => scrollGalleryThumbnails('right')}
-                    className="flex-shrink-0 focus-ring-none z-10"
-                    aria-label="Scroll thumbnails right"
-                  >
-                    <span className="text-lg">⟹</span>
-                  </Button>
-                )}
+              <div className="flex justify-center w-full mt-6">
+                <div className="hero-glass-frame hero-glass-frame-compact relative w-max max-w-full rounded-2xl backdrop-blur-lg overflow-hidden mx-auto">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
+                  <div className="relative flex flex-col items-center py-2 px-2 sm:px-3 min-w-0">
+                    <div className="flex items-center justify-center gap-2 w-full max-w-full min-w-0">
+                      {galleryImages.length > 3 && (
+                        <Button
+                          type="button"
+                          variant="circle"
+                          size="icon"
+                          onClick={() => scrollGalleryThumbnails('left')}
+                          className="flex-shrink-0 focus-ring-none z-10"
+                          aria-label="Scroll thumbnails left"
+                        >
+                          <span className="text-lg">⟸</span>
+                        </Button>
+                      )}
+                      <div
+                        ref={galleryThumbnailRef}
+                        className="gallery-thumbnail-row flex w-max max-w-[calc(100vw-4rem)] sm:max-w-full items-center justify-center gap-2 md:gap-3 overflow-x-auto scroll-smooth py-2 px-1 mx-auto min-w-0"
+                        style={{ scrollbarWidth: 'thin' }}
+                      >
+                        {galleryImages.map((img, index) => (
+                          <button
+                            type="button"
+                            key={index}
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={`flex flex-shrink-0 items-center justify-center h-14 w-14 md:h-16 md:w-16 rounded-xl overflow-hidden transition-all duration-200 focus-ring-none outline-none ring-0 border-2 backdrop-blur-sm ${
+                              currentImageIndex === index
+                                ? 'border-primary-500 dark:border-primary-400 scale-105 bg-primary-100/40 dark:bg-neutral-800/60'
+                                : 'border-primary-200/50 dark:border-primary-600/40 hover:border-primary-400/80 bg-primary-50/30 dark:bg-neutral-900/40'
+                            }`}
+                            aria-label={`View photo ${index + 1}`}
+                          >
+                            <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover object-center rounded-lg" />
+                          </button>
+                        ))}
+                      </div>
+                      {galleryImages.length > 3 && (
+                        <Button
+                          type="button"
+                          variant="circle"
+                          size="icon"
+                          onClick={() => scrollGalleryThumbnails('right')}
+                          className="flex-shrink-0 focus-ring-none z-10"
+                          aria-label="Scroll thumbnails right"
+                        >
+                          <span className="text-lg">⟹</span>
+                        </Button>
+                      )}
+                    </div>
+                    {/* Dots inside semi-transparent thumbnail container */}
+                    <div className="flex justify-center gap-2 pt-2 pb-1">
+                      {galleryImages.map((_, index) => (
+                        <button
+                          type="button"
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 focus-ring-none ${
+                            index === currentImageIndex ? 'bg-primary-600 scale-125' : 'bg-neutral-300 dark:bg-neutral-600 hover:bg-neutral-400 dark:hover:bg-neutral-500'
+                          }`}
+                          aria-label={`Go to photo ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
-            
-            {/* Dots Indicator */}
-            <div className="flex justify-center space-x-3">
-              {galleryImages.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentImageIndex ? 'bg-primary-600 scale-125' : 'bg-neutral-300 dark:bg-neutral-600 hover:bg-neutral-400 dark:hover:bg-neutral-500'
-                  }`}
-                />
-              ))}
-            </div>
           </div>
         </motion.div>
       </section>
@@ -520,53 +538,112 @@ export default function CEOProfile() {
         </motion.div>
       </section>
 
-      {/* Contact Section */}
-      <section className="mb-16 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          className="max-w-6xl mx-auto"
-        >
-          <h3 className="text-3xl font-bold text-primary-900 mb-8 text-center">GET Iᑎ TOᑌᑕᕼ</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
-              <Mail className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
-              <Button href="mailto:jerrylarubafestus@gmail.com" variant="default" className="inline-flex items-center justify-center px-6">
-                Email Me
-              </Button>
-            </div>
+      {/* Contact Section — same card design & grid as Home Contact.tsx */}
+      <section className="section relative overflow-hidden mb-16">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="section-title"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6 text-center">
+              GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span>
+            </h2>
+            <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto text-center">
+              Any questions about our fashion collection? Need styling advice? Contact us and we&apos;re here to help you find answers.
+            </p>
+          </motion.div>
 
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
-              <Phone className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256774948086</p>
-              <Button href="tel:+256774948086" variant="default" className="inline-flex items-center justify-center px-6">
-                Call Me
-              </Button>
-            </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0 }}
+              className="group"
+            >
+              <div className="hero-glass-frame relative h-full backdrop-blur-lg">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                  <Mail className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+                  <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
+                  <Button href="mailto:jerrylarubafestus@gmail.com" variant="default" className="inline-flex items-center justify-center px-6">
+                    Email Us
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
 
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
-              <IconBrandWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256755915549</p>
-              <Button href="https://wa.me/256755915549" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
-                Message Me
-              </Button>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="group"
+            >
+              <div className="hero-glass-frame relative h-full backdrop-blur-lg">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                  <Phone className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+                  <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 774 948 086</p>
+                  <Button href="tel:+256774948086" variant="default" className="inline-flex items-center justify-center px-6">
+                    Call Us
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
 
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
-              <MapPin className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
-              <Button href="https://maps.google.com/?q=Kampala,Uganda" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
-                Find Me
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="group"
+            >
+              <div className="hero-glass-frame relative h-full backdrop-blur-lg">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                  <IconBrandWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+                  <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 755 915 549</p>
+                  <Button href="https://wa.me/256755915549" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
+                    Text Us
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="group"
+            >
+              <div className="hero-glass-frame relative h-full backdrop-blur-lg">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                  <MapPin className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+                  <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
+                  <Button href="https://maps.google.com/?q=Kampala,Uganda" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
+                    Find Us
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Image Modal */}
