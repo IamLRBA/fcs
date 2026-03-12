@@ -205,23 +205,34 @@ export default function Home() {
                             Mysticism, Anarchism & Self Discovery!
                           </p>
                         </div>
-                        <div className="hero-cta-buttons flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center items-center">
-                          <Button
-                            variant="default"
-                            size="lg"
-                            className="text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
-                            onClick={() => scrollToSection('portals-section')}
-                          >
-                            ᗪIᐯE Iᑎ ᑎOᗯ
-                          </Button>
-                          <Button
-                            variant="filled"
-                            size="lg"
-                            className="text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
-                            onClick={() => scrollToSection('contact-section')}
-                          >
-                            GET Iᑎ TOᑌᑕᕼ
-                          </Button>
+                        {/* Home hero only: semi-transparent glass around each CTA; md+ more gap + padding */}
+                        <div className="hero-cta-buttons hero-cta-home-glass flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 lg:gap-12 justify-center items-stretch sm:items-center">
+                          <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-lg rounded-full shrink-0">
+                            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
+                            <div className="relative rounded-full p-1 sm:p-1.5 md:p-2">
+                              <Button
+                                variant="default"
+                                size="lg"
+                                className="text-sm sm:text-lg px-5 sm:px-8 md:px-10 py-2.5 sm:py-4 md:py-4"
+                                onClick={() => scrollToSection('portals-section')}
+                              >
+                                ᗪIᐯE Iᑎ ᑎOᗯ
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-lg rounded-full shrink-0">
+                            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
+                            <div className="relative rounded-full p-1 sm:p-1.5 md:p-2">
+                              <Button
+                                variant="filled"
+                                size="lg"
+                                className="text-sm sm:text-lg px-5 sm:px-8 md:px-10 py-2.5 sm:py-4 md:py-4"
+                                onClick={() => scrollToSection('contact-section')}
+                              >
+                                GET Iᑎ TOᑌᑕᕼ
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
