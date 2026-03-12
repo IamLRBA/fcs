@@ -67,8 +67,6 @@ export default function CEOProfile() {
 
 
 
-  const socialLinks = SOCIAL_LINKS
-
   const galleryImages = [
     '/assets/images/ceo-1.jpg',
     '/assets/images/ceo-2.jpg',
@@ -95,9 +93,11 @@ export default function CEOProfile() {
   }
 
   const scrollGalleryThumbnails = (direction: 'left' | 'right') => {
-    if (galleryThumbnailRef.current) {
-      galleryThumbnailRef.current.scrollBy({
-        left: direction === 'left' ? -180 : 180,
+    const el = galleryThumbnailRef.current
+    if (el) {
+      const amount = Math.max(200, Math.floor(el.clientWidth * 0.5))
+      el.scrollBy({
+        left: direction === 'left' ? -amount : amount,
         behavior: 'smooth'
       })
     }
@@ -147,8 +147,8 @@ export default function CEOProfile() {
         </Link>
       </motion.div>
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-32 md:pt-40">
+      {/* Hero Section — extra top padding so avatar sits lower from fixed Back link */}
+      <section className="relative min-h-screen flex items-center justify-center pt-44 md:pt-52 pb-16">
         <motion.div
           style={{ y, opacity, scale }}
           className="text-center z-20 px-4"
@@ -159,20 +159,25 @@ export default function CEOProfile() {
             transition={{ duration: 1 }}
             className="mb-8"
           >
-            <div className="w-48 h-48 mx-auto mb-8 relative overflow-hidden rounded-full border-8 border-white shadow-2xl">
-              <img
-                src="/assets/images/ceo-profile.jpg"
-                alt="LRBA - CEO"
-                className="w-full h-full object-cover"
-              />
+            <div className="hero-glass-frame relative inline-block backdrop-blur-lg rounded-full mx-auto mb-8">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
+              <div className="relative p-2 sm:p-3 rounded-full">
+                <div className="w-44 h-44 sm:w-48 sm:h-48 relative overflow-hidden rounded-full border-4 border-primary-200/60 dark:border-primary-700/50 shadow-2xl">
+                  <img
+                    src="/assets/images/ceo-profile.jpg"
+                    alt="LRBA - CEO"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
             <h1 className="text-8xl md:text-8xl font-bold mb-6">
-              <span className="text-primary-800">ᒪᖇᗷᗩ</span>
+              <span className="text-primary-800 dark:text-primary-100">ᒪᖇᗷᗩ</span>
             </h1>
-            <p className="text-2xl md:text-3xl text-primary-700 mb-6 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-2xl md:text-3xl text-primary-700 dark:text-primary-300 mb-6 max-w-4xl mx-auto leading-relaxed">
             ᑕEO & ᖴOᑌᑎᗪEᖇ
             </p>
-            <p className="text-lg text-primary-600 max-w-3xl mx-auto">
+            <p className="text-lg text-primary-600 dark:text-primary-400 max-w-3xl mx-auto">
               A visionary creative leader who materializes ideas through structural ingenuity across multiple dimensions of human expression.
             </p>
           </motion.div>
@@ -210,7 +215,8 @@ export default function CEOProfile() {
           className="mt-20"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-800">ᑕᖇEᗩTIᐯE</span> <span className="text-accent-600">ᔕKIᒪᒪᔕ</span>
+            <span className="text-primary-800 dark:text-primary-200">ᑕᖇEᗩTIᐯE</span>{' '}
+            <span className="text-accent-600 dark:text-accent-400">ᔕKIᒪᒪᔕ</span>
           </h2>
           
           <div className="space-y-16 flex flex-col items-center">
@@ -229,7 +235,9 @@ export default function CEOProfile() {
                       : 'items-end' // Right aligned (staggered)
                   }`}>
                                        {/* Image Container */}
-                    <div className={`flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 ${index % 2 === 0 ? 'self-start' : 'self-end'}`}>
+                    <div className={`hero-glass-frame relative flex-shrink-0 rounded-2xl overflow-hidden backdrop-blur-lg ${index % 2 === 0 ? 'self-start' : 'self-end'}`}>
+                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
+                      <div className="relative bg-gradient-to-br from-primary-800/25 to-primary-600/25 dark:from-primary-800/35 dark:to-primary-600/35 rounded-2xl border border-primary-500/25 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 md:p-8">
                       {skill.category === '⾕ ᗩᖇᑕᕼITEᑕTᑌᖇE' && (
                         <img 
                           src="/assets/images/sections/ceo/architecture.jpg" 
@@ -265,6 +273,7 @@ export default function CEOProfile() {
                           className="w-24 h-24 object-cover rounded-xl"
                         />
                       )}
+                      </div>
                     </div>
                    
                                        {/* Content */}
@@ -365,7 +374,8 @@ export default function CEOProfile() {
           className="max-w-6xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-32">
-            <span className="text-primary-800">ᑭᕼOTO</span> <span className="text-accent-600">GᗩᒪᒪEᖇY</span>
+            <span className="text-primary-800 dark:text-primary-200">ᑭᕼOTO</span>{' '}
+            <span className="text-accent-600 dark:text-accent-400">GᗩᒪᒪEᖇY</span>
           </h2>
           
           <div className="relative flex flex-col items-center">
@@ -383,82 +393,90 @@ export default function CEOProfile() {
                 border-radius: 9999px;
               }
             `}</style>
-            {/* Main Image */}
-            <div className="relative mb-8 group p-1 rounded-2xl border border-white/60 dark:border-white/30" style={{ borderWidth: '1px' }}>
-              <img
-                src={galleryImages[currentImageIndex]}
-                alt={`CEO Image ${currentImageIndex + 1}`}
-                className="max-w-full max-h-[600px] w-auto h-auto object-contain transition-transform duration-500 hover:scale-105 cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl"
-                onClick={() => openImageModal(currentImageIndex)}
-              />
-              
-              {/* Fullscreen Button */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => openImageModal(currentImageIndex)}
-                className="absolute top-4 right-4 p-2 text-white/80 hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200"
-                aria-label="Expand photo"
-              >
-                <Maximize2 className="w-6 h-6" />
-              </motion.button>
+            {/* Main Image — arrows + glass frame; frame shrink-wraps to image; arrows centered on this block only */}
+            <div className="relative mb-8 w-full max-w-5xl mx-auto">
+              <Button type="button" variant="default" size="icon" onClick={prevImage} className="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
+                <span className="text-2xl">⟸</span>
+              </Button>
+              <Button type="button" variant="default" size="icon" onClick={nextImage} className="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
+                <span className="text-2xl">⟹</span>
+              </Button>
+              <div className="flex justify-center px-14 sm:px-16">
+                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-full overflow-hidden inline-block">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
+                  <div className="relative p-2 sm:p-3 rounded-2xl border border-primary-200/40 dark:border-primary-700/40 flex items-center justify-center">
+                    <img
+                      src={galleryImages[currentImageIndex]}
+                      alt={`CEO Image ${currentImageIndex + 1}`}
+                      className="max-w-[min(100vw-8rem,56rem)] max-h-[600px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl"
+                      onClick={() => openImageModal(currentImageIndex)}
+                    />
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => openImageModal(currentImageIndex)}
+                      className="absolute top-3 right-3 p-2 text-primary-700 dark:text-primary-200 hover:text-primary-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200 focus-ring-none rounded-lg"
+                      aria-label="Expand photo"
+                    >
+                      <Maximize2 className="w-6 h-6" />
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
             </div>
-            
-            {/* Navigation Arrows */}
-            <Button variant="default" size="icon" onClick={prevImage} className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center">
-              <span className="text-2xl">⟸</span>
-            </Button>
-            <Button variant="default" size="icon" onClick={nextImage} className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center">
-              <span className="text-2xl">⟹</span>
-            </Button>
 
             {/* Thumbnails */}
             {galleryImages.length > 1 && (
-              <div className="relative w-full max-w-3xl mt-6">
-                {galleryImages.length > 4 && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => scrollGalleryThumbnails('left')}
-                      className="p-1 text-primary-100 hover:text-white transition-colors duration-200"
-                      aria-label="Scroll thumbnails left"
-                    >
-                      <span className="text-xl">⟸</span>
-                    </motion.button>
-                  </div>
+              <div className="hero-glass-frame relative w-full max-w-3xl mt-6 rounded-2xl backdrop-blur-lg overflow-hidden">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
+                <div className="relative flex items-center justify-center gap-2 py-3 pl-2 pr-2 md:pl-3 md:pr-3">
+                {galleryImages.length > 3 && (
+                  <Button
+                    type="button"
+                    variant="circle"
+                    size="icon"
+                    onClick={() => scrollGalleryThumbnails('left')}
+                    className="flex-shrink-0 focus-ring-none z-10"
+                    aria-label="Scroll thumbnails left"
+                  >
+                    <span className="text-lg">⟸</span>
+                  </Button>
                 )}
                 <div
                   ref={galleryThumbnailRef}
-                  className="gallery-thumbnail-row flex items-center justify-center gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3 px-4"
+                  className="gallery-thumbnail-row flex flex-1 min-w-0 items-center justify-center md:justify-start gap-2 md:gap-3 overflow-x-auto scroll-smooth py-2 px-1"
                   style={{ scrollbarWidth: 'thin' }}
                 >
                   {galleryImages.map((img, index) => (
                     <button
+                      type="button"
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden border-2 transition-all duration-200 ${
-                        currentImageIndex === index ? 'border-primary-400 scale-105' : 'border-transparent hover:border-primary-300'
+                      className={`flex flex-shrink-0 items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden transition-all duration-200 focus-ring-none outline-none ring-0 border-2 backdrop-blur-sm ${
+                        currentImageIndex === index
+                          ? 'border-primary-500 dark:border-primary-400 scale-105 bg-primary-100/40 dark:bg-neutral-800/60'
+                          : 'border-primary-200/50 dark:border-primary-600/40 hover:border-primary-400/80 bg-primary-50/30 dark:bg-neutral-900/40'
                       }`}
                       aria-label={`View photo ${index + 1}`}
                     >
-                      <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                      <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover object-center rounded-lg" />
                     </button>
                   ))}
                 </div>
-                {galleryImages.length > 4 && (
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => scrollGalleryThumbnails('right')}
-                      className="p-1 text-primary-100 hover:text-white transition-colors duration-200"
-                      aria-label="Scroll thumbnails right"
-                    >
-                      <span className="text-xl">⟹</span>
-                    </motion.button>
-                  </div>
+                {galleryImages.length > 3 && (
+                  <Button
+                    type="button"
+                    variant="circle"
+                    size="icon"
+                    onClick={() => scrollGalleryThumbnails('right')}
+                    className="flex-shrink-0 focus-ring-none z-10"
+                    aria-label="Scroll thumbnails right"
+                  >
+                    <span className="text-lg">⟹</span>
+                  </Button>
                 )}
+                </div>
               </div>
             )}
             
@@ -469,7 +487,7 @@ export default function CEOProfile() {
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentImageIndex ? 'bg-primary-600 scale-125' : 'bg-neutral-300 hover:bg-neutral-400'
+                    index === currentImageIndex ? 'bg-primary-600 scale-125' : 'bg-neutral-300 dark:bg-neutral-600 hover:bg-neutral-400 dark:hover:bg-neutral-500'
                   }`}
                 />
               ))}
@@ -478,7 +496,7 @@ export default function CEOProfile() {
         </motion.div>
       </section>
 
-      {/* Social Media Section - Icons only, no words */}
+      {/* Social — same pattern as Footer (social-links + Button circle) */}
       <section className="mb-16 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -486,24 +504,18 @@ export default function CEOProfile() {
           transition={{ duration: 0.6, delay: 1.0 }}
           className="max-w-4xl mx-auto"
         >
-          <h3 className="text-3xl font-bold text-primary-900 mb-8 text-center">ᑕOᑎᑎEᑕT ᗯITᕼ ᗰE</h3>
-          <div className="flex justify-center flex-wrap gap-6">
-            {socialLinks.map((social, index) => (
-              <motion.a
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 1.2 + index * 0.1 }}
-                whileHover={{ scale: 1.2, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-16 h-16 flex items-center justify-center transition-all duration-300 group"
-              >
-                <social.icon className="w-8 h-8 text-primary-600 group-hover:text-primary-800 transition-colors duration-300" />
-              </motion.a>
-            ))}
+          <h3 className="text-3xl font-bold text-primary-900 dark:text-primary-100 mb-8 text-center">ᑕOᑎᑎEᑕT ᗯITᕼ ᗰE</h3>
+          <div className="social-links flex justify-center flex-wrap gap-6 mb-8">
+            {SOCIAL_LINKS.map((social) => {
+              const Icon = social.icon as any
+              return (
+                <motion.div key={social.name} className="social-link" whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }}>
+                  <Button variant="circle" href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.name} className="focus-ring-none">
+                    <Icon size={24} />
+                  </Button>
+                </motion.div>
+              )
+            })}
           </div>
         </motion.div>
       </section>

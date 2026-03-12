@@ -186,9 +186,13 @@ export default function AboutUs() {
                 <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-2">ᒪᖇᗷᗩ</h4>
                 <p className="text-lg text-primary-700 dark:text-primary-300 mb-6">CEO & Founder</p>
                 
-                <Button href="/ceo-profile" variant="default" className="inline-flex items-center space-x-2">
-                  <span>View Profile</span>
-                  <ExternalLink className="w-4 h-4" />
+                <Button
+                  href="/ceo-profile"
+                  variant="default"
+                  className="about-ceo-cta inline-flex items-center space-x-2 focus-ring-none relative z-10"
+                >
+                  <span className="relative z-10">View Profile</span>
+                  <ExternalLink className="w-4 h-4 relative z-10" />
                 </Button>
               </div>
             </div>

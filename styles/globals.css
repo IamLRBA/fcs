@@ -683,6 +683,22 @@
     border-color: var(--color-neutral-700);
   }
 
+  /* About Us → CEO profile CTA: same dark treatment as hero CTAs (readable + correct hover) */
+  .dark .about-ceo-cta.btn-unified,
+  .dark a.about-ceo-cta.btn-unified {
+    background: var(--color-button-glass);
+    color: var(--color-border-accent);
+    border-color: var(--color-neutral-700);
+  }
+  .dark .about-ceo-cta.btn-unified:hover,
+  .dark .about-ceo-cta.btn-unified:focus-visible,
+  .dark a.about-ceo-cta.btn-unified:hover,
+  .dark a.about-ceo-cta.btn-unified:focus-visible {
+    background: var(--color-border-accent);
+    color: var(--color-text-inverse);
+    border-color: var(--color-neutral-700);
+  }
+
   /* Account prompt popup: primary CTA (filled) matches default’s hover at rest, default’s normal on hover */
   .dark .account-prompt-buttons .btn-unified-filled {
     background: var(--color-button-hover-fill);
