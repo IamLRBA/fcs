@@ -11,6 +11,7 @@ import type { User as UserType, Review } from '@/lib/auth'
 import { AnimatePresence } from 'framer-motion'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import { SkeletonAccountPage } from '@/components/ui/Skeleton'
 
 export default function AccountPage() {
   const [user, setUser] = useState<UserType | null>(null)
@@ -64,7 +65,7 @@ export default function AccountPage() {
   }, [])
 
   if (!user) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+    return <SkeletonAccountPage />
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

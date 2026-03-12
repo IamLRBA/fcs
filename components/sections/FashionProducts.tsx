@@ -193,11 +193,11 @@ export default function FashionProducts() {
                               <Link 
                                 key={thumbIndex}
                                 href={`/products/${s.slug}#${subcategory.slug}`}
-                                className="focus-ring-none relative group"
+                                className="focus-ring-none relative group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-900"
                                 onMouseEnter={() => setHoveredThumbnail({ serviceId: s.id, thumbIndex })}
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
-                                <div className="bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
+                                <div className="bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-primary-400/50 hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-primary-400/25 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
                             <img 
                               src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
                               alt={`${subcategory.name} - ${s.title}`}

@@ -284,10 +284,14 @@ export default function FashionVideoSection() {
             </div>
             
             {isLoading && (
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-                  <p className="text-white/80 text-xs">Loading...</p>
+              <div className="absolute inset-0 z-20 overflow-hidden rounded-lg" aria-busy aria-label="Loading video">
+                <div className="absolute inset-0 skeleton rounded-none opacity-60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                  <div className="h-1 w-36 rounded-full bg-white/15 overflow-hidden">
+                    <div className="h-full w-2/5 rounded-full bg-white/40 animate-pulse" />
+                  </div>
+                  <span className="text-white/60 text-xs">Preparing playback…</span>
                 </div>
               </div>
             )}
