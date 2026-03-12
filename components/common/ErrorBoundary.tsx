@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Component, ErrorInfo, ReactNode } from 'react'
+import React, { Component, ErrorInfo, ReactNode, useEffect } from 'react'
 import { AlertCircle, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
@@ -15,6 +15,20 @@ interface State {
   error: Error | null
 }
 
+/** In production, visitors see no error — just a seamless redirect to home. */
+function SilentRedirectToHome() {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.location.replace('/')
+    }
+  }, [])
+  return (
+    <div className="min-h-screen bg-unified" aria-hidden>
+      {/* No text, no error message — same background as site while redirect happens */}
+    </div>
+  )
+}
+
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
@@ -22,11 +36,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    // Don't catch hydration errors - they're usually harmless and resolve on retry
-    // Hydration errors are warnings in React 18+, not actual errors
     if (error.message && (error.message.includes('hydration') || error.message.includes('Hydration'))) {
       console.warn('Hydration mismatch detected (non-fatal):', error.message)
-      // Return null to let React handle it normally
       return { hasError: false, error: null }
     }
     return { hasError: true, error }
@@ -34,22 +45,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo)
-
-    // Log detailed error information for debugging
     if (typeof window !== 'undefined') {
       console.error('Error name:', error.name)
       console.error('Error message:', error.message)
       console.error('Error stack:', error.stack)
       console.error('Component stack:', errorInfo.componentStack)
-
-      // Check if it's a hydration error
-      if (error.message.includes('hydration') || error.message.includes('Hydration')) {
-        console.warn('Hydration error detected - this is usually harmless and will resolve on retry')
-      }
     }
-
-    // Here you could log to an error reporting service
-    // e.g., Sentry, LogRocket, etc.
   }
 
   handleReset = () => {
@@ -62,6 +63,12 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback
       }
 
+      // Production: visitors never see an error — silent redirect to homepage
+      if (process.env.NODE_ENV === 'production') {
+        return <SilentRedirectToHome />
+      }
+
+      // Development: show full error UI for debugging
       return (
         <div className="min-h-screen flex items-center justify-center bg-unified p-4">
           <div className="max-w-md w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-8 text-center">
@@ -74,7 +81,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-primary-600 dark:text-primary-300 mb-6">
               We encountered an unexpected error. Please try again or return to the homepage.
             </p>
-            {(process.env.NODE_ENV === 'development' || typeof window !== 'undefined') && this.state.error && (
+            {this.state.error && (
               <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg text-left">
                 <p className="text-sm font-mono text-red-800 dark:text-red-200 break-all mb-2">
                   {this.state.error.toString()}

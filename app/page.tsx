@@ -51,6 +51,7 @@ export default function Home() {
   
   const portalsScale = useTransform(portalsScrollY, [0, 0.5, 1], [1, 1.1, 1])
   const testimonialsScale = useTransform(testimonialsScrollY, [0, 0.5, 1], [1, 1.05, 1])
+  const progressBarScaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
 
   /* Must be unconditional – was inside !isLoading branch and caused "fewer hooks than expected" */
   const progressScaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
@@ -177,7 +178,7 @@ export default function Home() {
               {/* Progress Bar */}
               <motion.div
                 className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 z-50 origin-left"
-                style={{ scaleX: progressScaleX }}
+                style={{ scaleX: progressBarScaleX }}
               />
 
               {/* Hero Section */}
