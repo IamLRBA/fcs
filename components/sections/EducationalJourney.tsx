@@ -1,55 +1,169 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { useRef, useState, useEffect, type ReactNode } from 'react'
 
 export const education = [
   {
-    period: "2008 – 2012",
-    level: "Primary 3 – Primary 7 (PLE)",
-    school: "Bugema Adventist Primary School",
-    details: "Completed primary education and sat for the Primary Leaving Exams (PLE)."
+    period: '2008 – 2012',
+    level: 'Primary 3 – Primary 7 (PLE)',
+    school: 'Bugema Adventist Primary School',
+    details: 'Completed primary education and sat for the Primary Leaving Exams (PLE).'
   },
   {
-    period: "2013 – 2016",
-    level: "Senior One – Senior Four (UCE)",
-    school: "Bugema Adventist Secondary School",
-    details: "Completed lower secondary education and sat for the Uganda Certificate of Education (UCE)."
+    period: '2013 – 2016',
+    level: 'Senior One – Senior Four (UCE)',
+    school: 'Bugema Adventist Secondary School',
+    details: 'Completed lower secondary education and sat for the Uganda Certificate of Education (UCE).'
   },
   {
-    period: "2017 – 2018",
-    level: "Senior Five – Senior Six (UACE)",
-    school: "Bugema Adventist Secondary School",
-    details: "Completed advanced secondary education and sat for the Uganda Advanced Certificate of Education (UACE)."
+    period: '2017 – 2018',
+    level: 'Senior Five – Senior Six (UACE)',
+    school: 'Bugema Adventist Secondary School',
+    details: 'Completed advanced secondary education and sat for the Uganda Advanced Certificate of Education (UACE).'
   },
   {
-    period: "2021 – Present",
+    period: '2021 – Present',
     level: "Bachelor's Degree in Architecture",
-    school: "International University of East Africa",
-    details: "Currently pursuing a degree in Architecture with ongoing coursework and design projects."
+    school: 'International University of East Africa',
+    details: 'Currently pursuing a degree in Architecture with ongoing coursework and design projects.'
   }
 ]
 
+function useReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduced(mq.matches)
+    const handler = () => setReduced(mq.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+  return reduced
+}
+
+const cardMotionTransition = {
+  duration: 0.45,
+  ease: [0.22, 1, 0.36, 1] as const
+}
+
+/** Wraps a timeline row; animates in when entering viewport and out when leaving (all breakpoints) */
+function TimelineRowMotion({
+  children,
+  index,
+  reducedMotion,
+  className,
+  fromRight = false
+}: {
+  children: ReactNode
+  index: number
+  reducedMotion: boolean
+  className?: string
+  /** mobile: slide from right; desktop left column slides from left */
+  fromRight?: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { amount: 0.15, margin: '-50px 0px' })
+
+  const hidden = reducedMotion
+    ? { opacity: 0 }
+    : fromRight
+      ? { opacity: 0, x: 32, y: 8 }
+      : { opacity: 0, y: 24, x: index % 2 === 0 ? -20 : 20 }
+
+  const visible = { opacity: 1, x: 0, y: 0 }
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={false}
+      animate={inView ? visible : hidden}
+      transition={{
+        ...cardMotionTransition,
+        delay: inView ? index * 0.06 : 0
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+/** Timeline card — same glass/pill style for desktop (alternating) and mobile (full width, line on left) */
+function TimelineCard({
+  item,
+  index,
+  align,
+  className = ''
+}: {
+  item: (typeof education)[0]
+  index: number
+  align: 'left' | 'right'
+  className?: string
+}) {
+  /* Shorter cards by default; mobile passes max-w-none and constrains via wrapper */
+  const widthClass = className.includes('max-w-none') ? '' : 'max-w-sm'
+  return (
+    <div
+      className={`group relative w-full rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 ${widthClass} ${
+        align === 'right' ? 'text-right' : 'text-left'
+      } ${className}`}
+    >
+      <div className="hero-glass-frame relative rounded-2xl backdrop-blur-xl">
+        <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl opacity-90" aria-hidden />
+        <div className="relative rounded-2xl p-1">
+          <div className="rounded-xl border border-primary-200/50 dark:border-primary-600/40 bg-gradient-to-br from-primary-50/90 to-primary-100/50 dark:from-neutral-900/80 dark:to-neutral-800/60 p-4 sm:p-5 shadow-lg transition-shadow duration-300 group-hover:shadow-xl group-hover:border-accent-500/30">
+            <div className={`flex items-start gap-4 ${align === 'right' ? 'flex-row-reverse' : ''}`}>
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500/20 to-primary-600/20 dark:from-accent-400/15 dark:to-primary-500/10 flex items-center justify-center border border-accent-500/25 dark:border-accent-400/20">
+                <span className="text-xl font-bold text-accent-600 dark:text-accent-400">{index + 1}</span>
+              </div>
+              <div className={`flex-1 min-w-0 ${align === 'right' ? 'items-end' : ''} flex flex-col`}>
+                <span
+                  className={`inline-flex rounded-full px-3 py-0.5 text-xs font-medium bg-accent-500/15 text-accent-700 dark:text-accent-300 dark:bg-accent-400/15 mb-2 ${
+                    align === 'right' ? 'self-end' : 'self-start'
+                  }`}
+                >
+                  {item.period}
+                </span>
+                <h3 className="text-base font-semibold text-primary-900 dark:text-primary-100 leading-snug mb-2">
+                  {item.level}
+                </h3>
+                <div className={`flex items-center gap-2 mb-2 ${align === 'right' ? 'flex-row-reverse' : ''}`}>
+                  <span className="text-sm text-primary-700 dark:text-primary-300">{item.school}</span>
+                  <div className="w-8 h-8 rounded-lg overflow-hidden border border-primary-200/60 dark:border-primary-600/50 flex-shrink-0">
+                    <img
+                      src={`/assets/images/sections/ceo/school-${index + 1}.jpg`}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+                <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{item.details}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function EducationalJourney() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  })
-
-  const pathLength = useTransform(scrollYProgress, [0, 0.8], [0, 1])
-  const guideDotProgress = useTransform(scrollYProgress, [0, 0.8], [0, 1])
+  const reducedMotion = useReducedMotion()
 
   return (
     <section
       ref={containerRef}
-      className="py-20 px-4 md:px-8 lg:px-16 bg-transparent"
+      className="pt-20 pb-10 px-4 md:px-8 lg:px-16 bg-transparent md:pb-12"
+      aria-label="Educational journey timeline"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Section Heading */}
+        {/* Section heading — desktop: static accent as before; mobile: can use same static to match desktop */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
@@ -57,209 +171,109 @@ export default function EducationalJourney() {
             <span className="text-primary-500 dark:text-primary-400">EᗪᑌᑕᗩTIOᑎᗩᒪ</span>{' '}
             <span className="text-primary-800 dark:text-primary-200">ᒍOᑌᖇᑎEY</span>
           </h2>
-          <div 
+          <div
             className="w-24 h-1 mx-auto rounded-full"
             style={{ backgroundColor: 'var(--color-accent-600)' }}
           />
         </motion.div>
 
-        {/* Desktop Timeline */}
-        <div className="hidden md:block relative">
-          <svg 
-            viewBox="0 0 1000 800" 
-            className="w-full h-auto"
-            style={{ minHeight: '600px' }}
-          >
-            <defs>
-              <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style={{ stopColor: 'var(--color-primary-500)' }} />
-                <stop offset="100%" style={{ stopColor: 'var(--color-accent-500)' }} />
-              </linearGradient>
-            </defs>
-            
-            {/* Animated Path */}
-            <motion.path
-              d="M 50 100 L 950 100 L 950 300 L 50 300 L 50 500 L 950 500 L 950 700 L 50 700"
-              fill="none"
-              stroke="url(#pathGradient)"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeDasharray="1"
-              strokeDashoffset={pathLength}
-              style={{ pathLength: pathLength }}
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              transition={{ duration: 2, ease: "easeInOut" }}
-            />
+        {/* Desktop — vertical timeline: center spine, alternating cards, glass + pill period */}
+        <div className="hidden md:block relative max-w-5xl mx-auto py-4 pb-12">
+          {/* Center spine only — no blur/glow */}
+          <div
+            className="absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 rounded-full bg-gradient-to-b from-primary-400/80 via-accent-500 to-primary-600/80 dark:from-primary-500/50 dark:via-accent-400/70 dark:to-primary-400/50"
+            aria-hidden
+          />
 
-            {/* Animated Guide Dot */}
-            <motion.circle
-              r="6"
-              fill="var(--color-accent-500)"
-              filter="drop-shadow(0 0 8px var(--color-accent-500))"
-              cx={useTransform(guideDotProgress, [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1], [50, 950, 950, 50, 50, 950, 950, 50, 50])}
-              cy={useTransform(guideDotProgress, [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1], [100, 100, 300, 300, 500, 500, 700, 700, 700])}
-            />
-          </svg>
-
-          {/* Desktop Milestones */}
-          {education.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: 0.6, 
-                delay: 0.5 + (index * 0.2),
-                ease: "easeInOut"
-              }}
-              whileHover={{ scale: 1.05 }}
-              className="absolute"
-              style={{
-                left: index % 2 === 0 ? '5%' : '65%',
-                top: `${(index * 25) + 12.5}%`,
-                transform: 'translateY(-50%)'
-              }}
-            >
-              {/* Outer: semi-transparent shell unchanged; inner card inset so glass margin shows all around */}
-              <div className={`hero-glass-frame hero-glass-frame-compact relative w-72 rounded-xl backdrop-blur-lg overflow-hidden ${index % 2 === 0 ? 'mr-auto' : 'ml-auto'}`}>
-                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-xl" aria-hidden />
-                <div className="relative p-2.5 sm:p-3 md:p-3.5">
-                <div
-                  className="relative w-full mx-auto p-2.5 sm:p-3 rounded-lg border border-primary-200/40 dark:border-primary-600/50 bg-primary-50/40 dark:bg-neutral-900/50 shadow-md transition-all duration-300 hover:shadow-lg"
+          <div className="relative flex flex-col gap-10 lg:gap-14">
+            {education.map((item, index) => {
+              const isLeft = index % 2 === 0
+              return (
+                <TimelineRowMotion
+                  key={index}
+                  index={index}
+                  reducedMotion={reducedMotion}
+                  fromRight={false}
+                  className="relative flex min-h-[140px] w-full flex-row items-center"
                 >
-                  <div className="flex items-start gap-2">
-                    <div className="text-3xl font-bold text-primary-400 dark:text-primary-500 flex-shrink-0 leading-none w-8 text-center">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs font-medium mb-0.5 text-accent-600 dark:text-accent-400">
-                        {item.period}
+                  {/* Connector at row vertical center — same line weight as spine-side stubs */}
+                  <div
+                    className={`absolute top-1/2 z-[1] h-0.5 w-16 -translate-y-1/2 rounded-full lg:w-24 ${
+                      isLeft
+                        ? 'right-1/2 mr-6 bg-gradient-to-l from-accent-500/60 to-transparent dark:from-accent-400/50'
+                        : 'left-1/2 ml-6 bg-gradient-to-r from-accent-500/60 to-transparent dark:from-accent-400/50'
+                    }`}
+                    aria-hidden
+                  />
+
+                  {isLeft ? (
+                    <>
+                      <div className="flex-1 flex justify-end pr-8 lg:pr-12">
+                        <TimelineCard item={item} index={index} align="right" />
                       </div>
-                      <h3 className="text-sm font-semibold mb-1 text-primary-900 dark:text-primary-100 leading-tight">
-                        {item.level}
-                      </h3>
-                      <div className="flex items-center flex-wrap gap-1.5 mb-1">
-                        <h4 className="text-xs font-medium text-primary-700 dark:text-primary-300 leading-tight">
-                          {item.school}
-                        </h4>
-                        <div className="w-6 h-6 rounded-md overflow-hidden border border-primary-200/60 dark:border-primary-600/60 flex-shrink-0">
-                          <img
-                            src={`/assets/images/sections/ceo/school-${index + 1}.jpg`}
-                            alt={`${item.school} Badge`}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
+                      <div className="relative z-10 flex-shrink-0 w-12 flex justify-center">
+                        <div className="w-4 h-4 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100)] dark:shadow-[0_0_0_4px_var(--color-neutral-900)]" />
                       </div>
-                      <p className="text-xs leading-snug text-neutral-700 dark:text-neutral-300">
-                        {item.details}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                      <div className="flex-1" />
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex-1" />
+                      <div className="relative z-10 flex-shrink-0 w-12 flex justify-center">
+                        <div className="w-4 h-4 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100)] dark:shadow-[0_0_0_4px_var(--color-neutral-900)]" />
+                      </div>
+                      <div className="flex-1 flex justify-start pl-8 lg:pl-12">
+                        <TimelineCard item={item} index={index} align="left" />
+                      </div>
+                    </>
+                  )}
+                </TimelineRowMotion>
+              )
+            })}
+          </div>
         </div>
 
-        {/* Mobile Timeline */}
-        <div className="block md:hidden relative px-4">
-          <svg 
-            viewBox="0 0 400 1400" 
-            className="w-full h-auto"
-            style={{ minHeight: '1400px' }}
-          >
-            <defs>
-              <linearGradient id="mobilePathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style={{ stopColor: 'var(--color-primary-500)' }} />
-                <stop offset="100%" style={{ stopColor: 'var(--color-accent-500)' }} />
-              </linearGradient>
-            </defs>
-            
-            {/* Animated Path - moved to left side */}
-            <motion.path
-              d="M 15 15 L 15 350 L 15 650 L 15 950 L 15 1250 L 15 1350"
-              fill="none"
-              stroke="url(#mobilePathGradient)"
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeDasharray="1"
-              strokeDashoffset={pathLength}
-              style={{ pathLength: pathLength }}
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              transition={{ duration: 2, ease: "easeInOut" }}
-            />
-
-            {/* Animated Guide Dot - moved to left side */}
-            <motion.circle
-              cx="25"
-              r="8"
-              fill="var(--color-accent-500)"
-              filter="drop-shadow(0 0 8px var(--color-accent-500))"
-              cy={useTransform(guideDotProgress, [0, 1], [25, 1350])}
-            />
-          </svg>
-
-          {/* Mobile Milestones */}
-          {education.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: 0.6, 
-                delay: 0.5 + (index * 0.2),
-                ease: "easeInOut"
-              }}
-              whileHover={{ scale: 1.05 }}
-              className="absolute"
-              style={{
-                left: '50px',
-                top: index === 0 ? '5%' : index === 1 ? '28%' : index === 2 ? '51%' : '74%',
-                width: 'calc(100% - 4.5rem)',
-                maxWidth: '320px',
-                zIndex: education.length - index
-              }}
-            >
-              <div className="hero-glass-frame hero-glass-frame-compact relative w-full rounded-xl backdrop-blur-lg overflow-hidden">
-                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-xl" aria-hidden />
-                <div className="relative p-2.5 sm:p-3">
-                <div className="relative w-full p-2.5 sm:p-3 rounded-lg border border-primary-200/40 dark:border-primary-600/50 bg-primary-50/40 dark:bg-neutral-900/50 shadow-md transition-all duration-300 hover:shadow-lg">
-                  <div className="flex items-start gap-2">
-                    <div className="text-2xl font-bold text-primary-400 dark:text-primary-500 flex-shrink-0 leading-none w-7 text-center">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-medium mb-0.5 text-accent-600 dark:text-accent-400">
-                        {item.period}
-                      </div>
-                      <h3 className="text-sm font-semibold mb-0.5 text-primary-900 dark:text-primary-100 leading-tight">
-                        {item.level}
-                      </h3>
-                      <div className="flex items-center flex-wrap gap-1.5 mb-0.5">
-                        <h4 className="text-xs font-medium text-primary-700 dark:text-primary-300 leading-tight">
-                          {item.school}
-                        </h4>
-                        <div className="w-5 h-5 rounded-md overflow-hidden border border-primary-200/60 dark:border-primary-600/60 flex-shrink-0">
-                          <img
-                            src={`/assets/images/sections/ceo/school-${index + 1}.jpg`}
-                            alt={`${item.school} Badge`}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                      <p className="text-[11px] leading-snug text-neutral-700 dark:text-neutral-300">
-                        {item.details}
-                      </p>
-                    </div>
+        {/* Smaller screens — dot left of spine; connector runs from spine to card */}
+        <div className="md:hidden relative">
+          <div
+            className="absolute left-6 top-2 bottom-2 w-1 rounded-full bg-gradient-to-b from-primary-500 via-accent-500 to-primary-600 opacity-80"
+            aria-hidden
+          />
+          <div className="space-y-8 pl-0">
+            {education.map((item, index) => (
+              <TimelineRowMotion
+                key={index}
+                index={index}
+                reducedMotion={reducedMotion}
+                fromRight
+                className="relative flex min-h-[4rem] items-center"
+              >
+                  {/* Left column: dot + space up to spine right edge so connector terminates at spine edge */}
+                  <div className="relative flex-shrink-0 w-[1.75rem] flex items-center justify-start pr-0">
+                    <div
+                      className="absolute left-0.5 top-1/2 z-10 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500 shadow-[0_0_0_4px_var(--color-primary-100)] dark:shadow-[0_0_0_4px_var(--color-neutral-900)]"
+                      aria-hidden
+                    />
                   </div>
-                </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                  {/* Connector: horizontal line from spine right edge to card */}
+                  <div className="relative flex-1 min-w-0 flex items-center">
+                    <div
+                      className="pointer-events-none absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent-500/60 to-transparent dark:from-accent-400/50"
+                      aria-hidden
+                    />
+                  </div>
+                  {/* Card — wider on larger small screens so gap to spine isn't too large */}
+                  <div className="relative flex-shrink-0 w-full max-w-[20rem] sm:max-w-[26rem]">
+                    <TimelineCard
+                      item={item}
+                      index={index}
+                      align="left"
+                      className="relative z-[1] w-full max-w-none"
+                    />
+                  </div>
+              </TimelineRowMotion>
+            ))}
+          </div>
         </div>
       </div>
     </section>

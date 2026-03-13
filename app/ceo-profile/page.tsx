@@ -364,8 +364,8 @@ export default function CEOProfile() {
       {/* Educational Journey Section */}
       <EducationalJourney />
 
-      {/* Gallery Section — extra space below Educational Journey; title pushed lower */}
-      <section className="pt-24 md:pt-32 pb-36 px-4 mt-20 md:mt-28">
+      {/* Gallery Section — tighter gap below Educational Journey */}
+      <section className="pt-10 md:pt-14 pb-36 px-4 mt-6 md:mt-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -373,7 +373,7 @@ export default function CEOProfile() {
           viewport={{ once: true }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16 md:mb-24 mt-4 md:mt-8">
+          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16 md:mb-24 mt-0 md:mt-2">
             <span className="text-primary-800 dark:text-primary-200">ᑭᕼOTO</span>{' '}
             <span className="text-accent-600 dark:text-accent-400">GᗩᒪᒪEᖇY</span>
           </h2>
@@ -393,7 +393,7 @@ export default function CEOProfile() {
                 border-radius: 9999px;
               }
             `}</style>
-            {/* Main Image — small screens: full-width even glass (unchanged). md+: shrink-wrap to image like before. */}
+            {/* Main Image — one layout all breakpoints: glass shrink-wraps to image; max-w-full keeps narrow/tablet/desktop consistent */}
             <div className="relative mb-8 w-full max-w-5xl mx-auto">
               <Button type="button" variant="default" size="icon" onClick={prevImage} className="absolute left-0 sm:left-1 md:left-2 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
                 <span className="text-2xl">⟸</span>
@@ -401,37 +401,24 @@ export default function CEOProfile() {
               <Button type="button" variant="default" size="icon" onClick={nextImage} className="absolute right-0 sm:right-1 md:right-2 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
                 <span className="text-2xl">⟹</span>
               </Button>
-              {/* Mobile/tablet portrait: full-width shell, even padding all around */}
-              <div className="mx-auto w-full max-w-4xl px-2 sm:px-0 md:hidden">
-                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-full overflow-hidden">
-                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
-                  <div className="relative p-2 sm:p-3 rounded-2xl border border-primary-200/40 dark:border-primary-700/40">
-                    <div className="flex items-center justify-center">
-                      <img
-                        src={galleryImages[currentImageIndex]}
-                        alt={`CEO Image ${currentImageIndex + 1}`}
-                        className="max-w-full max-h-[600px] w-auto h-auto object-contain block mx-auto transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl"
-                        onClick={() => openImageModal(currentImageIndex)}
-                      />
-                    </div>
-                    <motion.button type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => openImageModal(currentImageIndex)} className="absolute top-3 right-3 p-2 text-primary-700 dark:text-primary-200 hover:text-primary-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200 focus-ring-none rounded-lg" aria-label="Expand photo">
-                      <Maximize2 className="w-6 h-6" />
-                    </motion.button>
-                  </div>
-                </div>
-              </div>
-              {/* Desktop (md+): shrink-wrap glass to image — same as before */}
-              <div className="hidden md:flex justify-center px-14 lg:px-16">
-                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-full overflow-hidden inline-block">
+              <div className="flex w-full justify-center px-3 sm:px-8 md:px-12 lg:px-16">
+                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-full min-w-0 overflow-hidden">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
                   <div className="relative p-2 sm:p-3 rounded-2xl border border-primary-200/40 dark:border-primary-700/40 flex items-center justify-center">
                     <img
                       src={galleryImages[currentImageIndex]}
                       alt={`CEO Image ${currentImageIndex + 1}`}
-                      className="max-w-[min(100vw-8rem,56rem)] max-h-[600px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl"
+                      className="max-h-[600px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl max-w-[min(calc(100vw-2.5rem),56rem)] sm:max-w-[min(calc(100vw-6rem),56rem)] md:max-w-[min(calc(100vw-8rem),56rem)]"
                       onClick={() => openImageModal(currentImageIndex)}
                     />
-                    <motion.button type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => openImageModal(currentImageIndex)} className="absolute top-3 right-3 p-2 text-primary-700 dark:text-primary-200 hover:text-primary-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200 focus-ring-none rounded-lg" aria-label="Expand photo">
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => openImageModal(currentImageIndex)}
+                      className="absolute top-3 right-3 p-2 text-primary-700 dark:text-primary-200 hover:text-primary-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200 focus-ring-none rounded-lg"
+                      aria-label="Expand photo"
+                    >
                       <Maximize2 className="w-6 h-6" />
                     </motion.button>
                   </div>
@@ -552,7 +539,7 @@ export default function CEOProfile() {
               GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span>
             </h2>
             <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto text-center">
-              Any questions about our fashion collection? Need styling advice? Contact us and we&apos;re here to help you find answers.
+              Any questions about me? Contact me and I'm here to help you find answers.
             </p>
           </motion.div>
 
@@ -577,7 +564,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
                   <Button href="mailto:jerrylarubafestus@gmail.com" variant="default" className="inline-flex items-center justify-center px-6">
-                    Email Us
+                    Email Me
                   </Button>
                 </div>
               </div>
@@ -597,7 +584,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 774 948 086</p>
                   <Button href="tel:+256774948086" variant="default" className="inline-flex items-center justify-center px-6">
-                    Call Us
+                    Call Me
                   </Button>
                 </div>
               </div>
@@ -617,7 +604,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 755 915 549</p>
                   <Button href="https://wa.me/256755915549" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
-                    Text Us
+                    Text Me
                   </Button>
                 </div>
               </div>
@@ -637,7 +624,7 @@ export default function CEOProfile() {
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
                   <Button href="https://maps.google.com/?q=Kampala,Uganda" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
-                    Find Us
+                    Find Me
                   </Button>
                 </div>
               </div>
