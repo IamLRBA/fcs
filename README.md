@@ -1,7 +1,7 @@
 
-# MysticalPIECES - Online Thrift 
+# MysticalPIECES - Thrift Store & Boutique
 
-A modern, interactive e-commerce platform for curated thrift fashion. MysticalPIECES offers a unique shopping experience with carefully selected vintage and second-hand items across multiple categories.
+A modern, interactive e-commerce site for curated thrift fashion. MysticalPIECES is a thrift store and boutique with pieces curated to awaken individuality, celebrate conscious style, and build modern connections through every garment. The site combines an earthy, mystical design with a full shopping flow: browse by category, cart, checkout, order confirmation, and optional email/WhatsApp notifications.
 
 ---
 
@@ -9,80 +9,86 @@ A modern, interactive e-commerce platform for curated thrift fashion. MysticalPI
 
 ### ⋆✴︎⌖⋆ E-Commerce Features
 
-- **Product Catalog**: Browse curated thrift fashion across multiple categories
-- **Shopping Cart**: Add items to cart with size and color selection
-- **Checkout System**: Secure checkout with delivery options
-- **Order Management**: Order confirmation with receipt generation
-- **Product Search**: Search functionality to find specific items
-- **Responsive Design**: Fully responsive across all devices
+- **Product catalog**: Curated thrift fashion across categories (Shirts, Tees, Coats & Outerwear, Pants & Shorts, Footwear, Accessories) with subcategories and product detail pages
+- **Shop portal**: Dedicated shop page with lookbook carousel, style categories (Classy, Retro, etc.), moodboard, and fashion video section
+- **Shopping cart**: Add items with size and color selection; cart persisted in local storage
+- **Checkout**: Customer details and delivery; order confirmation with receipt generation
+- **Product discovery**: Navbar search with live suggestions; browse by category from the home “Enter the Portal” section
+- **Responsive layout**: Mobile-first, responsive across all breakpoints
 
 ### 𓂃✍︎ Design System
 
-- **Dark Theme**: Earthy-toned minimalist design with black/white accents
-- **Custom Animations**: Tailwind CSS custom keyframes and animations
-- **Glass Effects**: Modern backdrop blur and transparency effects
-- **Typography**: Inter and JetBrains Mono font families
+- **Unified theme**: Earthy primary and accent palette (almond, coffee, ecru) with light/dark mode (`bg-unified`, glass frames, hero CTAs)
+- **Typography**: MuseoModerno (primary/display), JetBrains Mono (mono), Mrs Saint Delafield, Zen Dots (loaded via layout)
+- **Glass effects**: Hero glass frames, backdrop blur, gradient overlays, and consistent card treatments across hero, portals, and sections
+- **Motion**: Framer Motion for scroll-linked hero scale/opacity, portal and testimonial scale, progress bar, loading screen, and section animations; reduced-motion respected where applicable
 
 ### ⚛︎ Technology Stack
 
-- **Next.js 15**: App Router with TypeScript
-- **Tailwind CSS**: Custom design system with extended utilities
-- **Framer Motion**: Smooth animations and transitions
-- **Email Integration**: Automated email notifications (SendGrid/SMTP)
-- **WhatsApp Integration**: Order notifications via WhatsApp (Green API)
-- **Local Storage**: Cart and user preferences management
+- **Next.js** (App Router) with TypeScript
+- **Tailwind CSS**: Custom design system (primary, neutral, accent), extended utilities, and `globals.css` (animations, hero/CTA styles, footer)
+- **Framer Motion**: Page and scroll-based animations, loading overlay, portal transitions
+- **Icons**: react-icons (Heroicons hi/hi2), Lucide React, and custom inline SVGs in the Navbar
+- **Integrations**: SendGrid/nodemailer for email; WhatsApp (e.g. Green API/Twilio) for order notifications
+- **State & data**: Local storage (cart, preferences, first-visit flag); product catalog in `data/products.json`; optional Prisma for admin/accounts
 
 ---
 
 ## 🗀 Project Structure
 
 ```
-mysticalpieces/
-├── app/                          # Next.js App Router
-│   ├── layout.tsx               # Root layout
-│   ├── page.tsx                 # Home page
+mystical_pieces/
+├── app/                              # Next.js App Router
+│   ├── layout.tsx                     # Root layout (fonts, Navbar, Footer, Providers, SkipToContent, BackToTop, etc.)
+│   ├── page.tsx                      # Home (hero, progress bar, LoadingScreen, AnimatedImageBanner, FeaturedCollections, Portals, Stats, Testimonials, Contact)
+│   ├── about-us/                      # About Us page (AboutUs section + CTA to shop)
+│   ├── ceo-profile/                  # CEO profile (gallery, skills, Educational Journey timeline, GET IN TOUCH)
 │   ├── sections/
-│   │   └── shop/                # Shop portal page
+│   │   └── shop/                     # Shop portal (lookbook, style categories, moodboard, FashionVideoSection, FashionProducts)
 │   ├── products/
-│   │   └── [category]/          # Product category pages
-│   ├── cart/                     # Shopping cart page
-│   ├── checkout/                 # Checkout page
-│   ├── order-confirmation/       # Order confirmation page
-│   ├── about-us/                 # About Us page
-│   ├── ceo-profile/              # CEO profile page
-│   └── api/                      # API routes
-│       ├── send-email/           # Email notification API
-│       └── send-whatsapp/        # WhatsApp notification API
-├── components/                   # Shared UI components
-│   ├── layout/                   # Layout components
-│   │   ├── Navbar.tsx           # Navigation bar
-│   │   └── Footer.tsx           # Footer
-│   ├── sections/                 # Page sections
-│   │   ├── FashionProducts.tsx  # Product showcase
+│   │   └── [category]/               # Product category pages (dynamic category + sections)
+│   ├── cart/                         # Shopping cart page
+│   ├── checkout/                      # Checkout page
+│   ├── order-confirmation/           # Order confirmation + receipt
+│   ├── account/                      # Account page
+│   ├── login/                        # Login page
+│   ├── terms-conditions/              # Terms & Conditions
+│   ├── privacy-policy/               # Privacy Policy
+│   ├── admin/                        # Admin (login, dashboard, accounts, products)
+│   └── api/
+│       ├── send-email/                # Email notification API
+│       └── send-whatsapp/             # WhatsApp notification API
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.tsx                 # Top nav (logo, Home, Shop, About Us, search, cart, account/settings)
+│   │   └── Footer.tsx                 # Social links, tagline, copyright, legal links
+│   ├── sections/
+│   │   ├── AboutUs.tsx                # About content + CEO “View Profile” CTA
+│   │   ├── AnimatedImageBanner.tsx
+│   │   ├── AnimatedImageBannerAboutUs.tsx
+│   │   ├── Contact.tsx                # GET IN TOUCH (email, phone, etc.)
+│   │   ├── EducationalJourney.tsx     # CEO timeline (desktop center spine + mobile left spine)
 │   │   ├── FeaturedCollections.tsx
+│   │   ├── FashionProducts.tsx
+│   │   ├── FashionVideoSection.tsx
+│   │   ├── Stats.tsx
 │   │   ├── Testimonials.tsx
-│   │   └── Companies.tsx
-│   └── ui/                       # UI components
-│       ├── LogoMark.tsx
-│       ├── BackToTop.tsx
-│       └── LoadingSkeleton.tsx
-├── lib/                          # Utility libraries
-│   ├── cart.ts                  # Cart management
-│   ├── products.ts               # Product management
-│   ├── emails/                  # Email templates
-│   └── whatsapp/                # WhatsApp notifications
-├── data/                         # Data files
-│   └── products.json            # Product catalog
-├── public/                       # Static assets
+│   │   ├── Companies.tsx
+│   │   └── MissionVisionCard.tsx
+│   └── ui/                            # LogoMark, MysticalPiecesWord, Button, BackToTop, LoadingScreen, PortalNavigation, etc.
+├── lib/                               # cart, products, emails, whatsapp, constants (e.g. social)
+├── data/
+│   └── products.json                 # Product catalog by category/section (UGX pricing, condition, SKU, images)
+├── public/
 │   └── assets/
-│       ├── images/              # Product and brand images
-│       └── videos/              # Fashion videos
-├── styles/                       # Global styles
-│   └── globals.css
-├── tailwind.config.js           # Tailwind configuration
-├── next.config.js               # Next.js configuration
-├── tsconfig.json                # TypeScript configuration
-└── package.json                 # Dependencies and scripts
+│       ├── images/                    # Product and brand images
+│       └── videos/                    # Fashion videos
+├── styles/
+│   └── globals.css                    # Base, components, utilities, hero/CTA, footer, animations
+├── tailwind.config.js                 # Theme (primary, neutral, accent, fonts, keyframes)
+├── next.config.js
+├── tsconfig.json
+└── package.json
 ```
 
 ---
@@ -137,14 +143,15 @@ mysticalpieces/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
+
 ### Installation
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd mysticalpieces
+   cd mystical_pieces
    ```
 2. **Install dependencies**
    ```bash
@@ -168,7 +175,6 @@ npm start
 
 ## 𓅓 Customization
 
-
 ### Adding Products
 
 #### Product Images
@@ -181,8 +187,8 @@ npm start
 #### Product Data
 
 - Update product catalog in `/data/products.json`
-- Add product details: name, price, sizes, colors, images
-- Include product descriptions and SKU information
+- Add product details: name, price_ugx, sizes, colors, images, description, condition, sku
+- Structure by category and subcategory sections
 
 #### Fashion Videos
 
@@ -193,16 +199,16 @@ npm start
 
 ### Modifying Colors and Themes
 
-- Edit `tailwind.config.js` for color schemes
-- Update `styles/globals.css` for custom animations
-- Modify component-specific styling
+- Edit `tailwind.config.js` for primary, neutral, and accent colors
+- Update `styles/globals.css` for custom animations, hero/CTA, and footer styles
+- Modify component-specific styling as needed
 
 ### Adding New Product Categories
 
 1. Add category data to `/data/products.json`
-2. Create category images in `/public/assets/images/products-sections/fashion/`
+2. Create category images in `/public/assets/images/products-sections/fashion/` (or equivalent)
 3. Add subcategory images for each category
-4. Update product routes in `/app/products/[category]/`
+4. Ensure product routes in `/app/products/[category]/` support the new category
 
 ---
 
@@ -225,9 +231,9 @@ npm start
 ### Performance Optimization
 
 - Lazy loading for heavy components
-- Image optimization with Next.js Image
+- Image optimization with Next.js Image where used
 - Code splitting with dynamic imports
-- Optimized animations and transitions
+- Optimized animations and reduced-motion support
 
 ---
 
@@ -235,24 +241,23 @@ npm start
 
 ### Shopping Experience
 
-- **Product Browsing**: Browse products by category with beautiful visual layouts
-- **Product Details**: View detailed product information with multiple images
-- **Shopping Cart**: Add items to cart with size and color selection
-- **Checkout Process**: Secure checkout with customer information form
-- **Order Confirmation**: Receive order confirmation with downloadable receipt
+- **Product browsing**: Browse by category from the home portals section and from the Shop nav link; category pages with sections and product cards
+- **Product details**: Detail views with multiple images, size/color selection, add to cart
+- **Shopping cart**: Cart in local storage; cart page and navbar cart count
+- **Checkout**: Customer and delivery form; order confirmation with downloadable receipt
 
 ### Notifications
 
-- **Email Notifications**: Automated emails sent to customers and admins
-- **WhatsApp Notifications**: Order confirmations via WhatsApp
-- **Receipt Generation**: Automatic receipt generation with order details
+- **Email**: Automated emails to customers and admins (SendGrid/nodemailer via `/api/send-email`)
+- **WhatsApp**: Order confirmations via WhatsApp (e.g. Green API/Twilio via `/api/send-whatsapp`)
+- **Receipt**: Receipt generation with order details
 
 ### User Interface
 
-- **Dark/Light Mode**: Theme switching with persistent preferences
-- **Responsive Design**: Mobile-first approach, fully responsive
-- **Smooth Animations**: Framer Motion powered transitions
-- **Search Functionality**: Search products across the catalog
+- **Dark/Light mode**: Theme switching with persistent preferences
+- **Responsive design**: Mobile-first, responsive across devices
+- **Motion**: Framer Motion for hero, portals, testimonials, loading screen, and section transitions
+- **Search**: Navbar search with live product suggestions
 
 ---
 
@@ -260,23 +265,24 @@ npm start
 
 ### Framer Motion
 
-- Page transitions
-- Scroll-triggered animations
-- Hover effects and micro-interactions
+- Hero scroll-linked scale, opacity, and parallax
+- Portal and testimonial section scale on scroll
+- Progress bar tied to scroll progress
+- Loading screen (first visit) with completion callback
+- Scroll-triggered and hover-based transitions across sections
 
 ### Custom CSS Animations
 
-- Logo animations
+- Logo and hero animations
 - Product card hover effects
-- Smooth page transitions
-- Loading states
-- Scroll-triggered animations
+- Keyframes in `globals.css` (fadeIn, slideUp, float, etc.)
+- Loading states and scroll-triggered effects
 
 ### Performance Considerations
 
-- Hardware acceleration
-- Reduced motion support
-- Optimized animation loops
+- Hardware-accelerated transforms where appropriate
+- Reduced motion support in timeline and motion-heavy components
+- Conditional animation usage for accessibility
 
 ---
 
@@ -284,7 +290,7 @@ npm start
 
 ### Planned Features
 
-- [ ] User accounts and authentication
+- [ ] User accounts and authentication (beyond current login/account/admin)
 - [ ] Product reviews and ratings
 - [ ] Wishlist functionality
 - [ ] Payment gateway integration
@@ -294,9 +300,9 @@ npm start
 
 ### Technical Improvements
 
-- [ ] PWA capabilities
+- [ ] PWA capabilities (manifest and icons already in place)
 - [ ] Advanced caching strategies
-- [ ] SEO optimization
+- [ ] SEO optimization (metadata, StructuredData in layout)
 - [ ] Analytics integration
 - [ ] Performance monitoring
 
@@ -320,10 +326,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 𓂀 Acknowledgments
 
-- Next.js team for the amazing framework
+- Next.js team for the framework
 - Framer Motion for smooth animations
-- Three.js community for 3D graphics
 - Tailwind CSS for the utility-first approach
+- react-icons and Lucide for icons
 
 ---
 
@@ -336,7 +342,7 @@ For questions or support:
 
 ---
 
-**Built with ♡ by MysticalPIECES**
-*Future-facing thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment* 
+**Built with ♡ by MysticalPIECES**  
+*Thrift store & boutique with pieces curated to awaken individuality, celebrate conscious style, and build modern connections through every garment*
 
 ---
