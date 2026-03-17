@@ -1430,7 +1430,7 @@
   :root .login-form .input-overlay,
   :root .login-form input.input-overlay,
   :root .login-form textarea.input-overlay {
-    border-color: #8a8a8a !important;
+    border-color: var(--color-hero-frame-border) !important;
   }
   .input-overlay::placeholder,
   input.input-overlay::placeholder,

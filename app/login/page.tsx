@@ -160,19 +160,19 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="mb-6 rounded-2xl border border-primary-200/70 dark:border-neutral-600 bg-primary-50/80 dark:bg-neutral-700/70 p-1 shadow-inner">
+          <div className="input-overlay mb-6 rounded-2xl p-[1px] shadow-none">
             <div className="relative grid grid-cols-2">
               <motion.div
                 layout
                 animate={{ x: isLogin ? '0%' : '100%' }}
                 transition={{ type: 'spring', stiffness: 420, damping: 36 }}
-                className="absolute inset-y-0 left-0 w-1/2 rounded-[14px] bg-white dark:bg-neutral-800 shadow-md"
+                className="absolute inset-y-0 left-0 w-1/2 rounded-[14px] bg-white dark:bg-neutral-800"
               />
               <button
                 type="button"
                 onClick={() => { setIsLogin(true); setError('') }}
                 aria-pressed={isLogin}
-                className={`relative z-10 rounded-[14px] px-4 py-3 text-sm font-medium transition-colors duration-300 focus:outline-none focus-visible:outline-none ${
+                className={`relative z-10 rounded-[14px] border border-transparent px-4 py-3 text-sm font-medium transition-colors duration-300 appearance-none shadow-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 dark:focus:ring-0 dark:focus-visible:ring-0 dark:focus-visible:outline-none dark:focus:ring-offset-0 dark:focus-visible:ring-offset-0 active:outline-none active:ring-0 dark:active:outline-none dark:active:ring-0 ${
                   isLogin
                     ? 'text-primary-800 dark:text-primary-100'
                     : 'text-primary-500 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-100'
@@ -184,7 +184,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => { setIsLogin(false); setError(''); setProfileImage(''); setProfileImageFile(null) }}
                 aria-pressed={!isLogin}
-                className={`relative z-10 rounded-[14px] px-4 py-3 text-sm font-medium transition-colors duration-300 focus:outline-none focus-visible:outline-none ${
+                className={`relative z-10 rounded-[14px] border border-transparent px-4 py-3 text-sm font-medium transition-colors duration-300 appearance-none shadow-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 dark:focus:ring-0 dark:focus-visible:ring-0 dark:focus-visible:outline-none dark:focus:ring-offset-0 dark:focus-visible:ring-offset-0 active:outline-none active:ring-0 dark:active:outline-none dark:active:ring-0 ${
                   !isLogin
                     ? 'text-primary-800 dark:text-primary-100'
                     : 'text-primary-500 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-100'
