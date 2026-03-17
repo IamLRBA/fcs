@@ -1424,7 +1424,7 @@
   :root .send-us-message-form .input-overlay,
   :root .send-us-message-form input.input-overlay,
   :root .send-us-message-form textarea.input-overlay {
-    border-color: #8a8a8a !important;
+    border-color: var(--color-hero-frame-border) !important;
   }
   /* Login page – same full borders and dark overlay in light mode as message fields */
   :root .login-form .input-overlay,
