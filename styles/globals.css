@@ -1,5 +1,28 @@
-/* Fonts loaded via <link> in app/layout.tsx to control referrer and avoid duplicate requests */
 @import './variables.css';
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/MuseoModerno-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Mrs Saint Delafield';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/MrsSaintDelafield-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Zen Dots';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ZenDots-latin.woff2') format('woff2');
+}
 
 /* stylelint-disable */
 @tailwind base;
@@ -371,14 +394,14 @@
   }
 
   .mysticalpieces-word__m {
-    font-family: 'Mrs Saint Delafield', 'MuseoModerno', cursive;
+    font-family: 'Mrs Saint Delafield';
     font-weight: 400;
     font-size: inherit;
     line-height: 1;
   }
 
   .mysticalpieces-word__p {
-    font-family: 'Zen Dots', 'MuseoModerno', sans-serif;
+    font-family: 'Zen Dots';
     font-weight: 200;
     font-size: 0.92em;
     line-height: 1;
@@ -403,7 +426,7 @@
   }
 
   .mysticalpieces-word__symbol {
-    font-family: 'MuseoModerno', sans-serif;
+    font-family: 'MuseoModerno';
     font-size: 0.45em;
     font-weight: var(--font-weight-light);
     position: absolute;
