@@ -372,7 +372,6 @@ export default function LoginPage() {
                           size="sm"
                           type="button"
                           className="w-full justify-center pointer-events-none"
-                          as="span"
                         >
                           {profileImage ? 'Change Photo' : 'Upload Photo'}
                         </Button>
