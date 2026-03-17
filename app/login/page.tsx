@@ -160,23 +160,39 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="flex items-center justify-center mb-6 bg-primary-50/80 dark:bg-neutral-700 rounded-lg p-1 gap-1">
-            <Button
-              variant={isLogin ? 'filled' : 'default'}
-              size="sm"
-              onClick={() => { setIsLogin(true); setError('') }}
-              className="flex-1 !rounded-md"
-            >
-              Login
-            </Button>
-            <Button
-              variant={!isLogin ? 'filled' : 'default'}
-              size="sm"
-              onClick={() => { setIsLogin(false); setError(''); setProfileImage(''); setProfileImageFile(null) }}
-              className="flex-1 !rounded-md"
-            >
-              Sign Up
-            </Button>
+          <div className="input-overlay mb-6 rounded-2xl p-[1px] shadow-none">
+            <div className="relative grid grid-cols-2">
+              <motion.div
+                layout
+                animate={{ x: isLogin ? '0%' : '100%' }}
+                transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+                className="absolute inset-y-0 left-0 w-1/2 rounded-[14px] bg-white dark:bg-neutral-800"
+              />
+              <button
+                type="button"
+                onClick={() => { setIsLogin(true); setError('') }}
+                aria-pressed={isLogin}
+                className={`relative z-10 rounded-[14px] border border-transparent px-4 py-3 text-sm font-medium transition-colors duration-300 appearance-none shadow-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 dark:focus:ring-0 dark:focus-visible:ring-0 dark:focus-visible:outline-none dark:focus:ring-offset-0 dark:focus-visible:ring-offset-0 active:outline-none active:ring-0 dark:active:outline-none dark:active:ring-0 ${
+                  isLogin
+                    ? 'text-primary-800 dark:text-primary-100'
+                    : 'text-primary-500 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-100'
+                }`}
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                onClick={() => { setIsLogin(false); setError(''); setProfileImage(''); setProfileImageFile(null) }}
+                aria-pressed={!isLogin}
+                className={`relative z-10 rounded-[14px] border border-transparent px-4 py-3 text-sm font-medium transition-colors duration-300 appearance-none shadow-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 dark:focus:ring-0 dark:focus-visible:ring-0 dark:focus-visible:outline-none dark:focus:ring-offset-0 dark:focus-visible:ring-offset-0 active:outline-none active:ring-0 dark:active:outline-none dark:active:ring-0 ${
+                  !isLogin
+                    ? 'text-primary-800 dark:text-primary-100'
+                    : 'text-primary-500 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-100'
+                }`}
+              >
+                Sign Up
+              </button>
+            </div>
           </div>
 
           <AnimatePresence mode="wait">
@@ -435,7 +451,7 @@ export default function LoginPage() {
           </AnimatePresence>
 
           <div className="mt-6 text-center">
-            <Link href="/admin/login" className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
+            <Link href="/admin/login" className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0">
               Admin Login
             </Link>
           </div>

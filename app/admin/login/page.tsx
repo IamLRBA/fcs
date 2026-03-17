@@ -69,8 +69,8 @@ export default function AdminLoginPage() {
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-6 sm:p-8 border border-neutral-200 dark:border-neutral-700">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-transparent border border-primary-200/70 dark:border-neutral-600 flex items-center justify-center">
+              <Shield className="w-8 h-8 text-primary-700 dark:text-primary-200" />
             </div>
             <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">
               Admin Login
