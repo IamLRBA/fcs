@@ -19,7 +19,7 @@ A modern, interactive e-commerce site for curated thrift fashion. MysticalPIECES
 ### 𓂃✍︎ Design System
 
 - **Unified theme**: Earthy primary and accent palette (almond, coffee, ecru) with light/dark mode (`bg-unified`, glass frames, hero CTAs)
-- **Typography**: MuseoModerno (primary/display), JetBrains Mono (mono), Mrs Saint Delafield, Zen Dots (loaded via layout)
+- **Typography**: MuseoModerno (primary/display), Mrs Saint Delafield, Zen Dots (self-hosted under `public/fonts/`)
 - **Glass effects**: Hero glass frames, backdrop blur, gradient overlays, and consistent card treatments across hero, portals, and sections
 - **Motion**: Framer Motion for scroll-linked hero scale/opacity, portal and testimonial scale, progress bar, loading screen, and section animations; reduced-motion respected where applicable
 

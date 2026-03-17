@@ -90,9 +90,8 @@
   --color-shadow-heavy: rgba(38, 36, 36, 0.2);
 
   /* Typography */
-  --font-family-primary: 'MuseoModerno', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-display: 'MuseoModerno', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  --font-family-primary: 'MuseoModerno';
+  --font-family-display: 'MuseoModerno';
 
   /* Font Sizes */
   --text-xs: 0.75rem;    /* 12px */

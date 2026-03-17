@@ -140,7 +140,7 @@ export default function AboutUs() {
                 <span className="text-primary-800 dark:text-primary-100 font-semibold">Our Core:</span>
                 <span
                   className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
-                  style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
+                  style={{ fontFamily: 'Mrs Saint Delafield' }}
                 >
                   Hidden treasures reveal a timeless style
                 </span>
