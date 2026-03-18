@@ -232,6 +232,17 @@ export default function ProductCategoryPage() {
     return '/assets/images/placeholder.jpg'
   }
 
+  const getSubcategoryImageCandidates = (categorySlug: string, sectionSlug: string): string[] => {
+    const paths = [getSubcategoryImage(categorySlug, sectionSlug)]
+    if (categorySlug === 'pants-and-shorts') {
+      paths.push(
+        `/assets/images/products-sections/fashion/bottoms/thumb${(sections.indexOf(sectionSlug) % 4) + 1}.jpg`,
+        `/assets/images/products-sections/fashion/pants/thumb${(sections.indexOf(sectionSlug) % 4) + 1}.jpg`
+      )
+    }
+    return [...new Set(paths)]
+  }
+
   // Helper function to get quote for each category
   const getCategoryQuote = (categorySlug: string): { text: string; author: string } => {
     const quotes: Record<string, { text: string; author: string }> = {
@@ -387,7 +398,6 @@ export default function ProductCategoryPage() {
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {productsBySection.map(([section, products]) => {
           const visibleProducts = products.filter((product: any) => product.isActive !== false)
-          if (visibleProducts.length === 0) return null
           return (
           <motion.section
             key={section}
@@ -415,7 +425,10 @@ export default function ProductCategoryPage() {
                   className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
-                    target.src = `/assets/images/products-sections/fashion/${category}/thumb${(sections.indexOf(section) % 4) + 1}.svg`
+                    const candidates = getSubcategoryImageCandidates(category, section)
+                    const current = target.getAttribute('src') || ''
+                    const nextCandidate = candidates.find(candidate => candidate !== current)
+                    target.src = nextCandidate || '/assets/images/placeholder.jpg'
                   }}
                 />
               </div>
@@ -428,6 +441,19 @@ export default function ProductCategoryPage() {
               ).join(' ')}
             </h2>
             
+            {visibleProducts.length === 0 ? (
+              <div className="mx-auto max-w-xl rounded-2xl border border-primary-500/20 dark:border-primary-400/30 bg-primary-800/20 dark:bg-neutral-900/40 p-6 sm:p-8 text-center">
+                <h3 className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-100 mb-3">
+                  No Products Available...Check later
+                </h3>
+                <p className="text-sm sm:text-base text-neutral-700 dark:text-primary-300 mb-6">
+                  There are no active products in this section right now.
+                </p>
+                <Button href="/sections/shop#our-products" variant="default" size="md" className="inline-flex items-center justify-center">
+                  Check Other Products
+                </Button>
+              </div>
+            ) : (
             <div className="grid gap-4 md:gap-6 lg:gap-8 justify-items-center [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
               {visibleProducts.map((product: Product, index: number) => {
                 const hasDiscount = product.original_price && product.original_price > product.price_ugx
@@ -490,6 +516,7 @@ export default function ProductCategoryPage() {
                 </motion.div>
               )})}
             </div>
+            )}
           </motion.section>
           )
         })}

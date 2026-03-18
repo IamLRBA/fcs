@@ -129,6 +129,7 @@
     overflow-x: hidden;
     scroll-behavior: smooth;
     -webkit-scroll-behavior: smooth;
+    overscroll-behavior: none;
   }
   
   @keyframes spin-slow {
@@ -157,6 +158,12 @@
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
     transition: background-color 0.3s ease, color 0.3s ease;
+    overscroll-behavior: none;
+  }
+
+  body,
+  #__next {
+    overscroll-behavior: none;
   }
 
   @supports (-moz-osx-font-smoothing: grayscale) {
