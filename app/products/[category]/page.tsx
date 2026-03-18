@@ -240,7 +240,12 @@ export default function ProductCategoryPage() {
         `/assets/images/products-sections/fashion/pants/thumb${(sections.indexOf(sectionSlug) % 4) + 1}.jpg`
       )
     }
-    return [...new Set(paths)]
+    // Avoid using Set spreading (can break TS build with older targets)
+    const unique: string[] = []
+    for (const p of paths) {
+      if (!unique.includes(p)) unique.push(p)
+    }
+    return unique
   }
 
   // Helper function to get quote for each category
