@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sun, Moon, Monitor, Palette } from 'lucide-react'
+import useScrollLock from '@/components/layout/useScrollLock'
 
 type Theme = 'light' | 'dark' | 'system'
 
@@ -10,6 +11,7 @@ export default function ThemeSwitcher() {
   const [theme, setTheme] = useState<Theme>('system')
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  useScrollLock(isOpen)
 
   useEffect(() => {
     setMounted(true)
@@ -94,7 +96,7 @@ export default function ThemeSwitcher() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
                   transition={{ duration: 0.2, type: "spring", stiffness: 300 }}
-                  className="absolute right-0 top-12 w-64 bg-white dark:bg-primary-800 rounded-xl shadow-xl border border-gray-200 dark:border-primary-700 z-50 overflow-hidden"
+                  className="absolute right-0 top-12 w-64 bg-white dark:bg-primary-800 rounded-xl shadow-xl border border-gray-200 dark:border-primary-700 z-[1000] overflow-hidden"
                 >
                   <div className="p-4 border-b border-gray-200 dark:border-primary-700">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Choose Theme</h3>

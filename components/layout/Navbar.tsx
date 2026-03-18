@@ -10,6 +10,7 @@ import { ShoppingCart } from 'lucide-react'
 import SettingsDropdown from '@/components/ui/SettingsDropdown'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import LogoMark from '@/components/ui/LogoMark'
+import useScrollLock from '@/components/layout/useScrollLock'
 import { CartManager } from '@/lib/cart'
 import { ProductManager, type Product } from '@/lib/products'
 
@@ -96,8 +97,11 @@ interface SearchResult {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [menuSurfaceLocked, setMenuSurfaceLocked] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isPortalsOpen, setIsPortalsOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [navSurfaceClass, setNavSurfaceClass] = useState('bg-transparent')
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredSuggestions, setFilteredSuggestions] = useState<SearchResult[]>([])
   const [allProducts, setAllProducts] = useState<Product[]>([])
@@ -107,6 +111,8 @@ export default function Navbar() {
   const [cartCount, setCartCount] = useState(0)
   const pathname = usePathname()
   const searchRef = useRef<HTMLDivElement>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useScrollLock(isOpen)
   
   // Load all products on mount and when products are updated
   useEffect(() => {
@@ -141,8 +147,30 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10)
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+    }
   }, [])
+
+  useEffect(() => {
+    if (isOpen || menuSurfaceLocked || isSettingsOpen) return
+    setNavSurfaceClass(isScrolled ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent')
+  }, [isScrolled, isOpen, menuSurfaceLocked, isSettingsOpen])
+
+  const handleMenuToggle = () => {
+    if (!isOpen) {
+      setNavSurfaceClass(isScrolled ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent')
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+      setMenuSurfaceLocked(true)
+      setIsOpen(true)
+      return
+    }
+    closeTimerRef.current = setTimeout(() => {
+      setIsOpen(false)
+      setMenuSurfaceLocked(false)
+    }, 220)
+  }
 
   // Search through products
   useEffect(() => {
@@ -226,6 +254,7 @@ export default function Navbar() {
   }
 
   const closeMenu = () => {
+    setMenuSurfaceLocked(false)
     setIsOpen(false)
     setIsSearchOpen(false)
     setIsPortalsOpen(false)
@@ -238,10 +267,10 @@ export default function Navbar() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`navbar-shell fixed top-0 left-4 right-0 lg:left-4 lg:right-4 z-50 transition-all duration-300 ${
-          isScrolled
+        className={`navbar-shell fixed top-0 left-4 right-0 lg:left-4 lg:right-4 z-[1010] transition-all duration-300 ${
+          (isOpen || menuSurfaceLocked || isSettingsOpen) ? navSurfaceClass : (isScrolled
             ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg'
-            : 'bg-transparent'
+            : 'bg-transparent')
         }`}
       >
         <div className="container-custom">
@@ -374,10 +403,10 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Link>
-              <SettingsDropdown />
+              <SettingsDropdown onOpenChange={setIsSettingsOpen} />
             </div>
 
-            <button onClick={() => setIsOpen(!isOpen)} className="focus-ring-none lg:hidden absolute right-0 p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center" aria-label="Menu">
+            <button onClick={handleMenuToggle} className="focus-ring-none lg:hidden absolute right-0 p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center" aria-label="Menu">
               <div className="relative w-6 h-5 flex flex-col justify-between">
                 <motion.span
                   animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
@@ -408,7 +437,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }} 
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden" 
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] lg:hidden" 
               onClick={closeMenu} 
             />
             <motion.div 
@@ -416,10 +445,10 @@ export default function Navbar() {
               animate={{ x: 0 }} 
               exit={{ x: '100%' }} 
               transition={{ type: 'spring', stiffness: 300, damping: 30 }} 
-              className="fixed top-20 right-0 w-[85vw] max-w-sm max-h-[calc(100vh-10rem)] hero-glass-frame hero-glass-more-transparent backdrop-blur-lg z-50 lg:hidden rounded-l-2xl rounded-r-none overflow-hidden flex flex-col p-4"
+              className="fixed top-20 right-0 w-[85vw] max-w-sm max-h-[calc(100vh-10rem)] hero-glass-frame hero-glass-more-transparent backdrop-blur-lg z-[1005] lg:hidden rounded-l-2xl rounded-r-none overflow-hidden flex flex-col p-4"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-l-2xl rounded-r-none" aria-hidden />
-              <div className="relative z-10 rounded-l-xl rounded-r-none overflow-y-auto max-h-[calc(100vh-12rem)] menu-inner-light-depth shadow-2xl border border-gray-200 dark:border-neutral-700">
+              <div className="relative z-10 rounded-l-xl rounded-r-none overflow-y-auto max-h-[calc(100vh-12rem)] menu-inner-light-depth shadow-2xl border border-gray-200 dark:border-neutral-700 overscroll-contain">
               <div className="px-6 pt-6 pb-6 space-y-4">
                 {/* Navigation Links */}
                 <div className="space-y-1">
@@ -619,7 +648,7 @@ export default function Navbar() {
                 {/* Mobile Settings - icon only, aligned with other items */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-start px-4 py-3 rounded-xl text-neutral-700 dark:text-neutral-300">
-                    <SettingsDropdown variant="mobile" />
+                    <SettingsDropdown variant="mobile" onOpenChange={setIsSettingsOpen} />
                   </div>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Keyboard } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import useScrollLock from '@/components/layout/useScrollLock'
 
 interface Shortcut {
   key: string
@@ -26,6 +27,7 @@ const shortcuts: Shortcut[] = [
 export default function KeyboardShortcuts() {
   const [isOpen, setIsOpen] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
+  useScrollLock(isOpen)
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -193,14 +195,14 @@ export default function KeyboardShortcuts() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000]"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 z-[1000] flex items-center justify-center p-4"
             >
               {/* Semi-transparent outer container (like product modal) - main content sits inside */}
               <div

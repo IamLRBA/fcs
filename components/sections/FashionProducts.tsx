@@ -140,6 +140,14 @@ export default function FashionProducts() {
   const [hoveredThumbnail, setHoveredThumbnail] = useState<{serviceId: number, thumbIndex: number} | null>(null)
   
   const toggle = (id: number) => setExpandedId(expandedId === id ? null : id)
+  const getThumbnailCandidates = (slug: string, thumbIndex: number) => {
+    const folderMap: Record<string, string[]> = {
+      'pants-and-shorts': ['pants-and-shorts', 'bottoms', 'pants'],
+    }
+
+    const folders = folderMap[slug] || [slug]
+    return folders.map(folder => `/assets/images/products-sections/fashion/${folder}/thumb${thumbIndex}.jpg`)
+  }
   
   return (
     <section id="our-products" className="py-20 px-4">
@@ -197,18 +205,23 @@ export default function FashionProducts() {
                                 onMouseEnter={() => setHoveredThumbnail({ serviceId: s.id, thumbIndex })}
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
-                                <div className="bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-primary-400/50 hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-primary-400/25 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
-                            <img 
-                              src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
-                              alt={`${subcategory.name} - ${s.title}`}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement
-                                target.src = `/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.svg`
-                              }}
-                            />
-                                  <div className="hidden text-neutral-800 dark:text-primary-400 text-sm items-center justify-center w-full h-full">
-                                    {subcategory.name}
+                                <div className="bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-transparent hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-0 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
+                                  <img 
+                                    src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
+                                    alt={`${subcategory.name} - ${s.title}`}
+                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                    onError={(e) => {
+                                      const target = e.target as HTMLImageElement
+                                      const candidates = getThumbnailCandidates(s.slug, thumbIndex)
+                                      const current = target.getAttribute('src') || ''
+                                      const nextCandidate = candidates.find(candidate => candidate !== current)
+                                      target.src = nextCandidate || '/assets/images/placeholder.jpg'
+                                    }}
+                                  />
+                                  <div className="absolute inset-x-0 bottom-0 md:hidden flex items-center justify-center overflow-hidden rounded-tl-lg rounded-tr-lg rounded-bl-none rounded-br-none border-x border-b border-primary-500/20 dark:border-transparent bg-white/50 px-3 pt-2 pb-1.5 text-center backdrop-blur-sm dark:bg-neutral-950/75 translate-y-[1px]">
+                                    <span className="text-xs font-medium text-primary-800 dark:text-neutral-100">
+                                      {subcategory.name}
+                                    </span>
                                   </div>
                                 </div>
                                 
@@ -220,7 +233,7 @@ export default function FashionProducts() {
                                       animate={{ opacity: 1 }}
                                       exit={{ opacity: 0 }}
                                       transition={{ duration: 0.2 }}
-                                      className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center space-y-3 rounded-lg"
+                                      className="absolute inset-0 hidden md:flex bg-black/60 flex-col items-center justify-center space-y-3 rounded-lg"
                                     >
                                       <motion.span
                                         initial={{ y: 10, opacity: 0 }}
