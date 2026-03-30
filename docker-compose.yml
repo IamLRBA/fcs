@@ -1,0 +1,25 @@
+# Local PostgreSQL for Mystical PIECES (shop catalog).
+# Start: docker compose up -d
+# Stop:  docker compose down
+# Data persists in volume mystical_pieces_pgdata.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mystical_shop
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: mystical_shop
+    ports:
+      - "5433:5432"
+    volumes:
+      - mystical_pieces_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mystical_shop -d mystical_shop"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mystical_pieces_pgdata:

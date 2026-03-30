@@ -37,42 +37,12 @@ export default function FeaturedCollections() {
   const [addedToCart, setAddedToCart] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    const loadFeaturedProducts = () => {
+    const loadFeaturedProducts = async () => {
       try {
-        const getProductsData = () => {
-          return require('@/data/products.json')
-        }
-        
-        const productsData = getProductsData()
-        const categories = [
-          { slug: 'shirts', name: 'Shirts' },
-          { slug: 'tees', name: 'Tees' },
-          { slug: 'coats', name: 'OuterWear' },
-          { slug: 'pants-and-shorts', name: 'Bottoms' },
-          { slug: 'footwear', name: 'FootWear' },
-          { slug: 'accessories', name: 'Accessories' }
-        ]
-
-        const featured: FeaturedProduct[] = []
-
-        categories.forEach(({ slug, name }) => {
-          const categoryData = productsData.products[slug]
-          if (categoryData && categoryData.subcategories) {
-            const subcategories = Object.values(categoryData.subcategories)
-            if (subcategories.length > 0) {
-              const firstSubcategory = subcategories[0] as Product[]
-              if (firstSubcategory && firstSubcategory.length > 0) {
-                featured.push({
-                  product: firstSubcategory[0],
-                  categoryName: name,
-                  categorySlug: slug
-                })
-              }
-            }
-          }
-        })
-
-        setFeaturedProducts(featured)
+        const res = await fetch('/api/products?featured=1', { cache: 'no-store' })
+        if (!res.ok) throw new Error('Failed to load featured products')
+        const data: FeaturedProduct[] = await res.json()
+        setFeaturedProducts(data)
       } catch (error) {
         console.error('Error loading featured products:', error)
       }

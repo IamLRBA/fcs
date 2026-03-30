@@ -12,7 +12,6 @@ import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import LogoMark from '@/components/ui/LogoMark'
 import useScrollLock from '@/components/layout/useScrollLock'
 import { CartManager } from '@/lib/cart'
-import { ProductManager, type Product } from '@/lib/products'
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -51,41 +50,14 @@ const portalItems = [
   { name: 'Shop', href: '/sections/shop', outlineIcon: HiOutlineShoppingBag, solidIcon: HiMiniShoppingBag },
 ]
 
-// Helper function to get all products from JSON and ProductManager
-const getAllProducts = (): Product[] => {
-  const allProducts: Product[] = []
-  
-  try {
-    // Get products from JSON file
-    const getProductsData = () => {
-      return require('@/data/products.json')
-    }
-    const productsData = getProductsData()
-    
-    // Extract products from JSON
-    Object.keys(productsData.products || {}).forEach(category => {
-      Object.keys(productsData.products[category].subcategories || {}).forEach(section => {
-        productsData.products[category].subcategories[section].forEach((product: Product) => {
-          allProducts.push(product)
-        })
-      })
-    })
-  } catch (error) {
-    console.error('Error loading products from JSON:', error)
-  }
-  
-  // Get products from ProductManager (saved products)
-  const savedProducts = ProductManager.getAllProductsArray()
-  const existingIds = new Set(allProducts.map(p => p.id))
-  
-  // Add saved products that don't already exist
-  savedProducts.forEach(product => {
-    if (!existingIds.has(product.id)) {
-      allProducts.push(product)
-    }
-  })
-  
-  return allProducts
+interface Product {
+  id: string
+  name: string
+  brand: string
+  category: string
+  section: string
+  description: string
+  sku: string
 }
 
 interface SearchResult {
@@ -114,19 +86,19 @@ export default function Navbar() {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   useScrollLock(isOpen)
   
-  // Load all products on mount and when products are updated
+  // Load all products from DB for navbar search
   useEffect(() => {
-    const loadProducts = () => {
-      setAllProducts(getAllProducts())
+    const loadProducts = async () => {
+      try {
+        const res = await fetch('/api/products', { cache: 'no-store' })
+        if (!res.ok) return
+        const data: Product[] = await res.json()
+        setAllProducts(data)
+      } catch (error) {
+        console.error('Error loading searchable products:', error)
+      }
     }
-    
     loadProducts()
-    
-    // Listen for product updates
-    window.addEventListener('productsUpdated', loadProducts)
-    return () => {
-      window.removeEventListener('productsUpdated', loadProducts)
-    }
   }, [])
 
   useEffect(() => {

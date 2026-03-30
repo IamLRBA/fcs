@@ -5,9 +5,13 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Package, DollarSign, ShoppingCart, BarChart3 } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
-import { ProductManager, type Product } from '@/lib/products'
 import { OrderManager, type Order } from '@/lib/cart'
 import { SkeletonAdminDashboard } from '@/components/ui/Skeleton'
+
+interface Product {
+  id: string
+  category: string
+}
 
 const categories = ['shirts', 'tees', 'coats', 'pants-and-shorts', 'footwear', 'accessories']
 
@@ -26,18 +30,23 @@ export default function AdminDashboard() {
     loadData()
   }, [router])
 
-  const loadData = () => {
-    setProducts(ProductManager.getAllProductsArray())
+  const loadData = async () => {
+    try {
+      const res = await fetch('/api/products?includeInactive=1', { cache: 'no-store' })
+      if (res.ok) {
+        const data: Product[] = await res.json()
+        setProducts(data)
+      }
+    } catch (error) {
+      console.error('Failed to load products for dashboard', error)
+    }
     setOrders(OrderManager.getOrders())
   }
-
-  const boughtProducts = ProductManager.getBoughtProducts()
   const stats = {
     totalProducts: products.length,
     totalOrders: orders.length,
     totalRevenue: orders.reduce((sum, order) => sum + order.total, 0),
     totalItemsSold: orders.reduce((sum, order) => sum + order.items.reduce((itemSum, item) => itemSum + item.quantity, 0), 0),
-    boughtProducts: boughtProducts.length
   }
 
   return (
