@@ -54,11 +54,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     },
   })
 
-  return NextResponse.json(toCatalogProduct(updated))
+  const res = NextResponse.json(toCatalogProduct(updated))
+  res.headers.set('Cache-Control', 'private, no-store, must-revalidate')
+  return res
 }
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   await prisma.product.delete({ where: { id } })
-  return NextResponse.json({ ok: true })
+  const res = NextResponse.json({ ok: true })
+  res.headers.set('Cache-Control', 'private, no-store, must-revalidate')
+  return res
 }

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ShoppingCart, Trash2 } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import Button from '@/components/ui/Button'
+import SafeImage from '@/components/common/SafeImage'
 
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -26,14 +27,10 @@ export default function CartPage() {
     
     window.addEventListener('storage', handleCartUpdate)
     window.addEventListener('cartUpdated', handleCartUpdate)
-    
-    // Poll for updates
-    const interval = setInterval(loadCart, 500)
-    
+
     return () => {
       window.removeEventListener('storage', handleCartUpdate)
       window.removeEventListener('cartUpdated', handleCartUpdate)
-      clearInterval(interval)
     }
   }, [])
 
@@ -137,20 +134,19 @@ export default function CartPage() {
                   transition={{ delay: index * 0.1 }}
                   className="w-full"
                 >
-                  <div className="hero-glass-frame relative backdrop-blur-lg">
+                  <div className="hero-glass-frame relative backdrop-blur-md">
                     <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                   <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 overflow-hidden shadow-xl dark:shadow-xl">
                   <div className="flex flex-col sm:flex-row gap-4 p-6">
                     {/* Product Image */}
-                    <div className="w-full sm:w-32 h-32 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
-                      <img 
-                        src={item.image || '/assets/images/placeholder.jpg'} 
+                    <div className="relative w-full sm:w-32 h-32 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
+                      <SafeImage
+                        src={item.image}
                         alt={item.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement
-                          target.src = '/assets/images/placeholder.jpg'
-                        }}
+                        fill
+                        className="object-cover"
+                        sizes="128px"
+                        loading="lazy"
                       />
                     </div>
 

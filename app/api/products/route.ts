@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
+function applyProductCacheHeaders(res: NextResponse, opts: { privateNoStore: boolean }) {
+  if (opts.privateNoStore) {
+    res.headers.set('Cache-Control', 'private, no-store, must-revalidate')
+  } else {
+    res.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
+  }
+  return res
+}
+
 type CatalogProduct = {
   id: string
   name: string
@@ -73,19 +82,67 @@ export async function GET(request: Request) {
   const includeInactive = searchParams.get('includeInactive') === '1'
   const grouped = searchParams.get('grouped') === '1'
   const featured = searchParams.get('featured') === '1'
+  const lite = searchParams.get('lite') === '1'
+
+  const privateNoStore = includeInactive
+
+  const where = {
+    ...(category ? { category } : {}),
+    ...(section ? { section } : {}),
+    ...(includeInactive ? {} : { isActive: true }),
+  }
+
+  const orderBy = [{ category: 'asc' as const }, { section: 'asc' as const }, { createdAt: 'desc' as const }]
+
+  if (lite && !grouped && !featured) {
+    const rows = await prisma.product.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        brand: true,
+        category: true,
+        section: true,
+        sku: true,
+        description: true,
+        priceUgx: true,
+        originalPriceUgx: true,
+        stockQty: true,
+        sizes: true,
+        colors: true,
+        condition: true,
+        isActive: true,
+      },
+      orderBy,
+    })
+    const normalized: CatalogProduct[] = rows.map((p) => ({
+      id: p.id,
+      name: p.name,
+      brand: p.brand ?? '',
+      category: p.category,
+      section: p.section,
+      price_ugx: p.priceUgx,
+      original_price: p.originalPriceUgx ?? undefined,
+      sizes: p.sizes ?? [],
+      colors: p.colors ?? [],
+      images: [],
+      description: p.description ?? '',
+      condition: p.condition ?? 'Like New',
+      sku: p.sku ?? '',
+      stock_qty: p.stockQty,
+      isActive: p.isActive,
+    }))
+    return applyProductCacheHeaders(NextResponse.json(normalized), { privateNoStore })
+  }
 
   const products = await prisma.product.findMany({
-    where: {
-      ...(category ? { category } : {}),
-      ...(section ? { section } : {}),
-      ...(includeInactive ? {} : { isActive: true }),
-    },
+    where,
     include: {
       images: {
         orderBy: { sortOrder: 'asc' },
       },
     },
-    orderBy: [{ category: 'asc' }, { section: 'asc' }, { createdAt: 'desc' }],
+    orderBy,
   })
 
   const normalized = products.map(toCatalogProduct)
@@ -102,11 +159,11 @@ export async function GET(request: Request) {
       categoryName: CATEGORY_META[slug]?.title ?? slug,
       categorySlug: slug,
     }))
-    return NextResponse.json(featuredProducts)
+    return applyProductCacheHeaders(NextResponse.json(featuredProducts), { privateNoStore })
   }
 
   if (!grouped) {
-    return NextResponse.json(normalized)
+    return applyProductCacheHeaders(NextResponse.json(normalized), { privateNoStore })
   }
 
   const groupedProducts: Record<string, any> = {}
@@ -125,7 +182,7 @@ export async function GET(request: Request) {
     groupedProducts[product.category].subcategories[product.section].push(product)
   }
 
-  return NextResponse.json({ products: groupedProducts })
+  return applyProductCacheHeaders(NextResponse.json({ products: groupedProducts }), { privateNoStore })
 }
 
 export async function POST(request: Request) {
@@ -158,5 +215,7 @@ export async function POST(request: Request) {
     },
   })
 
-  return NextResponse.json(toCatalogProduct(created), { status: 201 })
+  const res = NextResponse.json(toCatalogProduct(created), { status: 201 })
+  res.headers.set('Cache-Control', 'no-store')
+  return res
 }

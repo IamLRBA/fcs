@@ -87,77 +87,12 @@ export default function Home() {
   return (
     <>
       <main className="min-h-screen bg-unified relative overflow-hidden">
-        {/* Unified Background Elements - applied to entire page */}
+        {/* Lightweight static accents (no full-screen blur, no infinite motion) */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent-200/30 to-accent-400/30 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-primary-300/30 to-primary-500/30 rounded-full blur-3xl"
-          />
-          {/* Enhanced Particle System */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{
-                  x: 0,
-                  y: 0,
-                  opacity: 0,
-                  scale: 0
-                }}
-                animate={{
-                  x: [0, 1200, 0],
-                  y: [0, 800, 0],
-                  opacity: [0, 0.6, 0],
-                  scale: [0, 1, 0],
-                  rotate: [0, 360]
-                }}
-                transition={{
-                  duration: 8 + (i * 0.2),
-                  repeat: Infinity,
-                  delay: i * 0.3,
-                  ease: "easeInOut"
-                }}
-                className="absolute w-2 h-2 bg-accent-400/60 rounded-full"
-                style={{
-                  left: `${(i * 5) % 100}%`,
-                  top: `${(i * 7) % 100}%`
-                }}
-              />
-            ))}
-          </div>
-          
-          {/* Geometric Shapes */}
-          <motion.div
-            animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.2, 1]
-            }}
-            transition={{ 
-              duration: 30, 
-              repeat: Infinity, 
-              ease: "linear" 
-            }}
-            className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-primary-500/20 transform rotate-30"
-          />
-          
-          <motion.div
-            animate={{ 
-              rotate: [360, 0],
-              scale: [1.2, 1, 1.2]
-            }}
-            transition={{ 
-              duration: 35, 
-              repeat: Infinity, 
-              ease: "linear" 
-            }}
-            className="absolute bottom-1/4 right-1/4 w-20 h-20 border-2 border-accent-500/20 transform -rotate-45"
-          />
+          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-accent-200/22 to-accent-400/18" />
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-br from-primary-300/18 to-primary-500/15" />
+          <div className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-primary-500/15 rotate-12 rounded-sm" />
+          <div className="absolute bottom-1/4 right-1/4 w-20 h-20 border-2 border-accent-500/15 -rotate-45 rounded-sm" />
         </div>
 
         {/* Loading overlay – first visit only; main content stays mounted underneath so hero is complete when overlay exits */}
