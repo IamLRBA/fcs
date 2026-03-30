@@ -36,6 +36,7 @@ export default function ProductCategoryPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [catalog, setCatalog] = useState<any>({ products: {} })
   const [loading, setLoading] = useState(true)
+  const [showBackButton, setShowBackButton] = useState(true)
 
   useEffect(() => {
     let active = true
@@ -71,6 +72,16 @@ export default function ProductCategoryPage() {
       }
     }
   }, [categoryData])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      setShowBackButton(scrollTop < 100)
+    }
+    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   if (loading) {
     return (
@@ -277,21 +288,6 @@ export default function ProductCategoryPage() {
     
     return quotes[categorySlug] || { text: '', author: '' }
   }
-
-  const [showBackButton, setShowBackButton] = useState(true)
-
-  // Show/hide back button based on scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop
-      // Show button when at top (within 100px), hide when scrolled down
-      setShowBackButton(scrollTop < 100)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    handleScroll() // Check initial position
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
     <div className="min-h-screen bg-unified relative overflow-hidden pt-20">
