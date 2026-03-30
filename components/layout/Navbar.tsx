@@ -90,7 +90,7 @@ export default function Navbar() {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const res = await fetch('/api/products', { cache: 'no-store' })
+        const res = await fetch('/api/products?lite=1')
         if (!res.ok) return
         const data: Product[] = await res.json()
         setAllProducts(data)
@@ -108,11 +108,9 @@ export default function Navbar() {
     updateCartCount()
     window.addEventListener('storage', updateCartCount)
     window.addEventListener('cartUpdated', updateCartCount)
-    const interval = setInterval(updateCartCount, 1000)
     return () => {
       window.removeEventListener('storage', updateCartCount)
       window.removeEventListener('cartUpdated', updateCartCount)
-      clearInterval(interval)
     }
   }, [])
 

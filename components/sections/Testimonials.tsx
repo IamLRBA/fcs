@@ -7,6 +7,7 @@ import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { renderWithMysticalPieces } from '@/components/ui/MysticalPiecesWord'
+import SafeImage from '@/components/common/SafeImage'
 
 interface Testimonial {
   id: number | string
@@ -316,7 +317,15 @@ export default function Testimonials() {
                   <div className="testimonial-author">
                     <div className="author-image w-10 h-10 sm:w-8 sm:h-8 lg:w-9 lg:h-9 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-base sm:text-sm lg:text-base mx-auto mb-2 sm:mb-1 lg:mb-2 overflow-hidden">
                       {testimonial.image ? (
-                        <img src={testimonial.image} alt={testimonial.author} className="w-full h-full rounded-full object-cover grayscale" />
+                        <SafeImage
+                          src={testimonial.image}
+                          alt={testimonial.author}
+                          width={40}
+                          height={40}
+                          className="w-full h-full rounded-full object-cover grayscale"
+                          sizes="40px"
+                          loading="lazy"
+                        />
                       ) : (
                         testimonial.author.split(' ').map((n: string) => n[0]).join('')
                       )}
@@ -376,7 +385,15 @@ export default function Testimonials() {
                 <div className="testimonial-author">
                   <div className="author-image w-12 h-12 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-base mx-auto mb-2 overflow-hidden">
                     {selectedTestimonial.image ? (
-                      <img src={selectedTestimonial.image} alt={selectedTestimonial.author} className="w-full h-full rounded-full object-cover grayscale" />
+                      <SafeImage
+                        src={selectedTestimonial.image}
+                        alt={selectedTestimonial.author}
+                        width={48}
+                        height={48}
+                        className="w-full h-full rounded-full object-cover grayscale"
+                        sizes="48px"
+                        loading="lazy"
+                      />
                     ) : (
                       selectedTestimonial.author.split(' ').map((n: string) => n[0]).join('')
                     )}
