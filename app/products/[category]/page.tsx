@@ -6,16 +6,9 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ShoppingCart, X, Maximize2, Minimize, ChevronLeft, ChevronRight, Quote } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
-import { ProductManager } from '@/lib/products'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { AuthManager } from '@/lib/auth'
-// Import products data - We'll need to create a proper data structure
-// For now, using mock data inline
-const getProductsData = () => {
-  // This should be replaced with actual data fetching
-  return require('@/data/products.json')
-}
 
 interface Product {
   id: string
@@ -32,6 +25,7 @@ interface Product {
   condition: string
   sku: string
   stock_qty: number
+  isActive?: boolean
 }
 
 export default function ProductCategoryPage() {
@@ -40,37 +34,33 @@ export default function ProductCategoryPage() {
   
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-  const [cart, setCart] = useState<Product[]>([])
-  
-  const productsData = getProductsData()
-  const savedProducts = ProductManager.getProducts()
-  
-  // Merge saved products with JSON products
-  const mergedProductsData = { ...productsData }
-  if (savedProducts.products) {
-    Object.keys(savedProducts.products).forEach(cat => {
-      if (!mergedProductsData.products[cat]) {
-        mergedProductsData.products[cat] = savedProducts.products[cat]
-      } else {
-        // Merge subcategories
-        Object.keys(savedProducts.products[cat].subcategories || {}).forEach(sub => {
-          if (!mergedProductsData.products[cat].subcategories[sub]) {
-            mergedProductsData.products[cat].subcategories[sub] = savedProducts.products[cat].subcategories[sub]
-          } else {
-            // Merge products in subcategory
-            const existingIds = new Set(mergedProductsData.products[cat].subcategories[sub].map((p: Product) => p.id))
-            savedProducts.products[cat].subcategories[sub].forEach((p: Product) => {
-              if (!existingIds.has(p.id)) {
-                mergedProductsData.products[cat].subcategories[sub].push(p)
-              }
-            })
-          }
+  const [catalog, setCatalog] = useState<any>({ products: {} })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    const loadCatalog = async () => {
+      try {
+        const res = await fetch(`/api/products?grouped=1&category=${encodeURIComponent(category)}`, {
+          cache: 'no-store',
         })
+        if (!res.ok) throw new Error('Failed to load products')
+        const data = await res.json()
+        if (active) setCatalog(data)
+      } catch (error) {
+        console.error('Error loading products:', error)
+        if (active) setCatalog({ products: {} })
+      } finally {
+        if (active) setLoading(false)
       }
-    })
-  }
-  
-  const categoryData = mergedProductsData.products[category as keyof typeof mergedProductsData.products]
+    }
+    loadCatalog()
+    return () => {
+      active = false
+    }
+  }, [category])
+
+  const categoryData = catalog.products?.[category]
   
   useEffect(() => {
     // Extract section from hash if present
@@ -81,6 +71,14 @@ export default function ProductCategoryPage() {
       }
     }
   }, [categoryData])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1 className="text-2xl font-semibold">Loading products...</h1>
+      </div>
+    )
+  }
 
   if (!categoryData) {
     return (

@@ -7,9 +7,26 @@ import { useRouter } from 'next/navigation'
 import { Package, Trash2, X, Plus, Pencil, Eye } from 'lucide-react'
 import { HiSearch, HiX } from 'react-icons/hi'
 import { AuthManager } from '@/lib/auth'
-import { ProductManager, type Product } from '@/lib/products'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+
+interface Product {
+  id: string
+  name: string
+  brand: string
+  category: string
+  section: string
+  price_ugx: number
+  original_price?: number
+  sizes: string[]
+  colors: string[]
+  images: string[]
+  description: string
+  condition: string
+  sku: string
+  stock_qty: number
+  isActive?: boolean
+}
 
 const categories = ['shirts', 'tees', 'coats', 'pants-and-shorts', 'footwear', 'accessories']
 const subcategoriesMap: Record<string, string[]> = {
@@ -54,9 +71,6 @@ export default function AdminProductsPage() {
       return
     }
     loadProducts()
-    const onUpdate = () => loadProducts()
-    window.addEventListener('productsUpdated', onUpdate)
-    return () => window.removeEventListener('productsUpdated', onUpdate)
   }, [router])
 
   useEffect(() => {
@@ -69,7 +83,17 @@ export default function AdminProductsPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const loadProducts = () => setProducts(ProductManager.getAllProductsArray())
+  const loadProducts = async () => {
+    try {
+      const res = await fetch('/api/products?includeInactive=1', { cache: 'no-store' })
+      if (!res.ok) throw new Error('Failed to load products')
+      const data: Product[] = await res.json()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error loading products:', error)
+      setProducts([])
+    }
+  }
 
   const query = searchQuery.toLowerCase().trim()
   const filtered = query
@@ -83,23 +107,34 @@ export default function AdminProductsPage() {
 
   const handleDelete = (product: Product, reason: 'Product Bought' | 'Mistakenly Posted') => {
     if (!confirm(`Remove "${product.name}"? Reason: ${reason}`)) return
-    if (ProductManager.deleteProduct(product.id, product.category, product.section, reason)) {
-      loadProducts()
-      setDetailsProduct(null)
-      setEditingProduct(null)
-    } else {
-      alert('Failed to remove product')
-    }
+    fetch(`/api/products/${product.id}`, { method: 'DELETE' })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to remove product')
+        return loadProducts()
+      })
+      .then(() => {
+        setDetailsProduct(null)
+        setEditingProduct(null)
+      })
+      .catch(() => alert('Failed to remove product'))
   }
 
   const handleUpdate = (updated: Product) => {
-    if (ProductManager.updateProduct(updated)) {
-      loadProducts()
-      setDetailsProduct(updated)
-      setEditingProduct(null)
-    } else {
-      alert('Failed to update product')
-    }
+    fetch(`/api/products/${updated.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to update product')
+        return res.json()
+      })
+      .then((saved: Product) => {
+        loadProducts()
+        setDetailsProduct(saved)
+        setEditingProduct(null)
+      })
+      .catch(() => alert('Failed to update product'))
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setImages: React.Dispatch<React.SetStateAction<string[]>>) => {
@@ -135,14 +170,19 @@ export default function AdminProductsPage() {
       stock_qty: parseInt(newProduct.stock_qty) || 1,
       isActive: true
     }
-    if (ProductManager.addProduct(product)) {
-      setShowAddModal(false)
-      setProductImages([])
-      setNewProduct({ name: '', brand: '', category: 'shirts', section: 'gentle', price_ugx: '', original_price: '', sizes: [], colors: [], images: [], description: '', condition: 'Like New', sku: '', stock_qty: '' })
-      loadProducts()
-    } else {
-      alert('Failed to add product')
-    }
+    fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to add product')
+        setShowAddModal(false)
+        setProductImages([])
+        setNewProduct({ name: '', brand: '', category: 'shirts', section: 'gentle', price_ugx: '', original_price: '', sizes: [], colors: [], images: [], description: '', condition: 'Like New', sku: '', stock_qty: '' })
+        return loadProducts()
+      })
+      .catch(() => alert('Failed to add product'))
   }
 
   const removeImage = (index: number) => setProductImages(prev => prev.filter((_, i) => i !== index))

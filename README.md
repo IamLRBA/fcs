@@ -30,7 +30,7 @@ A modern, interactive e-commerce site for curated thrift fashion. MysticalPIECES
 - **Framer Motion**: Page and scroll-based animations, loading overlay, portal transitions
 - **Icons**: react-icons (Heroicons hi/hi2), Lucide React, and custom inline SVGs in the Navbar
 - **Integrations**: SendGrid/nodemailer for email; WhatsApp (e.g. Green API/Twilio) for order notifications
-- **State & data**: Local storage (cart, preferences, first-visit flag); product catalog in `data/products.json`; optional Prisma for admin/accounts
+- **State & data**: Local storage (cart, preferences, first-visit flag); **product catalog in PostgreSQL** via Prisma (`Product` + `ProductImage`); storefront and admin use `/api/products`; optional one-time seed from `data/products.json` (`npm run import:products`)
 
 ---
 
@@ -56,6 +56,7 @@ mystical_pieces/
 │   ├── privacy-policy/               # Privacy Policy
 │   ├── admin/                        # Admin (login, dashboard, accounts, products)
 │   └── api/
+│       ├── products/                 # Product CRUD + grouped/featured reads (Prisma)
 │       ├── send-email/                # Email notification API
 │       └── send-whatsapp/             # WhatsApp notification API
 ├── components/
@@ -78,7 +79,12 @@ mystical_pieces/
 │   └── ui/                            # LogoMark, MysticalPiecesWord, Button, BackToTop, LoadingScreen, PortalNavigation, etc.
 ├── lib/                               # cart, products, emails, whatsapp, constants (e.g. social)
 ├── data/
-│   └── products.json                 # Product catalog by category/section (UGX pricing, condition, SKU, images)
+│   └── products.json                 # Optional seed source for initial import (see `npm run import:products`)
+├── prisma/
+│   └── schema.prisma                 # PostgreSQL schema (products, orders, users, etc.)
+├── scripts/
+│   └── import-products-from-json.js  # One-time / repeat import from `data/products.json`
+├── docker-compose.yml                # Local Postgres for development (port 5433)
 ├── public/
 │   └── assets/
 │       ├── images/                    # Product and brand images
@@ -145,6 +151,19 @@ mystical_pieces/
 
 - Node.js 18+
 - npm or yarn
+- **Docker Desktop** (recommended for local Postgres), or any PostgreSQL instance you can point `DATABASE_URL` at
+
+### First-time setup (database)
+
+**One-liner:** copy `.env.example` to `.env`, set `POSTGRES_PASSWORD` and a matching `DATABASE_URL` as described in `.env.example` (do not commit secrets), then run `npm run db:up && npx prisma db push && npm run import:products && npm run dev`.
+
+Details:
+
+1. Copy `.env.example` to `.env` and fill in database variables (same password in `POSTGRES_PASSWORD` and inside `DATABASE_URL` when using the bundled Docker Postgres).
+2. Start the database: `npm run db:up` (uses `docker-compose.yml`; Postgres listens on **localhost:5433** by default).
+3. Apply the schema: `npx prisma db push` (or use Prisma Migrate in production if you adopt migration files).
+4. Optional: load sample catalog from JSON: `npm run import:products`.
+5. Start the app: `npm run dev`.
 
 ### Installation
 
@@ -157,11 +176,12 @@ mystical_pieces/
    ```bash
    npm install
    ```
-3. **Run the development server**
+3. **Configure environment** — complete **First-time setup (database)** above if you have not already.
+4. **Run the development server**
    ```bash
    npm run dev
    ```
-4. **Open your browser**
+5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Build for Production
@@ -184,11 +204,10 @@ npm start
 - Recommended formats: JPG, PNG, WebP
 - Optimize for web (compress, resize)
 
-#### Product Data
+#### Product data (live catalog)
 
-- Update product catalog in `/data/products.json`
-- Add product details: name, price_ugx, sizes, colors, images, description, condition, sku
-- Structure by category and subcategory sections
+- **Admin UI**: add, edit, or deactivate products under **Admin → Products** (persisted in PostgreSQL).
+- **Optional bulk seed / refresh**: edit `/data/products.json`, then run `npm run import:products` (upserts by SKU and replaces image rows for each product).
 
 #### Fashion Videos
 
@@ -203,12 +222,11 @@ npm start
 - Update `styles/globals.css` for custom animations, hero/CTA, and footer styles
 - Modify component-specific styling as needed
 
-### Adding New Product Categories
+### Adding new product categories
 
-1. Add category data to `/data/products.json`
-2. Create category images in `/public/assets/images/products-sections/fashion/` (or equivalent)
-3. Add subcategory images for each category
-4. Ensure product routes in `/app/products/[category]/` support the new category
+1. Add products in the admin UI (or import JSON) using the new `category` / `section` slugs.
+2. Add category and subcategory hero/thumbnail assets under `/public/assets/images/products-sections/fashion/` (or equivalent).
+3. Extend routing/UI where needed: `/app/products/[category]/page.tsx` and nav links (e.g. shop portal) must include the new category slug.
 
 ---
 
@@ -220,6 +238,9 @@ npm start
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+- `npm run db:up` / `npm run db:down` - Start or stop local Docker Postgres
+- `npm run db:push` - Push `prisma/schema.prisma` to the database (dev-friendly)
+- `npm run import:products` - Import or upsert products from `data/products.json`
 
 ### Code Style
 
