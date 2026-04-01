@@ -7,11 +7,13 @@ import { User, AlertCircle } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import useScrollLock from '@/components/layout/useScrollLock'
 
 export default function AccountPromptPopup() {
   const [showPopup, setShowPopup] = useState(false)
   const [dismissed, setDismissed] = useState(false)
   const router = useRouter()
+  useScrollLock(showPopup)
 
   useEffect(() => {
     // Check if user is logged in
@@ -78,11 +80,11 @@ export default function AccountPromptPopup() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000]"
             onClick={handleDismiss}
           />
           {/* Small screens: horizontally centered; sm+: keep bottom-right (vertical unchanged) */}
-          <div className="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4 sm:justify-end sm:px-8 pointer-events-none">
+          <div className="fixed bottom-8 left-0 right-0 z-[1000] flex justify-center px-4 sm:justify-end sm:px-8 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}

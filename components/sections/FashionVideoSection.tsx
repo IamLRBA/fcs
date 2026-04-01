@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, FreeMode } from 'swiper/modules'
 import { Play, Pause, Volume2, VolumeX, Maximize, Settings, SkipBack, SkipForward } from 'lucide-react'
@@ -57,6 +58,8 @@ const fashionVideos = [
 
 export default function FashionVideoSection() {
   const [selectedVideo, setSelectedVideo] = useState(fashionVideos[0])
+  /** No network load until user presses play */
+  const [mediaSrc, setMediaSrc] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(0.8)
   const [isMuted, setIsMuted] = useState(true)
@@ -72,6 +75,7 @@ export default function FashionVideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const controlsTimeoutRef = useRef<number | null>(null)
+  const shouldPlayAfterLoadRef = useRef(false)
 
   useEffect(() => {
     if (showControls && isPlaying) {
@@ -87,55 +91,71 @@ export default function FashionVideoSection() {
   }, [showControls, isPlaying])
 
   useEffect(() => {
-    const preloadVideo = (src: string) => {
-      const video = document.createElement('video')
-      video.preload = 'metadata'
-      video.src = src
-      video.load()
+    const el = videoRef.current
+    if (!el || !mediaSrc) return
+    const onCanPlay = () => {
+      if (!shouldPlayAfterLoadRef.current) return
+      shouldPlayAfterLoadRef.current = false
+      el.play()
+        .then(() => {
+          setIsPlaying(true)
+          setIsLoading(false)
+          setShowTitleDescription(true)
+          window.setTimeout(() => setShowTitleDescription(false), 3000)
+        })
+        .catch(() => {
+          setIsPlaying(false)
+          setIsLoading(false)
+        })
     }
-    fashionVideos.forEach(video => {
-      preloadVideo(video.src)
-    })
+    el.addEventListener('canplay', onCanPlay)
+    return () => el.removeEventListener('canplay', onCanPlay)
+  }, [mediaSrc])
+
+  const handleVideoSelect = useCallback((video: typeof fashionVideos[0]) => {
+    shouldPlayAfterLoadRef.current = false
+    setSelectedVideo(video)
+    setMediaSrc(null)
+    setProgress(0)
+    setIsPlaying(false)
+    setShowControls(true)
+    setIsLoading(false)
+    setVideoError(null)
+    setShowTitleDescription(true)
+    const el = videoRef.current
+    if (el) {
+      el.pause()
+      el.removeAttribute('src')
+      el.load()
+    }
   }, [])
 
-  const handleVideoSelect = (video: typeof fashionVideos[0]) => {
-    setSelectedVideo(video)
-    setProgress(0)
-    setShowControls(true)
-    setIsLoading(true)
-    setVideoError(null)
-    setShowTitleDescription(true) // Show title/description when video is selected
-    setTimeout(() => {
-      if (videoRef.current) {
-        videoRef.current.play().then(() => {
-          setIsPlaying(true)
-          // Hide title/description after 3 seconds when video starts playing
-          setTimeout(() => {
-            setShowTitleDescription(false)
-          }, 3000)
-        }).catch(() => {
-          setIsPlaying(false)
-        })
-      }
-    }, 100)
-  }
-
-  const handlePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-        // Hide title/description after 3 seconds when video starts playing
-        setShowTitleDescription(true)
-        setTimeout(() => {
-          setShowTitleDescription(false)
-        }, 3000)
-      }
+  const handlePlayPause = useCallback(() => {
+    const el = videoRef.current
+    if (!el) return
+    if (isPlaying) {
+      el.pause()
+      setIsPlaying(false)
+      setShowControls(true)
+      return
     }
-    setIsPlaying(!isPlaying)
+    if (!mediaSrc) {
+      shouldPlayAfterLoadRef.current = true
+      setIsLoading(true)
+      setVideoError(null)
+      setMediaSrc(selectedVideo.src)
+      setShowControls(true)
+      return
+    }
+    el.play()
+      .then(() => {
+        setIsPlaying(true)
+        setShowTitleDescription(true)
+        window.setTimeout(() => setShowTitleDescription(false), 3000)
+      })
+      .catch(() => setIsPlaying(false))
     setShowControls(true)
-  }
+  }, [isPlaying, mediaSrc, selectedVideo.src])
 
   const handleVolumeChange = (newVolume: number) => {
     setVolume(newVolume)
@@ -229,9 +249,9 @@ export default function FashionVideoSection() {
         <span className="text-primary-500">↻ ◁ |</span><span className="text-neutral-700 dark:text-primary-300">| ▷ ↺</span>
         </h2>
         
-        <div className="hero-glass-frame relative backdrop-blur-lg">
+        <div className="hero-glass-frame relative backdrop-blur-sm">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="bg-gradient-to-br from-primary-50/80 to-primary-100/60 dark:from-white/10 dark:to-white/5 backdrop-blur-md rounded-2xl p-4 sm:p-6 md:p-8 border border-primary-200/40 dark:border-white/20 shadow-lg">
+        <div className="bg-gradient-to-br from-primary-50/90 to-primary-100/70 dark:from-neutral-900/85 dark:to-neutral-800/80 rounded-2xl p-4 sm:p-6 md:p-8 border border-primary-200/40 dark:border-white/15 shadow-lg">
           <div 
             ref={containerRef}
             className="relative aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden bg-black"
@@ -240,16 +260,17 @@ export default function FashionVideoSection() {
           >
             <video
               ref={videoRef}
-              src={selectedVideo.src}
+              key={selectedVideo.id}
+              src={mediaSrc ?? undefined}
               poster={selectedVideo.thumbnail}
               className="w-full h-full object-cover"
-              autoPlay={isPlaying}
+              preload="none"
               muted={isMuted}
               playsInline
               onLoadedMetadata={() => {
                 if (videoRef.current && videoRef.current.duration && isFinite(videoRef.current.duration)) {
                   handleDuration(videoRef.current.duration)
-                  setIsLoading(false)
+                  if (!shouldPlayAfterLoadRef.current) setIsLoading(false)
                 }
               }}
               onTimeUpdate={() => {
@@ -263,17 +284,20 @@ export default function FashionVideoSection() {
               }}
               onPlay={() => setIsLoading(false)}
               onPause={() => setIsLoading(false)}
-              onLoadStart={() => setIsLoading(true)}
+              onLoadStart={() => {
+                if (mediaSrc) setIsLoading(true)
+              }}
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/20">
               <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handlePlayPause}
-                className="w-20 h-20 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-300 pointer-events-auto"
+                className="w-20 h-20 bg-black/55 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-300 pointer-events-auto shadow-lg"
+                aria-label={isPlaying ? 'Pause' : 'Play video'}
               >
                 {isPlaying ? (
                   <Pause size={32} />
@@ -312,8 +336,8 @@ export default function FashionVideoSection() {
                       setVideoError(null)
                       setIsLoading(true)
                       const currentSrc = selectedVideo.src
-                      setSelectedVideo({ ...selectedVideo, src: '' })
-                      setTimeout(() => setSelectedVideo({ ...selectedVideo, src: currentSrc }), 100)
+                      setMediaSrc(null)
+                      setTimeout(() => setMediaSrc(currentSrc), 50)
                     }}
                     className="justify-center text-xs sm:text-base px-3 py-1.5 sm:px-4 sm:py-2 !text-white !border-white hover:!bg-white/20 hover:!text-white"
                   >
@@ -503,24 +527,16 @@ export default function FashionVideoSection() {
                       className="relative rounded-lg overflow-hidden bg-gradient-to-br from-primary-200/60 to-primary-300/40 dark:from-primary-800/50 dark:to-accent-800/50 border border-primary-300/30 dark:border-transparent w-full"
                       style={{ paddingTop: '55%', minHeight: '110px' }}
                     >
-                      <img
-                        src={video.thumbnail}
-                        alt={video.title}
-                        className="absolute top-0 left-0 w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const fallback = target.nextElementSibling as HTMLElement;
-                          if (fallback) fallback.style.display = 'flex';
-                        }}
-                        onLoad={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.opacity = '1';
-                        }}
-                        style={{ opacity: 0, transition: 'opacity 0.3s' }}
-                      />
+                      <div className="absolute inset-0">
+                        <Image
+                          src={video.thumbnail}
+                          alt={video.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 18vw"
+                          loading="lazy"
+                        />
+                      </div>
                       <div
                         className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary-200/60 to-primary-300/40 dark:from-primary-800/50 dark:to-accent-800/50"
                         style={{display: 'none'}}

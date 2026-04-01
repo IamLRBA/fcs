@@ -7,59 +7,47 @@ const LIGHT_IMAGE = '/assets/images/bg-light.png'
 const DARK_IMAGE = '/assets/images/bg-dark.png'
 
 export interface BlurredImageBackgroundProps {
-  /** Light mode: opacity of the image layer (0–1) */
   imageOpacity?: number
-  /** Light mode: blur radius in pixels */
+  /** @deprecated Blur removed for performance; kept for API compatibility */
   blur?: number
-  /** Light mode: brightness (0–2+, 1 = normal) */
   brightness?: number
-  /** Light mode: contrast (0–2+, 1 = normal) */
   contrast?: number
-  /** Light mode: saturate (0–2+, 1 = normal) */
   saturate?: number
-  /** Light mode: scale of the image (e.g. 1.05) */
   scale?: number
-  /** Dark mode: opacity of the image layer (0–1) */
   imageOpacityDark?: number
-  /** Dark mode: blur radius in pixels */
   blurDark?: number
-  /** Dark mode: brightness (0–2+, 1 = normal) */
   brightnessDark?: number
-  /** Dark mode: contrast (0–2+, 1 = normal) */
   contrastDark?: number
-  /** Dark mode: saturate (0–2+, 1 = normal) */
   saturateDark?: number
-  /** Dark mode: scale of the image */
   scaleDark?: number
 }
 
 const defaultsLight = {
-  imageOpacity: 0.75,
-  blur: 2.5,
+  imageOpacity: 0.72,
   brightness: 1,
-  contrast: 1.05,
-  saturate: 0.95,
-  scale: 1.15,
+  contrast: 1.04,
+  saturate: 0.96,
+  scale: 1.08,
 }
 
 const defaultsDark = {
-  imageOpacityDark: 0.9,
-  blurDark: 5.5,
-  brightnessDark: 1.25,
-  contrastDark: 1.1,
+  imageOpacityDark: 0.85,
+  brightnessDark: 1.12,
+  contrastDark: 1.08,
   saturateDark: 1,
-  scaleDark: 1.15,
+  scaleDark: 1.08,
 }
 
+/**
+ * Full-viewport background: no CSS filter:blur() (expensive). Soft look via image opacity + gradient scrim.
+ */
 export default function BlurredImageBackground({
   imageOpacity = defaultsLight.imageOpacity,
-  blur = defaultsLight.blur,
   brightness = defaultsLight.brightness,
   contrast = defaultsLight.contrast,
   saturate = defaultsLight.saturate,
   scale = defaultsLight.scale,
   imageOpacityDark = defaultsDark.imageOpacityDark,
-  blurDark = defaultsDark.blurDark,
   brightnessDark = defaultsDark.brightnessDark,
   contrastDark = defaultsDark.contrastDark,
   saturateDark = defaultsDark.saturateDark,
@@ -77,19 +65,8 @@ export default function BlurredImageBackground({
     )
   }
 
-  const filterLight = [
-    `blur(${blur}px)`,
-    `brightness(${brightness})`,
-    `contrast(${contrast})`,
-    `saturate(${saturate})`,
-  ].join(' ')
-
-  const filterDark = [
-    `blur(${blurDark}px)`,
-    `brightness(${brightnessDark})`,
-    `contrast(${contrastDark})`,
-    `saturate(${saturateDark})`,
-  ].join(' ')
+  const filterLight = [`brightness(${brightness})`, `contrast(${contrast})`, `saturate(${saturate})`].join(' ')
+  const filterDark = [`brightness(${brightnessDark})`, `contrast(${contrastDark})`, `saturate(${saturateDark})`].join(' ')
 
   return (
     <div
@@ -103,14 +80,7 @@ export default function BlurredImageBackground({
         minHeight: '100%',
       }}
     >
-      {/* Light mode image – hidden when dark, covers full screen */}
-      <div
-        className="absolute inset-0 dark:hidden min-w-full min-h-full"
-        style={{
-          opacity: imageOpacity,
-          filter: filterLight,
-        }}
-      >
+      <div className="absolute inset-0 dark:hidden min-w-full min-h-full" style={{ opacity: imageOpacity, filter: filterLight }}>
         <Image
           src={LIGHT_IMAGE}
           alt=""
@@ -119,18 +89,14 @@ export default function BlurredImageBackground({
           style={{ transform: `scale(${scale})`, objectPosition: 'center' }}
           sizes="100vw"
           priority
-          unoptimized={false}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/25 via-transparent to-[var(--color-bg-primary)]/40 dark:from-transparent"
+          aria-hidden
         />
       </div>
 
-      {/* Dark mode image – hidden when light, covers full screen */}
-      <div
-        className="absolute inset-0 hidden dark:block min-w-full min-h-full"
-        style={{
-          opacity: imageOpacityDark,
-          filter: filterDark,
-        }}
-      >
+      <div className="absolute inset-0 hidden dark:block min-w-full min-h-full" style={{ opacity: imageOpacityDark, filter: filterDark }}>
         <Image
           src={DARK_IMAGE}
           alt=""
@@ -138,8 +104,11 @@ export default function BlurredImageBackground({
           className="object-cover min-w-full min-h-full"
           style={{ transform: `scale(${scaleDark})`, objectPosition: 'center' }}
           sizes="100vw"
-          priority
-          unoptimized={false}
+          loading="lazy"
+        />
+        <div
+          className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-[var(--color-bg-primary)]/55"
+          aria-hidden
         />
       </div>
     </div>

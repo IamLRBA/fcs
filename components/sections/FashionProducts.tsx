@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Plus, Minus, Quote } from 'lucide-react'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
+import SafeImage from '@/components/common/SafeImage'
 
 interface ProductSubcategory {
   name: string
@@ -22,6 +23,23 @@ interface Product {
     text: string
     author: string
   }
+}
+
+function FashionCategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
+  const [idx, setIdx] = useState(0)
+  const safeIdx = Math.min(idx, Math.max(0, paths.length - 1))
+  const src = paths[safeIdx] ?? '/assets/images/placeholder.jpg'
+  return (
+    <SafeImage
+      src={src}
+      alt={alt}
+      fill
+      className="object-cover transition-transform duration-300 group-hover:scale-110"
+      sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 192px"
+      loading="lazy"
+      onError={() => setIdx((i) => (i < paths.length - 1 ? i + 1 : i))}
+    />
+  )
 }
 
 const products: Product[] = [
@@ -140,6 +158,14 @@ export default function FashionProducts() {
   const [hoveredThumbnail, setHoveredThumbnail] = useState<{serviceId: number, thumbIndex: number} | null>(null)
   
   const toggle = (id: number) => setExpandedId(expandedId === id ? null : id)
+  const getThumbnailCandidates = (slug: string, thumbIndex: number) => {
+    const folderMap: Record<string, string[]> = {
+      'pants-and-shorts': ['pants-and-shorts', 'bottoms', 'pants'],
+    }
+
+    const folders = folderMap[slug] || [slug]
+    return folders.map(folder => `/assets/images/products-sections/fashion/${folder}/thumb${thumbIndex}.jpg`)
+  }
   
   return (
     <section id="our-products" className="py-20 px-4">
@@ -159,7 +185,7 @@ export default function FashionProducts() {
                     <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300">{s.title}</h3>
                   </Link>
                   <Link href={`/products/${s.slug}`} className={`focus-ring-none block w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[352px] md:h-[352px] aspect-square flex-shrink-0 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:scale-[1.02] transition-all duration-300`}>
-                    <div className="hero-glass-frame relative w-full h-full backdrop-blur-lg">
+                    <div className="hero-glass-frame relative w-full h-full backdrop-blur-md">
                       <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                     <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl w-full h-full flex items-center justify-center p-6">
                       <div className="bg-primary-900/20 rounded-xl w-full h-full aspect-square flex-shrink-0 flex items-center justify-center overflow-hidden">
@@ -188,7 +214,13 @@ export default function FashionProducts() {
                           {[1, 2, 3, 4].map((thumbIndex) => {
                             const subcategory = s.subcategories[thumbIndex - 1]
                             const isHovered = hoveredThumbnail?.serviceId === s.id && hoveredThumbnail?.thumbIndex === thumbIndex
-                            
+                            const primary = `/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`
+                            const extra = getThumbnailCandidates(s.slug, thumbIndex).filter((p) => p !== primary)
+                            const thumbPaths: string[] = []
+                            for (const p of [primary, ...extra, '/assets/images/placeholder.jpg']) {
+                              if (!thumbPaths.includes(p)) thumbPaths.push(p)
+                            }
+
                             return (
                               <Link 
                                 key={thumbIndex}
@@ -197,18 +229,15 @@ export default function FashionProducts() {
                                 onMouseEnter={() => setHoveredThumbnail({ serviceId: s.id, thumbIndex })}
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
-                                <div className="bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-primary-400/50 hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-primary-400/25 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
-                            <img 
-                              src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
-                              alt={`${subcategory.name} - ${s.title}`}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement
-                                target.src = `/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.svg`
-                              }}
-                            />
-                                  <div className="hidden text-neutral-800 dark:text-primary-400 text-sm items-center justify-center w-full h-full">
-                                    {subcategory.name}
+                                <div className="relative bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-transparent hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-0 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
+                                  <FashionCategoryThumb
+                                    paths={thumbPaths}
+                                    alt={`${subcategory.name} - ${s.title}`}
+                                  />
+                                  <div className="absolute inset-x-0 bottom-0 md:hidden flex items-center justify-center overflow-hidden rounded-tl-lg rounded-tr-lg rounded-bl-none rounded-br-none border-x border-b border-primary-500/20 dark:border-transparent bg-white/50 px-3 pt-2 pb-1.5 text-center backdrop-blur-sm dark:bg-neutral-950/75 translate-y-[1px]">
+                                    <span className="text-xs font-medium text-primary-800 dark:text-neutral-100">
+                                      {subcategory.name}
+                                    </span>
                                   </div>
                                 </div>
                                 
@@ -220,7 +249,7 @@ export default function FashionProducts() {
                                       animate={{ opacity: 1 }}
                                       exit={{ opacity: 0 }}
                                       transition={{ duration: 0.2 }}
-                                      className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center space-y-3 rounded-lg"
+                                      className="absolute inset-0 hidden md:flex bg-black/60 flex-col items-center justify-center space-y-3 rounded-lg"
                                     >
                                       <motion.span
                                         initial={{ y: 10, opacity: 0 }}

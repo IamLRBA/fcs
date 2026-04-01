@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button'
 import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import { AuthManager } from '@/lib/auth'
+import SafeImage from '@/components/common/SafeImage'
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -198,8 +199,15 @@ export default function CheckoutPage() {
                   {cart.map((item, index) => (
                     <div key={index}>
                       <div className="flex items-start space-x-3 sm:space-x-4 pb-4">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                        <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
+                          <SafeImage
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                            loading="lazy"
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-neutral-900 dark:text-primary-50 font-medium text-sm sm:text-base truncate">{item.name}</h3>

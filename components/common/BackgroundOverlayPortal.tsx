@@ -2,14 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { motion } from 'framer-motion'
 import BlurredImageBackground from './BlurredImageBackground'
 
-/**
- * Shared full-bleed style for both background and overlay so they have identical edges,
- * stay fixed to the viewport (no scroll), and cover the entire screen with no gaps.
- * Small overshoot (2px each side) eliminates sub-pixel gaps at screen edges.
- */
 const fullBleedStyle: React.CSSProperties = {
   position: 'fixed',
   top: -2,
@@ -25,6 +19,9 @@ const fullBleedStyle: React.CSSProperties = {
   minHeight: 'calc(100% + 4px)',
 }
 
+/**
+ * Static gradient accents (no infinite motion, no blur-3xl) to cut compositor cost.
+ */
 export default function BackgroundOverlayPortal() {
   const [mounted, setMounted] = useState(false)
 
@@ -53,44 +50,18 @@ export default function BackgroundOverlayPortal() {
       <div
         aria-hidden
         className="block dark:hidden"
-        style={{
-          ...fullBleedStyle,
-          zIndex: 2,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-        }}
+        style={{ ...fullBleedStyle, zIndex: 2, pointerEvents: 'none', overflow: 'hidden' }}
       >
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute -top-48 -right-48 w-[32rem] h-[32rem] bg-gradient-to-br from-neutral-800/50 to-neutral-900/50 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-          className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-primary-800/30 to-primary-950/30 rounded-full blur-3xl"
-        />
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-accent-200/25 to-accent-400/20 opacity-90" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-br from-primary-300/20 to-primary-500/20 opacity-90" />
       </div>
       <div
         aria-hidden
         className="hidden dark:block"
-        style={{
-          ...fullBleedStyle,
-          zIndex: 2,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-        }}
+        style={{ ...fullBleedStyle, zIndex: 2, pointerEvents: 'none', overflow: 'hidden' }}
       >
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute -top-48 -right-48 w-[28rem] h-[28rem] bg-gradient-to-br from-accent-200/40 to-accent-400/40 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-          className="absolute -bottom-48 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-primary-300/40 to-primary-500/40 rounded-full blur-3xl"
-        />
+        <div className="absolute -top-40 -right-40 w-72 h-72 rounded-full bg-gradient-to-br from-accent-200/20 to-accent-400/15 opacity-90" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-br from-primary-300/18 to-primary-500/18 opacity-90" />
       </div>
     </div>,
     document.body

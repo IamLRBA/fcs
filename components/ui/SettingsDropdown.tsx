@@ -6,22 +6,26 @@ import { useRouter } from 'next/navigation'
 import { Settings, Sun, Moon, Monitor, Palette, User, LogOut } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import ThemeSwitcher from '@/components/ui/ThemeSwitcher'
+import useScrollLock from '@/components/layout/useScrollLock'
 
 type Theme = 'light' | 'dark' | 'system'
 
 interface SettingsDropdownProps {
   /** When 'mobile', dropdown panel is centered and in-flow so the menu container expands when open */
   variant?: 'desktop' | 'mobile'
+  onOpenChange?: (isOpen: boolean) => void
 }
 
-export default function SettingsDropdown({ variant = 'desktop' }: SettingsDropdownProps) {
+export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: SettingsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [surfaceLocked, setSurfaceLocked] = useState(false)
   const [isThemeOpen, setIsThemeOpen] = useState(false)
   const [theme, setTheme] = useState<Theme>('system')
   const [mounted, setMounted] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [rotation, setRotation] = useState(0)
   const router = useRouter()
+  useScrollLock((isOpen || surfaceLocked) && variant === 'desktop')
 
   useEffect(() => {
     setMounted(true)
@@ -77,16 +81,32 @@ export default function SettingsDropdown({ variant = 'desktop' }: SettingsDropdo
   }
 
   const handleToggle = () => {
-    const newIsOpen = !isOpen
-    setIsOpen(newIsOpen)
-    // Spin counter-clockwise when opening, clockwise when closing
-    setRotation(prev => prev + (newIsOpen ? -360 : 360))
+    if (!isOpen) {
+      setIsOpen(true)
+      setSurfaceLocked(true)
+      onOpenChange?.(true)
+      // Spin counter-clockwise when opening
+      setRotation(prev => prev - 360)
+      return
+    }
+
+    // Spin clockwise when closing, but keep the surface until the exit animation ends
+    setRotation(prev => prev + 360)
+    setTimeout(() => {
+      setIsOpen(false)
+      setSurfaceLocked(false)
+      onOpenChange?.(false)
+    }, 200)
   }
 
   const handleClose = () => {
     if (isOpen) {
-      setIsOpen(false)
       setRotation(prev => prev + 360)
+      setTimeout(() => {
+        setIsOpen(false)
+        setSurfaceLocked(false)
+        onOpenChange?.(false)
+      }, 200)
     }
   }
 
@@ -103,6 +123,7 @@ export default function SettingsDropdown({ variant = 'desktop' }: SettingsDropdo
   ]
 
   const isMobile = variant === 'mobile'
+  useScrollLock(isOpen && !isMobile)
 
   return (
     <div className="relative">
@@ -146,12 +167,12 @@ export default function SettingsDropdown({ variant = 'desktop' }: SettingsDropdo
               transition={{ duration: 0.2 }}
               className={
                 isMobile
-                  ? 'relative mt-2 w-64 hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-xl shadow-xl z-10 overflow-hidden p-4 rounded-r-none'
-                  : 'absolute right-0 top-14 w-64 hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-xl shadow-xl z-50 overflow-hidden p-4 rounded-r-none'
+                  ? 'relative mt-2 -ml-6 w-[calc(100%+3rem)] hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-tl-xl rounded-bl-xl rounded-tr-none rounded-br-none shadow-none z-10 overflow-hidden p-4 sm:ml-0 sm:w-64 sm:rounded-xl sm:rounded-r-none'
+                  : 'absolute right-0 top-14 w-64 hero-glass-frame hero-glass-more-transparent backdrop-blur-lg rounded-xl shadow-none z-[1000] overflow-hidden p-4 rounded-r-none'
               }
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className={`relative z-10 overflow-hidden settings-inner-light-depth border border-gray-200 dark:border-neutral-700 ${isMobile ? 'rounded-lg rounded-r-none' : 'rounded-lg rounded-r-none'}`}>
+              <div className={`relative z-10 overflow-hidden settings-inner-light-depth border border-gray-200 dark:border-neutral-700 ${isMobile ? 'rounded-tl-lg rounded-bl-lg rounded-tr-none rounded-br-none sm:rounded-lg sm:rounded-r-none' : 'rounded-lg rounded-r-none'}`}>
               {/* Theme Section */}
               <div className="p-2">
                 <button

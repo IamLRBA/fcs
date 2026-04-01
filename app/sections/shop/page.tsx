@@ -2,12 +2,28 @@
 
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import SafeImage from '@/components/common/SafeImage'
 import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
-import FashionVideoSection from '@/components/sections/FashionVideoSection'
-import FashionProducts from '@/components/sections/FashionProducts'
+
+const FashionVideoSection = dynamic(
+  () => import('@/components/sections/FashionVideoSection'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full min-h-[280px] rounded-2xl bg-primary-900/10 dark:bg-primary-950/30 animate-pulse" aria-hidden />
+    ),
+  }
+)
+
+const FashionProducts = dynamic(() => import('@/components/sections/FashionProducts'), {
+  loading: () => (
+    <div className="w-full min-h-[200px] rounded-2xl bg-primary-900/10 dark:bg-primary-950/30 animate-pulse" aria-hidden />
+  ),
+})
 
 export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -342,13 +358,17 @@ export default function ShopPage() {
             >
               <div className="flex flex-col items-center md:block">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">01</div>
-                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
-                  <img 
-                    src="/assets/images/sections/fashion/philosophy-1.jpg" 
-                    alt="Mysticism" 
+                  <SafeImage
+                    src="/assets/images/sections/fashion/philosophy-1.jpg"
+                    alt="Mysticism"
+                    width={96}
+                    height={96}
                     className="w-24 h-24 object-cover rounded-xl"
+                    sizes="96px"
+                    loading="lazy"
                   />
                 </div>
                 </div>
@@ -372,13 +392,17 @@ export default function ShopPage() {
             >
               <div className="flex flex-col items-center md:block">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">02</div>
-                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-400/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
-                  <img 
-                    src="/assets/images/sections/fashion/philosophy-2.jpg" 
-                    alt="Sustainability" 
+                  <SafeImage
+                    src="/assets/images/sections/fashion/philosophy-2.jpg"
+                    alt="Sustainability"
+                    width={96}
+                    height={96}
                     className="w-24 h-24 object-cover rounded-xl"
+                    sizes="96px"
+                    loading="lazy"
                   />
                 </div>
                 </div>
@@ -402,13 +426,17 @@ export default function ShopPage() {
             >
               <div className="flex flex-col items-center md:block">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">03</div>
-                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-200/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
-                  <img 
-                    src="/assets/images/sections/fashion/philosophy-3.jpg" 
-                    alt="Self-Discovery" 
+                  <SafeImage
+                    src="/assets/images/sections/fashion/philosophy-3.jpg"
+                    alt="Self-Discovery"
+                    width={96}
+                    height={96}
                     className="w-24 h-24 object-cover rounded-xl"
+                    sizes="96px"
+                    loading="lazy"
                   />
                 </div>
                 </div>

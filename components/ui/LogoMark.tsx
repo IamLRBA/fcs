@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useTheme } from '@/components/layout/ThemeProvider'
 
 type LogoMarkProps = {
@@ -34,7 +35,7 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
       aria-hidden="true"
     >
       {/* Light logo – hidden in dark mode via wrapper so only one logo ever renders visibly */}
-      <img
+      <Image
         src={LIGHT_LOGO_SRC}
         alt="Mystical PIECES® logo"
         width={size}
@@ -48,11 +49,12 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
           maxWidth: '100%',
           maxHeight: '100%',
         }}
-        loading="eager"
+        sizes={`${size}px`}
+        priority
       />
       {/* Dark logo – wrapper is display:none in light so the dark image never paints in light mode */}
       <span className={mounted ? 'hidden dark:block absolute inset-0 w-full h-full' : 'hidden'}>
-        <img
+        <Image
           src={DARK_LOGO_SRC}
           alt=""
           width={size}
@@ -65,7 +67,8 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
             maxWidth: '100%',
             maxHeight: '100%',
           }}
-          loading="eager"
+          sizes={`${size}px`}
+          priority
           aria-hidden
         />
       </span>

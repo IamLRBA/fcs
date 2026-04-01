@@ -1,21 +1,15 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ShoppingCart, X, Maximize2, Minimize, ChevronLeft, ChevronRight, Quote } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
-import { ProductManager } from '@/lib/products'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { AuthManager } from '@/lib/auth'
-// Import products data - We'll need to create a proper data structure
-// For now, using mock data inline
-const getProductsData = () => {
-  // This should be replaced with actual data fetching
-  return require('@/data/products.json')
-}
+import SafeImage from '@/components/common/SafeImage'
 
 interface Product {
   id: string
@@ -32,7 +26,99 @@ interface Product {
   condition: string
   sku: string
   stock_qty: number
+  isActive?: boolean
 }
+
+function SubcategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
+  const [idx, setIdx] = useState(0)
+  const safeIdx = Math.min(idx, Math.max(0, paths.length - 1))
+  const src = paths[safeIdx] ?? '/assets/images/placeholder.jpg'
+  return (
+    <SafeImage
+      src={src}
+      alt={alt}
+      width={192}
+      height={192}
+      className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
+      sizes="(max-width: 640px) 80px, 96px"
+      loading="lazy"
+      onError={() => setIdx((i) => (i < paths.length - 1 ? i + 1 : i))}
+    />
+  )
+}
+
+const ProductGridCard = memo(function ProductGridCard({
+  product,
+  index,
+  onOpen,
+}: {
+  product: Product
+  index: number
+  onOpen: (p: Product) => void
+}) {
+  const hasDiscount = Boolean(product.original_price && product.original_price > product.price_ugx)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="w-full max-w-xs transition-all duration-300 group cursor-pointer"
+      onClick={() => onOpen(product)}
+    >
+      <div className="hero-glass-frame relative h-full backdrop-blur-md group-hover:shadow-xl transition-shadow duration-300">
+        <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+        <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col">
+          <div className="relative w-full aspect-square bg-primary-900/20 overflow-hidden">
+            <SafeImage
+              src={product.images[0]}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-110"
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 280px"
+              loading="lazy"
+            />
+            {hasDiscount && (
+              <div className="absolute top-2 left-2 px-2 py-1 bg-accent-500 text-white text-xs font-bold rounded-full">
+                {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
+              </div>
+            )}
+          </div>
+
+          <div className="p-2 text-center">
+            <p className="text-primary-700 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.brand}</p>
+            <h3 className="text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2">{product.name}</h3>
+            <div className="flex items-center justify-center space-x-1 mb-1 flex-wrap">
+              <span className="text-base sm:text-sm font-bold text-primary-600 dark:text-primary-300">
+                UGX {product.price_ugx.toLocaleString()}
+              </span>
+              {product.original_price && (
+                <span className="text-xs text-neutral-600 dark:text-neutral-400 line-through">
+                  UGX {product.original_price.toLocaleString()}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center space-x-2 mt-1.5">
+              <Button
+                variant="default"
+                size="sm"
+                className="flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onOpen(product)
+                }}
+              >
+                <ShoppingCart className="w-4 h-4" />
+                <span className="hidden sm:inline">Quick View</span>
+                <span className="sm:hidden">View</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+})
 
 export default function ProductCategoryPage() {
   const params = useParams()
@@ -40,37 +126,34 @@ export default function ProductCategoryPage() {
   
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-  const [cart, setCart] = useState<Product[]>([])
-  
-  const productsData = getProductsData()
-  const savedProducts = ProductManager.getProducts()
-  
-  // Merge saved products with JSON products
-  const mergedProductsData = { ...productsData }
-  if (savedProducts.products) {
-    Object.keys(savedProducts.products).forEach(cat => {
-      if (!mergedProductsData.products[cat]) {
-        mergedProductsData.products[cat] = savedProducts.products[cat]
-      } else {
-        // Merge subcategories
-        Object.keys(savedProducts.products[cat].subcategories || {}).forEach(sub => {
-          if (!mergedProductsData.products[cat].subcategories[sub]) {
-            mergedProductsData.products[cat].subcategories[sub] = savedProducts.products[cat].subcategories[sub]
-          } else {
-            // Merge products in subcategory
-            const existingIds = new Set(mergedProductsData.products[cat].subcategories[sub].map((p: Product) => p.id))
-            savedProducts.products[cat].subcategories[sub].forEach((p: Product) => {
-              if (!existingIds.has(p.id)) {
-                mergedProductsData.products[cat].subcategories[sub].push(p)
-              }
-            })
-          }
-        })
+  const [catalog, setCatalog] = useState<any>({ products: {} })
+  const [loading, setLoading] = useState(true)
+  const [showBackButton, setShowBackButton] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    const loadCatalog = async () => {
+      try {
+        const res = await fetch(
+          `/api/products?grouped=1&category=${encodeURIComponent(category)}`
+        )
+        if (!res.ok) throw new Error('Failed to load products')
+        const data = await res.json()
+        if (active) setCatalog(data)
+      } catch (error) {
+        console.error('Error loading products:', error)
+        if (active) setCatalog({ products: {} })
+      } finally {
+        if (active) setLoading(false)
       }
-    })
-  }
-  
-  const categoryData = mergedProductsData.products[category as keyof typeof mergedProductsData.products]
+    }
+    loadCatalog()
+    return () => {
+      active = false
+    }
+  }, [category])
+
+  const categoryData = catalog.products?.[category]
   
   useEffect(() => {
     // Extract section from hash if present
@@ -82,6 +165,41 @@ export default function ProductCategoryPage() {
     }
   }, [categoryData])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      setShowBackButton(scrollTop < 100)
+    }
+    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const openProductModal = useCallback((product: Product) => {
+    setSelectedProduct(product)
+    AuthManager.addViewedItem(product.id)
+  }, [])
+
+  const closeProductModal = useCallback(() => {
+    setSelectedProduct(null)
+  }, [])
+
+  const scrollToSection = useCallback((section: string) => {
+    setSelectedSection(section)
+    const element = document.getElementById(section)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1 className="text-2xl font-semibold">Loading products...</h1>
+      </div>
+    )
+  }
+
   if (!categoryData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -92,24 +210,6 @@ export default function ProductCategoryPage() {
 
   const sections = Object.keys(categoryData.subcategories)
   const productsBySection = Object.entries(categoryData.subcategories) as [string, Product[]][]
-
-  const openProductModal = (product: Product) => {
-    setSelectedProduct(product)
-    // Track viewed item
-    AuthManager.addViewedItem(product.id)
-  }
-
-  const closeProductModal = () => {
-    setSelectedProduct(null)
-  }
-
-  const scrollToSection = (section: string) => {
-    setSelectedSection(section)
-    const element = document.getElementById(section)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
 
   // Get category-specific animation config (opening transitions only)
   const getCategoryConfig = () => {
@@ -232,6 +332,22 @@ export default function ProductCategoryPage() {
     return '/assets/images/placeholder.jpg'
   }
 
+  const getSubcategoryImageCandidates = (categorySlug: string, sectionSlug: string): string[] => {
+    const paths = [getSubcategoryImage(categorySlug, sectionSlug)]
+    if (categorySlug === 'pants-and-shorts') {
+      paths.push(
+        `/assets/images/products-sections/fashion/bottoms/thumb${(sections.indexOf(sectionSlug) % 4) + 1}.jpg`,
+        `/assets/images/products-sections/fashion/pants/thumb${(sections.indexOf(sectionSlug) % 4) + 1}.jpg`
+      )
+    }
+    // Avoid using Set spreading (can break TS build with older targets)
+    const unique: string[] = []
+    for (const p of paths) {
+      if (!unique.includes(p)) unique.push(p)
+    }
+    return unique
+  }
+
   // Helper function to get quote for each category
   const getCategoryQuote = (categorySlug: string): { text: string; author: string } => {
     const quotes: Record<string, { text: string; author: string }> = {
@@ -264,21 +380,6 @@ export default function ProductCategoryPage() {
     return quotes[categorySlug] || { text: '', author: '' }
   }
 
-  const [showBackButton, setShowBackButton] = useState(true)
-
-  // Show/hide back button based on scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop
-      // Show button when at top (within 100px), hide when scrolled down
-      setShowBackButton(scrollTop < 100)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    handleScroll() // Check initial position
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
     <div className="min-h-screen bg-unified relative overflow-hidden pt-20">
       {/* Navigation Back */}
@@ -306,18 +407,19 @@ export default function ProductCategoryPage() {
             className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-1 md:mb-6"
           >
             {/* Main Product Image */}
-            <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+            <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
               <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 sm:p-8">
-                <img 
-                  src={getMainProductImage(category)}
-                  alt={`${categoryData.title} - Main Product Image`}
-                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-xl"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = '/assets/images/placeholder.jpg'
-                  }}
-                />
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shrink-0 mx-auto">
+                  <SafeImage
+                    src={getMainProductImage(category)}
+                    alt={`${categoryData.title} - Main Product Image`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
+                    priority
+                  />
+                </div>
               </div>
             </div>
 
@@ -387,7 +489,6 @@ export default function ProductCategoryPage() {
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {productsBySection.map(([section, products]) => {
           const visibleProducts = products.filter((product: any) => product.isActive !== false)
-          if (visibleProducts.length === 0) return null
           return (
           <motion.section
             key={section}
@@ -406,17 +507,20 @@ export default function ProductCategoryPage() {
               transition={{ duration: 0.6 }}
               className="flex justify-center mb-8"
             >
-            <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-lg">
+            <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
               <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 sm:p-8">
-                <img 
-                  src={getSubcategoryImage(category, section)}
+                <SubcategoryThumb
+                  paths={(() => {
+                    const primary = getSubcategoryImage(category, section)
+                    const extra = getSubcategoryImageCandidates(category, section).filter((p) => p !== primary)
+                    const unique: string[] = []
+                    for (const p of [primary, ...extra, '/assets/images/placeholder.jpg']) {
+                      if (!unique.includes(p)) unique.push(p)
+                    }
+                    return unique
+                  })()}
                   alt={`${section} - ${categoryData.title}`}
-                  className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = `/assets/images/products-sections/fashion/${category}/thumb${(sections.indexOf(section) % 4) + 1}.svg`
-                  }}
                 />
               </div>
             </div>
@@ -428,68 +532,30 @@ export default function ProductCategoryPage() {
               ).join(' ')}
             </h2>
             
+            {visibleProducts.length === 0 ? (
+              <div className="mx-auto max-w-xl rounded-2xl border border-primary-500/20 dark:border-primary-400/30 bg-primary-800/20 dark:bg-neutral-900/40 p-6 sm:p-8 text-center">
+                <h3 className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-100 mb-3">
+                  No Products Available...Check later
+                </h3>
+                <p className="text-sm sm:text-base text-neutral-700 dark:text-primary-300 mb-6">
+                  There are no active products in this section right now.
+                </p>
+                <Button href="/sections/shop#our-products" variant="default" size="md" className="inline-flex items-center justify-center">
+                  Check Other Products
+                </Button>
+              </div>
+            ) : (
             <div className="grid gap-4 md:gap-6 lg:gap-8 justify-items-center [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-              {visibleProducts.map((product: Product, index: number) => {
-                const hasDiscount = product.original_price && product.original_price > product.price_ugx
-                return (
-                <motion.div
+              {visibleProducts.map((product: Product, index: number) => (
+                <ProductGridCard
                   key={product.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="w-full max-w-xs transition-all duration-300 group cursor-pointer"
-                  onClick={() => openProductModal(product)}
-                >
-                  <div className="hero-glass-frame relative h-full backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
-                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                    <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col">
-                      {/* Product Image - square area */}
-                      <div className="relative w-full aspect-square bg-primary-900/20 overflow-hidden">
-                        <img
-                          src={product.images[0] || '/assets/images/placeholder.jpg'}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.src = '/assets/images/placeholder.jpg'
-                          }}
-                        />
-                        {/* Discount Badge */}
-                        {hasDiscount && (
-                          <div className="absolute top-2 left-2 px-2 py-1 bg-accent-500 text-white text-xs font-bold rounded-full">
-                            {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Product Info */}
-                      <div className="p-2 text-center">
-                        <p className="text-primary-700 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.brand}</p>
-                        <h3 className="text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2">{product.name}</h3>
-                        <div className="flex items-center justify-center space-x-1 mb-1 flex-wrap">
-                          <span className="text-base sm:text-sm font-bold text-primary-600 dark:text-primary-300">
-                            UGX {product.price_ugx.toLocaleString()}
-                          </span>
-                          {product.original_price && (
-                            <span className="text-xs text-neutral-600 dark:text-neutral-400 line-through">
-                              UGX {product.original_price.toLocaleString()}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2 mt-1.5">
-                          <Button variant="default" size="sm" className="flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2" onClick={(e) => { e.stopPropagation(); openProductModal(product) }}>
-                            <ShoppingCart className="w-4 h-4" />
-                            <span className="hidden sm:inline">Quick View</span>
-                            <span className="sm:hidden">View</span>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )})}
+                  product={product}
+                  index={index}
+                  onOpen={openProductModal}
+                />
+              ))}
             </div>
+            )}
           </motion.section>
           )
         })}
@@ -498,7 +564,7 @@ export default function ProductCategoryPage() {
       {/* Product Modal */}
       <AnimatePresence>
         {selectedProduct && (
-          <ProductModal product={selectedProduct} onClose={closeProductModal} />
+          <MemoProductModal product={selectedProduct} onClose={closeProductModal} />
         )}
       </AnimatePresence>
     </div>
@@ -599,7 +665,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
+      className="fixed inset-0 bg-black/55 dark:bg-black/85 z-50 flex items-center justify-center p-3 sm:p-4"
       onClick={onClose}
     >
       <style jsx>{`
@@ -641,7 +707,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         }
       `}</style>
       <div
-        className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600"
+        className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-md bg-white/30 dark:bg-neutral-900/25 dark:border-neutral-600"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
@@ -658,10 +724,13 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           {/* Image Gallery */}
           <div className="flex-shrink-0 flex flex-col space-y-4">
             <div className="relative h-72 sm:h-80 md:h-[24rem] bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group">
-              <img
-                src={product.images[currentImageIndex] || '/assets/images/placeholder.jpg'}
+              <SafeImage
+                src={product.images[currentImageIndex]}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+                priority
               />
               {product.images.length > 0 && (
                 <motion.button
@@ -702,7 +771,15 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                         currentImageIndex === index ? 'border-primary-600 dark:border-primary-500 scale-105' : 'border-transparent hover:border-primary-400 dark:hover:border-primary-300'
                       }`}
                     >
-                      <img src={img} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                      <SafeImage
+                        src={img}
+                        alt={`${product.name} ${index + 1}`}
+                        width={88}
+                        height={88}
+                        className="w-full h-full object-cover"
+                        sizes="88px"
+                        loading="lazy"
+                      />
                     </button>
                   ))}
                 </div>
@@ -806,15 +883,23 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             >
               <Minimize className="w-6 h-6" />
             </motion.button>
-            <motion.img
+            <motion.div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
-              src={product.images[currentImageIndex] || '/assets/images/placeholder.jpg'}
-              alt={product.name}
-              className="max-w-full max-h-full object-contain"
+              className="relative max-w-full max-h-[90vh] flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
-            />
+            >
+              <SafeImage
+                src={product.images[currentImageIndex]}
+                alt={product.name}
+                width={1920}
+                height={1920}
+                className="max-w-full max-h-[90vh] w-auto h-auto object-contain"
+                sizes="100vw"
+                priority
+              />
+            </motion.div>
             {product.images.length > 1 && (
               <>
                 <button
@@ -846,4 +931,6 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
     </motion.div>
   )
 }
+
+const MemoProductModal = memo(ProductModal)
 

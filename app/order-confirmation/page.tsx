@@ -10,6 +10,7 @@ import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import Button from '@/components/ui/Button'
+import SafeImage from '@/components/common/SafeImage'
 
 export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null)
@@ -288,15 +289,14 @@ export default function OrderConfirmationPage() {
                 <div key={index}>
                   <div className="flex items-start justify-between pb-4">
                     <div className="flex items-start space-x-3 flex-1">
-                      <div className="w-20 h-20 bg-gray-100 dark:bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 border border-gray-200 dark:border-neutral-600">
-                        <img 
-                          src={item.image || '/assets/images/placeholder.jpg'} 
-                          alt={item.name} 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.src = '/assets/images/placeholder.jpg'
-                          }}
+                      <div className="relative w-20 h-20 bg-gray-100 dark:bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 border border-gray-200 dark:border-neutral-600">
+                        <SafeImage
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                          loading="lazy"
                         />
                       </div>
                       <div className="flex-1 min-w-0">

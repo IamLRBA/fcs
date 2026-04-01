@@ -2,7 +2,14 @@
 
 ## MysticalPIECES — Production Database Design
 
-This document defines the PostgreSQL schema, ORM configuration, migration strategy, backend architecture, and security model. **No application code is modified** until implementation phase.
+This document defines the PostgreSQL schema, ORM configuration, migration strategy, backend architecture, and security model.
+
+### Current implementation (local + app)
+
+- **ORM**: Prisma; schema file `prisma/schema.prisma`.
+- **Product catalog**: Stored in PostgreSQL; read/write via `app/api/products` routes; admin and storefront consume these APIs.
+- **Local database**: Optional `docker-compose.yml` (Postgres on host port **5433**). First-time flow is documented in the repo **README** under *First-time setup (database)* — configure `.env` from `.env.example` (no secrets in git), then `npm run db:up`, `npx prisma db push`, optionally `npm run import:products`.
+- **Seeding from JSON**: `scripts/import-products-from-json.js` (`npm run import:products`) upserts by SKU from `data/products.json`.
 
 ---
 
