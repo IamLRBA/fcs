@@ -10,6 +10,7 @@ import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { AuthManager } from '@/lib/auth'
 import SafeImage from '@/components/common/SafeImage'
+import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 
 interface Product {
   id: string
@@ -186,6 +187,9 @@ export default function ProductCategoryPage() {
 
   const scrollToSection = useCallback((section: string) => {
     setSelectedSection(section)
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `#${section}`)
+    }
     const element = document.getElementById(section)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -210,6 +214,14 @@ export default function ProductCategoryPage() {
 
   const sections = Object.keys(categoryData.subcategories)
   const productsBySection = Object.entries(categoryData.subcategories) as [string, Product[]][]
+
+  const sectionNavItems = sections.map((section) => ({
+    id: section,
+    label: section
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' '),
+  }))
 
   // Get category-specific animation config (opening transitions only)
   const getCategoryConfig = () => {
@@ -462,25 +474,14 @@ export default function ProductCategoryPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto"
+            className="w-full max-w-4xl mx-auto px-1"
           >
-            {sections.map((section) => {
-              const displayName = section.split('-').map(word => 
-                word.charAt(0).toUpperCase() + word.slice(1)
-              ).join(' ')
-              
-              return (
-                <Button
-                  key={section}
-                  variant={selectedSection === section ? 'filled' : 'default'}
-                  size="sm"
-                  onClick={() => scrollToSection(section)}
-                  className="text-sm sm:text-base justify-center"
-                >
-                  {displayName}
-                </Button>
-              )
-            })}
+            <SegmentedPillNav
+              items={sectionNavItems}
+              value={selectedSection}
+              onSelect={(id) => scrollToSection(id)}
+              hideIndicatorUntilSelected
+            />
           </motion.div>
         </div>
       </section>

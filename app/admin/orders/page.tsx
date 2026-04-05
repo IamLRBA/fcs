@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
 import { Loader2 } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import type { Order } from '@/lib/cart'
@@ -10,6 +9,7 @@ import AdminNavHeader from '@/components/admin/AdminNavHeader'
 import SafeImage from '@/components/common/SafeImage'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import { SkeletonAdminDashboard } from '@/components/ui/Skeleton'
 
 type WorkflowTab = 'pending' | 'in_progress' | 'ready'
@@ -206,8 +206,6 @@ export default function AdminOrdersPage() {
     }
   }
 
-  const tabIndex = TABS.findIndex((t) => t.id === tab)
-
   return (
     <div className="min-h-screen pb-20">
       {!isAdmin || loading ? (
@@ -223,36 +221,16 @@ export default function AdminOrdersPage() {
                 Order pipeline
               </h2>
 
-              <div className="mb-8 !rounded-full bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(0,0,0,0.35)] p-[1px] max-w-xl mx-auto">
-                <div className="relative grid grid-cols-3 p-[1px]">
-                  <motion.div
-                    aria-hidden
-                    className="pointer-events-none absolute top-[1px] bottom-[1px] left-[1px] w-[calc((100%-2px)/3)] !rounded-full bg-white dark:bg-neutral-800 z-0"
-                    initial={false}
-                    transition={{ type: 'spring', stiffness: 420, damping: 36 }}
-                    animate={{ x: `${tabIndex * 100}%` }}
-                  />
-                  {TABS.map(({ id, label }) => {
-                    const active = tab === id
-                    return (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() => {
-                          setTab(id)
-                          setExpandedId(null)
-                        }}
-                        className={`relative z-10 !rounded-full border border-transparent px-2 sm:px-4 py-[9px] text-xs sm:text-sm font-medium transition-colors duration-300 focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 dark:focus:ring-0 dark:focus-visible:ring-0 dark:focus-visible:outline-none dark:focus:ring-offset-0 dark:focus-visible:ring-offset-0 active:outline-none active:ring-0 dark:active:outline-none dark:active:ring-0 ${
-                          active
-                            ? 'text-primary-800 dark:text-primary-100'
-                            : 'text-primary-500 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-100'
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    )
-                  })}
-                </div>
+              <div className="mb-8 max-w-xl mx-auto px-1">
+                <SegmentedPillNav
+                  items={TABS}
+                  value={tab}
+                  onSelect={(id) => {
+                    setTab(id as WorkflowTab)
+                    setExpandedId(null)
+                  }}
+                  className="!max-w-none"
+                />
               </div>
 
               {filtered.length === 0 ? (

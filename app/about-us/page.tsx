@@ -25,10 +25,17 @@ export default function AboutUsPage() {
             <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto mb-8">
               Dive into our portal and feel future-forward thrift fashion in motion.
             </p>
-            <Button href="/sections/shop" variant="filled" size="md" className="inline-flex items-center space-x-2 group">
-              <span>view the ᔕᕼOᑭ portal</span>
-              <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-2xl leading-none">⟹</span>
-            </Button>
+            <div className="hero-cta-buttons flex justify-center">
+              <Button
+                href="/sections/shop"
+                variant="default"
+                size="md"
+                className="inline-flex items-center justify-center space-x-2 group"
+              >
+                <span>view the ᔕᕼOᑭ portal</span>
+                <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-2xl leading-none">⟹</span>
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>

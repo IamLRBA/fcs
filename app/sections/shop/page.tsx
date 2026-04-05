@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
+import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
 
 const FashionVideoSection = dynamic(
@@ -24,6 +25,54 @@ const FashionProducts = dynamic(() => import('@/components/sections/FashionProdu
     <div className="w-full min-h-[200px] rounded-2xl bg-primary-900/10 dark:bg-primary-950/30 animate-pulse" aria-hidden />
   ),
 })
+
+const moodboardData = {
+  inspiration: [
+    { icon: '🎨', name: 'Art', image: '/assets/images/fashion/inspiration/art.jpg' },
+    { icon: '✨', name: 'Sparkle', image: '/assets/images/fashion/inspiration/sparkle.jpg' },
+    { icon: '🌟', name: 'Star', image: '/assets/images/fashion/inspiration/star.jpg' },
+    { icon: '💫', name: 'Dizzy', image: '/assets/images/fashion/inspiration/dizzy.jpg' },
+    { icon: '🔮', name: 'Crystal Ball', image: '/assets/images/fashion/inspiration/crystal-ball.jpg' },
+    { icon: '🌈', name: 'Rainbow', image: '/assets/images/fashion/inspiration/rainbow.jpg' },
+    { icon: '🎭', name: 'Theater', image: '/assets/images/fashion/inspiration/theatre.jpg' },
+    { icon: '🎪', name: 'Circus', image: '/assets/images/fashion/inspiration/circus.jpg' },
+  ],
+  elegance: [
+    { icon: '👑', name: 'Crown', image: '/assets/images/fashion/elegance/crown.jpg' },
+    { icon: '💎', name: 'Gem', image: '/assets/images/fashion/elegance/gem.jpg' },
+    { icon: '🕊️', name: 'Dove', image: '/assets/images/fashion/elegance/dove.jpg' },
+    { icon: '🌹', name: 'Rose', image: '/assets/images/fashion/elegance/rose.jpg' },
+    { icon: '🦢', name: 'Swan', image: '/assets/images/fashion/elegance/swan.jpg' },
+    { icon: '💍', name: 'Ring', image: '/assets/images/fashion/elegance/ring.jpg' },
+    { icon: '👗', name: 'Dress', image: '/assets/images/fashion/elegance/dress.jpg' },
+    { icon: '👠', name: 'High Heel', image: '/assets/images/fashion/elegance/high-heel.jpg' },
+  ],
+  urban: [
+    { icon: '🏙️', name: 'City', image: '/assets/images/fashion/urban/city.jpg' },
+    { icon: '🚗', name: 'Car', image: '/assets/images/fashion/urban/car.jpg' },
+    { icon: '🎵', name: 'Music', image: '/assets/images/fashion/urban/music.jpg' },
+    { icon: '🎧', name: 'Headphones', image: '/assets/images/fashion/urban/headphones.jpg' },
+    { icon: '🛹', name: 'Skateboard', image: '/assets/images/fashion/urban/skateboard.jpg' },
+    { icon: '🎨', name: 'Art', image: '/assets/images/fashion/urban/art.jpg' },
+    { icon: '💡', name: 'Light Bulb', image: '/assets/images/fashion/urban/light-bulb.jpg' },
+    { icon: '⚡', name: 'Lightning', image: '/assets/images/fashion/urban/lightning.jpg' },
+  ],
+  nature: [
+    { icon: '🌿', name: 'Herb', image: '/assets/images/fashion/nature/herb.jpg' },
+    { icon: '🌸', name: 'Cherry Blossom', image: '/assets/images/fashion/nature/cherry-blossom.jpg' },
+    { icon: '🌺', name: 'Hibiscus', image: '/assets/images/fashion/nature/hibiscus.jpg' },
+    { icon: '🍃', name: 'Leaf', image: '/assets/images/fashion/nature/leaf.jpg' },
+    { icon: '🌊', name: 'Wave', image: '/assets/images/fashion/nature/wave.jpg' },
+    { icon: '🌅', name: 'Sunrise', image: '/assets/images/fashion/nature/sunrise.jpg' },
+    { icon: '🌙', name: 'Moon', image: '/assets/images/fashion/nature/moon.jpg' },
+    { icon: '⭐', name: 'Star', image: '/assets/images/fashion/nature/star.jpg' },
+  ],
+}
+
+const moodNavItems = Object.keys(moodboardData).map((mood) => ({
+  id: mood,
+  label: mood.charAt(0).toUpperCase() + mood.slice(1),
+}))
 
 export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -50,6 +99,7 @@ export default function ShopPage() {
   const [pendingMoodChange, setPendingMoodChange] = useState<Array<{icon: string, name: string, image: string}> | null>(null)
   const [imageUpdateQueue, setImageUpdateQueue] = useState<number[]>([])
   const [isUpdatingImages, setIsUpdatingImages] = useState(false)
+  const [showBackButton, setShowBackButton] = useState(true)
 
   const looks = [
     {
@@ -113,50 +163,6 @@ export default function ShopPage() {
       styles: ['Urban Casual', 'Skate Style', 'Hip Hop Fashion', 'Street Luxe', 'Tech Street', 'Graffiti Inspired', 'Underground', 'City Vibes']
     }
   ]
-  
-  // Moodboard data
-  const moodboardData = {
-    inspiration: [
-      { icon: '🎨', name: 'Art', image: '/assets/images/fashion/inspiration/art.jpg' },
-      { icon: '✨', name: 'Sparkle', image: '/assets/images/fashion/inspiration/sparkle.jpg' },
-      { icon: '🌟', name: 'Star', image: '/assets/images/fashion/inspiration/star.jpg' },
-      { icon: '💫', name: 'Dizzy', image: '/assets/images/fashion/inspiration/dizzy.jpg' },
-      { icon: '🔮', name: 'Crystal Ball', image: '/assets/images/fashion/inspiration/crystal-ball.jpg' },
-      { icon: '🌈', name: 'Rainbow', image: '/assets/images/fashion/inspiration/rainbow.jpg' },
-      { icon: '🎭', name: 'Theater', image: '/assets/images/fashion/inspiration/theatre.jpg' },
-      { icon: '🎪', name: 'Circus', image: '/assets/images/fashion/inspiration/circus.jpg' }
-    ],
-    elegance: [
-      { icon: '👑', name: 'Crown', image: '/assets/images/fashion/elegance/crown.jpg' },
-      { icon: '💎', name: 'Gem', image: '/assets/images/fashion/elegance/gem.jpg' },
-      { icon: '🕊️', name: 'Dove', image: '/assets/images/fashion/elegance/dove.jpg' },
-      { icon: '🌹', name: 'Rose', image: '/assets/images/fashion/elegance/rose.jpg' },
-      { icon: '🦢', name: 'Swan', image: '/assets/images/fashion/elegance/swan.jpg' },
-      { icon: '💍', name: 'Ring', image: '/assets/images/fashion/elegance/ring.jpg' },
-      { icon: '👗', name: 'Dress', image: '/assets/images/fashion/elegance/dress.jpg' },
-      { icon: '👠', name: 'High Heel', image: '/assets/images/fashion/elegance/high-heel.jpg' }
-    ],
-    urban: [
-      { icon: '🏙️', name: 'City', image: '/assets/images/fashion/urban/city.jpg' },
-      { icon: '🚗', name: 'Car', image: '/assets/images/fashion/urban/car.jpg' },
-      { icon: '🎵', name: 'Music', image: '/assets/images/fashion/urban/music.jpg' },
-      { icon: '🎧', name: 'Headphones', image: '/assets/images/fashion/urban/headphones.jpg' },
-      { icon: '🛹', name: 'Skateboard', image: '/assets/images/fashion/urban/skateboard.jpg' },
-      { icon: '🎨', name: 'Art', image: '/assets/images/fashion/urban/art.jpg' },
-      { icon: '💡', name: 'Light Bulb', image: '/assets/images/fashion/urban/light-bulb.jpg' },
-      { icon: '⚡', name: 'Lightning', image: '/assets/images/fashion/urban/lightning.jpg' }
-    ],
-    nature: [
-      { icon: '🌿', name: 'Herb', image: '/assets/images/fashion/nature/herb.jpg' },
-      { icon: '🌸', name: 'Cherry Blossom', image: '/assets/images/fashion/nature/cherry-blossom.jpg' },
-      { icon: '🌺', name: 'Hibiscus', image: '/assets/images/fashion/nature/hibiscus.jpg' },
-      { icon: '🍃', name: 'Leaf', image: '/assets/images/fashion/nature/leaf.jpg' },
-      { icon: '🌊', name: 'Wave', image: '/assets/images/fashion/nature/wave.jpg' },
-      { icon: '🌅', name: 'Sunrise', image: '/assets/images/fashion/nature/sunrise.jpg' },
-      { icon: '🌙', name: 'Moon', image: '/assets/images/fashion/nature/moon.jpg' },
-      { icon: '⭐', name: 'Star', image: '/assets/images/fashion/nature/star.jpg' }
-    ]
-  }
 
   // Auto-play functionality
   useEffect(() => {
@@ -258,8 +264,6 @@ export default function ShopPage() {
     setMoodboardImages(initialImages)
     setDisplayedImages(initialImages)
   }, [])
-
-  const [showBackButton, setShowBackButton] = useState(true)
 
   // Show/hide back button based on scroll position
   useEffect(() => {
@@ -473,33 +477,26 @@ export default function ShopPage() {
           <div className="hero-glass-frame relative backdrop-blur-lg">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
           <div className="glass-effect p-8 rounded-2xl">
-            <div className="text-center mb-8">
+            <div className="text-center mb-6 sm:mb-8">
               <h3 className="text-3xl font-bold mb-4 text-neutral-850 dark:text-primary-50">
                 Visual Inspiration
               </h3>
-              <p className="text-neutral-700 dark:text-primary-300">
+              <p className="text-neutral-700 dark:text-primary-300 mb-6 sm:mb-8">
                 Curated collections that capture different moods and aesthetics
               </p>
+              <div className="w-full max-w-2xl mx-auto px-1 overflow-x-auto pb-1">
+                <SegmentedPillNav
+                  items={moodNavItems}
+                  value={selectedMood}
+                  onSelect={changeMood}
+                  disabled={isUpdatingImages}
+                  className="!max-w-none min-w-[18rem] sm:min-w-0"
+                />
+              </div>
             </div>
             
             {/* Interactive Moodboard */}
             <div className="space-y-6">
-              {/* Mood Selector */}
-              <div className="flex justify-center flex-wrap gap-3">
-                {Object.keys(moodboardData).map((mood) => (
-                  <Button
-                    key={mood}
-                    variant={selectedMood === mood ? 'filled' : 'default'}
-                    size="sm"
-                    onClick={() => changeMood(mood)}
-                    disabled={isUpdatingImages}
-                    className={`capitalize ${isUpdatingImages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    {mood}
-                  </Button>
-                ))}
-              </div>
-              
               {/* Moodboard Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-4 px-4 md:px-0">
                 {displayedImages.map((item, index) => (
@@ -591,9 +588,16 @@ export default function ShopPage() {
           <p className="text-xl text-neutral-700 dark:text-primary-300 mb-8">
             Explore our collection of thrifted treasures and for any questions, contact us!
           </p>
-          <Button href="/#contact-section" variant="default" size="md">
-            Contact Us
-          </Button>
+          <div className="hero-cta-buttons flex justify-center">
+            <Button
+              href="/#contact-section"
+              variant="default"
+              size="md"
+              className="inline-flex items-center justify-center"
+            >
+              Contact Us
+            </Button>
+          </div>
         </motion.div>
       </section>
     </div>

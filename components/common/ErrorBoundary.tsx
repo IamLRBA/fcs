@@ -2,7 +2,6 @@
 
 import React, { Component, ErrorInfo, ReactNode, useEffect } from 'react'
 import { AlertCircle, RefreshCw } from 'lucide-react'
-import Link from 'next/link'
 import Button from '@/components/ui/Button'
 
 interface Props {
@@ -93,7 +92,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 )}
               </div>
             )}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="hero-cta-buttons flex flex-col sm:flex-row gap-3 justify-center">
               <Button
                 variant="default"
                 onClick={this.handleReset}
@@ -102,7 +101,11 @@ export class ErrorBoundary extends Component<Props, State> {
                 <RefreshCw className="w-4 h-4" />
                 Try Again
               </Button>
-              <Button href="/" variant="filled">
+              <Button
+                href="/"
+                variant="default"
+                className="inline-flex items-center justify-center"
+              >
                 Go Home
               </Button>
             </div>
