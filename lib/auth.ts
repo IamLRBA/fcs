@@ -107,6 +107,11 @@ export class AuthManager {
     return userData ? JSON.parse(userData) : null
   }
 
+  /** Set current user from server-auth response. */
+  static setSessionUser(user: User): void {
+    this.setCurrentUser(user)
+  }
+
   static isAuthenticated(): boolean {
     return this.getCurrentUser() !== null
   }

@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Fragment } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Package, Trash2, X, Plus, Pencil, Eye } from 'lucide-react'
+import { Package, Trash2, X, Plus, Pencil, Eye, SkipBack, SkipForward } from 'lucide-react'
 import { HiSearch, HiX } from 'react-icons/hi'
 import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import AdminNavHeader from '@/components/admin/AdminNavHeader'
 
 interface Product {
   id: string
@@ -38,16 +38,17 @@ const subcategoriesMap: Record<string, string[]> = {
   'accessories': ['rings-necklaces', 'shades-glasses', 'bracelets-watches', 'decor']
 }
 const conditions = ['Like New', 'Good', 'Fair', 'Worn']
+const PAGE_SIZE = 10
 
 export default function AdminProductsPage() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const [detailsProduct, setDetailsProduct] = useState<Product | null>(null)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
   const [productImages, setProductImages] = useState<string[]>([])
+  const [tablePage, setTablePage] = useState(1)
   const [newProduct, setNewProduct] = useState({
     name: '',
     brand: '',
@@ -76,7 +77,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
-        setShowSuggestions(false)
+        // no-op: suggestions disabled for table-driven search
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -103,7 +104,18 @@ export default function AdminProductsPage() {
       })
     : products
   const filteredProducts = [...filtered].sort((a, b) => (a.name || '').localeCompare(b.name || ''))
-  const suggestions = query ? filteredProducts.slice(0, 8) : []
+
+  const totalTablePages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE))
+  const safeTablePage = Math.min(tablePage, totalTablePages)
+  const pageProducts = filteredProducts.slice((safeTablePage - 1) * PAGE_SIZE, safeTablePage * PAGE_SIZE)
+
+  useEffect(() => {
+    setTablePage(1)
+  }, [searchQuery])
+
+  useEffect(() => {
+    if (tablePage > totalTablePages) setTablePage(totalTablePages)
+  }, [tablePage, totalTablePages])
 
   const handleDelete = (product: Product, reason: 'Product Bought' | 'Mistakenly Posted') => {
     if (!confirm(`Remove "${product.name}"? Reason: ${reason}`)) return
@@ -189,7 +201,11 @@ export default function AdminProductsPage() {
 
   return (
     <div className="admin-products-page min-h-screen pt-4">
-      <div className="container-custom mt-1 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <div className="mt-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AdminNavHeader
+          title="Product Management"
+          subtitle="Manage catalog items, inventory status, and product details"
+        />
         <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl overflow-hidden">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
@@ -217,50 +233,19 @@ export default function AdminProductsPage() {
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value)
-                      setShowSuggestions(true)
                     }}
-                    onFocus={() => searchQuery && setShowSuggestions(true)}
                     className="input-overlay w-full py-2.5 pl-4 pr-10 text-sm border-0 bg-white/80 dark:bg-neutral-800/80 rounded-xl"
                   />
                   {searchQuery && (
                     <button
                       type="button"
-                      onClick={() => { setSearchQuery(''); setShowSuggestions(false) }}
+                      onClick={() => { setSearchQuery('') }}
                       className="focus-ring-none absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
                       aria-label="Clear"
                     >
                       <HiX className="w-4 h-4" />
                     </button>
                   )}
-                  <AnimatePresence>
-                    {showSuggestions && suggestions.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        className="absolute top-full left-0 right-0 mt-2 w-full hero-glass-frame hero-glass-frame-compact backdrop-blur-lg rounded-lg overflow-hidden z-50"
-                      >
-                        <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                        <div className="relative z-10 rounded-md bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 max-h-64 overflow-y-auto">
-                          {suggestions.map((p) => (
-                            <button
-                              key={p.id}
-                              type="button"
-                              className="w-full text-left px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700/50 border-b border-neutral-100 dark:border-neutral-700 last:border-0"
-                              onClick={() => {
-                                setSearchQuery(p.name)
-                                setShowSuggestions(false)
-                                setDetailsProduct(p)
-                              }}
-                            >
-                              <span className="text-xs text-neutral-500 dark:text-neutral-400 block">{p.category} • {p.section}</span>
-                              <span className="font-medium text-neutral-900 dark:text-neutral-100">{p.name} – {p.brand}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
               </form>
             </div>
@@ -280,31 +265,39 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Table */}
-            <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl overflow-hidden">
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800/80 rounded-xl border border-neutral-300/80 dark:border-neutral-700 overflow-x-auto">
+            <div className="rounded-bl-lg rounded-br-lg border border-neutral-300/80 dark:border-neutral-700 bg-white dark:bg-neutral-800 overflow-hidden">
                 {filteredProducts.length === 0 ? (
-                  <p className="text-center text-neutral-600 dark:text-neutral-400 py-12">No products match your search.</p>
+                  <div className="overflow-x-auto">
+                    <p className="text-center text-neutral-600 dark:text-neutral-400 py-12 px-2">No products match your search.</p>
+                  </div>
                 ) : (
+                  <>
+                  <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-neutral-300/80 dark:border-neutral-600 bg-neutral-300/80 dark:bg-neutral-700/50">
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">No.</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Image</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Name</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Price</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Stock</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Label</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Status</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Actions</th>
+                      <tr className="bg-neutral-300/80 dark:bg-neutral-700/50">
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">No.</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Image</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Name</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Price</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Stock</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Label</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Status</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Actions</th>
+                      </tr>
+                      <tr aria-hidden>
+                        <th colSpan={8} className="p-0 font-normal border-0">
+                          <div className="h-px w-full bg-gradient-to-r from-transparent via-neutral-400/90 dark:via-neutral-500 to-transparent" />
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredProducts.map((product, index) => (
-                        <tr key={product.id} className="border-b border-neutral-200/80 dark:border-neutral-700 hover:bg-neutral-200/40 dark:hover:bg-neutral-700/30">
-                          <td className="p-3 text-neutral-600 dark:text-neutral-400">{index + 1}</td>
-                          <td className="p-3">
-                            <div className="w-12 h-12 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex-shrink-0">
+                      {pageProducts.map((product, index) => (
+                        <Fragment key={product.id}>
+                        <tr className="hover:bg-neutral-200/40 dark:hover:bg-neutral-700/30">
+                          <td className="py-2 px-2 text-neutral-600 dark:text-neutral-400 text-sm">{(safeTablePage - 1) * PAGE_SIZE + index + 1}</td>
+                          <td className="py-2 px-2">
+                            <div className="w-11 h-11 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex-shrink-0">
                               <img
                                 src={product.images?.[0] || '/assets/images/placeholder.jpg'}
                                 alt={product.name}
@@ -313,31 +306,63 @@ export default function AdminProductsPage() {
                               />
                             </div>
                           </td>
-                          <td className="p-3 font-medium text-neutral-900 dark:text-neutral-100">{product.name}</td>
-                          <td className="p-3">UGX {product.price_ugx?.toLocaleString?.() ?? product.price_ugx}</td>
-                          <td className="p-3">{product.stock_qty}</td>
-                          <td className="p-3 text-primary-700 dark:text-primary-400">{product.brand}</td>
-                          <td className="p-3">
+                          <td className="py-2 px-2 font-medium text-neutral-900 dark:text-neutral-100 text-sm">{product.name}</td>
+                          <td className="py-2 px-2 text-sm">UGX {product.price_ugx?.toLocaleString?.() ?? product.price_ugx}</td>
+                          <td className="py-2 px-2 text-sm">{product.stock_qty}</td>
+                          <td className="py-2 px-2 text-primary-700 dark:text-primary-400 text-sm">{product.brand}</td>
+                          <td className="py-2 px-2">
                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${product.isActive !== false ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-600 dark:text-neutral-300'}`}>
                               {product.isActive !== false ? 'Active' : 'Inactive'}
                             </span>
                           </td>
-                          <td className="p-3">
+                          <td className="py-2 px-2">
                             <button
                               type="button"
                               onClick={() => setDetailsProduct(product)}
-                              className="focus-ring-none p-2 rounded-lg text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors"
+                              className="focus-ring-none p-1.5 rounded-lg text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
                               title="Details"
                             >
-                              <Eye className="w-5 h-5" />
+                              <Eye className="w-[18px] h-[18px]" />
                             </button>
                           </td>
                         </tr>
+                        {index < pageProducts.length - 1 ? (
+                          <tr aria-hidden className="pointer-events-none">
+                            <td colSpan={8} className="py-0 px-0 border-0">
+                              <div className="h-px w-full bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-600 to-transparent" />
+                            </td>
+                          </tr>
+                        ) : null}
+                        </Fragment>
                       ))}
                     </tbody>
                   </table>
+                  </div>
+                  <div className="flex items-center justify-center gap-6 py-3 border-t border-neutral-200/80 dark:border-neutral-700">
+                    <button
+                      type="button"
+                      disabled={safeTablePage <= 1}
+                      onClick={() => setTablePage((p) => Math.max(1, p - 1))}
+                      className="text-neutral-500 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 disabled:opacity-30 disabled:pointer-events-none transition-colors duration-300"
+                      aria-label="Previous page"
+                    >
+                      <SkipBack className="w-5 h-5" strokeWidth={2} />
+                    </button>
+                    <span className="text-xs text-neutral-600 dark:text-neutral-400 tabular-nums">
+                      {safeTablePage} / {totalTablePages}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={safeTablePage >= totalTablePages}
+                      onClick={() => setTablePage((p) => Math.min(totalTablePages, p + 1))}
+                      className="text-neutral-500 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 disabled:opacity-30 disabled:pointer-events-none transition-colors duration-300"
+                      aria-label="Next page"
+                    >
+                      <SkipForward className="w-5 h-5" strokeWidth={2} />
+                    </button>
+                  </div>
+                  </>
                 )}
-              </div>
             </div>
           </div>
         </div>

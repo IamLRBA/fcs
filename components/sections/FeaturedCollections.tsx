@@ -40,11 +40,15 @@ export default function FeaturedCollections() {
     const loadFeaturedProducts = async () => {
       try {
         const res = await fetch('/api/products?featured=1')
-        if (!res.ok) throw new Error('Failed to load featured products')
+        if (!res.ok) {
+          setFeaturedProducts([])
+          return
+        }
         const data: FeaturedProduct[] = await res.json()
         setFeaturedProducts(data)
       } catch (error) {
         console.error('Error loading featured products:', error)
+        setFeaturedProducts([])
       }
     }
 

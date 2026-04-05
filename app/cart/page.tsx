@@ -118,9 +118,16 @@ export default function CartPage() {
             <ShoppingCart className="w-24 h-24 mx-auto text-primary-400/70 dark:text-primary-500/30 mb-6" />
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-4">Your cart is empty</h2>
             <p className="text-neutral-600 dark:text-primary-400 mb-8">Looks like you haven't added anything to your cart yet.</p>
-            <Button href="/sections/shop" variant="filled" size="md">
-              Start Shopping
-            </Button>
+            <div className="hero-cta-buttons flex justify-center">
+              <Button
+                href="/sections/shop"
+                variant="default"
+                size="md"
+                className="inline-flex items-center justify-center"
+              >
+                Start Shopping
+              </Button>
+            </div>
           </motion.div>
         ) : (
           <div className="grid md:grid-cols-3 gap-8">

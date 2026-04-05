@@ -319,6 +319,69 @@ Next Steps:
     }
   }
 
+  static customerOrderReady(order: Order): EmailConfig {
+    const subject = `Your order is ready — ${order.id} — MysticalPIECES`
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <h1 style="color: #6F4E37;">Your order is ready</h1>
+    <p>Dear ${order.customer.fullName},</p>
+    <p>Great news — your order <strong>${order.id}</strong> is ready and will be on its way to you soon.</p>
+    <p>We expect delivery within <strong>2–3 business days</strong> to:</p>
+    <p style="background: #f9fafb; padding: 12px; border-radius: 8px;">
+      ${order.customer.address.street}<br>${order.customer.address.city}
+    </p>
+    <p>Total paid on delivery: <strong>UGX ${order.total.toLocaleString()}</strong> (Cash on Delivery)</p>
+    <p>If you have questions, reply to this email or WhatsApp us at +256 755 915 549.</p>
+    <p>Thank you for shopping with MysticalPIECES!</p>
+  </div>
+</body>
+</html>`
+    const text = `Dear ${order.customer.fullName},
+
+Your order ${order.id} is ready and will arrive within 2-3 business days.
+
+Delivery address:
+${order.customer.address.street}, ${order.customer.address.city}
+
+Total (COD): UGX ${order.total.toLocaleString()}
+
+Thank you — MysticalPIECES
+`
+    return { to: order.customer.email, subject, html: html.trim(), text: text.trim() }
+  }
+
+  static customerOrderDelivered(order: Order): EmailConfig {
+    const subject = `Delivered — thank you! — ${order.id} — MysticalPIECES`
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <h1 style="color: #6F4E37;">Your order has been delivered</h1>
+    <p>Dear ${order.customer.fullName},</p>
+    <p>We hope you love your pieces from MysticalPIECES! Order <strong>${order.id}</strong> is marked as <strong>delivered</strong>.</p>
+    <p>Thank you so much for shopping with us — we truly appreciate your support.</p>
+    <p>We would love to see you again soon. Explore new arrivals anytime on our store.</p>
+    <p style="margin-top: 24px;">With gratitude,<br>MysticalPIECES</p>
+  </div>
+</body>
+</html>`
+    const text = `Dear ${order.customer.fullName},
+
+Your order ${order.id} has been delivered. We hope you enjoy your purchase!
+
+Thank you for shopping with MysticalPIECES — we would love to see you again soon.
+
+— MysticalPIECES
+`
+    return { to: order.customer.email, subject, html: html.trim(), text: text.trim() }
+  }
+
   // Helper function to send emails via API
   static async sendEmail(config: EmailConfig): Promise<boolean> {
     try {

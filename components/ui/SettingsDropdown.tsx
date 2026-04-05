@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Settings, Sun, Moon, Monitor, Palette, User, LogOut } from 'lucide-react'
@@ -17,6 +17,7 @@ interface SettingsDropdownProps {
 }
 
 export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: SettingsDropdownProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [surfaceLocked, setSurfaceLocked] = useState(false)
   const [isThemeOpen, setIsThemeOpen] = useState(false)
@@ -80,35 +81,40 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
     setIsThemeOpen(false)
   }
 
+  const handleClose = useCallback(() => {
+    if (!isOpen) return
+    setRotation((prev) => prev + 360)
+    setTimeout(() => {
+      setIsOpen(false)
+      setSurfaceLocked(false)
+      onOpenChange?.(false)
+    }, 200)
+  }, [isOpen, onOpenChange])
+
   const handleToggle = () => {
     if (!isOpen) {
       setIsOpen(true)
       setSurfaceLocked(true)
       onOpenChange?.(true)
       // Spin counter-clockwise when opening
-      setRotation(prev => prev - 360)
+      setRotation((prev) => prev - 360)
       return
     }
-
-    // Spin clockwise when closing, but keep the surface until the exit animation ends
-    setRotation(prev => prev + 360)
-    setTimeout(() => {
-      setIsOpen(false)
-      setSurfaceLocked(false)
-      onOpenChange?.(false)
-    }, 200)
+    handleClose()
   }
 
-  const handleClose = () => {
-    if (isOpen) {
-      setRotation(prev => prev + 360)
-      setTimeout(() => {
-        setIsOpen(false)
-        setSurfaceLocked(false)
-        onOpenChange?.(false)
-      }, 200)
+  const isMobile = variant === 'mobile'
+
+  useEffect(() => {
+    if (!isOpen || isMobile) return
+    const onPointerDown = (e: PointerEvent) => {
+      const root = containerRef.current
+      if (!root || root.contains(e.target as Node)) return
+      handleClose()
     }
-  }
+    document.addEventListener('pointerdown', onPointerDown, true)
+    return () => document.removeEventListener('pointerdown', onPointerDown, true)
+  }, [isOpen, isMobile, handleClose])
 
   const handleLogout = () => {
     AuthManager.logout()
@@ -122,11 +128,10 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
     { value: 'system' as const, label: 'System', icon: Monitor, description: 'Follows your system preference' }
   ]
 
-  const isMobile = variant === 'mobile'
   useScrollLock(isOpen && !isMobile)
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       {mounted ? (
         <>
           <motion.button
@@ -150,16 +155,6 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
           <AnimatePresence>
         {isOpen && (
           <>
-            {!isMobile && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-40"
-                onClick={handleClose}
-              />
-            )}
-            
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
