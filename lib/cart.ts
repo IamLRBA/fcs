@@ -137,6 +137,15 @@ export class OrderManager {
   static getOrderById(id: string): Order | undefined {
     return this.getOrders().find(order => order.id === id)
   }
+
+  /** Persist an order returned from the server (same id) so confirmation & account pages can resolve it. */
+  static addOrder(order: Order): void {
+    if (typeof window === 'undefined') return
+    const orders = this.getOrders()
+    if (orders.some((o) => o.id === order.id)) return
+    orders.push(order)
+    localStorage.setItem(this.ORDERS_KEY, JSON.stringify(orders))
+  }
 }
 
 export function calculateDeliveryFee(deliveryOption: 'kampala' | 'outside', address?: string): number {

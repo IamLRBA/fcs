@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Users, X, Key, Trash2, UserCheck, UserX } from 'lucide-react'
-import { AuthManager, restoreUser } from '@/lib/auth'
+import { Users, X, Key, Trash2, UserCheck, UserX, Search, UserPlus, SkipBack, SkipForward } from 'lucide-react'
+import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import AdminNavHeader from '@/components/admin/AdminNavHeader'
 
 type UserRow = {
   id: string
@@ -15,7 +16,11 @@ type UserRow = {
   phone: string
   createdAt: string
   isActive?: boolean
+  ordersCount?: number
+  reviewsCount?: number
 }
+
+const PAGE_SIZE = 10
 
 export default function AdminAccountsPage() {
   const router = useRouter()
@@ -23,10 +28,8 @@ export default function AdminAccountsPage() {
   const [resetUserId, setResetUserId] = useState<string | null>(null)
   const [newPassword, setNewPassword] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const [pendingDeleteUser, setPendingDeleteUser] = useState<UserRow | null>(null)
-  const [lastDeletedUser, setLastDeletedUser] = useState<any | null>(null)
-  const [showUndoModal, setShowUndoModal] = useState(false)
+  const [tablePage, setTablePage] = useState(1)
 
   useEffect(() => {
     if (!AuthManager.isAdmin()) {
@@ -36,29 +39,32 @@ export default function AdminAccountsPage() {
     load()
   }, [router])
 
-  const load = () => {
-    const users = AuthManager.getUsersList() as any[]
-    setList(users.map(u => ({
-      id: u.id,
-      email: u.email || '',
-      fullName: u.fullName || '',
-      phone: u.phone || '',
-      createdAt: u.createdAt || '',
-      isActive: u.isActive !== false
-    })))
+  const load = async () => {
+    const res = await fetch('/api/users', { cache: 'no-store' })
+    if (!res.ok) return
+    const users = (await res.json()) as UserRow[]
+    setList(users)
   }
 
-  const setActive = (userId: string, active: boolean) => {
-    AuthManager.setUserActive(userId, active)
-    load()
+  const setActive = async (userId: string, active: boolean) => {
+    await fetch(`/api/users/${userId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isActive: active }),
+    })
+    await load()
   }
 
-  const submitResetPassword = (userId: string) => {
+  const submitResetPassword = async (userId: string) => {
     if (!newPassword.trim() || newPassword.length < 6) {
       alert('Password must be at least 6 characters')
       return
     }
-    AuthManager.resetUserPassword(userId, newPassword)
+    await fetch(`/api/users/${userId}/password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newPassword }),
+    })
     setResetUserId(null)
     setNewPassword('')
   }
@@ -70,35 +76,37 @@ export default function AdminAccountsPage() {
         [u.fullName, u.email, u.phone].join(' ').toLowerCase().includes(query)
       )
     : baseList
-  const suggestions = query ? filteredList.slice(0, 8) : []
+
+  const totalTablePages = Math.max(1, Math.ceil(filteredList.length / PAGE_SIZE))
+  const safeTablePage = Math.min(tablePage, totalTablePages)
+  const pageUsers = filteredList.slice((safeTablePage - 1) * PAGE_SIZE, safeTablePage * PAGE_SIZE)
+
+  useEffect(() => {
+    setTablePage(1)
+  }, [searchQuery])
+
+  useEffect(() => {
+    if (tablePage > totalTablePages) setTablePage(totalTablePages)
+  }, [tablePage, totalTablePages])
 
   const confirmDeleteUser = () => {
     if (!pendingDeleteUser) return
-    const all = AuthManager.getUsersList() as any[]
-    const raw = all.find(u => u.id === pendingDeleteUser.id)
-    AuthManager.deleteUser(pendingDeleteUser.id)
-    if (raw) {
-      setLastDeletedUser(raw)
-      setShowUndoModal(true)
-    }
+    fetch(`/api/users/${pendingDeleteUser.id}`, { method: 'DELETE' }).then(() => load())
     setPendingDeleteUser(null)
-    load()
   }
 
-  const handleUndoDelete = () => {
-    if (!lastDeletedUser) {
-      setShowUndoModal(false)
-      return
-    }
-    restoreUser(lastDeletedUser)
-    load()
-    setLastDeletedUser(null)
-    setShowUndoModal(false)
-  }
+  const totalUsers = list.length
+  const activeUsers = list.filter((u) => u.isActive !== false).length
+  const inactiveUsers = totalUsers - activeUsers
+  const recentUsers = list.filter((u) => Date.now() - new Date(u.createdAt).getTime() <= 7 * 24 * 60 * 60 * 1000).length
 
   return (
     <div className="min-h-screen pt-4">
-      <div className="container-custom mt-1 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <div className="mt-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AdminNavHeader
+          title="Account Management"
+          subtitle="Manage user accounts, access status, and credentials"
+        />
         <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl overflow-hidden">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
@@ -106,7 +114,37 @@ export default function AdminAccountsPage() {
               Accounts
             </h1>
 
-            {/* Search accounts - same style as products search */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {[{
+                label: 'Total Users',
+                value: totalUsers,
+                icon: Users,
+              }, {
+                label: 'Active',
+                value: activeUsers,
+                icon: UserCheck,
+              }, {
+                label: 'Inactive',
+                value: inactiveUsers,
+                icon: UserX,
+              }, {
+                label: 'New (7 days)',
+                value: recentUsers,
+                icon: UserPlus,
+              }].map((card) => (
+                <div key={card.label} className="rounded-lg border border-neutral-300/70 dark:border-neutral-700 bg-white/70 dark:bg-neutral-900/40 py-4 px-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400">{card.label}</p>
+                      <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{card.value}</p>
+                    </div>
+                    <card.icon className="w-5 h-5 text-primary-700 dark:text-primary-300" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Search accounts */}
             <div className="flex justify-center mb-6">
               <form
                 onSubmit={(e) => e.preventDefault()}
@@ -117,7 +155,7 @@ export default function AdminAccountsPage() {
                   className="focus-ring-none shrink-0 p-2.5 mr-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300"
                   aria-label="Search"
                 >
-                  <Users className="w-5 h-5" />
+                  <Search className="w-5 h-5" />
                 </button>
                 <div className="relative flex-1">
                   <input
@@ -126,9 +164,7 @@ export default function AdminAccountsPage() {
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value)
-                      setShowSuggestions(true)
                     }}
-                    onFocus={() => searchQuery && setShowSuggestions(true)}
                     className="input-overlay w-full py-2.5 pl-4 pr-8 text-sm border-0 bg-white/80 dark:bg-neutral-800/80 rounded-xl"
                   />
                   {searchQuery && (
@@ -136,7 +172,6 @@ export default function AdminAccountsPage() {
                       type="button"
                       onClick={() => {
                         setSearchQuery('')
-                        setShowSuggestions(false)
                       }}
                       className="focus-ring-none absolute right-2 top-1/2 -translate-y-1/2 z-10 p-1 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
                       aria-label="Clear search"
@@ -144,73 +179,58 @@ export default function AdminAccountsPage() {
                       <X className="w-4 h-4" />
                     </button>
                   )}
-                  <AnimatePresence>
-                    {showSuggestions && suggestions.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        className="absolute top-full left-0 right-0 mt-2 w-full hero-glass-frame hero-glass-frame-compact backdrop-blur-lg rounded-lg overflow-hidden z-50"
-                      >
-                        <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                        <div className="relative z-10 rounded-md bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 max-h-64 overflow-y-auto">
-                          {suggestions.map((u) => (
-                            <button
-                              key={u.id}
-                              type="button"
-                              className="w-full text-left px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700/50 border-b border-neutral-100 dark:border-neutral-700 last:border-0 text-sm"
-                              onClick={() => {
-                                setSearchQuery(u.fullName || u.email)
-                                setShowSuggestions(false)
-                              }}
-                            >
-                              <span className="block text-xs text-neutral-500 dark:text-neutral-400">{u.email}</span>
-                              <span className="block font-medium text-neutral-900 dark:text-neutral-100">{u.fullName}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
               </form>
             </div>
 
-            <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl overflow-hidden">
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-neutral-200/60 dark:bg-neutral-800/80 rounded-xl border border-neutral-300/80 dark:border-neutral-700 overflow-x-auto">
+            <div className="rounded-bl-lg rounded-br-lg border border-neutral-300/80 dark:border-neutral-700 bg-white dark:bg-neutral-800 overflow-hidden">
                 {filteredList.length === 0 ? (
-                  <p className="text-center text-neutral-600 dark:text-neutral-400 py-12">No accounts yet.</p>
+                  <div className="overflow-x-auto">
+                    <p className="text-center text-neutral-600 dark:text-neutral-400 py-12 px-2">No accounts yet.</p>
+                  </div>
                 ) : (
+                  <>
+                  <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-neutral-300/80 dark:border-neutral-600 bg-neutral-300/80 dark:bg-neutral-700/50">
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">No.</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Name</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Email</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Phone</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Status</th>
-                        <th className="text-left p-3 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Actions</th>
+                      <tr className="bg-neutral-300/80 dark:bg-neutral-700/50">
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">No.</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Name</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Email</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Phone</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Status</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Activity</th>
+                        <th className="text-left py-2 px-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200">Actions</th>
+                      </tr>
+                      <tr aria-hidden>
+                        <th colSpan={7} className="p-0 font-normal border-0">
+                          <div className="h-px w-full bg-gradient-to-r from-transparent via-neutral-400/90 dark:via-neutral-500 to-transparent" />
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredList.map((u, index) => (
-                        <tr key={u.id} className="border-b border-neutral-200/80 dark:border-neutral-700 hover:bg-neutral-200/40 dark:hover:bg-neutral-700/30">
-                          <td className="p-3 text-neutral-600 dark:text-neutral-400">{index + 1}</td>
-                          <td className="p-3 font-medium text-neutral-900 dark:text-neutral-100">{u.fullName}</td>
-                          <td className="p-3 text-sm text-neutral-700 dark:text-neutral-300">{u.email}</td>
-                          <td className="p-3 text-sm text-neutral-700 dark:text-neutral-300">{u.phone || '—'}</td>
-                          <td className="p-3">
+                      {pageUsers.map((u, index) => (
+                        <Fragment key={u.id}>
+                        <tr className="hover:bg-neutral-200/40 dark:hover:bg-neutral-700/30">
+                          <td className="py-2 px-2 text-neutral-600 dark:text-neutral-400 text-sm">{(safeTablePage - 1) * PAGE_SIZE + index + 1}</td>
+                          <td className="py-2 px-2 font-medium text-neutral-900 dark:text-neutral-100 text-sm">{u.fullName}</td>
+                          <td className="py-2 px-2 text-xs text-neutral-700 dark:text-neutral-300">{u.email}</td>
+                          <td className="py-2 px-2 text-xs text-neutral-700 dark:text-neutral-300">{u.phone || '—'}</td>
+                          <td className="py-2 px-2">
                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${u.isActive !== false ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-600 dark:text-neutral-300'}`}>
                               {u.isActive !== false ? 'Active' : 'Inactive'}
                             </span>
                           </td>
-                          <td className="p-3 flex flex-wrap items-center gap-2">
+                          <td className="py-2 px-2 text-xs text-neutral-600 dark:text-neutral-400">
+                            {u.ordersCount ?? 0} orders • {u.reviewsCount ?? 0} reviews
+                          </td>
+                          <td className="py-2 px-2">
+                            <div className="flex flex-wrap items-center gap-1">
                             {u.isActive !== false ? (
                               <button
                                 type="button"
                                 onClick={() => setActive(u.id, false)}
-                                className="focus-ring-none p-2 rounded-lg text-amber-600 dark:text-amber-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                className="focus-ring-none p-1.5 rounded-lg text-amber-600 dark:text-amber-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                                 title="Deactivate"
                               >
                                 <UserX className="w-4 h-4" />
@@ -219,7 +239,7 @@ export default function AdminAccountsPage() {
                               <button
                                 type="button"
                                 onClick={() => setActive(u.id, true)}
-                                className="focus-ring-none p-2 rounded-lg text-green-600 dark:text-green-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                className="focus-ring-none p-1.5 rounded-lg text-green-600 dark:text-green-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                                 title="Activate"
                               >
                                 <UserCheck className="w-4 h-4" />
@@ -228,7 +248,7 @@ export default function AdminAccountsPage() {
                             <button
                               type="button"
                               onClick={() => setResetUserId(u.id)}
-                              className="focus-ring-none p-2 rounded-lg text-primary-600 dark:text-primary-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                              className="focus-ring-none p-1.5 rounded-lg text-primary-600 dark:text-primary-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                               title="Reset password"
                             >
                               <Key className="w-4 h-4" />
@@ -236,18 +256,51 @@ export default function AdminAccountsPage() {
                             <button
                               type="button"
                               onClick={() => setPendingDeleteUser(u)}
-                              className="focus-ring-none p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                              className="focus-ring-none p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                               title="Delete"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
+                            </div>
                           </td>
                         </tr>
+                        {index < pageUsers.length - 1 ? (
+                          <tr aria-hidden className="pointer-events-none">
+                            <td colSpan={7} className="py-0 px-0 border-0">
+                              <div className="h-px w-full bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-600 to-transparent" />
+                            </td>
+                          </tr>
+                        ) : null}
+                        </Fragment>
                       ))}
                     </tbody>
                   </table>
+                  </div>
+                  <div className="flex items-center justify-center gap-6 py-3 border-t border-neutral-200/80 dark:border-neutral-700">
+                    <button
+                      type="button"
+                      disabled={safeTablePage <= 1}
+                      onClick={() => setTablePage((p) => Math.max(1, p - 1))}
+                      className="text-neutral-500 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 disabled:opacity-30 disabled:pointer-events-none transition-colors duration-300"
+                      aria-label="Previous page"
+                    >
+                      <SkipBack className="w-5 h-5" strokeWidth={2} />
+                    </button>
+                    <span className="text-xs text-neutral-600 dark:text-neutral-400 tabular-nums">
+                      {safeTablePage} / {totalTablePages}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={safeTablePage >= totalTablePages}
+                      onClick={() => setTablePage((p) => Math.min(totalTablePages, p + 1))}
+                      className="text-neutral-500 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 disabled:opacity-30 disabled:pointer-events-none transition-colors duration-300"
+                      aria-label="Next page"
+                    >
+                      <SkipForward className="w-5 h-5" strokeWidth={2} />
+                    </button>
+                  </div>
+                  </>
                 )}
-              </div>
             </div>
           </div>
         </div>
@@ -319,43 +372,6 @@ export default function AdminAccountsPage() {
                   </Button>
                   <Button type="button" variant="default" onClick={() => setPendingDeleteUser(null)}>
                     Cancel
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Undo delete modal */}
-      <AnimatePresence>
-        {showUndoModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-4"
-            onClick={() => setShowUndoModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="hero-glass-frame relative w-full max-w-sm backdrop-blur-lg rounded-2xl bg-white/25 dark:bg-neutral-900/20 border border-neutral-300/80 dark:border-neutral-600 overflow-hidden"
-            >
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-2xl p-5">
-                <h2 className="text-lg font-bold text-primary-800 dark:text-primary-100 mb-2">Account deleted</h2>
-                <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-4">
-                  The account was deleted. Would you like to undo this action?
-                </p>
-                <div className="flex gap-3">
-                  <Button type="button" variant="default" onClick={handleUndoDelete}>
-                    Undo
-                  </Button>
-                  <Button type="button" variant="default" onClick={() => setShowUndoModal(false)}>
-                    Close
                   </Button>
                 </div>
               </div>

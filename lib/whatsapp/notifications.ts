@@ -145,5 +145,15 @@ export class WhatsAppNotifications {
     const formatted = this.formatPhoneNumber(phone)
     return formatted.length >= 10 // Basic validation
   }
+
+  static customerOrderReady(order: Order): WhatsAppConfig {
+    const message = `✨ *Your order is ready!*\n\nDear ${order.customer.fullName},\n\nYour order *${order.id}* is ready and will be dispatched shortly.\n\n📦 *Expected delivery:* within *2–3 business days*\n📍 *To:* ${order.customer.address.street}, ${order.customer.address.city}\n\n💰 Total (COD): *UGX ${order.total.toLocaleString()}*\n\nThank you for choosing MysticalPIECES! 🙏`
+    return { phone: this.formatPhoneNumber(order.customer.phone), message }
+  }
+
+  static customerOrderDelivered(order: Order): WhatsAppConfig {
+    const message = `🎉 *Delivered — thank you!*\n\nDear ${order.customer.fullName},\n\nYour order *${order.id}* has been marked as *delivered*. We hope you love your pieces!\n\nThank you so much for shopping with us. We would love to see you again soon — explore new arrivals on MysticalPIECES anytime.\n\nWith gratitude 💜\nMysticalPIECES`
+    return { phone: this.formatPhoneNumber(order.customer.phone), message }
+  }
 }
 

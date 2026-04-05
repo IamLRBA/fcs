@@ -1,0 +1,94 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { LayoutDashboard, Package, Users, LogOut, ArrowLeft, ClipboardList } from 'lucide-react'
+import { AuthManager } from '@/lib/auth'
+import { motion } from 'framer-motion'
+
+type AdminNavHeaderProps = {
+  title: string
+  subtitle?: string
+}
+
+const navItems = [
+  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/orders', label: 'Orders', icon: ClipboardList },
+  { href: '/admin/accounts', label: 'Accounts', icon: Users },
+]
+
+export default function AdminNavHeader({ title, subtitle }: AdminNavHeaderProps) {
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = () => {
+    AuthManager.adminLogout()
+    router.push('/')
+  }
+
+  return (
+    <div className="mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-primary-700 dark:text-primary-300 hover:text-primary-900 dark:hover:text-primary-100"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm font-medium">Back Home</span>
+        </Link>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="inline-flex items-center gap-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="text-sm font-medium">Logout</span>
+        </button>
+      </div>
+
+      <div className="text-center mb-4">
+        <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{title}</h1>
+        {subtitle ? <p className="text-neutral-600 dark:text-neutral-400 mt-1">{subtitle}</p> : null}
+      </div>
+
+      <div className="mb-6 !rounded-full bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(0,0,0,0.4)] p-[1px] shadow-none max-w-2xl mx-auto">
+        <div className="relative grid grid-cols-4 p-[1px]">
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute top-[1px] bottom-[1px] left-[1px] w-[calc((100%-2px)/4)] !rounded-full bg-white dark:bg-neutral-800 z-0"
+            initial={false}
+            transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+            animate={{
+              x:
+                pathname === '/admin/products'
+                  ? '100%'
+                  : pathname === '/admin/orders'
+                    ? '200%'
+                    : pathname === '/admin/accounts'
+                      ? '300%'
+                      : '0%',
+            }}
+          />
+          {navItems.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`relative z-10 !rounded-full border border-transparent px-2 sm:px-4 py-[9px] text-xs sm:text-sm font-medium transition-colors duration-300 inline-flex items-center justify-center gap-1 sm:gap-2 appearance-none shadow-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 dark:focus:ring-0 dark:focus-visible:ring-0 dark:focus-visible:outline-none dark:focus:ring-offset-0 dark:focus-visible:ring-offset-0 active:outline-none active:ring-0 dark:active:outline-none dark:active:ring-0 ${
+                  active
+                    ? 'text-primary-800 dark:text-primary-100'
+                    : 'text-primary-500 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-100'
+                }`}
+              >
+                <Icon className="w-4 h-4 relative z-10" />
+                <span className="relative z-10">{label}</span>
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}

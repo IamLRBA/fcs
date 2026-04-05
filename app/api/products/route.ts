@@ -76,6 +76,18 @@ function toCatalogProduct(product: any): CatalogProduct {
 }
 
 export async function GET(request: Request) {
+  try {
+    return await handleProductsGet(request)
+  } catch (err) {
+    console.error('[api/products] GET failed:', err)
+    return NextResponse.json(
+      { error: 'Database unavailable or query failed' },
+      { status: 503 }
+    )
+  }
+}
+
+async function handleProductsGet(request: Request) {
   const { searchParams } = new URL(request.url)
   const category = searchParams.get('category')
   const section = searchParams.get('section')

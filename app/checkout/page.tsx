@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart } from 'lucide-react'
-import { CartManager, OrderManager, calculateDeliveryFee, isKampalaAddress, type CartItem } from '@/lib/cart'
+import { CartManager, OrderManager, calculateDeliveryFee, isKampalaAddress, type CartItem, type Order } from '@/lib/cart'
 import Button from '@/components/ui/Button'
 import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
@@ -75,8 +75,8 @@ export default function CheckoutPage() {
     const deliveryFee = calculateDeliveryFee(formData.deliveryOption, formData.city)
     const total = subtotal + deliveryFee
     
-    // Create order
-    const order = OrderManager.createOrder({
+    const orderPayload = {
+      userId: AuthManager.getCurrentUser()?.id ?? null,
       customer: {
         fullName: formData.fullName,
         email: formData.email,
@@ -86,14 +86,44 @@ export default function CheckoutPage() {
           city: formData.city
         }
       },
-      items: cart,
+      items: cart.map((item) => ({
+        productId: item.productId,
+        name: item.name,
+        price: item.price,
+        size: item.size,
+        color: item.color,
+        quantity: item.quantity,
+        image: item.image,
+        sku: item.sku
+      })),
       subtotal,
       deliveryFee,
       total,
       deliveryOption: formData.deliveryOption,
-      notes: formData.notes || undefined,
-      status: 'pending'
+      notes: formData.notes || undefined
+    }
+
+    let order: Order
+    const apiRes = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderPayload)
     })
+    if (apiRes.ok) {
+      order = await apiRes.json()
+      OrderManager.addOrder(order)
+    } else {
+      order = OrderManager.createOrder({
+        customer: orderPayload.customer,
+        items: cart,
+        subtotal,
+        deliveryFee,
+        total,
+        deliveryOption: formData.deliveryOption,
+        notes: formData.notes || undefined,
+        status: 'pending'
+      })
+    }
     
     // Send notifications (async, don't wait for completion)
     try {
@@ -190,9 +220,16 @@ export default function CheckoutPage() {
                 <div className="text-center py-12">
                   <ShoppingCart className="w-16 h-16 mx-auto text-neutral-300 dark:text-primary-500/50 mb-4" />
                   <p className="text-neutral-600 dark:text-primary-400 text-lg">Your cart is empty</p>
-                  <Button href="/sections/shop" variant="filled" size="md" className="mt-4">
-                    Start Shopping
-                  </Button>
+                  <div className="hero-cta-buttons flex justify-center mt-4">
+                    <Button
+                      href="/sections/shop"
+                      variant="default"
+                      size="md"
+                      className="inline-flex items-center justify-center"
+                    >
+                      Start Shopping
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-4">

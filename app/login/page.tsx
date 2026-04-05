@@ -68,16 +68,25 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
-
-    const result = AuthManager.login(loginData.email, loginData.password)
-    
-    if (result.success) {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData),
+      })
+      const payload = await res.json()
+      if (!res.ok) {
+        setError(payload.error || 'Login failed')
+        setLoading(false)
+        return
+      }
+      AuthManager.setSessionUser(payload.user)
       router.push('/account')
-    } else {
-      setError(result.error || 'Login failed')
+    } catch {
+      setError('Login failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
-    
-    setLoading(false)
   }
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -96,21 +105,31 @@ export default function LoginPage() {
 
     setLoading(true)
 
-    const result = AuthManager.signUp(
-      signupData.email,
-      signupData.fullName,
-      signupData.phone,
-      signupData.password,
-      profileImage // Pass profile image
-    )
-    
-    if (result.success) {
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: signupData.email,
+          fullName: signupData.fullName,
+          phone: signupData.phone,
+          password: signupData.password,
+          profileImageUrl: profileImage || null,
+        }),
+      })
+      const payload = await res.json()
+      if (!res.ok) {
+        setError(payload.error || 'Signup failed')
+        setLoading(false)
+        return
+      }
+      AuthManager.setSessionUser(payload.user)
       router.push('/account')
-    } else {
-      setError(result.error || 'Signup failed')
+    } catch {
+      setError('Signup failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
-    
-    setLoading(false)
   }
 
   const [showBackButton, setShowBackButton] = useState(true)

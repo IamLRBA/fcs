@@ -1,10 +1,11 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Plus, Minus, Quote } from 'lucide-react'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
+import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 
 interface ProductSubcategory {
   name: string
@@ -153,10 +154,22 @@ const products: Product[] = [
   }
 ]
 
+const shopNavItems = products.map((p) => ({ id: p.slug, label: p.title }))
+const shopNavItemsRow1 = products.slice(0, 3).map((p) => ({ id: p.slug, label: p.title }))
+const shopNavItemsRow2 = products.slice(3, 6).map((p) => ({ id: p.slug, label: p.title }))
+const row1Slugs = new Set(shopNavItemsRow1.map((i) => i.id))
+const row2Slugs = new Set(shopNavItemsRow2.map((i) => i.id))
+
 export default function FashionProducts() {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [hoveredThumbnail, setHoveredThumbnail] = useState<{serviceId: number, thumbIndex: number} | null>(null)
-  
+  const [shopActiveSlug, setShopActiveSlug] = useState<string>(products[0].slug)
+
+  const scrollToShopCategory = useCallback((slug: string) => {
+    setShopActiveSlug(slug)
+    document.getElementById(`our-products-${slug}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
   const toggle = (id: number) => setExpandedId(expandedId === id ? null : id)
   const getThumbnailCandidates = (slug: string, thumbIndex: number) => {
     const folderMap: Record<string, string[]> = {
@@ -170,15 +183,54 @@ export default function FashionProducts() {
   return (
     <section id="our-products" className="py-20 px-4">
       <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true }} className="max-w-7xl mx-auto">
-        <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
+        <h2 className="text-5xl md:text-6xl font-bold text-center mb-8 sm:mb-10">
           <span className="text-primary-500 dark:text-primary-100">⏣ Our</span>{' '}
           <span className="text-neutral-700 dark:text-primary-300"> Products</span>
         </h2>
+        <div className="mb-12 sm:mb-16 w-full max-w-5xl mx-auto px-2 sm:px-4">
+          {/* Two compact pill rows on small screens; one bar from md up */}
+          <div className="flex flex-col gap-3 md:hidden">
+            <div className="overflow-x-auto overflow-y-visible pb-1 -mx-1 px-1">
+              <SegmentedPillNav
+                items={shopNavItemsRow1}
+                value={row1Slugs.has(shopActiveSlug) ? shopActiveSlug : null}
+                onSelect={scrollToShopCategory}
+                hideIndicatorUntilSelected
+                className="!max-w-none w-full min-w-0"
+              />
+            </div>
+            <div className="overflow-x-auto overflow-y-visible pb-1 -mx-1 px-1">
+              <SegmentedPillNav
+                items={shopNavItemsRow2}
+                value={row2Slugs.has(shopActiveSlug) ? shopActiveSlug : null}
+                onSelect={scrollToShopCategory}
+                hideIndicatorUntilSelected
+                className="!max-w-none w-full min-w-0"
+              />
+            </div>
+          </div>
+          <div className="hidden md:block overflow-x-auto overflow-y-visible pb-1">
+            <SegmentedPillNav
+              items={shopNavItems}
+              value={shopActiveSlug}
+              onSelect={scrollToShopCategory}
+              className="!max-w-none min-w-0 sm:!max-w-5xl"
+            />
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-8">
           {products.map((s, i) => { 
             const isRight = i % 2 === 1
             return (
-              <motion.div key={s.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className={`flex flex-col ${isRight ? 'items-end' : 'items-start'}`}>
+              <motion.div
+                key={s.id}
+                id={`our-products-${s.slug}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className={`flex flex-col scroll-mt-24 ${isRight ? 'items-end' : 'items-start'}`}
+              >
                 <div className={`flex flex-col space-y-6 ${isRight ? 'items-end' : 'items-start'}`}>
                   <Link href={`/products/${s.slug}`} className={`focus-ring-none flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'} group cursor-pointer`}>
                     <div className="text-6xl font-bold text-neutral-700 dark:text-primary-400">{s.number}</div>

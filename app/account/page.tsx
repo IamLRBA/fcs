@@ -96,17 +96,27 @@ export default function AccountPage() {
     setProfileImageFile(null)
   }
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     if (!user) return
-    
-    if (AuthManager.updateUser(user.id, { profileImage })) {
-      const updatedUser = AuthManager.getCurrentUser()
-      if (updatedUser) {
-        setUser(updatedUser)
+    try {
+      const res = await fetch(`/api/users/${user.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profileImageUrl: profileImage || null }),
+      })
+      if (!res.ok) {
+        alert('Failed to update profile picture')
+        return
       }
+      const updated = await res.json()
+      const mergedUser = { ...user, profileImage: updated.profileImage }
+      setUser(mergedUser)
+      AuthManager.setSessionUser(mergedUser)
       setShowEditProfile(false)
       setProfileImageFile(null)
       alert('Profile picture updated successfully!')
+    } catch {
+      alert('Failed to update profile picture')
     }
   }
 
