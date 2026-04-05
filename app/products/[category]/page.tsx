@@ -71,8 +71,8 @@ const ProductGridCard = memo(function ProductGridCard({
     >
       <div className="hero-glass-frame relative h-full backdrop-blur-md group-hover:shadow-xl transition-shadow duration-300">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col">
-          <div className="relative w-full aspect-square bg-primary-900/20 overflow-hidden">
+        <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col gap-3 p-3 sm:p-4">
+          <div className="relative w-full aspect-square bg-primary-900/20 overflow-hidden rounded-lg">
             <SafeImage
               src={product.images[0]}
               alt={product.name}
@@ -88,10 +88,10 @@ const ProductGridCard = memo(function ProductGridCard({
             )}
           </div>
 
-          <div className="p-2 text-center">
-            <p className="text-primary-700 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.brand}</p>
-            <h3 className="text-sm font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2">{product.name}</h3>
-            <div className="flex items-center justify-center space-x-1 mb-1 flex-wrap">
+          <div className="px-1 pt-1 pb-2 text-center sm:px-2 sm:pt-2 sm:pb-3">
+            <p className="text-primary-700 dark:text-primary-400 text-xs mb-1 line-clamp-1">{product.brand}</p>
+            <h3 className="text-sm font-bold text-neutral-850 dark:text-primary-50 mb-1 line-clamp-2">{product.name}</h3>
+            <div className="flex items-center justify-center space-x-1 mb-2 flex-wrap">
               <span className="text-base sm:text-sm font-bold text-primary-600 dark:text-primary-300">
                 UGX {product.price_ugx.toLocaleString()}
               </span>
@@ -101,11 +101,11 @@ const ProductGridCard = memo(function ProductGridCard({
                 </span>
               )}
             </div>
-            <div className="flex items-center space-x-2 mt-1.5">
+            <div className="flex items-center space-x-2 mt-2">
               <Button
                 variant="default"
                 size="sm"
-                className="flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2"
+                className="flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2.5"
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpen(product)
@@ -544,11 +544,11 @@ export default function ProductCategoryPage() {
               </div>
             ) : (
             <HorizontalScrollAffordance
-              className="-mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0"
-              scrollClassName="pb-2"
+              className="-mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 mb-2 md:mb-4"
+              scrollClassName="pb-10 md:pb-14"
               scrollAriaLabel={`${section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} products`}
             >
-              <div className="flex flex-row gap-4 md:gap-6 lg:gap-8 w-max min-h-[1px]">
+              <div className="flex min-h-[1px] min-w-full w-max flex-row justify-center gap-4 md:gap-6 lg:gap-8">
                 {visibleProducts.map((product: Product, index: number) => (
                   <div
                     key={product.id}
