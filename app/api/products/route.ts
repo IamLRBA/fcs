@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
 
 function applyProductCacheHeaders(res: NextResponse, opts: { privateNoStore: boolean }) {
   if (opts.privateNoStore) {
@@ -192,6 +193,38 @@ async function handleProductsGet(request: Request) {
       groupedProducts[product.category].subcategories[product.section] = []
     }
     groupedProducts[product.category].subcategories[product.section].push(product)
+  }
+
+  const mergeKnownSubcategories = (catKey: string) => {
+    const meta = CATEGORY_META[catKey]
+    if (!meta) return
+    if (!groupedProducts[catKey]) {
+      groupedProducts[catKey] = {
+        title: meta.title,
+        description: meta.description,
+        subcategories: {},
+      }
+    }
+    const subs = CATEGORY_SUBCATEGORY_SLUGS[catKey]
+    if (!subs?.length) return
+    const ordered: Record<string, CatalogProduct[]> = {}
+    for (const s of subs) {
+      ordered[s] = groupedProducts[catKey].subcategories[s] ?? []
+    }
+    for (const k of Object.keys(groupedProducts[catKey].subcategories)) {
+      if (ordered[k] === undefined) {
+        ordered[k] = groupedProducts[catKey].subcategories[k]
+      }
+    }
+    groupedProducts[catKey].subcategories = ordered
+  }
+
+  if (category && CATEGORY_META[category]) {
+    mergeKnownSubcategories(category)
+  } else {
+    for (const catKey of Object.keys(groupedProducts)) {
+      mergeKnownSubcategories(catKey)
+    }
   }
 
   return applyProductCacheHeaders(NextResponse.json({ products: groupedProducts }), { privateNoStore })

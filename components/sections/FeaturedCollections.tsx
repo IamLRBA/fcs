@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { ShoppingCart, ArrowRight, Sparkles } from 'lucide-react'
+import { ShoppingCart, Sparkles } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { SkeletonFeaturedCollections } from '@/components/ui/Skeleton'
+import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import { CartManager, type CartItem } from '@/lib/cart'
 
 interface Product {
@@ -145,14 +146,17 @@ export default function FeaturedCollections() {
         </motion.div>
 
         {featuredProducts.length > 0 ? (
-          <div className="flex justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-y-8 sm:gap-x-10 md:gap-8 lg:gap-15 max-w-6xl mx-auto px-8 sm:px-10 sm:justify-items-stretch">
+          <HorizontalScrollAffordance
+            className="max-w-6xl mx-auto -mx-4 px-4 sm:mx-0 sm:px-0"
+            scrollClassName="pb-4"
+            scrollAriaLabel="Featured collections"
+          >
+            <div className="flex flex-row gap-6 sm:gap-x-10 md:gap-8 lg:gap-15 w-max px-4 sm:px-8 sm:px-10">
             {featuredProducts.map((item, index) => {
-              const { product, categoryName, categorySlug } = item
+              const { product, categorySlug } = item
               const isAdding = addingToCart === product.id
               const isInCart = addedToCart.has(product.id) || CartManager.isProductInCart(product.id)
               const hasDiscount = product.original_price && product.original_price > product.price_ugx
-              const isLeftAligned = index % 2 === 0
 
               return (
                 <motion.div
@@ -171,7 +175,7 @@ export default function FeaturedCollections() {
                     scale: 1.02,
                     transition: { duration: 0.3 }
                   }}
-                  className={`group relative w-[280px] sm:min-w-0 sm:w-full h-full flex flex-col ${isLeftAligned ? 'justify-self-start sm:justify-self-stretch' : 'justify-self-end sm:justify-self-stretch'}`}
+                  className="group relative flex h-full flex-shrink-0 flex-col w-[min(280px,calc(100vw-3rem))] sm:w-[min(320px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(340px,calc((min(72rem,100vw)-9rem)/3))]"
                 >
                   {/* Outer glass frame (same style as hero image containers) */}
                   <div className="hero-glass-frame relative w-full h-full flex flex-col flex-1 min-h-0 backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
@@ -299,7 +303,7 @@ export default function FeaturedCollections() {
               )
             })}
             </div>
-          </div>
+          </HorizontalScrollAffordance>
         ) : (
           <SkeletonFeaturedCollections />
         )}
