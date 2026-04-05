@@ -11,6 +11,8 @@ import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { AuthManager } from '@/lib/auth'
 import SafeImage from '@/components/common/SafeImage'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
+import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
+import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
 
 interface Product {
   id: string
@@ -324,17 +326,7 @@ export default function ProductCategoryPage() {
 
   // Helper function to get subcategory image based on category and section
   const getSubcategoryImage = (categorySlug: string, sectionSlug: string): string => {
-    // Map of category slugs to their subcategories in order
-    const subcategoryMaps: Record<string, string[]> = {
-      'shirts': ['gentle', 'checked', 'textured', 'denim'],
-      'tees': ['plain', 'graphic', 'collared', 'sporty'],
-      'coats': ['sweater', 'hoodie', 'coat', 'jacket'],
-      'pants-and-shorts': ['gentle', 'denim', 'cargo', 'sporty'],
-      'footwear': ['gentle', 'sneakers', 'sandals', 'boots'],
-      'accessories': ['rings-necklaces', 'shades-glasses', 'bracelets-watches', 'decor']
-    }
-    
-    const subcategories = subcategoryMaps[categorySlug] || []
+    const subcategories = [...(CATEGORY_SUBCATEGORY_SLUGS[categorySlug] ?? [])]
     const thumbIndex = subcategories.indexOf(sectionSlug) + 1
     
     if (thumbIndex > 0) {
@@ -535,27 +527,34 @@ export default function ProductCategoryPage() {
             
             {visibleProducts.length === 0 ? (
               <div className="mx-auto max-w-xl rounded-2xl border border-primary-500/20 dark:border-primary-400/30 bg-primary-800/20 dark:bg-neutral-900/40 p-6 sm:p-8 text-center">
-                <h3 className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-100 mb-3">
-                  No Products Available...Check later
-                </h3>
-                <p className="text-sm sm:text-base text-neutral-700 dark:text-primary-300 mb-6">
-                  There are no active products in this section right now.
+                <p className="text-xl sm:text-2xl font-semibold text-primary-800 dark:text-primary-100">
+                  Products Not Available
                 </p>
-                <Button href="/sections/shop#our-products" variant="default" size="md" className="inline-flex items-center justify-center">
+                <Button href="/sections/shop#our-products" variant="default" size="md" className="inline-flex items-center justify-center mt-6">
                   Check Other Products
                 </Button>
               </div>
             ) : (
-            <div className="grid gap-4 md:gap-6 lg:gap-8 justify-items-center [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-              {visibleProducts.map((product: Product, index: number) => (
-                <ProductGridCard
-                  key={product.id}
-                  product={product}
-                  index={index}
-                  onOpen={openProductModal}
-                />
-              ))}
-            </div>
+            <HorizontalScrollAffordance
+              className="-mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0"
+              scrollClassName="pb-2"
+              scrollAriaLabel={`${section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} products`}
+            >
+              <div className="flex flex-row gap-4 md:gap-6 lg:gap-8 w-max min-h-[1px]">
+                {visibleProducts.map((product: Product, index: number) => (
+                  <div
+                    key={product.id}
+                    className="flex-shrink-0 w-[min(20rem,calc(100vw-3rem))] sm:w-[min(20rem,calc((min(80rem,100vw)-5.5rem)/2))] md:w-[min(20rem,calc((min(80rem,100vw)-7rem)/3))] lg:w-[min(20rem,calc((min(80rem,100vw)-8.5rem)/4))] xl:w-[min(20rem,calc((min(80rem,100vw)-10rem)/5))]"
+                  >
+                    <ProductGridCard
+                      product={product}
+                      index={index}
+                      onOpen={openProductModal}
+                    />
+                  </div>
+                ))}
+              </div>
+            </HorizontalScrollAffordance>
             )}
           </motion.section>
           )

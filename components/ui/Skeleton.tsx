@@ -1,5 +1,7 @@
 'use client'
 
+import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
+
 function cx(...parts: (string | boolean | undefined)[]) {
   return parts.filter(Boolean).join(' ')
 }
@@ -112,22 +114,32 @@ export function SkeletonAdminDashboard() {
   )
 }
 
-/** Featured collections – single row of 3 cards (not 6) */
+/** Featured collections – horizontal strip (matches loaded layout) */
 export function SkeletonFeaturedCollections() {
   return (
     <div className="min-h-[280px] bg-unified relative overflow-hidden py-10 px-4">
-      <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="w-full max-w-[240px] rounded-2xl overflow-hidden skeleton-panel">
-            <Skeleton className="aspect-square w-full rounded-none rounded-t-2xl" />
-            <div className="p-3 space-y-2">
-              <Skeleton className="h-3 w-16 rounded" />
-              <Skeleton className="h-4 w-full rounded" />
-              <Skeleton className="h-8 w-full rounded-lg" />
+      <HorizontalScrollAffordance
+        className="max-w-6xl mx-auto"
+        scrollClassName="pb-2"
+        scrollAriaLabel="Featured collections loading"
+        keyboardFocusable={false}
+      >
+        <div className="flex w-max gap-6 sm:gap-8 px-4 sm:px-8">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-[min(280px,calc(100vw-3rem))] sm:w-[min(320px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(340px,calc((min(72rem,100vw)-9rem)/3))] rounded-2xl overflow-hidden skeleton-panel"
+            >
+              <Skeleton className="aspect-square w-full rounded-none rounded-t-2xl" />
+              <div className="p-3 space-y-2">
+                <Skeleton className="h-3 w-16 rounded" />
+                <Skeleton className="h-4 w-full rounded" />
+                <Skeleton className="h-8 w-full rounded-lg" />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </HorizontalScrollAffordance>
     </div>
   )
 }
