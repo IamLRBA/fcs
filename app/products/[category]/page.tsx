@@ -673,7 +673,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/55 dark:bg-black/85 z-50 flex items-center justify-center p-3 sm:p-4"
+      className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/55 p-3 dark:bg-black/85 sm:p-4"
       onClick={onClose}
     >
       <style jsx>{`
@@ -723,7 +723,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="relative w-full bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll border border-neutral-200 dark:border-neutral-700"
+        className="relative w-full max-h-[70vh] overflow-y-auto rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 bg-white shadow-2xl modal-scroll dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
       >
         {/* Close Button */}
         <ModalCloseButton onClose={onClose} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close modal" />
@@ -877,7 +877,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black z-[60] flex items-center justify-center p-4"
+            className="fixed inset-0 z-[1200] flex items-center justify-center bg-black p-4"
             onClick={closeFullscreen}
           >
             <motion.button
