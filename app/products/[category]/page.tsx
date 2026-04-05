@@ -157,16 +157,25 @@ export default function ProductCategoryPage() {
   }, [category])
 
   const categoryData = catalog.products?.[category]
-  
+
   useEffect(() => {
-    // Extract section from hash if present
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.substring(1)
-      if (hash && categoryData?.subcategories[hash as keyof typeof categoryData.subcategories]) {
-        setSelectedSection(hash)
-      }
+    setSelectedSection(null)
+  }, [category])
+
+  useEffect(() => {
+    if (!categoryData) return
+    const keys = Object.keys(categoryData.subcategories)
+    if (keys.length === 0) return
+
+    const hash =
+      typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : ''
+
+    if (hash && keys.includes(hash)) {
+      setSelectedSection(hash)
+    } else {
+      setSelectedSection(keys[0])
     }
-  }, [categoryData])
+  }, [category, categoryData])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -470,9 +479,8 @@ export default function ProductCategoryPage() {
           >
             <SegmentedPillNav
               items={sectionNavItems}
-              value={selectedSection}
+              value={selectedSection ?? sections[0] ?? null}
               onSelect={(id) => scrollToSection(id)}
-              hideIndicatorUntilSelected
             />
           </motion.div>
         </div>
