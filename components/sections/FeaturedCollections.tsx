@@ -267,7 +267,7 @@ export default function FeaturedCollections() {
                           product.stock_qty === 0
                             ? 'opacity-50 cursor-not-allowed pointer-events-none'
                             : isInCart
-                              ? 'opacity-50 cursor-not-allowed'
+                              ? 'opacity-50 cursor-pointer'
                               : ''
                         }`}
                       >
@@ -277,7 +277,7 @@ export default function FeaturedCollections() {
                             size="sm"
                             onClick={() => handleAddToCart(product)}
                             disabled={isAdding || isInCart || product.stock_qty === 0}
-                            className="w-full justify-center gap-1 py-0.5 text-[10px] font-semibold sm:gap-1.5 sm:py-1 sm:text-[11px]"
+                            className={`w-full justify-center gap-1 py-0.5 text-[10px] font-semibold sm:gap-1.5 sm:py-1 sm:text-[11px]${isInCart ? ' disabled:cursor-pointer' : ''}`}
                             aria-label={
                               isAdding
                                 ? 'Adding to cart'
