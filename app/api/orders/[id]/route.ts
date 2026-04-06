@@ -5,11 +5,11 @@ import { notifyOrderDelivered, notifyOrderReady } from '@/lib/orders/notify-cust
 import type { OrderStatus } from '@prisma/client'
 
 type PatchBody = {
-  action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order'
+  action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order' | 'undo_cancel'
 }
 
 const STEPS: Record<
-  Exclude<PatchBody['action'], 'cancel_order'>,
+  Exclude<PatchBody['action'], 'cancel_order' | 'undo_cancel'>,
   { from: OrderStatus; to: OrderStatus; notify: boolean }
 > = {
   start_progress: { from: 'pending', to: 'confirmed', notify: false },
@@ -49,7 +49,27 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
       return res
     }
 
-    const step = action ? STEPS[action as Exclude<PatchBody['action'], 'cancel_order'>] : undefined
+    if (action === 'undo_cancel') {
+      if (existing.status !== 'cancelled') {
+        return NextResponse.json(
+          { error: 'Only cancelled orders can be restored' },
+          { status: 409 }
+        )
+      }
+      const updated = await prisma.order.update({
+        where: { id },
+        data: { status: 'pending' },
+        include: { items: { orderBy: { createdAt: 'asc' } } },
+      })
+      const order = prismaOrderToClientOrder(updated)
+      const res = NextResponse.json(order)
+      res.headers.set('Cache-Control', 'no-store')
+      return res
+    }
+
+    const step = action
+      ? STEPS[action as Exclude<PatchBody['action'], 'cancel_order' | 'undo_cancel'>]
+      : undefined
     if (!step) {
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
@@ -71,6 +91,23 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
 
     if (step.notify) {
       try {
+        if (step.to === 'delivered') {
+          const soldProductIds = Array.from(
+            new Set((updated.items ?? []).map((item) => item.productId).filter(Boolean))
+          ) as string[]
+          for (const productId of soldProductIds) {
+            await prisma.productRemoval.create({
+              data: {
+                productId,
+                reason: 'PRODUCT_BOUGHT',
+                productSnapshot: {
+                  source: 'ORDER_DELIVERED',
+                  orderId: updated.id,
+                } as object,
+              },
+            })
+          }
+        }
         if (step.to === 'dispatched') {
           await notifyOrderReady(order)
         } else if (step.to === 'delivered') {

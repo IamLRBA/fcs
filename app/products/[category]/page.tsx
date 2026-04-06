@@ -716,27 +716,28 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         onClick={(e) => e.stopPropagation()}
       >
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+        <ModalCloseButton onClose={onClose} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close modal" />
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         className="relative flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
       >
-        <ModalCloseButton onClose={onClose} className="absolute top-2 right-2 z-30 flex-shrink-0" aria-label="Close modal" />
-
         <div className="modal-scroll min-h-0 flex-1 overflow-y-auto pt-10 sm:pt-8 md:pt-6 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
         <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-10">
           {/* Image Gallery */}
           <div className="flex-shrink-0 flex flex-col space-y-4">
-            <div className="relative h-72 sm:h-80 md:h-[24rem] bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group flex items-center justify-center">
-              <SafeImage
-                src={product.images[currentImageIndex]}
-                alt={product.name}
-                fill
-                className="object-contain"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
-                priority
-              />
+            <div className="relative mx-auto w-full max-w-[28rem] aspect-square bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group flex items-center justify-center">
+              <span className="absolute inset-2 overflow-hidden rounded-md bg-neutral-50 dark:bg-neutral-900/50">
+                <SafeImage
+                  src={product.images[currentImageIndex]}
+                  alt={product.name}
+                  fill
+                  className="object-contain object-center"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+                  priority
+                />
+              </span>
               {product.images.length > 0 && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}

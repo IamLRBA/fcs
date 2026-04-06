@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, type MouseEvent } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Loader2, Trash2 } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
@@ -137,6 +138,8 @@ export default function AdminOrdersPage() {
   const [tab, setTab] = useState<WorkflowTab>('pending')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [cancelConfirmOrderId, setCancelConfirmOrderId] = useState<string | null>(null)
+  const [undoOrderId, setUndoOrderId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!AuthManager.isAdmin()) {
@@ -188,7 +191,7 @@ export default function AdminOrdersPage() {
 
   const runAction = async (
     orderId: string,
-    action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order'
+    action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order' | 'undo_cancel'
   ) => {
     setBusyId(orderId)
     try {
@@ -209,15 +212,23 @@ export default function AdminOrdersPage() {
     }
   }
 
-  const confirmCancelOrder = (orderId: string) => {
-    if (
-      !confirm(
-        'Cancel this order? It will be removed from the pipeline. Only use this if the customer opts out.'
-      )
-    ) {
-      return
-    }
-    void runAction(orderId, 'cancel_order')
+  const openCancelOrderDialog = (orderId: string) => {
+    setCancelConfirmOrderId(orderId)
+  }
+
+  const confirmCancelOrder = async () => {
+    if (!cancelConfirmOrderId) return
+    const targetId = cancelConfirmOrderId
+    setCancelConfirmOrderId(null)
+    await runAction(targetId, 'cancel_order')
+    setUndoOrderId(targetId)
+  }
+
+  const undoCancelOrder = async () => {
+    if (!undoOrderId) return
+    const targetId = undoOrderId
+    setUndoOrderId(null)
+    await runAction(targetId, 'undo_cancel')
   }
 
   return (
@@ -319,7 +330,7 @@ export default function AdminOrdersPage() {
                                   className="w-10 h-10 shrink-0 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
                                   onClick={(e) => {
                                     e.stopPropagation()
-                                    confirmCancelOrder(order.id)
+                                    openCancelOrderDialog(order.id)
                                   }}
                                   aria-label="Cancel order"
                                 >
@@ -386,7 +397,7 @@ export default function AdminOrdersPage() {
                                       type="button"
                                       disabled={busy}
                                       className="w-10 h-10 shrink-0 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
-                                      onClick={() => confirmCancelOrder(order.id)}
+                                      onClick={() => openCancelOrderDialog(order.id)}
                                       aria-label="Cancel order"
                                     >
                                       {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-5 h-5" />}
@@ -417,6 +428,80 @@ export default function AdminOrdersPage() {
           </div>
         </div>
       )}
+
+      <AnimatePresence>
+        {cancelConfirmOrderId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1200] flex items-center justify-center bg-black/45 p-4 backdrop-blur-sm dark:bg-black/75"
+            onClick={() => setCancelConfirmOrderId(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              className="hero-glass-frame relative w-full max-w-sm overflow-hidden rounded-2xl backdrop-blur-lg"
+              onClick={(e: MouseEvent) => e.stopPropagation()}
+            >
+              <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
+              <div className="relative z-10 rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
+                <ModalCloseButton onClose={() => setCancelConfirmOrderId(null)} className="absolute right-3 top-3 z-20" aria-label="Close" />
+                <h3 className="pr-8 text-lg font-bold text-neutral-900 dark:text-primary-100">Cancel order?</h3>
+                <p className="mt-2 text-sm text-neutral-700 dark:text-primary-300">
+                  Are you sure you want to cancel this order?
+                </p>
+                <div className="mt-5 flex justify-end gap-3">
+                  <Button type="button" variant="default" size="sm" onClick={() => setCancelConfirmOrderId(null)}>
+                    Keep order
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="filled"
+                    size="sm"
+                    className="!border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white"
+                    onClick={() => void confirmCancelOrder()}
+                  >
+                    Cancel order
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {undoOrderId && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            className="fixed bottom-5 right-5 z-[1200] w-[min(92vw,23rem)]"
+          >
+            <div className="hero-glass-frame relative overflow-hidden rounded-xl backdrop-blur-lg">
+              <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
+              <div className="relative z-10 rounded-xl border border-neutral-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-800">
+                <button
+                  type="button"
+                  className="focus-ring-none absolute right-2 top-2 rounded-md p-1 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-primary-100"
+                  onClick={() => setUndoOrderId(null)}
+                  aria-label="Dismiss undo"
+                >
+                  ×
+                </button>
+                <p className="pr-8 text-sm text-neutral-800 dark:text-primary-200">Order cancelled.</p>
+                <div className="mt-2">
+                  <Button type="button" variant="default" size="sm" onClick={() => void undoCancelOrder()}>
+                    Undo Delete
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
