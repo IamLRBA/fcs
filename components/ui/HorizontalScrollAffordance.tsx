@@ -95,7 +95,7 @@ export default function HorizontalScrollAffordance({
         aria-label={scrollAriaLabel}
         tabIndex={keyboardFocusable ? 0 : -1}
         onKeyDown={onKeyDown}
-        className={`overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:thin] outline-none ${keyboardFocusable ? 'focus-visible:ring-2 focus-visible:ring-primary-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent' : ''} rounded-lg ${scrollClassName}`}
+        className={`focus-ring-none overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:thin] rounded-lg outline-none ${scrollClassName}`}
       >
         {children}
       </div>

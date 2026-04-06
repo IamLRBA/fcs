@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Trash2 } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import type { Order } from '@/lib/cart'
 import AdminNavHeader from '@/components/admin/AdminNavHeader'
@@ -186,7 +186,10 @@ export default function AdminOrdersPage() {
     return `${base} grid w-full grid-cols-2 lg:grid-cols-3`
   }, [filtered.length, expandedId])
 
-  const runAction = async (orderId: string, action: 'start_progress' | 'mark_ready' | 'delivered') => {
+  const runAction = async (
+    orderId: string,
+    action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order'
+  ) => {
     setBusyId(orderId)
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
@@ -204,6 +207,17 @@ export default function AdminOrdersPage() {
     } finally {
       setBusyId(null)
     }
+  }
+
+  const confirmCancelOrder = (orderId: string) => {
+    if (
+      !confirm(
+        'Cancel this order? It will be removed from the pipeline. Only use this if the customer opts out.'
+      )
+    ) {
+      return
+    }
+    void runAction(orderId, 'cancel_order')
   }
 
   return (
@@ -295,13 +309,29 @@ export default function AdminOrdersPage() {
                           </button>
 
                           {!expanded && act ? (
-                            <div className="px-4 sm:px-5 pb-4 pt-0 flex justify-center">
+                            <div className="px-4 sm:px-5 pb-4 pt-0 flex flex-col sm:flex-row justify-center items-center gap-3">
+                              {tab === 'pending' ? (
+                                <Button
+                                  variant="default"
+                                  size="icon"
+                                  type="button"
+                                  disabled={busy}
+                                  className="w-10 h-10 shrink-0 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    confirmCancelOrder(order.id)
+                                  }}
+                                  aria-label="Cancel order"
+                                >
+                                  {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-5 h-5" />}
+                                </Button>
+                              ) : null}
                               <Button
                                 variant="default"
                                 size="sm"
                                 type="button"
                                 disabled={busy}
-                                className="w-full justify-center gap-2"
+                                className="w-full min-w-[11rem] max-w-[240px] justify-center gap-2 sm:w-auto sm:flex-1"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   void runAction(order.id, act.action)
@@ -348,7 +378,20 @@ export default function AdminOrdersPage() {
                               </div>
 
                               {act ? (
-                                <div className="mt-auto pt-8 flex justify-center border-0">
+                                <div className="mt-auto pt-8 flex flex-col sm:flex-row justify-center items-center gap-4 border-0">
+                                  {tab === 'pending' ? (
+                                    <Button
+                                      variant="default"
+                                      size="icon"
+                                      type="button"
+                                      disabled={busy}
+                                      className="w-10 h-10 shrink-0 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
+                                      onClick={() => confirmCancelOrder(order.id)}
+                                      aria-label="Cancel order"
+                                    >
+                                      {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-5 h-5" />}
+                                    </Button>
+                                  ) : null}
                                   <Button
                                     variant="default"
                                     size="sm"

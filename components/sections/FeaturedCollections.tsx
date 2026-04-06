@@ -185,12 +185,12 @@ export default function FeaturedCollections() {
                   >
 
                     <Link href={`/products/${categorySlug}`} className="focus-ring-none">
-                      <div className="relative h-40 sm:h-44 md:h-40 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+                      <div className="relative flex h-40 sm:h-44 md:h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200">
                         <motion.img
                           src={product.images[0] || '/assets/images/placeholder.jpg'}
                           alt={product.name}
-                          className="w-full h-full object-cover"
-                          whileHover={{ scale: 1.15 }}
+                          className="max-h-full max-w-full object-contain"
+                          whileHover={{ scale: 1.06 }}
                           transition={{ duration: 0.4 }}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement

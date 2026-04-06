@@ -1010,6 +1010,13 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Pill nav (Featured shop pills, product subcategory nav): no global focus outline on segments */
+  .segmented-pill-nav button:focus,
+  .segmented-pill-nav button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
   .portal-card::before {
     /* stylelint-disable-next-line property-no-unknown */
     content: '';

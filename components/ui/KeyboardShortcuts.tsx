@@ -210,19 +210,17 @@ export default function KeyboardShortcuts() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                {/* Main container inside the semi-transparent frame (like product modal inner) */}
-                <div className="relative z-10 flex flex-col flex-1 min-h-0 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 overflow-y-auto max-h-[80vh]">
-                  {/* Header section - semi-transparent container, slightly darker shade in light mode */}
-                  <div className="flex-shrink-0 hero-glass-frame hero-glass-frame-compact backdrop-blur-sm bg-neutral-100/90 dark:bg-neutral-800/95 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-t-2xl opacity-50" aria-hidden />
+                {/* Main container: header + close stay fixed; body scrolls */}
+                <div className="relative z-10 flex max-h-[80vh] flex-1 min-h-0 flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+                  <div className="hero-glass-frame hero-glass-frame-compact relative flex shrink-0 items-center justify-between rounded-t-2xl border-b border-neutral-200 bg-neutral-100/90 px-6 py-4 backdrop-blur-sm dark:border-neutral-700 dark:bg-neutral-800/95">
+                    <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-t-2xl opacity-50" aria-hidden />
                     <div className="relative z-10 flex items-center space-x-3">
-                      <Keyboard className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                      <Keyboard className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                       <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Keyboard Shortcuts</h2>
                     </div>
-                    <ModalCloseButton onClose={() => setIsOpen(false)} className="relative z-10 flex-shrink-0" aria-label="Close" />
+                    <ModalCloseButton onClose={() => setIsOpen(false)} className="relative z-10 shrink-0" aria-label="Close" />
                   </div>
-                  {/* Shortcuts grid section */}
-                  <div className="p-6 flex-1 min-h-0">
+                  <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {shortcuts.map((shortcut) => (
                         <div

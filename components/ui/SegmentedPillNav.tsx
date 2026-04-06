@@ -36,7 +36,7 @@ export default function SegmentedPillNav({
 
   return (
     <div
-      className={`!rounded-full bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(0,0,0,0.35)] p-[1px] w-full max-w-4xl mx-auto ${disabled ? 'opacity-55' : ''} ${className}`}
+      className={`segmented-pill-nav !rounded-full bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(0,0,0,0.35)] p-[1px] w-full max-w-4xl mx-auto ${disabled ? 'opacity-55' : ''} ${className}`}
     >
       <div
         className="relative grid p-[1px]"

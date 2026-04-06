@@ -131,76 +131,80 @@ export default function CartPage() {
           </motion.div>
         ) : (
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Cart Items */}
-            <div className="md:col-span-2 space-y-4">
-              {cart.map((item, index) => (
-                <motion.div
-                  key={`${item.id}-${index}`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="w-full"
-                >
-                  <div className="hero-glass-frame relative backdrop-blur-md">
-                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                  <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 overflow-hidden shadow-xl dark:shadow-xl">
-                  <div className="flex flex-col sm:flex-row gap-4 p-6">
-                    {/* Product Image */}
-                    <div className="relative w-full sm:w-32 h-32 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
-                      <SafeImage
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                        sizes="128px"
-                        loading="lazy"
-                      />
-                    </div>
-
-                    {/* Product Details */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-bold text-neutral-900 dark:text-primary-50 mb-2 line-clamp-2">{item.name}</h3>
-                      <p className="text-neutral-600 dark:text-primary-400 text-sm mb-2">SKU: {item.sku}</p>
-                      {item.size && (
-                        <p className="text-neutral-700 dark:text-primary-300 text-sm mb-1">Size: {item.size}</p>
-                      )}
-                      {item.color && (
-                        <p className="text-neutral-700 dark:text-primary-300 text-sm mb-3">Color: {item.color}</p>
-                      )}
-                      
-                      {/* Remove Button - Quantity is always 1 for single pieces */}
-                      <div className="flex items-center space-x-4">
-                        <div className="px-3 py-2 bg-primary-100 dark:bg-primary-800/30 rounded-lg border border-primary-300 dark:border-primary-500/30">
-                          <span className="text-primary-700 dark:text-primary-300 text-sm">Single Piece</span>
+            {/* Cart Items — single glass container, rows separated by faded dividers */}
+            <div className="md:col-span-2">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="hero-glass-frame relative backdrop-blur-md"
+              >
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xl dark:border-primary-500/30 dark:bg-primary-800/30 dark:shadow-xl">
+                  {cart.map((item, index) => (
+                    <div key={`${item.id}-${index}`}>
+                      <div className="flex flex-col gap-4 p-6 sm:flex-row">
+                        {/* Product Image */}
+                        <div className="relative h-32 w-full flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 dark:bg-primary-900/20 sm:w-32">
+                          <SafeImage
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                            sizes="128px"
+                            loading="lazy"
+                          />
                         </div>
 
-                        <Button
-                          variant="default"
-                          size="icon"
-                          onClick={() => removeItem(index)}
-                          disabled={isUpdating}
-                          className="w-10 h-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
-                          aria-label="Remove item"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </div>
+                        {/* Product Details */}
+                        <div className="min-w-0 flex-1">
+                          <h3 className="mb-2 line-clamp-2 text-xl font-bold text-neutral-900 dark:text-primary-50">
+                            {item.name}
+                          </h3>
+                          <p className="mb-2 text-sm text-neutral-600 dark:text-primary-400">SKU: {item.sku}</p>
+                          {item.size && (
+                            <p className="mb-1 text-sm text-neutral-700 dark:text-primary-300">Size: {item.size}</p>
+                          )}
+                          {item.color && (
+                            <p className="mb-3 text-sm text-neutral-700 dark:text-primary-300">Color: {item.color}</p>
+                          )}
 
-                    {/* Price */}
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-primary-600 dark:text-primary-300 mb-1">
-                        UGX {item.price.toLocaleString()}
-                      </p>
-                      <p className="text-sm text-neutral-600 dark:text-primary-300 text-xs mt-1">
-                        Single piece
-                      </p>
+                          <div className="flex items-center space-x-4">
+                            <div className="rounded-lg border border-primary-300 bg-primary-100 px-3 py-2 dark:border-primary-500/30 dark:bg-primary-800/30">
+                              <span className="text-sm text-primary-700 dark:text-primary-300">Single Piece</span>
+                            </div>
+
+                            <Button
+                              variant="default"
+                              size="icon"
+                              onClick={() => removeItem(index)}
+                              disabled={isUpdating}
+                              className="h-10 w-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 disabled:opacity-50 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300"
+                              aria-label="Remove item"
+                            >
+                              <Trash2 className="h-5 w-5" />
+                            </Button>
+                          </div>
+                        </div>
+
+                        {/* Price */}
+                        <div className="text-left sm:text-right">
+                          <p className="mb-1 text-2xl font-bold text-primary-600 dark:text-primary-300">
+                            UGX {item.price.toLocaleString()}
+                          </p>
+                          <p className="mt-1 text-xs text-neutral-600 dark:text-primary-300">Single piece</p>
+                        </div>
+                      </div>
+                      {index < cart.length - 1 ? (
+                        <div
+                          className="h-px w-full bg-gradient-to-r from-transparent via-neutral-300/70 to-transparent dark:from-transparent dark:via-white/[0.1] dark:to-transparent"
+                          aria-hidden
+                        />
+                      ) : null}
                     </div>
-                  </div>
-                  </div>
-                  </div>
-                </motion.div>
-              ))}
+                  ))}
+                </div>
+              </motion.div>
             </div>
 
             {/* Order Summary */}

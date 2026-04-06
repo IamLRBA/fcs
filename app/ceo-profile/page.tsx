@@ -648,16 +648,17 @@ export default function CEOProfile() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative flex items-center justify-center w-full h-full p-8"
+              className="relative flex h-full w-full max-h-full flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <ModalCloseButton onClose={closeImageModal} className="absolute top-6 right-6 z-10 flex-shrink-0" aria-label="Close photo" />
-              
-              <img
-                src={galleryImages[selectedImage]}
-                alt={`CEO Image ${selectedImage + 1}`}
-                className="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl shadow-2xl"
-              />
+              <ModalCloseButton onClose={closeImageModal} className="absolute right-6 top-6 z-20 shrink-0" aria-label="Close photo" />
+              <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto p-8">
+                <img
+                  src={galleryImages[selectedImage]}
+                  alt={`CEO Image ${selectedImage + 1}`}
+                  className="max-h-full max-w-full w-auto rounded-2xl object-contain shadow-2xl"
+                />
+              </div>
             </motion.div>
           </motion.div>
         )}

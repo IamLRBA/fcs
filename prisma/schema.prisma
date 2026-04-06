@@ -21,6 +21,7 @@ enum OrderStatus {
   confirmed
   dispatched
   delivered
+  cancelled
 }
 
 enum DeliveryOption {
@@ -31,6 +32,7 @@ enum DeliveryOption {
 enum RemovalReason {
   PRODUCT_BOUGHT
   MISTAKENLY_POSTED
+  DISCONTINUED
 }
 
 // ---------------------------------------------------------------------------

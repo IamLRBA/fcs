@@ -40,6 +40,29 @@ const subcategoriesMap: Record<string, string[]> = {
 const conditions = ['Like New', 'Good', 'Fair', 'Worn']
 const PAGE_SIZE = 10
 
+type RemovalReasonKey = 'PRODUCT_BOUGHT' | 'MISTAKENLY_POSTED' | 'DISCONTINUED'
+
+const DELETE_REASON_OPTIONS: { key: RemovalReasonKey; label: string; description: string }[] = [
+  {
+    key: 'PRODUCT_BOUGHT',
+    label: 'Sold / purchased',
+    description: 'The piece was bought; remove it from the catalog.',
+  },
+  {
+    key: 'MISTAKENLY_POSTED',
+    label: 'Mistakenly posted',
+    description: 'Listed by mistake or with incorrect details.',
+  },
+  {
+    key: 'DISCONTINUED',
+    label: 'Discontinued',
+    description: 'No longer offered or replaced in the collection.',
+  },
+]
+
+const ICON_BTN_RED =
+  'w-10 h-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300'
+
 export default function AdminProductsPage() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
@@ -47,6 +70,8 @@ export default function AdminProductsPage() {
   const [detailsProduct, setDetailsProduct] = useState<Product | null>(null)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
+  const [deleteBusy, setDeleteBusy] = useState(false)
   const [productImages, setProductImages] = useState<string[]>([])
   const [tablePage, setTablePage] = useState(1)
   const [newProduct, setNewProduct] = useState({
@@ -117,18 +142,24 @@ export default function AdminProductsPage() {
     if (tablePage > totalTablePages) setTablePage(totalTablePages)
   }, [tablePage, totalTablePages])
 
-  const handleDelete = (product: Product, reason: 'Product Bought' | 'Mistakenly Posted') => {
-    if (!confirm(`Remove "${product.name}"? Reason: ${reason}`)) return
-    fetch(`/api/products/${product.id}`, { method: 'DELETE' })
+  const performDelete = (product: Product, reason: RemovalReasonKey) => {
+    setDeleteBusy(true)
+    fetch(`/api/products/${product.id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason }),
+    })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to remove product')
         return loadProducts()
       })
       .then(() => {
+        setDeleteTarget(null)
         setDetailsProduct(null)
         setEditingProduct(null)
       })
       .catch(() => alert('Failed to remove product'))
+      .finally(() => setDeleteBusy(false))
   }
 
   const handleUpdate = (updated: Product) => {
@@ -375,7 +406,7 @@ export default function AdminProductsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
+            className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-3 backdrop-blur-sm dark:bg-black/80 sm:p-4"
             onClick={() => setDetailsProduct(null)}
           >
             <div
@@ -387,13 +418,17 @@ export default function AdminProductsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
+                className="relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
               >
-                <ModalCloseButton onClose={() => setDetailsProduct(null)} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close" />
+                <ModalCloseButton onClose={() => setDetailsProduct(null)} className="absolute right-2 top-2 z-30 shrink-0" aria-label="Close" />
                 <div className="flex flex-col sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-5 sm:gap-6 pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 overflow-y-auto flex-1 min-h-0">
                   <div className="flex-shrink-0">
-                    <div className="relative h-56 sm:h-64 md:h-72 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden">
-                      <img src={detailsProduct.images?.[0] || '/assets/images/placeholder.jpg'} alt={detailsProduct.name} className="w-full h-full object-cover" />
+                    <div className="relative flex h-56 sm:h-64 md:h-72 items-center justify-center overflow-hidden rounded-lg bg-neutral-100 dark:bg-primary-900/20">
+                      <img
+                        src={detailsProduct.images?.[0] || '/assets/images/placeholder.jpg'}
+                        alt={detailsProduct.name}
+                        className="max-h-full max-w-full object-contain"
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col min-w-0">
@@ -408,12 +443,26 @@ export default function AdminProductsPage() {
                     )}
                   </div>
                 </div>
-                <div className="pt-4 mt-auto border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex flex-wrap gap-3 flex-shrink-0">
-                  <Button type="button" variant="default" size="md" onClick={() => setEditingProduct({ ...detailsProduct })} className="inline-flex items-center gap-2">
-                    <Pencil className="w-4 h-4" /> Edit
+                <div className="pt-4 mt-auto flex flex-shrink-0 flex-wrap items-center justify-center gap-3 border-t border-neutral-200 px-4 pb-4 dark:border-primary-600/40 sm:px-6 sm:pb-6 md:px-8">
+                  <Button
+                    type="button"
+                    variant="default"
+                    size="icon"
+                    onClick={() => setEditingProduct({ ...detailsProduct })}
+                    className="focus-ring-none h-10 w-10"
+                    aria-label="Edit product"
+                  >
+                    <Pencil className="h-5 w-5" />
                   </Button>
-                  <Button type="button" variant="filled" size="md" onClick={() => handleDelete(detailsProduct, 'Mistakenly Posted')} className="inline-flex items-center gap-2 !border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white">
-                    <Trash2 className="w-4 h-4" /> Delete
+                  <Button
+                    type="button"
+                    variant="default"
+                    size="icon"
+                    onClick={() => setDeleteTarget(detailsProduct)}
+                    className={`focus-ring-none h-10 w-10 ${ICON_BTN_RED}`}
+                    aria-label="Remove product"
+                  >
+                    <Trash2 className="h-5 w-5" />
                   </Button>
                 </div>
               </motion.div>
@@ -429,7 +478,7 @@ export default function AdminProductsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-3 sm:p-4"
+            className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-3 backdrop-blur-sm dark:bg-black/80 sm:p-4"
             onClick={() => setEditingProduct(null)}
           >
             <div
@@ -441,9 +490,9 @@ export default function AdminProductsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
+                className="relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
               >
-                <ModalCloseButton onClose={() => setEditingProduct(null)} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close" />
+                <ModalCloseButton onClose={() => setEditingProduct(null)} className="absolute right-2 top-2 z-30 shrink-0" aria-label="Close" />
                 <form onSubmit={(e) => { e.preventDefault(); handleUpdate(editingProduct) }} className="flex flex-col min-h-0 flex-1 overflow-hidden">
                   <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
                     <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Edit product</h2>
@@ -467,8 +516,8 @@ export default function AdminProductsPage() {
                         Browse
                       </Button>
                       {editingProduct.images?.[0] && (
-                        <div className="mt-2 w-24 h-24 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-700">
-                          <img src={editingProduct.images[0]} alt="Preview" className="w-full h-full object-cover" />
+                        <div className="mt-2 flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-700">
+                          <img src={editingProduct.images[0]} alt="Preview" className="max-h-full max-w-full object-contain" />
                         </div>
                       )}
                     </div>
@@ -543,7 +592,7 @@ export default function AdminProductsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
+            className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-3 backdrop-blur-sm dark:bg-black/80 sm:p-4"
             onClick={() => setShowAddModal(false)}
           >
             <div
@@ -555,9 +604,9 @@ export default function AdminProductsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative z-10 w-full bg-white dark:bg-neutral-800 rounded-tl-2xl rounded-bl-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 flex flex-col max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh]"
+                className="relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
               >
-                <ModalCloseButton onClose={() => setShowAddModal(false)} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close" />
+                <ModalCloseButton onClose={() => setShowAddModal(false)} className="absolute right-2 top-2 z-30 shrink-0" aria-label="Close" />
                 <form onSubmit={handleAddProduct} className="flex flex-col min-h-0 flex-1 overflow-hidden">
                   <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
                     <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Add new product</h2>
@@ -642,6 +691,66 @@ export default function AdminProductsPage() {
                 </form>
               </motion.div>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {deleteTarget && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1150] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm dark:bg-black/85"
+            onClick={() => {
+              if (!deleteBusy) setDeleteTarget(null)
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              className="hero-glass-frame relative w-full max-w-md overflow-hidden rounded-2xl backdrop-blur-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
+              <div className="relative z-10 rounded-2xl border border-neutral-200 bg-white p-6 sm:p-8 dark:border-neutral-700 dark:bg-neutral-800">
+                <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Remove product?</h2>
+                <p className="mt-2 text-neutral-700 dark:text-primary-300">
+                  <span className="font-semibold text-neutral-900 dark:text-primary-50">
+                    &ldquo;{deleteTarget.name}&rdquo;
+                  </span>
+                </p>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-primary-400">
+                  Reason for removal
+                </p>
+                <div className="mt-3 flex flex-col gap-2">
+                  {DELETE_REASON_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      disabled={deleteBusy}
+                      onClick={() => performDelete(deleteTarget, opt.key)}
+                      className="focus-ring-none rounded-xl border border-neutral-200 bg-white/90 px-4 py-3 text-left transition hover:border-primary-400 hover:bg-primary-50/90 dark:border-neutral-600 dark:bg-neutral-800/90 dark:hover:border-primary-500 dark:hover:bg-neutral-700/80 disabled:opacity-50"
+                    >
+                      <span className="block font-medium text-neutral-900 dark:text-primary-50">{opt.label}</span>
+                      <span className="text-xs text-neutral-600 dark:text-primary-400">{opt.description}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-6 flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="default"
+                    size="sm"
+                    disabled={deleteBusy}
+                    onClick={() => setDeleteTarget(null)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
