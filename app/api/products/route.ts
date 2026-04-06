@@ -235,6 +235,7 @@ export async function POST(request: Request) {
 
   const created = await prisma.product.create({
     data: {
+      ...(body.id ? { id: String(body.id) } : {}),
       name: body.name,
       brand: body.brand ?? '',
       category: body.category,

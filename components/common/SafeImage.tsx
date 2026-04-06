@@ -36,11 +36,14 @@ export default function SafeImage({
   const resolved = src && src.length > 0 ? src : PLACEHOLDER
 
   if (resolved.startsWith('data:')) {
+    const dataClassName = fill
+      ? `absolute inset-0 h-full w-full ${className}`.trim()
+      : className
     return (
       <img
         src={resolved}
         alt={alt}
-        className={className}
+        className={dataClassName}
         loading={priority ? 'eager' : loading}
         decoding="async"
         onError={onError}
