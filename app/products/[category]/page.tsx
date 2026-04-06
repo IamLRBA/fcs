@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ShoppingCart, X, Maximize2, Minimize, Quote } from 'lucide-react'
+import { ShoppingCart, X, Maximize2, Minimize, Quote, CircleSlash } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
@@ -59,6 +59,14 @@ const ProductGridCard = memo(function ProductGridCard({
   index: number
   onOpen: (p: Product) => void
 }) {
+  const [isInCart, setIsInCart] = useState(() => CartManager.isProductInCart(product.id))
+  useEffect(() => {
+    const sync = () => setIsInCart(CartManager.isProductInCart(product.id))
+    sync()
+    window.addEventListener('cartUpdated', sync)
+    return () => window.removeEventListener('cartUpdated', sync)
+  }, [product.id])
+
   const hasDiscount = Boolean(product.original_price && product.original_price > product.price_ugx)
   return (
     <motion.div
@@ -82,8 +90,16 @@ const ProductGridCard = memo(function ProductGridCard({
               loading="lazy"
             />
             {hasDiscount && (
-              <div className="absolute left-1.5 top-1.5 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-white sm:text-xs">
+              <div className="absolute left-1.5 top-1.5 z-30 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-white sm:text-xs">
                 {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
+              </div>
+            )}
+            {isInCart && (
+              <div
+                className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black/55"
+                aria-hidden
+              >
+                <CircleSlash className="h-9 w-9 text-white drop-shadow-lg sm:h-11 sm:w-11" strokeWidth={2} />
               </div>
             )}
           </div>
@@ -823,18 +839,38 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
 
             {/* Add to Cart Button */}
             <div className="pt-5 mt-5 border-t border-neutral-200 dark:border-primary-600/40">
-              <Button
-                variant="default"
-                size="md"
-                onClick={addToCart}
-                disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
-                className={`w-full justify-center gap-2 ${isAddingToCart || addedToCart || isInCart || product.stock_qty === 0 ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''}`}
+              <div
+                className={`relative w-full ${addedToCart || isInCart ? 'group/modaladdcart' : ''}`}
               >
-                <ShoppingCart className="w-5 h-5" />
-                <span>
-                  {isAddingToCart ? 'Adding...' : (addedToCart || isInCart) ? 'Already in Cart' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
-                </span>
-              </Button>
+                <Button
+                  variant="default"
+                  size="md"
+                  onClick={addToCart}
+                  disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
+                  className={`w-full justify-center gap-2 ${
+                    isAddingToCart
+                      ? 'opacity-60 cursor-wait pointer-events-none'
+                      : product.stock_qty === 0
+                        ? 'opacity-60 cursor-not-allowed pointer-events-none'
+                        : addedToCart || isInCart
+                          ? 'opacity-60 cursor-not-allowed'
+                          : ''
+                  }`}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>
+                    {isAddingToCart ? 'Adding...' : (addedToCart || isInCart) ? 'Already in Cart' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
+                  </span>
+                </Button>
+                {(addedToCart || isInCart) && (
+                  <div
+                    className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-200 group-hover/modaladdcart:opacity-100 dark:bg-black/50"
+                    aria-hidden
+                  >
+                    <CircleSlash className="h-7 w-7 text-white drop-shadow-md" strokeWidth={2} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
