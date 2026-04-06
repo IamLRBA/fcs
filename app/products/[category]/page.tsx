@@ -853,7 +853,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       : product.stock_qty === 0
                         ? 'opacity-60 cursor-not-allowed pointer-events-none'
                         : addedToCart || isInCart
-                          ? 'opacity-60 cursor-not-allowed'
+                          ? 'opacity-60 disabled:cursor-pointer'
                           : ''
                   }`}
                 >
