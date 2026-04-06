@@ -8,7 +8,7 @@
           {
             "id": "shirt-gentle-1",
             "name": "Classic White Shirt",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "shirts",
             "section": "gentle",
             "price_ugx": 45000,
@@ -67,7 +67,7 @@
           {
             "id": "shirt-textured-1",
             "name": "Linen Textured Shirt",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "shirts",
             "section": "textured",
             "price_ugx": 40000,
@@ -113,7 +113,7 @@
           {
             "id": "tee-plain-1",
             "name": "Basic White Tee",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "tees",
             "section": "plain",
             "price_ugx": 25000,
@@ -173,7 +173,7 @@
           {
             "id": "tee-sporty-1",
             "name": "Athletic Performance Tee",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "tees",
             "section": "sporty",
             "price_ugx": 35000,
@@ -219,7 +219,7 @@
           {
             "id": "coat-hoodie-1",
             "name": "Classic Hoodie",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "coats",
             "section": "hoodie",
             "price_ugx": 55000,
@@ -285,7 +285,7 @@
           {
             "id": "pants-gentle-1",
             "name": "Chino Pants",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "pants-and-shorts",
             "section": "gentle",
             "price_ugx": 85000,
@@ -345,7 +345,7 @@
           {
             "id": "pants-sporty-1",
             "name": "Athletic Shorts",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "pants-and-shorts",
             "section": "sporty",
             "price_ugx": 35000,
@@ -411,7 +411,7 @@
           {
             "id": "footwear-sandals-1",
             "name": "Leather Sandals",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "footwear",
             "section": "sandals",
             "price_ugx": 45000,
@@ -517,7 +517,7 @@
           {
             "id": "accessory-decor-1",
             "name": "Leather Belt",
-            "brand": "FusionCRAFT",
+            "brand": "Mystical PIECES",
             "category": "accessories",
             "section": "decor",
             "price_ugx": 40000,

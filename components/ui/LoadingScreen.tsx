@@ -46,16 +46,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     >
       {/* Same atmospheric layer as Home (pointer-events-none) – light/dark via Tailwind */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent-200/30 to-accent-400/30 dark:from-accent-500/15 dark:to-accent-600/10 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-primary-300/30 to-primary-500/30 dark:from-primary-700/20 dark:to-primary-900/25 rounded-full blur-3xl"
-        />
         {/* Subtle particles – visible in both modes */}
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(12)].map((_, i) => (

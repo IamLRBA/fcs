@@ -15,7 +15,7 @@ export default function ThemeSwitcher() {
 
   useEffect(() => {
     setMounted(true)
-    const savedTheme = localStorage.getItem('fusioncraft-theme') as Theme
+    const savedTheme = localStorage.getItem('mysticalpieces-theme') as Theme
     if (savedTheme) {
       setTheme(savedTheme)
     }
@@ -36,7 +36,7 @@ export default function ThemeSwitcher() {
       metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#191919' : '#FEFEFE')
     }
 
-    localStorage.setItem('fusioncraft-theme', theme)
+    localStorage.setItem('mysticalpieces-theme', theme)
   }, [theme, mounted])
 
   useEffect(() => {

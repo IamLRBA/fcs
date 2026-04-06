@@ -32,7 +32,7 @@ export interface Order {
 }
 
 export class CartManager {
-  private static CART_KEY = 'fusioncraft_cart'
+  private static CART_KEY = 'mysticalpieces_cart'
   
   static getCart(): CartItem[] {
     if (typeof window === 'undefined') return []
@@ -112,7 +112,7 @@ export class CartManager {
 }
 
 export class OrderManager {
-  private static ORDERS_KEY = 'fusioncraft_orders'
+  private static ORDERS_KEY = 'mysticalpieces_orders'
   
   static createOrder(order: Omit<Order, 'id' | 'timestamp'>): Order {
     const newOrder: Order = {

@@ -189,7 +189,7 @@ This document defines the PostgreSQL schema, ORM configuration, migration strate
 | reason | Enum | NOT NULL | PRODUCT_BOUGHT, MISTAKENLY_POSTED. |
 | removedAt | DateTime | NOT NULL | |
 
-**Indexes:** `removedAt`, `reason`. Replaces `fusioncraft_bought_products` in localStorage.
+**Indexes:** `removedAt`, `reason`. Replaces `mysticalpieces_bought_products` in localStorage.
 
 ---
 
@@ -325,21 +325,21 @@ The full schema is in **prisma/schema.prisma** (see repository). It includes:
 - Create one **AdminUser** with hashed password (bcrypt/argon2).
 - Store username and hash in DB; **remove** hardcoded admin credentials from `lib/auth.ts` and any config.
 
-### 4.5 Step 4: Migrate Users (localStorage fusioncraft_users)
+### 4.5 Step 4: Migrate Users (localStorage mysticalpieces_users)
 
 - **Challenge:** Data is in users’ browsers. Options:
   - **A) No bulk migration:** Rely on new signups and “forgot password” / re-registration. Existing localStorage users re-register or use a one-time “import my account” flow that reads from a file they export (if you add export).
-  - **B) One-time import tool:** Build an admin-only page that accepts a JSON upload of exported `fusioncraft_users`, hashes passwords, and creates User rows. Users must export from a dev/build that still has the old logic.
+  - **B) One-time import tool:** Build an admin-only page that accepts a JSON upload of exported `mysticalpieces_users`, hashes passwords, and creates User rows. Users must export from a dev/build that still has the old logic.
 - Recommend **B** for a single migration window; then remove export and import.
 
-### 4.6 Step 5: Migrate Orders (localStorage fusioncraft_orders)
+### 4.6 Step 5: Migrate Orders (localStorage mysticalpieces_orders)
 
 - Same as users: data is per-browser. Options:
   - **A)** Do not migrate; keep old orders in localStorage until cleared (or show “Order history before [date] is not available”).
   - **B)** Admin import: accept JSON of orders, create Order + OrderItems; optionally attach to User by email match (userId).
 - New orders from go-live use DB only.
 
-### 4.7 Step 6: Migrate Reviews (localStorage fusioncraft_reviews)
+### 4.7 Step 6: Migrate Reviews (localStorage mysticalpieces_reviews)
 
 - If you have a way to export global reviews (e.g. admin export), run a script that:
   - Matches `author` to User by fullName/email (or creates anonymous user if needed).
@@ -348,10 +348,10 @@ The full schema is in **prisma/schema.prisma** (see repository). It includes:
 
 ### 4.8 Step 7: Migrate Product Additions / Bought List (localStorage)
 
-- **fusioncraft_products:** Admin-added products live in localStorage. Options:
+- **mysticalpieces_products:** Admin-added products live in localStorage. Options:
   - Export from admin (if you add export), then run script to insert Product + ProductImages.
   - Or treat as one-time: re-add critical products via admin UI after cutover.
-- **fusioncraft_bought_products:** Import into **ProductRemoval** with productSnapshot and reason.
+- **mysticalpieces_bought_products:** Import into **ProductRemoval** with productSnapshot and reason.
 
 ### 4.9 Step 8: Cart
 

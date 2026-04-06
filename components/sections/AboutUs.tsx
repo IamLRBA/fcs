@@ -34,7 +34,7 @@ const teamMembers = [
       instagram: "https://instagram.com/sarahchen",
       x: "https://x.com/sarahchen",
       whatsapp: "+1234567890",
-      email: "sarah@fusioncraft.com"
+      email: "sarah@mysticalpieces.com"
     }
   },
   {
@@ -64,7 +64,7 @@ const teamMembers = [
       instagram: "https://instagram.com/elenapetrov",
       x: "https://x.com/elenapetrov",
       whatsapp: "+1234567890",
-      email: "elena@fusioncraft.com"
+      email: "elena@mysticalpieces.com"
     }
   }
 ]

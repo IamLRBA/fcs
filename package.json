@@ -1,7 +1,7 @@
 {
-  "name": "fusioncraft-portfolio",
+  "name": "mysticalpieces",
   "version": "1.0.0",
-  "description": "FusionCRAFT STUDIOS - Personal Portfolio showcasing Architecture, Music, Art, Coding, and Fashion",
+  "description": "Mystical PIECES — fashion e-commerce and catalog",
   "private": true,
   "scripts": {
     "dev": "next dev",

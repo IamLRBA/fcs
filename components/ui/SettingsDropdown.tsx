@@ -30,7 +30,7 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
 
   useEffect(() => {
     setMounted(true)
-    const savedTheme = localStorage.getItem('fusioncraft-theme') as Theme
+    const savedTheme = localStorage.getItem('mysticalpieces-theme') as Theme
     if (savedTheme) {
       setTheme(savedTheme)
     }
@@ -59,7 +59,7 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
       metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#191919' : '#FEFEFE')
     }
 
-    localStorage.setItem('fusioncraft-theme', theme)
+    localStorage.setItem('mysticalpieces-theme', theme)
   }, [theme, mounted])
 
   useEffect(() => {

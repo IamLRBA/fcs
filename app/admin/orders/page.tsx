@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, type MouseEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Loader2, Trash2 } from 'lucide-react'
+import { Loader2, Trash2, SkipBack, SkipForward } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import type { Order } from '@/lib/cart'
 import AdminNavHeader from '@/components/admin/AdminNavHeader'
@@ -22,6 +22,8 @@ const TABS: { id: WorkflowTab; label: string }[] = [
 ]
 
 const EXPANDED_ACTION_BTN_CLASS = 'w-full min-w-[11rem] max-w-[240px] mx-auto justify-center gap-2'
+
+const ORDERS_PAGE_SIZE = 6
 
 function tabMatchesStatus(tab: WorkflowTab, status: Order['status']): boolean {
   if (tab === 'pending') return status === 'pending'
@@ -140,6 +142,7 @@ export default function AdminOrdersPage() {
   const [busyId, setBusyId] = useState<string | null>(null)
   const [cancelConfirmOrderId, setCancelConfirmOrderId] = useState<string | null>(null)
   const [undoOrderId, setUndoOrderId] = useState<string | null>(null)
+  const [ordersListPage, setOrdersListPage] = useState(1)
 
   useEffect(() => {
     if (!AuthManager.isAdmin()) {
@@ -172,22 +175,37 @@ export default function AdminOrdersPage() {
     [orders, tab]
   )
 
+  const totalOrderPages = Math.max(1, Math.ceil(filtered.length / ORDERS_PAGE_SIZE))
+  const safeOrderPage = Math.min(ordersListPage, totalOrderPages)
+  const pageOrders = filtered.slice(
+    (safeOrderPage - 1) * ORDERS_PAGE_SIZE,
+    safeOrderPage * ORDERS_PAGE_SIZE
+  )
+
+  useEffect(() => {
+    setOrdersListPage(1)
+  }, [tab])
+
+  useEffect(() => {
+    if (ordersListPage > totalOrderPages) setOrdersListPage(totalOrderPages)
+  }, [ordersListPage, totalOrderPages])
+
+  /** 1 col phone; 2 cols tablet; 3 cols desktop. One card: single column + centered at all sizes. Two cards: 2-col grid on md+ so the pair is centered on desktop (not stuck in first two of three columns). */
   const orderListUlClass = useMemo(() => {
-    const n = filtered.length
+    const n = pageOrders.length
     const anyExpanded = expandedId !== null
-    const base = 'list-none p-0 m-0 gap-4 lg:gap-6'
-    if (n <= 1) {
-      return anyExpanded
-        ? `${base} grid grid-cols-1 w-full max-w-5xl mx-auto`
-        : `${base} grid grid-cols-1 w-full max-w-md mx-auto justify-items-center`
+    const base = 'list-none p-0 m-0 gap-4 lg:gap-6 grid w-full'
+    if (n <= 1 && !anyExpanded) {
+      return `${base} grid-cols-1 max-w-md mx-auto`
     }
-    if (n === 2) {
-      return anyExpanded
-        ? `${base} grid grid-cols-2 w-full max-w-5xl mx-auto`
-        : `${base} grid grid-cols-2 w-full max-w-2xl mx-auto`
+    if (n === 2 && !anyExpanded) {
+      return `${base} grid-cols-1 md:grid-cols-2 lg:grid-cols-2 max-w-md mx-auto md:max-w-2xl lg:max-w-4xl`
     }
-    return `${base} grid w-full grid-cols-2 lg:grid-cols-3`
-  }, [filtered.length, expandedId])
+    if (anyExpanded) {
+      return `${base} grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto`
+    }
+    return `${base} grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+  }, [pageOrders.length, expandedId])
 
   const runAction = async (
     orderId: string,
@@ -263,20 +281,20 @@ export default function AdminOrdersPage() {
                   No orders in this stage.
                 </p>
               ) : (
+                <>
                 <ul className={orderListUlClass}>
-                  {filtered.map((order) => {
+                  {pageOrders.map((order) => {
                     const expanded = expandedId === order.id
                     const act = actionForTab(tab)
                     const busy = busyId === order.id
-                    const n = filtered.length
+                    const n = pageOrders.length
                     const loneSecondRow =
                       n === 2 && expandedId !== null && expandedId !== order.id && !expanded
                     let liSpan = ''
                     if (expanded) {
-                      if (n >= 3) liSpan = 'col-span-2 lg:col-span-3'
-                      else if (n === 2) liSpan = 'col-span-2'
+                      liSpan = 'col-span-full'
                     } else if (loneSecondRow) {
-                      liSpan = 'col-span-2 flex justify-center'
+                      liSpan = 'col-span-full flex justify-center'
                     }
                     const innerCardWidthClass = loneSecondRow
                       ? 'w-full max-w-md mx-auto'
@@ -423,6 +441,36 @@ export default function AdminOrdersPage() {
                     )
                   })}
                 </ul>
+                <div className="flex items-center justify-center gap-6 py-4 border-t border-neutral-200/80 dark:border-neutral-700 mt-4">
+                  <button
+                    type="button"
+                    disabled={safeOrderPage <= 1}
+                    onClick={() => {
+                      setExpandedId(null)
+                      setOrdersListPage((p) => Math.max(1, p - 1))
+                    }}
+                    className="focus-ring-none focus:outline-none text-neutral-500 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 disabled:opacity-30 disabled:pointer-events-none transition-colors duration-300"
+                    aria-label="Previous orders page"
+                  >
+                    <SkipBack className="w-5 h-5" strokeWidth={2} />
+                  </button>
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400 tabular-nums">
+                    {safeOrderPage} / {totalOrderPages}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={safeOrderPage >= totalOrderPages}
+                    onClick={() => {
+                      setExpandedId(null)
+                      setOrdersListPage((p) => Math.min(totalOrderPages, p + 1))
+                    }}
+                    className="focus-ring-none focus:outline-none text-neutral-500 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 disabled:opacity-30 disabled:pointer-events-none transition-colors duration-300"
+                    aria-label="Next orders page"
+                  >
+                    <SkipForward className="w-5 h-5" strokeWidth={2} />
+                  </button>
+                </div>
+                </>
               )}
             </div>
           </div>
