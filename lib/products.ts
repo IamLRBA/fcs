@@ -30,8 +30,8 @@ export interface BoughtProduct {
 }
 
 export class ProductManager {
-  private static PRODUCTS_KEY = 'fusioncraft_products'
-  private static BOUGHT_PRODUCTS_KEY = 'fusioncraft_bought_products'
+  private static PRODUCTS_KEY = 'mysticalpieces_products'
+  private static BOUGHT_PRODUCTS_KEY = 'mysticalpieces_bought_products'
 
   static getProducts(): any {
     if (typeof window === 'undefined') return { products: {} }

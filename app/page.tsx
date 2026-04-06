@@ -89,8 +89,6 @@ export default function Home() {
       <main className="min-h-screen bg-unified relative overflow-hidden">
         {/* Lightweight static accents (no full-screen blur, no infinite motion) */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-accent-200/22 to-accent-400/18" />
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-br from-primary-300/18 to-primary-500/15" />
           <div className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-primary-500/15 rotate-12 rounded-sm" />
           <div className="absolute bottom-1/4 right-1/4 w-20 h-20 border-2 border-accent-500/15 -rotate-45 rounded-sm" />
         </div>
@@ -137,7 +135,7 @@ export default function Home() {
                           </h1>
                           <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full" />
                           <p className="text-lg text-primary-600 dark:text-primary-300 max-w-2xl">
-                            Mysticism, Anarchism & Self Discovery!
+                          Mystical Thrift Fashion & Soulful Style Curators
                           </p>
                         </div>
                         {/* Home hero only: semi-transparent glass around each CTA; md+ more gap + padding */}

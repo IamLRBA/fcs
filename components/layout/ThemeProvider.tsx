@@ -28,7 +28,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     // Set mounted flag and load theme from localStorage only after mount
     setMounted(true)
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('fusioncraft-theme') as Theme
+      const savedTheme = localStorage.getItem('mysticalpieces-theme') as Theme
       if (savedTheme) {
         setTheme(savedTheme)
       }
@@ -52,7 +52,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
         metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#191919' : '#FEFEFE')
       }
       if (typeof window !== 'undefined') {
-        localStorage.setItem('fusioncraft-theme', theme)
+        localStorage.setItem('mysticalpieces-theme', theme)
       }
     })
   }, [theme, mounted])

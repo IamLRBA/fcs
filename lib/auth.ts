@@ -28,15 +28,15 @@ export interface Admin {
 }
 
 const ADMIN_CREDENTIALS: Admin = {
-  username: 'IamLRBA',
-  password: 'L@ruba1212'
+  username: 'IamMYSTICAL',
+  password: 'Mystic@l1212'
 }
 
 export class AuthManager {
-  private static USERS_KEY = 'fusioncraft_users'
-  private static CURRENT_USER_KEY = 'fusioncraft_current_user'
-  private static ADMIN_KEY = 'fusioncraft_admin'
-  private static REVIEWS_KEY = 'fusioncraft_reviews'
+  private static USERS_KEY = 'mysticalpieces_users'
+  private static CURRENT_USER_KEY = 'mysticalpieces_current_user'
+  private static ADMIN_KEY = 'mysticalpieces_admin'
+  private static REVIEWS_KEY = 'mysticalpieces_reviews'
 
   // User Management
   static signUp(email: string, fullName: string, phone: string, password: string, profileImage?: string): { success: boolean; error?: string; user?: User } {
