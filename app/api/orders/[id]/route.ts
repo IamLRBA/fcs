@@ -81,33 +81,63 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
       )
     }
 
-    const updated = await prisma.order.update({
-      where: { id },
-      data: { status: step.to },
-      include: { items: { orderBy: { createdAt: 'asc' } } },
+    const updated = await prisma.$transaction(async (tx) => {
+      const u = await tx.order.update({
+        where: { id },
+        data: { status: step.to },
+        include: { items: { orderBy: { createdAt: 'asc' } } },
+      })
+
+      if (step.to === 'delivered') {
+        const soldProductIds = Array.from(
+          new Set(
+            u.items
+              .map((item) => item.productId)
+              .filter((pid): pid is string => typeof pid === 'string' && pid.length > 0)
+          )
+        )
+        for (const productId of soldProductIds) {
+          const p = await tx.product.findUnique({
+            where: { id: productId },
+            include: { images: { orderBy: { sortOrder: 'asc' } } },
+          })
+          if (!p) continue
+          await tx.productRemoval.create({
+            data: {
+              productId,
+              reason: 'PRODUCT_BOUGHT',
+              productSnapshot: {
+                source: 'ORDER_DELIVERED',
+                orderId: u.id,
+                name: p.name,
+                brand: p.brand,
+                sku: p.sku,
+                category: p.category,
+                section: p.section,
+                priceUgx: p.priceUgx,
+                imageUrls: p.images.map((img) => img.url),
+              } as object,
+            },
+          })
+          await tx.product.delete({ where: { id: productId } })
+        }
+      }
+
+      return u
     })
 
-    const order = prismaOrderToClientOrder(updated)
+    const orderRow =
+      step.to === 'delivered'
+        ? await prisma.order.findUniqueOrThrow({
+            where: { id },
+            include: { items: { orderBy: { createdAt: 'asc' } } },
+          })
+        : updated
+
+    const order = prismaOrderToClientOrder(orderRow)
 
     if (step.notify) {
       try {
-        if (step.to === 'delivered') {
-          const soldProductIds = Array.from(
-            new Set((updated.items ?? []).map((item) => item.productId).filter(Boolean))
-          ) as string[]
-          for (const productId of soldProductIds) {
-            await prisma.productRemoval.create({
-              data: {
-                productId,
-                reason: 'PRODUCT_BOUGHT',
-                productSnapshot: {
-                  source: 'ORDER_DELIVERED',
-                  orderId: updated.id,
-                } as object,
-              },
-            })
-          }
-        }
         if (step.to === 'dispatched') {
           await notifyOrderReady(order)
         } else if (step.to === 'delivered') {

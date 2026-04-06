@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Package, DollarSign, ShoppingCart, BarChart3, Users } from 'lucide-react'
+import { Package, DollarSign, ShoppingCart, BarChart3, Users, ShoppingBag } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import { OrderManager, type Order } from '@/lib/cart'
 import { SkeletonAdminDashboard } from '@/components/ui/Skeleton'
@@ -78,6 +78,9 @@ export default function AdminDashboard() {
   const [salesChartMode, setSalesChartMode] = useState<'monthly' | 'yearly'>('monthly')
   const [chartYear, setChartYear] = useState(() => new Date().getFullYear())
   const [chartMonth, setChartMonth] = useState(() => new Date().getMonth())
+  const [removalSummary, setRemovalSummary] = useState<{
+    PRODUCT_BOUGHT: number
+  } | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -91,12 +94,19 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     try {
-      const [productsRes, usersRes, ordersRes] = await Promise.all([
+      const [productsRes, usersRes, ordersRes, removalsRes] = await Promise.all([
         fetch('/api/products?includeInactive=1', { cache: 'no-store' }),
         fetch('/api/users', { cache: 'no-store' }),
         fetch('/api/orders', { cache: 'no-store' }),
+        fetch('/api/product-removals/summary', { cache: 'no-store' }),
       ])
       if (productsRes.ok) setProducts(await productsRes.json())
+      if (removalsRes.ok) {
+        const r = await removalsRes.json()
+        setRemovalSummary({ PRODUCT_BOUGHT: Number(r.PRODUCT_BOUGHT) || 0 })
+      } else {
+        setRemovalSummary(null)
+      }
       if (usersRes.ok) {
         const usersData = await usersRes.json()
         setUsers(usersData.map((u: any) => ({ id: u.id, isActive: u.isActive !== false })))
@@ -162,6 +172,12 @@ export default function AdminDashboard() {
     { label: 'Completed orders', value: stats.totalOrders, icon: ShoppingCart, delay: 0.1 },
     { label: 'Total Revenue', value: `UGX ${stats.totalRevenue.toLocaleString()}`, icon: DollarSign, delay: 0.2 },
     { label: 'Items Sold', value: stats.totalItemsSold, icon: BarChart3, delay: 0.3 },
+    {
+      label: 'Sold off catalog',
+      value: removalSummary?.PRODUCT_BOUGHT ?? '—',
+      icon: ShoppingBag,
+      delay: 0.32,
+    },
     { label: 'Total Users', value: stats.totalUsers, icon: Users, delay: 0.35 },
   ] as const
 
@@ -183,8 +199,8 @@ export default function AdminDashboard() {
 
               <div className="mb-6 sm:mb-8">
                 <h2 className="text-lg sm:text-xl font-bold text-primary-800 dark:text-primary-100 mb-4 text-center">Overview</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                  {overviewCards.slice(0, 3).map((card) => {
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {overviewCards.map((card) => {
                     const Icon = card.icon
                     return (
                       <motion.div
@@ -205,28 +221,10 @@ export default function AdminDashboard() {
                     )
                   })}
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-                  {overviewCards.slice(3).map((card) => {
-                    const Icon = card.icon
-                    return (
-                      <motion.div
-                        key={card.label}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: card.delay }}
-                        className="rounded-lg border border-neutral-300/70 dark:border-neutral-700 bg-white/70 dark:bg-neutral-900/40 py-4 px-4"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="min-w-0">
-                            <p className="text-xs text-neutral-600 dark:text-neutral-400">{card.label}</p>
-                            <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 break-words leading-tight">{card.value}</p>
-                          </div>
-                          <Icon className="w-5 h-5 text-primary-700 dark:text-primary-300 flex-shrink-0" />
-                        </div>
-                      </motion.div>
-                    )
-                  })}
-                </div>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 text-center mt-3 max-w-xl mx-auto leading-snug">
+                  When an order is marked <strong>delivered</strong>, each line item with a catalog product is removed from the shop and recorded as{' '}
+                  <strong>purchased</strong> (<code className="text-[10px]">PRODUCT_BOUGHT</code>). Revenue and items-sold charts use delivered orders; product counts reflect the live catalog.
+                </p>
               </div>
 
               {/* Analytics */}
@@ -478,7 +476,7 @@ export default function AdminDashboard() {
                           : 'Y-axis: units sold (top product only) · X-axis: month'}
                       </p>
                       <p className="text-[10px] text-neutral-500 dark:text-neutral-400 text-center mt-1 px-2 max-w-xl mx-auto leading-snug">
-                        Charts use <strong>delivered</strong> orders from the database (plus any older delivered orders saved only in this browser). Names follow the catalog when the line item product ID matches; otherwise you see the name stored on the order.
+                        Charts use <strong>delivered</strong> orders from the database (plus any older delivered orders saved only in this browser). Names follow the catalog when the line item product ID matches; otherwise you see the name stored on the order. Delivered line items remove matching products from the catalog, so older sales may show names from the order only.
                       </p>
                     </div>
                   </div>
