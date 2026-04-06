@@ -480,11 +480,15 @@ export default function FashionVideoSection() {
 
           <div className="mt-6 sm:mt-8 w-full">
             <HorizontalScrollAffordance
+              showEdgeFades={false}
+              syncScrollEdgeLines
+              hideScrollbar
               className="w-full"
-              scrollClassName="pb-2"
+              scrollClassName="py-3"
               scrollAriaLabel="Video gallery thumbnails"
+              syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-700/45 to-primary-500/28 dark:from-neutral-500 dark:to-neutral-400"
             >
-              <div className="flex w-max flex-row gap-3 px-2 sm:gap-4 sm:px-4">
+              <div className="flex min-h-[1px] min-w-full w-max flex-row justify-center gap-3 px-2 sm:gap-4 sm:px-4">
               {fashionVideos.map((video) => (
                   <motion.div
                     key={video.id}

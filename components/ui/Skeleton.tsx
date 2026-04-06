@@ -117,24 +117,27 @@ export function SkeletonAdminDashboard() {
 /** Featured collections – horizontal strip (matches loaded layout) */
 export function SkeletonFeaturedCollections() {
   return (
-    <div className="min-h-[280px] bg-unified relative overflow-hidden py-10 px-4">
+    <div className="min-h-[200px] bg-unified relative overflow-hidden py-10 px-4">
       <HorizontalScrollAffordance
-        className="mt-10 mb-10 max-w-6xl mx-auto"
-        scrollClassName="pt-8 pb-8"
+        showEdgeFades={false}
+        syncScrollEdgeLines
+        hideScrollbar
+        className="mt-10 mb-14 max-w-6xl mx-auto sm:mb-16"
+        scrollClassName="pt-6 pb-8"
         scrollAriaLabel="Featured collections loading"
         keyboardFocusable={false}
       >
-        <div className="flex w-max gap-6 sm:gap-8 px-4 sm:px-8">
+        <div className="flex w-max gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[min(280px,calc(100vw-3rem))] sm:w-[min(320px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(340px,calc((min(72rem,100vw)-9rem)/3))] rounded-2xl overflow-hidden skeleton-panel"
+              className="flex-shrink-0 w-[min(180px,calc(100vw-2.25rem))] sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))] overflow-hidden rounded-md skeleton-panel"
             >
-              <Skeleton className="aspect-square w-full rounded-none rounded-t-2xl" />
-              <div className="p-3 space-y-2">
-                <Skeleton className="h-3 w-16 rounded" />
-                <Skeleton className="h-4 w-full rounded" />
-                <Skeleton className="h-8 w-full rounded-lg" />
+              <Skeleton className="aspect-square w-full rounded-none rounded-t-md" />
+              <div className="space-y-1 p-1.5 sm:space-y-1.5 sm:p-2">
+                <Skeleton className="h-2 w-12 rounded sm:h-2.5 sm:w-14" />
+                <Skeleton className="h-3 w-full rounded sm:h-3.5" />
+                <Skeleton className="h-6 w-full rounded-md sm:h-7" />
               </div>
             </div>
           ))}

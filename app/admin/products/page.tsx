@@ -65,6 +65,30 @@ const DELETE_REASON_OPTIONS: { key: RemovalReasonKey; label: string; description
 const ICON_BTN_RED =
   'w-10 h-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300'
 
+/** Matches category grid card: badge on image top-left, sale + struck original under (ProductGridCard). */
+function AdminShopCardDiscountPreview({ saleUgx, originalUgx }: { saleUgx: number; originalUgx: number }) {
+  if (!Number.isFinite(saleUgx) || !Number.isFinite(originalUgx) || originalUgx <= saleUgx) return null
+  const pct = Math.round(((originalUgx - saleUgx) / originalUgx) * 100)
+  return (
+    <div className="mt-2 rounded-md border border-primary-500/30 bg-primary-800/30 p-2 dark:border-primary-500/40">
+      <p className="mb-1.5 text-[11px] font-medium text-primary-800 dark:text-primary-200">Shop card preview</p>
+      <div className="relative mx-auto aspect-square w-full max-w-[7.5rem] overflow-hidden rounded-lg bg-primary-900/20">
+        <div className="absolute left-1.5 top-1.5 z-30 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-white sm:text-xs">
+          {pct}% OFF
+        </div>
+      </div>
+      <div className="mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-0 px-0.5 pt-0 text-center">
+        <span className="text-[11px] font-bold text-primary-600 dark:text-primary-300 sm:text-xs">
+          UGX {saleUgx.toLocaleString()}
+        </span>
+        <span className="text-[10px] leading-none text-neutral-600 line-through dark:text-neutral-400 sm:text-[11px]">
+          UGX {originalUgx.toLocaleString()}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export default function AdminProductsPage() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
@@ -80,6 +104,10 @@ export default function AdminProductsPage() {
   const [undoDeletedProduct, setUndoDeletedProduct] = useState<Product | null>(null)
   const [undoBusy, setUndoBusy] = useState(false)
   const [productImages, setProductImages] = useState<string[]>([])
+  /** Brief spinner on thumbnail remove (add modal). */
+  const [addRemovingIndex, setAddRemovingIndex] = useState<number | null>(null)
+  /** Brief spinner on thumbnail remove (edit modal strip). */
+  const [editThumbRemovingIndex, setEditThumbRemovingIndex] = useState<number | null>(null)
   const [tablePage, setTablePage] = useState(1)
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -100,6 +128,11 @@ export default function AdminProductsPage() {
   const draggingImageIndexRef = useRef<number | null>(null)
   /** Tracks which thumbnail index is being moved under the finger (refs avoid stale closures in pointermove). */
   const touchDraggingImageIndexRef = useRef<number | null>(null)
+  /** Add-product modal image strip (only one of add/edit modals is open). */
+  const touchDraggingNewImageIndexRef = useRef<number | null>(null)
+  const draggingNewImageIndexRef = useRef<number | null>(null)
+
+  const REMOVE_IMAGE_SPIN_MS = 320
 
   useEffect(() => {
     if (!AuthManager.isAdmin()) {
@@ -157,6 +190,14 @@ export default function AdminProductsPage() {
   }, [detailsProduct?.id])
 
   useEffect(() => {
+    if (!editingProduct) setEditThumbRemovingIndex(null)
+  }, [editingProduct])
+
+  useEffect(() => {
+    if (!showAddModal) setAddRemovingIndex(null)
+  }, [showAddModal])
+
+  useEffect(() => {
     setDeleteReason('MISTAKENLY_POSTED')
   }, [deleteTarget?.id])
 
@@ -178,6 +219,35 @@ export default function AdminProductsPage() {
       images.splice(toIndex, 0, moved)
       return { ...prev, images }
     })
+  }
+
+  const reorderProductImages = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex) return
+    setProductImages((prev) => {
+      const images = [...prev]
+      if (!images[fromIndex] || !images[toIndex]) return prev
+      const [moved] = images.splice(fromIndex, 1)
+      images.splice(toIndex, 0, moved)
+      return images
+    })
+  }
+
+  const removeProductImageWithSpin = (index: number) => {
+    if (addRemovingIndex !== null) return
+    setAddRemovingIndex(index)
+    window.setTimeout(() => {
+      setProductImages((prev) => prev.filter((_, i) => i !== index))
+      setAddRemovingIndex(null)
+    }, REMOVE_IMAGE_SPIN_MS)
+  }
+
+  const removeEditThumbWithSpin = (index: number) => {
+    if (editThumbRemovingIndex !== null) return
+    setEditThumbRemovingIndex(index)
+    window.setTimeout(() => {
+      removeEditingImage(index)
+      setEditThumbRemovingIndex(null)
+    }, REMOVE_IMAGE_SPIN_MS)
   }
 
   const performDelete = (product: Product, reason: RemovalReasonKey) => {
@@ -222,10 +292,16 @@ export default function AdminProductsPage() {
   }
 
   const handleUpdate = (updated: Product) => {
-    fetch(`/api/products/${updated.id}`, {
+    const sale = updated.price_ugx
+    const orig = updated.original_price
+    const payload: Product = {
+      ...updated,
+      original_price: orig != null && Number(orig) > sale ? orig : undefined,
+    }
+    fetch(`/api/products/${payload.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated),
+      body: JSON.stringify(payload),
     })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to update product')
@@ -255,14 +331,19 @@ export default function AdminProductsPage() {
       alert('Add at least one image')
       return
     }
+    const sale = parseInt(newProduct.price_ugx, 10)
+    const originalParsed = parseInt(newProduct.original_price, 10)
+    const original_price =
+      Number.isFinite(originalParsed) && originalParsed > sale ? originalParsed : undefined
+
     const product: Product = {
       id: `${newProduct.category}-${newProduct.section}-${Date.now()}`,
       name: newProduct.name,
       brand: newProduct.brand,
       category: newProduct.category,
       section: newProduct.section,
-      price_ugx: parseInt(newProduct.price_ugx),
-      original_price: newProduct.original_price ? parseInt(newProduct.original_price) : undefined,
+      price_ugx: sale,
+      original_price,
       sizes: newProduct.sizes,
       colors: newProduct.colors,
       images: productImages,
@@ -286,8 +367,6 @@ export default function AdminProductsPage() {
       })
       .catch(() => alert('Failed to add product'))
   }
-
-  const removeImage = (index: number) => setProductImages(prev => prev.filter((_, i) => i !== index))
 
   return (
     <div className="admin-products-page min-h-screen pt-4">
@@ -496,11 +575,15 @@ export default function AdminProductsPage() {
                     </div>
                     {(detailsProduct.images?.length || 0) > 1 && (
                       <HorizontalScrollAffordance
-                        className="pt-2"
-                        scrollClassName="py-3 [scrollbar-width:thin]"
+                        showEdgeFades={false}
+                        syncScrollEdgeLines
+                        hideScrollbar
+                        className="mx-auto w-full max-w-[22rem] pt-2"
+                        scrollClassName="py-3"
                         scrollAriaLabel="Admin product image thumbnails"
+                        syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
                       >
-                        <div className="flex w-max items-center justify-start gap-2 px-1 md:gap-3">
+                        <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-center gap-2 px-1 md:gap-3">
                           {detailsProduct.images.map((img, index) => {
                             const isActive = detailsImageIndex === index
                             return (
@@ -510,7 +593,7 @@ export default function AdminProductsPage() {
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={() => setDetailsImageIndex(index)}
                                 aria-current={isActive ? 'true' : undefined}
-                                className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                                className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
                                   isActive
                                     ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
                                     : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
@@ -635,29 +718,22 @@ export default function AdminProductsPage() {
                               sizes="224px"
                               loading="lazy"
                             />
-                            <Button
-                              type="button"
-                              variant="circle"
-                              size="sm"
-                              className="focus-ring-none absolute right-2 top-2 z-20"
-                              onClick={() => removeEditingImage(0)}
-                              aria-label="Remove main image"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
                           </div>
-                          {(editingProduct.images?.length || 0) > 1 && (
-                            <HorizontalScrollAffordance
-                              className="pt-2"
-                              scrollClassName="py-3 [scrollbar-width:thin]"
-                              scrollAriaLabel="Edit product images"
-                            >
-                              <div className="flex w-max items-center justify-start gap-2 px-1 md:gap-3">
-                                {editingProduct.images.map((img, index) => {
+                          <HorizontalScrollAffordance
+                            showEdgeFades={false}
+                            syncScrollEdgeLines
+                            syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                            hideScrollbar
+                            className="pt-2"
+                            scrollClassName="py-3"
+                            scrollAriaLabel="Edit product images"
+                          >
+                            <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-start gap-2 px-1 md:gap-3">
+                              {editingProduct.images.map((img, index) => {
                                   const isActive = index === 0
                                   return (
                                     <div
-                                      key={img}
+                                      key={`${img}-${index}`}
                                       role="button"
                                       tabIndex={0}
                                       draggable
@@ -719,9 +795,9 @@ export default function AdminProductsPage() {
                                         setDraggingImageIndex(null)
                                       }}
                                       aria-current={isActive ? 'true' : undefined}
-                                      className={`focus-ring-none relative aspect-square w-10 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                      className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
                                         isActive
-                                          ? 'z-[1] border-primary-600 shadow-md dark:border-primary-400'
+                                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
                                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                       }`}
                                     >
@@ -735,12 +811,28 @@ export default function AdminProductsPage() {
                                           loading="lazy"
                                         />
                                       </span>
+                                      <button
+                                        type="button"
+                                        draggable={false}
+                                        onPointerDown={(e) => e.stopPropagation()}
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          removeEditThumbWithSpin(index)
+                                        }}
+                                        className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
+                                        aria-label={`Remove image ${index + 1}`}
+                                      >
+                                        {editThumbRemovingIndex === index ? (
+                                          <Loader2 className="h-2.5 w-2.5 animate-spin" aria-hidden />
+                                        ) : (
+                                          <X className="h-2.5 w-2.5" aria-hidden />
+                                        )}
+                                      </button>
                                     </div>
                                   )
                                 })}
-                              </div>
-                            </HorizontalScrollAffordance>
-                          )}
+                            </div>
+                          </HorizontalScrollAffordance>
                         </>
                       )}
                     </div>
@@ -768,6 +860,63 @@ export default function AdminProductsPage() {
                         />
                         <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, price_ugx: (prev.price_ugx || 0) + 1000 } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
                       </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Original price (UGX)</label>
+                      <p className="mb-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
+                        Optional. Higher than sale price shows the discount badge and crossed price on product cards.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEditingProduct((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    original_price: Math.max(0, (prev.original_price ?? 0) - 1000) || undefined,
+                                  }
+                                : null
+                            )
+                          }
+                          className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        >
+                          −
+                        </button>
+                        <input
+                          type="number"
+                          min={0}
+                          value={editingProduct.original_price ?? ''}
+                          onChange={(e) => {
+                            const v = e.target.value
+                            setEditingProduct((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    original_price: v === '' ? undefined : Math.max(0, parseInt(v, 10) || 0),
+                                  }
+                                : null
+                            )
+                          }}
+                          placeholder="e.g. list price"
+                          className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEditingProduct((prev) =>
+                              prev ? { ...prev, original_price: (prev.original_price ?? 0) + 1000 } : null
+                            )
+                          }
+                          className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <AdminShopCardDiscountPreview
+                        saleUgx={editingProduct.price_ugx}
+                        originalUgx={editingProduct.original_price ?? 0}
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Stock *</label>
@@ -863,6 +1012,50 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
                       <div>
+                        <label className="block text-sm font-medium mb-1">Original price (UGX)</label>
+                        <p className="mb-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
+                          Optional. Higher than sale price shows the discount badge and crossed price on product cards.
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setNewProduct((p) => ({
+                                ...p,
+                                original_price: String(Math.max(0, (parseInt(p.original_price, 10) || 0) - 1000)),
+                              }))
+                            }
+                            className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                          >
+                            −
+                          </button>
+                          <input
+                            type="number"
+                            min={0}
+                            value={newProduct.original_price}
+                            onChange={(e) => setNewProduct({ ...newProduct, original_price: e.target.value })}
+                            placeholder="e.g. list price"
+                            className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setNewProduct((p) => ({
+                                ...p,
+                                original_price: String((parseInt(p.original_price, 10) || 0) + 1000),
+                              }))
+                            }
+                            className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <AdminShopCardDiscountPreview
+                          saleUgx={parseInt(newProduct.price_ugx, 10) || 0}
+                          originalUgx={parseInt(newProduct.original_price, 10) || 0}
+                        />
+                      </div>
+                      <div>
                         <label className="block text-sm font-medium mb-1">Stock *</label>
                         <div className="flex items-center gap-2">
                           <button type="button" onClick={() => setNewProduct(p => ({ ...p, stock_qty: String(Math.max(0, (parseInt(p.stock_qty) || 0) - 1)) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
@@ -884,14 +1077,129 @@ export default function AdminProductsPage() {
                         Browse
                       </Button>
                       {productImages.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {productImages.map((img, i) => (
-                            <div key={i} className="relative">
-                              <img src={img} alt="" className="w-16 h-16 object-cover rounded-lg" />
-                              <button type="button" onClick={() => removeImage(i)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">×</button>
+                        <>
+                          <div className="mt-3 relative mr-auto w-full max-w-[14rem] aspect-square overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-700">
+                            <SafeImage
+                              src={productImages[0]}
+                              alt="Main image preview"
+                              fill
+                              className="object-contain object-center"
+                              sizes="224px"
+                              loading="lazy"
+                            />
+                          </div>
+                          <HorizontalScrollAffordance
+                            showEdgeFades={false}
+                            syncScrollEdgeLines
+                            syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                            hideScrollbar
+                            className="pt-2"
+                            scrollClassName="py-3"
+                            scrollAriaLabel="New product images"
+                          >
+                            <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-start gap-2 px-1 md:gap-3">
+                              {productImages.map((img, index) => {
+                                const isMain = index === 0
+                                return (
+                                  <div
+                                    key={`${index}-${img.length}`}
+                                    role="button"
+                                    tabIndex={0}
+                                    draggable
+                                    data-new-thumb-index={index}
+                                    onPointerDown={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      touchDraggingNewImageIndexRef.current = index
+                                      try {
+                                        e.currentTarget.setPointerCapture(e.pointerId)
+                                      } catch {
+                                        /* pointer capture unsupported */
+                                      }
+                                    }}
+                                    onPointerMove={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      if (touchDraggingNewImageIndexRef.current === null) return
+                                      const under = document.elementFromPoint(e.clientX, e.clientY)
+                                      if (!under) return
+                                      const thumb = under.closest('[data-new-thumb-index]') as HTMLElement | null
+                                      if (!thumb) return
+                                      const raw = thumb.getAttribute('data-new-thumb-index')
+                                      if (raw == null) return
+                                      const targetIndex = Number.parseInt(raw, 10)
+                                      if (!Number.isFinite(targetIndex)) return
+                                      const from = touchDraggingNewImageIndexRef.current
+                                      if (from === targetIndex) return
+                                      reorderProductImages(from, targetIndex)
+                                      touchDraggingNewImageIndexRef.current = targetIndex
+                                    }}
+                                    onPointerUp={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      touchDraggingNewImageIndexRef.current = null
+                                      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                        e.currentTarget.releasePointerCapture(e.pointerId)
+                                      }
+                                    }}
+                                    onPointerCancel={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      touchDraggingNewImageIndexRef.current = null
+                                      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                        e.currentTarget.releasePointerCapture(e.pointerId)
+                                      }
+                                    }}
+                                    onDragStart={() => {
+                                      draggingNewImageIndexRef.current = index
+                                    }}
+                                    onDragOver={(e) => e.preventDefault()}
+                                    onDrop={(e) => {
+                                      e.preventDefault()
+                                      const sourceIndex = draggingNewImageIndexRef.current
+                                      if (sourceIndex === null) return
+                                      reorderProductImages(sourceIndex, index)
+                                      draggingNewImageIndexRef.current = null
+                                    }}
+                                    onDragEnd={() => {
+                                      draggingNewImageIndexRef.current = null
+                                    }}
+                                    aria-current={isMain ? 'true' : undefined}
+                                    className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                      isMain
+                                        ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                                        : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
+                                    }`}
+                                  >
+                                    <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                                      <SafeImage
+                                        src={img}
+                                        alt={`New product image ${index + 1}`}
+                                        fill
+                                        className="object-contain object-center"
+                                        sizes="64px"
+                                        loading="lazy"
+                                      />
+                                    </span>
+                                    <button
+                                      type="button"
+                                      draggable={false}
+                                      onPointerDown={(e) => e.stopPropagation()}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        removeProductImageWithSpin(index)
+                                      }}
+                                      className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
+                                      aria-label={`Remove image ${index + 1}`}
+                                    >
+                                      {addRemovingIndex === index ? (
+                                        <Loader2 className="h-2.5 w-2.5 animate-spin" aria-hidden />
+                                      ) : (
+                                        <X className="h-2.5 w-2.5" aria-hidden />
+                                      )}
+                                    </button>
+                                  </div>
+                                )
+                              })}
                             </div>
-                          ))}
-                        </div>
+                          </HorizontalScrollAffordance>
+                        </>
                       )}
                     </div>
                     <div>

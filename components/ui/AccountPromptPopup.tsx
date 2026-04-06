@@ -92,12 +92,12 @@ export default function AccountPromptPopup() {
             className="pointer-events-auto w-full max-w-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Outer semi-transparent shell – same pattern as testimonials modal */}
-            <div className="hero-glass-frame relative backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl shadow-2xl">
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 flex max-h-[min(85vh,32rem)] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-                <ModalCloseButton onClose={handleDismiss} className="absolute top-4 right-4 z-30 shrink-0" aria-label="Close" />
-                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6">
+            {/* Outer glass + inner card with straight top-right / bottom-right (matches quick-view / remove-product modals) */}
+            <div className="hero-glass-frame relative overflow-hidden rounded-2xl backdrop-blur-lg bg-white/25 shadow-2xl dark:border-neutral-600 dark:bg-neutral-900/20">
+              <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
+              <ModalCloseButton onClose={handleDismiss} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close" />
+              <div className="relative z-10 flex max-h-[min(85vh,32rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-10 sm:pt-8 sm:pb-6">
             <div className="flex items-start space-x-4">
               <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-800">
                 <User className="h-6 w-6 text-primary-600 dark:text-primary-300" />
