@@ -66,52 +66,53 @@ const ProductGridCard = memo(function ProductGridCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="w-full max-w-xs transition-all duration-300 group cursor-pointer"
+      className="w-full transition-all duration-300 group cursor-pointer"
       onClick={() => onOpen(product)}
     >
       <div className="hero-glass-frame relative h-full backdrop-blur-md group-hover:shadow-xl transition-shadow duration-300">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col gap-3 p-3 sm:p-4">
+        <div className="bg-primary-800/30 rounded-md overflow-hidden border border-primary-500/30 h-full flex flex-col gap-1.5 p-1.5 sm:gap-1.5 sm:p-2">
           <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-900/20">
             <SafeImage
               src={product.images[0]}
               alt={product.name}
               fill
               className="object-contain transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 280px"
+              sizes="(max-width: 640px) 180px, 220px"
               loading="lazy"
             />
             {hasDiscount && (
-              <div className="absolute top-2 left-2 px-2 py-1 bg-accent-500 text-white text-xs font-bold rounded-full">
+              <div className="absolute left-1.5 top-1.5 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-white sm:text-xs">
                 {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
               </div>
             )}
           </div>
 
-          <div className="px-1 pt-1 pb-2 text-center sm:px-2 sm:pt-2 sm:pb-3">
-            <p className="text-primary-700 dark:text-primary-400 text-xs mb-1 line-clamp-1">{product.brand}</p>
-            <h3 className="text-sm font-bold text-neutral-850 dark:text-primary-50 mb-1 line-clamp-2">{product.name}</h3>
-            <div className="flex items-center justify-center space-x-1 mb-2 flex-wrap">
-              <span className="text-base sm:text-sm font-bold text-primary-600 dark:text-primary-300">
+          <div className="px-0.5 pb-0.5 pt-0 text-center sm:px-1">
+            <p className="mb-px line-clamp-1 text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">{product.brand}</p>
+            <h3 className="mb-px line-clamp-2 text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">{product.name}</h3>
+            <div className="mb-1 mt-px flex flex-wrap items-center justify-center gap-x-1 gap-y-0">
+              <span className="text-[11px] font-bold text-primary-600 dark:text-primary-300 sm:text-xs">
                 UGX {product.price_ugx.toLocaleString()}
               </span>
               {product.original_price && (
-                <span className="text-xs text-neutral-600 dark:text-neutral-400 line-through">
+                <span className="text-[10px] leading-none text-neutral-600 line-through dark:text-neutral-400 sm:text-[11px]">
                   UGX {product.original_price.toLocaleString()}
                 </span>
               )}
             </div>
-            <div className="flex items-center space-x-2 mt-2">
+            <div className="mt-0.5 flex items-center space-x-1">
               <Button
                 variant="default"
                 size="sm"
-                className="flex-1 text-sm font-medium gap-1.5 sm:gap-2 justify-center py-2.5"
+                className="flex-1 justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs"
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpen(product)
                 }}
+                aria-label={`Quick view ${product.name}`}
               >
-                <ShoppingCart className="w-4 h-4" />
+                <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Quick View</span>
                 <span className="sm:hidden">View</span>
               </Button>
@@ -552,15 +553,19 @@ export default function ProductCategoryPage() {
               </div>
             ) : (
             <HorizontalScrollAffordance
-              className="-mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 mb-2 md:mb-4"
-              scrollClassName="pb-10 md:pb-14"
+              showEdgeFades={false}
+              syncScrollEdgeLines
+              syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+              hideScrollbar
+              className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-0 sm:mb-10 sm:px-0 md:mb-12"
+              scrollClassName="pt-6 pb-8"
               scrollAriaLabel={`${section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} products`}
             >
-              <div className="flex min-h-[1px] min-w-full w-max flex-row justify-center gap-4 md:gap-6 lg:gap-8">
+              <div className="flex min-h-[1px] min-w-full w-max flex-row items-stretch justify-center gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5">
                 {visibleProducts.map((product: Product, index: number) => (
                   <div
                     key={product.id}
-                    className="flex-shrink-0 w-[min(20rem,calc(100vw-3rem))] sm:w-[min(20rem,calc((min(80rem,100vw)-5.5rem)/2))] md:w-[min(20rem,calc((min(80rem,100vw)-7rem)/3))] lg:w-[min(20rem,calc((min(80rem,100vw)-8.5rem)/4))] xl:w-[min(20rem,calc((min(80rem,100vw)-10rem)/5))]"
+                    className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
                   >
                     <ProductGridCard
                       product={product}
@@ -691,25 +696,6 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         .dark .modal-scroll::-webkit-scrollbar-track {
           background: rgba(255, 255, 255, 0.05);
         }
-        .thumbnail-row::-webkit-scrollbar {
-          height: 4px;
-          border-radius: 9999px;
-        }
-        .thumbnail-row::-webkit-scrollbar-thumb {
-          background: rgba(111, 78, 55, 0.3);
-          border-radius: 9999px;
-          border: none;
-        }
-        .thumbnail-row::-webkit-scrollbar-track {
-          background: rgba(111, 78, 55, 0.1);
-          border-radius: 9999px;
-        }
-        .dark .thumbnail-row::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.25);
-        }
-        .dark .thumbnail-row::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
-        }
       `}</style>
       <div
         className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-md bg-white/30 dark:bg-neutral-900/25 dark:border-neutral-600"
@@ -750,8 +736,12 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             </div>
             {product.images.length > 1 && (
               <HorizontalScrollAffordance
+                showEdgeFades={false}
+                syncScrollEdgeLines
+                syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                hideScrollbar
                 className="pt-2"
-                scrollClassName="py-3 thumbnail-row [scrollbar-width:thin]"
+                scrollClassName="py-3"
                 scrollAriaLabel="Product image thumbnails"
               >
                 <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-center gap-2 px-1 md:gap-3">
@@ -766,7 +756,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       aria-current={isActive ? 'true' : undefined}
                       className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
                         isActive
-                          ? 'z-[1] border-primary-600 shadow-md dark:border-primary-400'
+                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                       }`}
                     >

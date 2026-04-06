@@ -446,9 +446,9 @@ export default function AdminOrdersPage() {
               onClick={(e: MouseEvent) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800">
-                <ModalCloseButton onClose={() => setCancelConfirmOrderId(null)} className="absolute right-3 top-3 z-20" aria-label="Close" />
-                <h3 className="pr-8 text-lg font-bold text-neutral-900 dark:text-primary-100">Cancel order?</h3>
+              <ModalCloseButton onClose={() => setCancelConfirmOrderId(null)} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close" />
+              <div className="relative z-10 rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white p-6 pt-10 dark:border-neutral-700 dark:bg-neutral-800 sm:pt-8">
+                <h3 className="text-lg font-bold text-neutral-900 dark:text-primary-100">Cancel order?</h3>
                 <p className="mt-2 text-sm text-neutral-700 dark:text-primary-300">
                   Are you sure you want to cancel this order?
                 </p>
@@ -482,16 +482,9 @@ export default function AdminOrdersPage() {
           >
             <div className="hero-glass-frame relative overflow-hidden rounded-xl backdrop-blur-lg">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 rounded-xl border border-neutral-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-800">
-                <button
-                  type="button"
-                  className="focus-ring-none absolute right-2 top-2 rounded-md p-1 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-primary-100"
-                  onClick={() => setUndoOrderId(null)}
-                  aria-label="Dismiss undo"
-                >
-                  ×
-                </button>
-                <p className="pr-8 text-sm text-neutral-800 dark:text-primary-200">Order cancelled.</p>
+              <ModalCloseButton onClose={() => setUndoOrderId(null)} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Dismiss undo" />
+              <div className="relative z-10 rounded-bl-xl rounded-tl-xl border border-neutral-200 bg-white p-3 pt-9 dark:border-neutral-700 dark:bg-neutral-800 sm:pt-8">
+                <p className="text-sm text-neutral-800 dark:text-primary-200">Order cancelled.</p>
                 <div className="mt-2">
                   <Button type="button" variant="default" size="sm" onClick={() => void undoCancelOrder()}>
                     Undo Delete

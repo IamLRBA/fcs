@@ -29,6 +29,11 @@ type HorizontalScrollAffordanceProps = {
   syncScrollEdgeLines?: boolean
   /** Use scrollbar-hide instead of a visible horizontal scrollbar */
   hideScrollbar?: boolean
+  /**
+   * Tailwind classes for the vertical rails when syncScrollEdgeLines is on.
+   * Defaults to the Featured Collections panel gradient when omitted.
+   */
+  syncScrollEdgeLineClassName?: string
 }
 
 /**
@@ -43,6 +48,7 @@ export default function HorizontalScrollAffordance({
   showEdgeFades = true,
   syncScrollEdgeLines = false,
   hideScrollbar = false,
+  syncScrollEdgeLineClassName,
 }: HorizontalScrollAffordanceProps) {
   const scrollerRef = useRef<HTMLDivElement>(null)
   const [canLeft, setCanLeft] = useState(false)
@@ -99,8 +105,8 @@ export default function HorizontalScrollAffordance({
     }
   }
 
-  /** Same surface as FeaturedCollections card inner panel (title/price/buttons sit on this). */
   const edgeLineSurface =
+    (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) ||
     'bg-gradient-to-b from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700'
 
   const scrollerClassName = `focus-ring-none overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none ${hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]'} ${scrollClassName}`

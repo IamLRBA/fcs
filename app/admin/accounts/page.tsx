@@ -316,9 +316,9 @@ export default function AdminAccountsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-            <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
-              <ModalCloseButton onClose={() => setResetUserId(null)} className="absolute right-4 top-4 z-20 shrink-0" aria-label="Close" />
-              <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-12">
+            <ModalCloseButton onClose={() => setResetUserId(null)} className="absolute top-2 right-2 z-40 shrink-0" aria-label="Close" />
+            <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-10 sm:pt-8 sm:pb-6">
                 <h2 className="mb-4 text-lg font-bold text-primary-800 dark:text-primary-100">Reset password</h2>
                 <input
                   type="password"
@@ -357,9 +357,9 @@ export default function AdminAccountsPage() {
               className="hero-glass-frame relative w-full max-w-md backdrop-blur-lg rounded-2xl bg-white/25 dark:bg-neutral-900/20 border border-neutral-300/80 dark:border-neutral-600 overflow-hidden"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
-                <ModalCloseButton onClose={() => setPendingDeleteUser(null)} className="absolute right-4 top-4 z-20 shrink-0" aria-label="Close" />
-                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-12">
+              <ModalCloseButton onClose={() => setPendingDeleteUser(null)} className="absolute top-2 right-2 z-40 shrink-0" aria-label="Close" />
+              <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
+                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-10 sm:pt-8 sm:pb-6">
                   <h2 className="mb-4 text-lg font-bold text-primary-800 dark:text-primary-100">Delete account</h2>
                   <p className="mb-4 text-sm text-neutral-700 dark:text-neutral-300">
                     Are you sure you want to delete this account?

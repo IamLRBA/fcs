@@ -469,7 +469,7 @@ export default function LoginPage() {
           </AnimatePresence>
 
           <div className="mt-6 text-center">
-            <Link href="/admin/login" className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0">
+            <Link href="/admin/login" className="focus-ring-none text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
               Admin Login
             </Link>
           </div>

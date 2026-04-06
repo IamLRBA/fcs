@@ -80,6 +80,10 @@ export default function AdminProductsPage() {
   const [undoDeletedProduct, setUndoDeletedProduct] = useState<Product | null>(null)
   const [undoBusy, setUndoBusy] = useState(false)
   const [productImages, setProductImages] = useState<string[]>([])
+  /** Brief spinner on thumbnail remove (add modal). */
+  const [addRemovingIndex, setAddRemovingIndex] = useState<number | null>(null)
+  /** Brief spinner on thumbnail remove (edit modal strip). */
+  const [editThumbRemovingIndex, setEditThumbRemovingIndex] = useState<number | null>(null)
   const [tablePage, setTablePage] = useState(1)
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -100,6 +104,11 @@ export default function AdminProductsPage() {
   const draggingImageIndexRef = useRef<number | null>(null)
   /** Tracks which thumbnail index is being moved under the finger (refs avoid stale closures in pointermove). */
   const touchDraggingImageIndexRef = useRef<number | null>(null)
+  /** Add-product modal image strip (only one of add/edit modals is open). */
+  const touchDraggingNewImageIndexRef = useRef<number | null>(null)
+  const draggingNewImageIndexRef = useRef<number | null>(null)
+
+  const REMOVE_IMAGE_SPIN_MS = 320
 
   useEffect(() => {
     if (!AuthManager.isAdmin()) {
@@ -157,6 +166,14 @@ export default function AdminProductsPage() {
   }, [detailsProduct?.id])
 
   useEffect(() => {
+    if (!editingProduct) setEditThumbRemovingIndex(null)
+  }, [editingProduct])
+
+  useEffect(() => {
+    if (!showAddModal) setAddRemovingIndex(null)
+  }, [showAddModal])
+
+  useEffect(() => {
     setDeleteReason('MISTAKENLY_POSTED')
   }, [deleteTarget?.id])
 
@@ -178,6 +195,35 @@ export default function AdminProductsPage() {
       images.splice(toIndex, 0, moved)
       return { ...prev, images }
     })
+  }
+
+  const reorderProductImages = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex) return
+    setProductImages((prev) => {
+      const images = [...prev]
+      if (!images[fromIndex] || !images[toIndex]) return prev
+      const [moved] = images.splice(fromIndex, 1)
+      images.splice(toIndex, 0, moved)
+      return images
+    })
+  }
+
+  const removeProductImageWithSpin = (index: number) => {
+    if (addRemovingIndex !== null) return
+    setAddRemovingIndex(index)
+    window.setTimeout(() => {
+      setProductImages((prev) => prev.filter((_, i) => i !== index))
+      setAddRemovingIndex(null)
+    }, REMOVE_IMAGE_SPIN_MS)
+  }
+
+  const removeEditThumbWithSpin = (index: number) => {
+    if (editThumbRemovingIndex !== null) return
+    setEditThumbRemovingIndex(index)
+    window.setTimeout(() => {
+      removeEditingImage(index)
+      setEditThumbRemovingIndex(null)
+    }, REMOVE_IMAGE_SPIN_MS)
   }
 
   const performDelete = (product: Product, reason: RemovalReasonKey) => {
@@ -286,8 +332,6 @@ export default function AdminProductsPage() {
       })
       .catch(() => alert('Failed to add product'))
   }
-
-  const removeImage = (index: number) => setProductImages(prev => prev.filter((_, i) => i !== index))
 
   return (
     <div className="admin-products-page min-h-screen pt-4">
@@ -496,11 +540,15 @@ export default function AdminProductsPage() {
                     </div>
                     {(detailsProduct.images?.length || 0) > 1 && (
                       <HorizontalScrollAffordance
+                        showEdgeFades={false}
+                        syncScrollEdgeLines
+                        hideScrollbar
                         className="pt-2"
-                        scrollClassName="py-3 [scrollbar-width:thin]"
+                        scrollClassName="py-3"
                         scrollAriaLabel="Admin product image thumbnails"
+                        syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
                       >
-                        <div className="flex w-max items-center justify-start gap-2 px-1 md:gap-3">
+                        <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-start gap-2 px-1 md:gap-3">
                           {detailsProduct.images.map((img, index) => {
                             const isActive = detailsImageIndex === index
                             return (
@@ -510,7 +558,7 @@ export default function AdminProductsPage() {
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={() => setDetailsImageIndex(index)}
                                 aria-current={isActive ? 'true' : undefined}
-                                className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                                className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
                                   isActive
                                     ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
                                     : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
@@ -635,29 +683,22 @@ export default function AdminProductsPage() {
                               sizes="224px"
                               loading="lazy"
                             />
-                            <Button
-                              type="button"
-                              variant="circle"
-                              size="sm"
-                              className="focus-ring-none absolute right-2 top-2 z-20"
-                              onClick={() => removeEditingImage(0)}
-                              aria-label="Remove main image"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
                           </div>
-                          {(editingProduct.images?.length || 0) > 1 && (
-                            <HorizontalScrollAffordance
-                              className="pt-2"
-                              scrollClassName="py-3 [scrollbar-width:thin]"
-                              scrollAriaLabel="Edit product images"
-                            >
-                              <div className="flex w-max items-center justify-start gap-2 px-1 md:gap-3">
-                                {editingProduct.images.map((img, index) => {
+                          <HorizontalScrollAffordance
+                            showEdgeFades={false}
+                            syncScrollEdgeLines
+                            syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                            hideScrollbar
+                            className="pt-2"
+                            scrollClassName="py-3"
+                            scrollAriaLabel="Edit product images"
+                          >
+                            <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-start gap-2 px-1 md:gap-3">
+                              {editingProduct.images.map((img, index) => {
                                   const isActive = index === 0
                                   return (
                                     <div
-                                      key={img}
+                                      key={`${img}-${index}`}
                                       role="button"
                                       tabIndex={0}
                                       draggable
@@ -719,9 +760,9 @@ export default function AdminProductsPage() {
                                         setDraggingImageIndex(null)
                                       }}
                                       aria-current={isActive ? 'true' : undefined}
-                                      className={`focus-ring-none relative aspect-square w-10 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                      className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
                                         isActive
-                                          ? 'z-[1] border-primary-600 shadow-md dark:border-primary-400'
+                                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
                                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                       }`}
                                     >
@@ -735,12 +776,28 @@ export default function AdminProductsPage() {
                                           loading="lazy"
                                         />
                                       </span>
+                                      <button
+                                        type="button"
+                                        draggable={false}
+                                        onPointerDown={(e) => e.stopPropagation()}
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          removeEditThumbWithSpin(index)
+                                        }}
+                                        className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
+                                        aria-label={`Remove image ${index + 1}`}
+                                      >
+                                        {editThumbRemovingIndex === index ? (
+                                          <Loader2 className="h-2.5 w-2.5 animate-spin" aria-hidden />
+                                        ) : (
+                                          <X className="h-2.5 w-2.5" aria-hidden />
+                                        )}
+                                      </button>
                                     </div>
                                   )
                                 })}
-                              </div>
-                            </HorizontalScrollAffordance>
-                          )}
+                            </div>
+                          </HorizontalScrollAffordance>
                         </>
                       )}
                     </div>
@@ -884,14 +941,129 @@ export default function AdminProductsPage() {
                         Browse
                       </Button>
                       {productImages.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {productImages.map((img, i) => (
-                            <div key={i} className="relative">
-                              <img src={img} alt="" className="w-16 h-16 object-cover rounded-lg" />
-                              <button type="button" onClick={() => removeImage(i)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">×</button>
+                        <>
+                          <div className="mt-3 relative mr-auto w-full max-w-[14rem] aspect-square overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-700">
+                            <SafeImage
+                              src={productImages[0]}
+                              alt="Main image preview"
+                              fill
+                              className="object-contain object-center"
+                              sizes="224px"
+                              loading="lazy"
+                            />
+                          </div>
+                          <HorizontalScrollAffordance
+                            showEdgeFades={false}
+                            syncScrollEdgeLines
+                            syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                            hideScrollbar
+                            className="pt-2"
+                            scrollClassName="py-3"
+                            scrollAriaLabel="New product images"
+                          >
+                            <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-start gap-2 px-1 md:gap-3">
+                              {productImages.map((img, index) => {
+                                const isMain = index === 0
+                                return (
+                                  <div
+                                    key={`${index}-${img.length}`}
+                                    role="button"
+                                    tabIndex={0}
+                                    draggable
+                                    data-new-thumb-index={index}
+                                    onPointerDown={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      touchDraggingNewImageIndexRef.current = index
+                                      try {
+                                        e.currentTarget.setPointerCapture(e.pointerId)
+                                      } catch {
+                                        /* pointer capture unsupported */
+                                      }
+                                    }}
+                                    onPointerMove={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      if (touchDraggingNewImageIndexRef.current === null) return
+                                      const under = document.elementFromPoint(e.clientX, e.clientY)
+                                      if (!under) return
+                                      const thumb = under.closest('[data-new-thumb-index]') as HTMLElement | null
+                                      if (!thumb) return
+                                      const raw = thumb.getAttribute('data-new-thumb-index')
+                                      if (raw == null) return
+                                      const targetIndex = Number.parseInt(raw, 10)
+                                      if (!Number.isFinite(targetIndex)) return
+                                      const from = touchDraggingNewImageIndexRef.current
+                                      if (from === targetIndex) return
+                                      reorderProductImages(from, targetIndex)
+                                      touchDraggingNewImageIndexRef.current = targetIndex
+                                    }}
+                                    onPointerUp={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      touchDraggingNewImageIndexRef.current = null
+                                      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                        e.currentTarget.releasePointerCapture(e.pointerId)
+                                      }
+                                    }}
+                                    onPointerCancel={(e) => {
+                                      if (e.pointerType !== 'touch') return
+                                      touchDraggingNewImageIndexRef.current = null
+                                      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                        e.currentTarget.releasePointerCapture(e.pointerId)
+                                      }
+                                    }}
+                                    onDragStart={() => {
+                                      draggingNewImageIndexRef.current = index
+                                    }}
+                                    onDragOver={(e) => e.preventDefault()}
+                                    onDrop={(e) => {
+                                      e.preventDefault()
+                                      const sourceIndex = draggingNewImageIndexRef.current
+                                      if (sourceIndex === null) return
+                                      reorderProductImages(sourceIndex, index)
+                                      draggingNewImageIndexRef.current = null
+                                    }}
+                                    onDragEnd={() => {
+                                      draggingNewImageIndexRef.current = null
+                                    }}
+                                    aria-current={isMain ? 'true' : undefined}
+                                    className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                      isMain
+                                        ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                                        : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
+                                    }`}
+                                  >
+                                    <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                                      <SafeImage
+                                        src={img}
+                                        alt={`New product image ${index + 1}`}
+                                        fill
+                                        className="object-contain object-center"
+                                        sizes="64px"
+                                        loading="lazy"
+                                      />
+                                    </span>
+                                    <button
+                                      type="button"
+                                      draggable={false}
+                                      onPointerDown={(e) => e.stopPropagation()}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        removeProductImageWithSpin(index)
+                                      }}
+                                      className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
+                                      aria-label={`Remove image ${index + 1}`}
+                                    >
+                                      {addRemovingIndex === index ? (
+                                        <Loader2 className="h-2.5 w-2.5 animate-spin" aria-hidden />
+                                      ) : (
+                                        <X className="h-2.5 w-2.5" aria-hidden />
+                                      )}
+                                    </button>
+                                  </div>
+                                )
+                              })}
                             </div>
-                          ))}
-                        </div>
+                          </HorizontalScrollAffordance>
+                        </>
                       )}
                     </div>
                     <div>

@@ -472,10 +472,12 @@ export default function AccountPage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex w-full max-w-md max-h-[min(90vh,36rem)] flex-col overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-neutral-800"
+                className="hero-glass-frame relative flex w-full max-w-md max-h-[min(90vh,36rem)] flex-col overflow-hidden rounded-2xl backdrop-blur-lg bg-white/25 shadow-2xl dark:border-neutral-600 dark:bg-neutral-900/20"
               >
-                <ModalCloseButton onClose={() => setShowEditProfile(false)} className="absolute right-4 top-4 z-20 shrink-0" aria-label="Close" />
-                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-8 pt-14">
+                <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
+                <ModalCloseButton onClose={() => setShowEditProfile(false)} className="absolute top-2 right-2 z-40 shrink-0" aria-label="Close" />
+                <div className="relative z-10 flex max-h-[min(90vh,36rem)] min-h-0 flex-1 flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-800">
+                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-8 pt-10 sm:pt-8 sm:pb-6">
                 <h2 className="mb-6 text-2xl font-bold text-primary-800 dark:text-primary-100">
                   Edit Profile Picture
                 </h2>
@@ -518,6 +520,7 @@ export default function AccountPage() {
                       Save Changes
                     </Button>
                   </div>
+                </div>
                 </div>
                 </div>
               </motion.div>
