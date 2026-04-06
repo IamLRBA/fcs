@@ -97,6 +97,9 @@ export default function AdminProductsPage() {
     stock_qty: ''
   })
   const searchRef = useRef<HTMLDivElement>(null)
+  const draggingImageIndexRef = useRef<number | null>(null)
+  /** Tracks which thumbnail index is being moved under the finger (refs avoid stale closures in pointermove). */
+  const touchDraggingImageIndexRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (!AuthManager.isAdmin()) {
@@ -624,16 +627,24 @@ export default function AdminProductsPage() {
                       {(editingProduct.images?.length || 0) > 0 && (
                         <>
                           <div className="mt-3 relative mr-auto w-full max-w-[14rem] aspect-square overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-700">
-                            <span className="absolute inset-1.5 overflow-hidden rounded-md bg-neutral-50 dark:bg-neutral-900/50">
-                              <SafeImage
-                                src={editingProduct.images?.[0]}
-                                alt="Selected preview"
-                                fill
-                                className="object-contain object-center"
-                                sizes="224px"
-                                loading="lazy"
-                              />
-                            </span>
+                            <SafeImage
+                              src={editingProduct.images?.[0]}
+                              alt="Selected preview"
+                              fill
+                              className="object-contain object-center"
+                              sizes="224px"
+                              loading="lazy"
+                            />
+                            <Button
+                              type="button"
+                              variant="circle"
+                              size="sm"
+                              className="focus-ring-none absolute right-2 top-2 z-20"
+                              onClick={() => removeEditingImage(0)}
+                              aria-label="Remove main image"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
                           </div>
                           {(editingProduct.images?.length || 0) > 1 && (
                             <HorizontalScrollAffordance
@@ -646,23 +657,71 @@ export default function AdminProductsPage() {
                                   const isActive = index === 0
                                   return (
                                     <div
-                                      key={`edit-image-${index}`}
+                                      key={img}
                                       role="button"
                                       tabIndex={0}
                                       draggable
-                                      onMouseDown={(e) => e.preventDefault()}
-                                      onDragStart={() => setDraggingImageIndex(index)}
+                                      data-edit-thumb-index={index}
+                                      onPointerDown={(e) => {
+                                        if (e.pointerType !== 'touch') return
+                                        touchDraggingImageIndexRef.current = index
+                                        try {
+                                          e.currentTarget.setPointerCapture(e.pointerId)
+                                        } catch {
+                                          /* pointer capture unsupported */
+                                        }
+                                      }}
+                                      onPointerMove={(e) => {
+                                        if (e.pointerType !== 'touch') return
+                                        if (touchDraggingImageIndexRef.current === null) return
+                                        const under = document.elementFromPoint(e.clientX, e.clientY)
+                                        if (!under) return
+                                        const thumb = under.closest('[data-edit-thumb-index]') as HTMLElement | null
+                                        if (!thumb) return
+                                        const raw = thumb.getAttribute('data-edit-thumb-index')
+                                        if (raw == null) return
+                                        const targetIndex = Number.parseInt(raw, 10)
+                                        if (!Number.isFinite(targetIndex)) return
+                                        const from = touchDraggingImageIndexRef.current
+                                        if (from === targetIndex) return
+                                        reorderEditingImages(from, targetIndex)
+                                        touchDraggingImageIndexRef.current = targetIndex
+                                      }}
+                                      onPointerUp={(e) => {
+                                        if (e.pointerType !== 'touch') return
+                                        touchDraggingImageIndexRef.current = null
+                                        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                          e.currentTarget.releasePointerCapture(e.pointerId)
+                                        }
+                                      }}
+                                      onPointerCancel={(e) => {
+                                        if (e.pointerType !== 'touch') return
+                                        touchDraggingImageIndexRef.current = null
+                                        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                                          e.currentTarget.releasePointerCapture(e.pointerId)
+                                        }
+                                      }}
+                                      onDragStart={() => {
+                                        draggingImageIndexRef.current = index
+                                        setDraggingImageIndex(index)
+                                      }}
                                       onDragOver={(e) => e.preventDefault()}
-                                      onDrop={() => {
-                                        if (draggingImageIndex === null) return
-                                        reorderEditingImages(draggingImageIndex, index)
+                                      onDrop={(e) => {
+                                        e.preventDefault()
+                                        const sourceIndex = draggingImageIndexRef.current ?? draggingImageIndex
+                                        if (sourceIndex === null) return
+                                        reorderEditingImages(sourceIndex, index)
+                                        draggingImageIndexRef.current = null
                                         setDraggingImageIndex(null)
                                       }}
-                                      onDragEnd={() => setDraggingImageIndex(null)}
+                                      onDragEnd={() => {
+                                        draggingImageIndexRef.current = null
+                                        setDraggingImageIndex(null)
+                                      }}
                                       aria-current={isActive ? 'true' : undefined}
-                                      className={`focus-ring-none relative aspect-square w-10 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-12 md:w-14 dark:bg-neutral-800/40 ${
+                                      className={`focus-ring-none relative aspect-square w-10 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
                                         isActive
-                                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                                          ? 'z-[1] border-primary-600 shadow-md dark:border-primary-400'
                                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                       }`}
                                     >
@@ -676,18 +735,6 @@ export default function AdminProductsPage() {
                                           loading="lazy"
                                         />
                                       </span>
-                                      <button
-                                        type="button"
-                                        className="focus-ring-none absolute left-1/2 top-1/2 z-20 inline-flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary-500/40 bg-black/40 text-white backdrop-blur-sm dark:border-primary-400/50"
-                                        onClick={(e) => {
-                                          e.preventDefault()
-                                          e.stopPropagation()
-                                          removeEditingImage(index)
-                                        }}
-                                        aria-label={`Remove image ${index + 1}`}
-                                      >
-                                        <X className="h-3.5 w-3.5" />
-                                      </button>
                                     </div>
                                   )
                                 })}
