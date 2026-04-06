@@ -119,8 +119,8 @@ export function SkeletonFeaturedCollections() {
   return (
     <div className="min-h-[280px] bg-unified relative overflow-hidden py-10 px-4">
       <HorizontalScrollAffordance
-        className="max-w-6xl mx-auto"
-        scrollClassName="pb-2"
+        className="mt-10 mb-10 max-w-6xl mx-auto"
+        scrollClassName="pt-8 pb-8"
         scrollAriaLabel="Featured collections loading"
         keyboardFocusable={false}
       >

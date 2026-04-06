@@ -728,16 +728,14 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           {/* Image Gallery */}
           <div className="flex-shrink-0 flex flex-col space-y-4">
             <div className="relative mx-auto w-full max-w-[28rem] aspect-square bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group flex items-center justify-center">
-              <span className="absolute inset-2 overflow-hidden rounded-md bg-neutral-50 dark:bg-neutral-900/50">
-                <SafeImage
-                  src={product.images[currentImageIndex]}
-                  alt={product.name}
-                  fill
-                  className="object-contain object-center"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
-                  priority
-                />
-              </span>
+              <SafeImage
+                src={product.images[currentImageIndex]}
+                alt={product.name}
+                fill
+                className="object-contain object-center"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+                priority
+              />
               {product.images.length > 0 && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -756,7 +754,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 scrollClassName="py-3 thumbnail-row [scrollbar-width:thin]"
                 scrollAriaLabel="Product image thumbnails"
               >
-                <div className="flex w-max items-center justify-start gap-2 md:gap-3 px-1">
+                <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-center gap-2 px-1 md:gap-3">
                   {product.images.map((img, index) => {
                     const isActive = currentImageIndex === index
                     return (
@@ -768,7 +766,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       aria-current={isActive ? 'true' : undefined}
                       className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
                         isActive
-                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                          ? 'z-[1] border-primary-600 shadow-md dark:border-primary-400'
                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                       }`}
                     >

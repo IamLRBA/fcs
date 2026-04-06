@@ -147,8 +147,8 @@ export default function FeaturedCollections() {
 
         {featuredProducts.length > 0 ? (
           <HorizontalScrollAffordance
-            className="max-w-6xl mx-auto -mx-4 px-4 sm:mx-0 sm:px-0"
-            scrollClassName="pb-4"
+            className="mt-10 mb-10 max-w-6xl mx-auto -mx-4 px-4 sm:mx-0 sm:px-0"
+            scrollClassName="pt-8 pb-8"
             scrollAriaLabel="Featured collections"
           >
             <div className="flex flex-row gap-6 sm:gap-x-10 md:gap-8 lg:gap-15 w-max px-4 sm:px-8 sm:px-10">
