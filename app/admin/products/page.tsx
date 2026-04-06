@@ -65,6 +65,30 @@ const DELETE_REASON_OPTIONS: { key: RemovalReasonKey; label: string; description
 const ICON_BTN_RED =
   'w-10 h-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300'
 
+/** Matches category grid card: badge on image top-left, sale + struck original under (ProductGridCard). */
+function AdminShopCardDiscountPreview({ saleUgx, originalUgx }: { saleUgx: number; originalUgx: number }) {
+  if (!Number.isFinite(saleUgx) || !Number.isFinite(originalUgx) || originalUgx <= saleUgx) return null
+  const pct = Math.round(((originalUgx - saleUgx) / originalUgx) * 100)
+  return (
+    <div className="mt-2 rounded-md border border-primary-500/30 bg-primary-800/30 p-2 dark:border-primary-500/40">
+      <p className="mb-1.5 text-[11px] font-medium text-primary-800 dark:text-primary-200">Shop card preview</p>
+      <div className="relative mx-auto aspect-square w-full max-w-[7.5rem] overflow-hidden rounded-lg bg-primary-900/20">
+        <div className="absolute left-1.5 top-1.5 z-30 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-white sm:text-xs">
+          {pct}% OFF
+        </div>
+      </div>
+      <div className="mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-0 px-0.5 pt-0 text-center">
+        <span className="text-[11px] font-bold text-primary-600 dark:text-primary-300 sm:text-xs">
+          UGX {saleUgx.toLocaleString()}
+        </span>
+        <span className="text-[10px] leading-none text-neutral-600 line-through dark:text-neutral-400 sm:text-[11px]">
+          UGX {originalUgx.toLocaleString()}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export default function AdminProductsPage() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
@@ -268,10 +292,16 @@ export default function AdminProductsPage() {
   }
 
   const handleUpdate = (updated: Product) => {
-    fetch(`/api/products/${updated.id}`, {
+    const sale = updated.price_ugx
+    const orig = updated.original_price
+    const payload: Product = {
+      ...updated,
+      original_price: orig != null && Number(orig) > sale ? orig : undefined,
+    }
+    fetch(`/api/products/${payload.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated),
+      body: JSON.stringify(payload),
     })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to update product')
@@ -301,14 +331,19 @@ export default function AdminProductsPage() {
       alert('Add at least one image')
       return
     }
+    const sale = parseInt(newProduct.price_ugx, 10)
+    const originalParsed = parseInt(newProduct.original_price, 10)
+    const original_price =
+      Number.isFinite(originalParsed) && originalParsed > sale ? originalParsed : undefined
+
     const product: Product = {
       id: `${newProduct.category}-${newProduct.section}-${Date.now()}`,
       name: newProduct.name,
       brand: newProduct.brand,
       category: newProduct.category,
       section: newProduct.section,
-      price_ugx: parseInt(newProduct.price_ugx),
-      original_price: newProduct.original_price ? parseInt(newProduct.original_price) : undefined,
+      price_ugx: sale,
+      original_price,
       sizes: newProduct.sizes,
       colors: newProduct.colors,
       images: productImages,
@@ -827,6 +862,63 @@ export default function AdminProductsPage() {
                       </div>
                     </div>
                     <div>
+                      <label className="block text-sm font-medium mb-1">Original price (UGX)</label>
+                      <p className="mb-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
+                        Optional. Higher than sale price shows the discount badge and crossed price on product cards.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEditingProduct((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    original_price: Math.max(0, (prev.original_price ?? 0) - 1000) || undefined,
+                                  }
+                                : null
+                            )
+                          }
+                          className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        >
+                          −
+                        </button>
+                        <input
+                          type="number"
+                          min={0}
+                          value={editingProduct.original_price ?? ''}
+                          onChange={(e) => {
+                            const v = e.target.value
+                            setEditingProduct((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    original_price: v === '' ? undefined : Math.max(0, parseInt(v, 10) || 0),
+                                  }
+                                : null
+                            )
+                          }}
+                          placeholder="e.g. list price"
+                          className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEditingProduct((prev) =>
+                              prev ? { ...prev, original_price: (prev.original_price ?? 0) + 1000 } : null
+                            )
+                          }
+                          className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <AdminShopCardDiscountPreview
+                        saleUgx={editingProduct.price_ugx}
+                        originalUgx={editingProduct.original_price ?? 0}
+                      />
+                    </div>
+                    <div>
                       <label className="block text-sm font-medium mb-1">Stock *</label>
                       <div className="flex items-center gap-2">
                         <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, stock_qty: Math.max(0, (prev.stock_qty || 0) - 1) } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
@@ -918,6 +1010,50 @@ export default function AdminProductsPage() {
                           <input required type="number" min={0} value={newProduct.price_ugx} onChange={(e) => setNewProduct({ ...newProduct, price_ugx: e.target.value })} className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center" />
                           <button type="button" onClick={() => setNewProduct(p => ({ ...p, price_ugx: String((parseInt(p.price_ugx) || 0) + 1000) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
                         </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Original price (UGX)</label>
+                        <p className="mb-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
+                          Optional. Higher than sale price shows the discount badge and crossed price on product cards.
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setNewProduct((p) => ({
+                                ...p,
+                                original_price: String(Math.max(0, (parseInt(p.original_price, 10) || 0) - 1000)),
+                              }))
+                            }
+                            className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                          >
+                            −
+                          </button>
+                          <input
+                            type="number"
+                            min={0}
+                            value={newProduct.original_price}
+                            onChange={(e) => setNewProduct({ ...newProduct, original_price: e.target.value })}
+                            placeholder="e.g. list price"
+                            className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setNewProduct((p) => ({
+                                ...p,
+                                original_price: String((parseInt(p.original_price, 10) || 0) + 1000),
+                              }))
+                            }
+                            className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <AdminShopCardDiscountPreview
+                          saleUgx={parseInt(newProduct.price_ugx, 10) || 0}
+                          originalUgx={parseInt(newProduct.original_price, 10) || 0}
+                        />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Stock *</label>
