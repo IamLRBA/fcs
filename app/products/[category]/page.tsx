@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, memo } from 'react'
+import { useState, useEffect, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ShoppingCart, X, Maximize2, Minimize, ChevronLeft, ChevronRight, Quote } from 'lucide-react'
+import { ShoppingCart, X, Maximize2, Minimize, Quote } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
@@ -72,12 +72,12 @@ const ProductGridCard = memo(function ProductGridCard({
       <div className="hero-glass-frame relative h-full backdrop-blur-md group-hover:shadow-xl transition-shadow duration-300">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
         <div className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 h-full flex flex-col gap-3 p-3 sm:p-4">
-          <div className="relative w-full aspect-square bg-primary-900/20 overflow-hidden rounded-lg">
+          <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-900/20">
             <SafeImage
               src={product.images[0]}
               alt={product.name}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-110"
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 280px"
               loading="lazy"
             />
@@ -481,6 +481,7 @@ export default function ProductCategoryPage() {
               items={sectionNavItems}
               value={selectedSection ?? sections[0] ?? null}
               onSelect={(id) => scrollToSection(id)}
+              className="focus-ring-none"
             />
           </motion.div>
         </div>
@@ -538,9 +539,16 @@ export default function ProductCategoryPage() {
                 <p className="text-xl sm:text-2xl font-semibold text-primary-800 dark:text-primary-100">
                   Products Not Available
                 </p>
-                <Button href="/sections/shop#our-products" variant="default" size="md" className="inline-flex items-center justify-center mt-6">
-                  Check Other Products
-                </Button>
+                <div className="hero-cta-buttons flex justify-center mt-6">
+                  <Button
+                    href="/sections/shop#our-products"
+                    variant="default"
+                    size="md"
+                    className="inline-flex items-center justify-center"
+                  >
+                    Check Other Products
+                  </Button>
+                </div>
               </div>
             ) : (
             <HorizontalScrollAffordance
@@ -586,7 +594,6 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
   const [addedToCart, setAddedToCart] = useState(false)
   const [isInCart, setIsInCart] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const thumbnailRef = useRef<HTMLDivElement>(null)
 
   // Get the single size and color for this product (since each product is one piece)
   const productSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : ''
@@ -642,16 +649,6 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       setIsAddingToCart(false)
       setAddedToCart(true)
     }, 300)
-  }
-
-  const scrollThumbnails = (direction: 'left' | 'right') => {
-    if (thumbnailRef.current) {
-      const scrollAmount = 200
-      thumbnailRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      })
-    }
   }
 
   const openFullscreen = () => setIsFullscreen(true)
@@ -723,20 +720,20 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="relative w-full max-h-[70vh] overflow-y-auto rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 bg-white shadow-2xl modal-scroll dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
+        className="relative flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
       >
-        {/* Close Button */}
-        <ModalCloseButton onClose={onClose} className="absolute top-2 right-2 z-20 flex-shrink-0" aria-label="Close modal" />
+        <ModalCloseButton onClose={onClose} className="absolute top-2 right-2 z-30 flex-shrink-0" aria-label="Close modal" />
 
-        <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-10 pt-10 sm:pt-8 md:pt-6 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
+        <div className="modal-scroll min-h-0 flex-1 overflow-y-auto pt-10 sm:pt-8 md:pt-6 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
+        <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-10">
           {/* Image Gallery */}
           <div className="flex-shrink-0 flex flex-col space-y-4">
-            <div className="relative h-72 sm:h-80 md:h-[24rem] bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group">
+            <div className="relative h-72 sm:h-80 md:h-[24rem] bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group flex items-center justify-center">
               <SafeImage
                 src={product.images[currentImageIndex]}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
                 priority
               />
@@ -745,7 +742,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={isFullscreen ? closeFullscreen : openFullscreen}
-                  className="absolute top-4 right-4 p-2 text-neutral-700 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all bg-white/80 dark:bg-black/40 rounded-lg"
+                  className="absolute top-4 right-4 p-2 text-neutral-700 dark:text-white/90 opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 focus:outline-none"
                   aria-label="Fullscreen"
                 >
                   {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
@@ -753,57 +750,42 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
               )}
             </div>
             {product.images.length > 1 && (
-              <div className="relative pt-2 sm:pt-2 overflow-visible">
-                {product.images.length > 4 && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => scrollThumbnails('left')}
-                      className="p-1 text-neutral-850/80 dark:text-white/80 hover:text-neutral-850 dark:hover:text-white transition-all duration-200"
-                    >
-                      <span className="text-lg font-medium inline-block">⟸</span>
-                    </motion.button>
-                  </div>
-                )}
-                <div
-                  ref={thumbnailRef}
-                  className="thumbnail-row flex items-center justify-start gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3 pl-4 pr-4 md:pl-0 md:pr-0"
-                  style={{ scrollbarWidth: 'thin' }}
-                >
-                  {product.images.map((img, index) => (
+              <HorizontalScrollAffordance
+                className="pt-2"
+                scrollClassName="py-3 thumbnail-row [scrollbar-width:thin]"
+                scrollAriaLabel="Product image thumbnails"
+              >
+                <div className="flex w-max items-center justify-start gap-2 md:gap-3 px-1">
+                  {product.images.map((img, index) => {
+                    const isActive = currentImageIndex === index
+                    return (
                     <button
                       key={index}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 h-16 w-16 sm:h-20 sm:w-20 md:h-[5.5rem] md:w-[5.5rem] rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                        currentImageIndex === index ? 'border-primary-600 dark:border-primary-500 scale-105' : 'border-transparent hover:border-primary-400 dark:hover:border-primary-300'
+                      aria-current={isActive ? 'true' : undefined}
+                      className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                        isActive
+                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                          : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                       }`}
                     >
-                      <SafeImage
-                        src={img}
-                        alt={`${product.name} ${index + 1}`}
-                        width={88}
-                        height={88}
-                        className="w-full h-full object-cover"
-                        sizes="88px"
-                        loading="lazy"
-                      />
+                      <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                        <SafeImage
+                          src={img}
+                          alt={`${product.name} ${index + 1}`}
+                          fill
+                          className="object-contain object-center"
+                          sizes="80px"
+                          loading="lazy"
+                        />
+                      </span>
                     </button>
-                  ))}
+                    )
+                  })}
                 </div>
-                {product.images.length > 4 && (
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => scrollThumbnails('right')}
-                      className="p-1 text-neutral-850/80 dark:text-white/80 hover:text-neutral-850 dark:hover:text-white transition-all duration-200"
-                    >
-                      <span className="text-lg font-medium inline-block">⟹</span>
-                    </motion.button>
-                  </div>
-                )}
-              </div>
+              </HorizontalScrollAffordance>
             )}
           </div>
 
@@ -867,6 +849,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             </div>
           </div>
         </div>
+        </div>
       </motion.div>
       </div>
 
@@ -887,9 +870,10 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 e.stopPropagation()
                 closeFullscreen()
               }}
-              className="absolute top-4 right-4 p-2 text-white/80 hover:text-white transition-all duration-200 z-10"
+              className="absolute top-4 right-4 z-10 p-2 text-white/85 transition-colors hover:text-white"
+              aria-label="Exit fullscreen"
             >
-              <Minimize className="w-6 h-6" />
+              <Minimize className="h-6 w-6" />
             </motion.button>
             <motion.div
               initial={{ scale: 0.9 }}
@@ -910,24 +894,38 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             </motion.div>
             {product.images.length > 1 && (
               <>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : product.images.length - 1))
-                  }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-200"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setCurrentImageIndex((prev) => (prev < product.images.length - 1 ? prev + 1 : 0))
-                  }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-200"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
+                <div className="absolute left-3 top-1/2 z-10 -translate-y-1/2 sm:left-4">
+                  <Button
+                    type="button"
+                    variant="circle"
+                    className="focus-ring-none !border-white/35 !bg-white/15 !text-white hover:!bg-white/25"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : product.images.length - 1))
+                    }}
+                    aria-label="Previous image"
+                  >
+                    <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>
+                      ⟸
+                    </span>
+                  </Button>
+                </div>
+                <div className="absolute right-3 top-1/2 z-10 -translate-y-1/2 sm:right-4">
+                  <Button
+                    type="button"
+                    variant="circle"
+                    className="focus-ring-none !border-white/35 !bg-white/15 !text-white hover:!bg-white/25"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCurrentImageIndex((prev) => (prev < product.images.length - 1 ? prev + 1 : 0))
+                    }}
+                    aria-label="Next image"
+                  >
+                    <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>
+                      ⟹
+                    </span>
+                  </Button>
+                </div>
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
                   {currentImageIndex + 1} / {product.images.length}
                 </div>

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import type { RemovalReason } from '@prisma/client'
 
 function toCatalogProduct(product: any) {
   return {
@@ -59,9 +60,45 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   return res
 }
 
-export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+const VALID_REMOVAL_REASONS: RemovalReason[] = ['PRODUCT_BOUGHT', 'MISTAKENLY_POSTED', 'DISCONTINUED']
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  await prisma.product.delete({ where: { id } })
+  let reason: RemovalReason = 'MISTAKENLY_POSTED'
+  try {
+    const body = await request.json().catch(() => ({}))
+    const r = (body as { reason?: string })?.reason
+    if (r && VALID_REMOVAL_REASONS.includes(r as RemovalReason)) {
+      reason = r as RemovalReason
+    }
+  } catch {
+    /* empty body ok */
+  }
+
+  const existing = await prisma.product.findUnique({
+    where: { id },
+    include: { images: true },
+  })
+  if (!existing) {
+    return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.productRemoval.create({
+      data: {
+        productId: id,
+        reason,
+        productSnapshot: {
+          name: existing.name,
+          sku: existing.sku,
+          category: existing.category,
+          section: existing.section,
+        } as object,
+      },
+    })
+    await tx.product.delete({ where: { id } })
+  })
+
   const res = NextResponse.json({ ok: true })
   res.headers.set('Cache-Control', 'private, no-store, must-revalidate')
   return res

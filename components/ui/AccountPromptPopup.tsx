@@ -95,16 +95,15 @@ export default function AccountPromptPopup() {
             {/* Outer semi-transparent shell – same pattern as testimonials modal */}
             <div className="hero-glass-frame relative backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl shadow-2xl">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              {/* Inner solid container for readable content */}
-              <div className="relative z-10 rounded-2xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-6">
-            <ModalCloseButton onClose={handleDismiss} className="absolute top-4 right-4 flex-shrink-0 z-20" aria-label="Close" />
-            
+              <div className="relative z-10 flex max-h-[min(85vh,32rem)] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+                <ModalCloseButton onClose={handleDismiss} className="absolute top-4 right-4 z-30 shrink-0" aria-label="Close" />
+                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6">
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center flex-shrink-0">
-                <User className="w-6 h-6 text-primary-600 dark:text-primary-300" />
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-800">
+                <User className="h-6 w-6 text-primary-600 dark:text-primary-300" />
               </div>
               
-              <div className="flex-1 min-w-0 pr-10">
+              <div className="min-w-0 flex-1 pr-2 sm:pr-4">
                 <div className="flex items-center space-x-2 mb-2">
                   <AlertCircle className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                   <h3 className="text-lg font-bold text-primary-800 dark:text-neutral-100">
@@ -138,6 +137,7 @@ export default function AccountPromptPopup() {
                 </div>
               </div>
             </div>
+                </div>
               </div>
             </div>
           </motion.div>

@@ -3,15 +3,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation, Pagination, FreeMode } from 'swiper/modules'
 import { Play, Pause, Volume2, VolumeX, Maximize, Settings, SkipBack, SkipForward } from 'lucide-react'
 import Button from '@/components/ui/Button'
-
-// Import Swiper styles
-import 'swiper/css'
-import 'swiper/css/pagination'
-import 'swiper/css/free-mode'
+import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 
 const fashionVideos = [
   {
@@ -485,42 +479,19 @@ export default function FashionVideoSection() {
           </div>
 
           <div className="mt-6 sm:mt-8 w-full">
-            <Swiper
-              modules={[Navigation, Pagination, FreeMode]}
-              spaceBetween={12}
-              slidesPerView={2}
-              freeMode={true}
-              navigation={true}
-              pagination={{ clickable: true }}
-              watchOverflow={true}
-              watchSlidesProgress={true}
-              breakpoints={{
-                320: {
-                  slidesPerView: 2,
-                  spaceBetween: 12,
-                },
-                640: {
-                  slidesPerView: 3,
-                  spaceBetween: 16,
-                },
-                1024: {
-                  slidesPerView: 4,
-                  spaceBetween: 16,
-                },
-                1280: {
-                  slidesPerView: 5,
-                  spaceBetween: 16,
-                },
-              }}
-              className="video-swiper w-full"
-              style={{ paddingBottom: '40px' }}
+            <HorizontalScrollAffordance
+              className="w-full"
+              scrollClassName="pb-2"
+              scrollAriaLabel="Video gallery thumbnails"
             >
+              <div className="flex w-max flex-row gap-3 px-2 sm:gap-4 sm:px-4">
               {fashionVideos.map((video) => (
-                <SwiperSlide key={video.id}>
                   <motion.div
+                    key={video.id}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="cursor-pointer p-2"
+                    className="w-[min(200px,calc(50vw-2rem))] flex-shrink-0 cursor-pointer p-2 sm:w-[min(210px,calc(33.333vw-1.5rem))] lg:w-[min(230px,calc(25vw-1.25rem))] xl:w-[min(240px,calc(20vw-1rem))]"
+                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => handleVideoSelect(video)}
                   >
                     <div
@@ -585,9 +556,9 @@ export default function FashionVideoSection() {
                       <p className="text-neutral-700 dark:text-primary-300 text-xs truncate w-full">{video.description}</p>
                     </div>
                   </motion.div>
-                </SwiperSlide>
               ))}
-            </Swiper>
+              </div>
+            </HorizontalScrollAffordance>
           </div>
         </div>
         </div>
@@ -610,48 +581,6 @@ export default function FashionVideoSection() {
           background: var(--color-primary-300);
           cursor: pointer;
           border: none;
-        }
-
-        .video-swiper {
-          width: 100%;
-          overflow: visible;
-        }
-        
-        .video-swiper .swiper-wrapper {
-          display: flex;
-          align-items: stretch;
-        }
-        
-        .video-swiper .swiper-slide {
-          height: auto;
-          display: flex;
-        }
-        
-        .video-swiper .swiper-button-next,
-        .video-swiper .swiper-button-prev {
-          top: 25%;
-          transform: translateY(-50%);
-          background: transparent;
-          width: auto;
-          height: auto;
-          border: none;
-          color: var(--color-primary-300);
-          z-index: 10;
-        }
-        
-        .video-swiper .swiper-button-prev,
-        .video-swiper .swiper-button-next {
-          display: none !important;
-        }
-
-        .video-swiper .swiper-pagination-bullet {
-          background: var(--color-primary-300);
-          opacity: 0.6;
-          transition: background-color 0.3s ease, opacity 0.3s ease;
-        }
-        .video-swiper .swiper-pagination-bullet-active {
-          background: var(--color-primary-300);
-          opacity: 1;
         }
       `}</style>
     </section>

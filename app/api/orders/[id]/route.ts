@@ -5,11 +5,11 @@ import { notifyOrderDelivered, notifyOrderReady } from '@/lib/orders/notify-cust
 import type { OrderStatus } from '@prisma/client'
 
 type PatchBody = {
-  action: 'start_progress' | 'mark_ready' | 'delivered'
+  action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order'
 }
 
 const STEPS: Record<
-  PatchBody['action'],
+  Exclude<PatchBody['action'], 'cancel_order'>,
   { from: OrderStatus; to: OrderStatus; notify: boolean }
 > = {
   start_progress: { from: 'pending', to: 'confirmed', notify: false },
@@ -21,10 +21,7 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
   try {
     const { id } = await ctx.params
     const body = (await request.json()) as PatchBody
-    const step = body?.action ? STEPS[body.action] : undefined
-    if (!step) {
-      return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
-    }
+    const action = body?.action
 
     const existing = await prisma.order.findUnique({
       where: { id },
@@ -33,6 +30,30 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
     if (!existing) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
+
+    if (action === 'cancel_order') {
+      if (existing.status !== 'pending') {
+        return NextResponse.json(
+          { error: 'Only pending orders can be cancelled' },
+          { status: 409 }
+        )
+      }
+      const updated = await prisma.order.update({
+        where: { id },
+        data: { status: 'cancelled' },
+        include: { items: { orderBy: { createdAt: 'asc' } } },
+      })
+      const order = prismaOrderToClientOrder(updated)
+      const res = NextResponse.json(order)
+      res.headers.set('Cache-Control', 'no-store')
+      return res
+    }
+
+    const step = action ? STEPS[action as Exclude<PatchBody['action'], 'cancel_order'>] : undefined
+    if (!step) {
+      return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+    }
+
     if (existing.status !== step.from) {
       return NextResponse.json(
         { error: `Order is not in the expected state (${step.from})` },

@@ -28,7 +28,7 @@ export interface Order {
   total: number
   deliveryOption: 'kampala' | 'outside'
   notes?: string
-  status: 'pending' | 'confirmed' | 'dispatched' | 'delivered'
+  status: 'pending' | 'confirmed' | 'dispatched' | 'delivered' | 'cancelled'
 }
 
 export class CartManager {

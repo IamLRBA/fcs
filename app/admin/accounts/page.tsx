@@ -316,23 +316,23 @@ export default function AdminAccountsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-            <div className="relative z-10 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-primary-800 dark:text-primary-100">Reset password</h2>
-                <ModalCloseButton onClose={() => setResetUserId(null)} aria-label="Close" />
-              </div>
-              <input
-                type="password"
-                placeholder="New password (min 6 characters)"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white mb-4"
-              />
-              <div className="flex gap-3">
-                <Button type="button" variant="default" onClick={() => submitResetPassword(resetUserId)}>
-                  Set password
-                </Button>
-                <Button type="button" variant="default" onClick={() => setResetUserId(null)}>Cancel</Button>
+            <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
+              <ModalCloseButton onClose={() => setResetUserId(null)} className="absolute right-4 top-4 z-20 shrink-0" aria-label="Close" />
+              <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-12">
+                <h2 className="mb-4 text-lg font-bold text-primary-800 dark:text-primary-100">Reset password</h2>
+                <input
+                  type="password"
+                  placeholder="New password (min 6 characters)"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="input-overlay mb-4 w-full rounded-lg px-3 py-2 dark:bg-neutral-700 dark:text-white"
+                />
+                <div className="flex gap-3">
+                  <Button type="button" variant="default" onClick={() => submitResetPassword(resetUserId)}>
+                    Set password
+                  </Button>
+                  <Button type="button" variant="default" onClick={() => setResetUserId(null)}>Cancel</Button>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -357,22 +357,22 @@ export default function AdminAccountsPage() {
               className="hero-glass-frame relative w-full max-w-md backdrop-blur-lg rounded-2xl bg-white/25 dark:bg-neutral-900/20 border border-neutral-300/80 dark:border-neutral-600 overflow-hidden"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-2xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold text-primary-800 dark:text-primary-100">Delete account</h2>
-                  <ModalCloseButton onClose={() => setPendingDeleteUser(null)} aria-label="Close" />
-                </div>
-                <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-4">
-                  Are you sure you want to delete this account?
-                </p>
-                <div className="flex gap-3">
-                  <Button type="button" variant="filled" onClick={confirmDeleteUser} className="inline-flex items-center gap-2 !border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white">
-                    <Trash2 className="w-4 h-4" />
-                    <span>Delete</span>
-                  </Button>
-                  <Button type="button" variant="default" onClick={() => setPendingDeleteUser(null)}>
-                    Cancel
-                  </Button>
+              <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
+                <ModalCloseButton onClose={() => setPendingDeleteUser(null)} className="absolute right-4 top-4 z-20 shrink-0" aria-label="Close" />
+                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-12">
+                  <h2 className="mb-4 text-lg font-bold text-primary-800 dark:text-primary-100">Delete account</h2>
+                  <p className="mb-4 text-sm text-neutral-700 dark:text-neutral-300">
+                    Are you sure you want to delete this account?
+                  </p>
+                  <div className="flex gap-3">
+                    <Button type="button" variant="filled" onClick={confirmDeleteUser} className="inline-flex items-center gap-2 !border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white">
+                      <Trash2 className="h-4 w-4" />
+                      <span>Delete</span>
+                    </Button>
+                    <Button type="button" variant="default" onClick={() => setPendingDeleteUser(null)}>
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               </div>
             </motion.div>

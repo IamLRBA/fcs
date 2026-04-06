@@ -329,6 +329,7 @@ export default function AccountPage() {
                                   order.status === 'delivered' ? 'bg-green-100 text-green-800' :
                                   order.status === 'dispatched' ? 'bg-blue-100 text-blue-800' :
                                   order.status === 'confirmed' ? 'bg-primary-100 text-primary-800' :
+                                  order.status === 'cancelled' ? 'bg-neutral-200 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-200' :
                                   'bg-yellow-100 text-yellow-800'
                                 }`}>
                                   {order.status}
@@ -471,14 +472,13 @@ export default function AccountPage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white dark:bg-neutral-800 rounded-2xl p-8 max-w-md w-full shadow-xl"
+                className="relative flex w-full max-w-md max-h-[min(90vh,36rem)] flex-col overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-neutral-800"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100">
-                    Edit Profile Picture
-                  </h2>
-                  <ModalCloseButton onClose={() => setShowEditProfile(false)} className="flex-shrink-0" aria-label="Close" />
-                </div>
+                <ModalCloseButton onClose={() => setShowEditProfile(false)} className="absolute right-4 top-4 z-20 shrink-0" aria-label="Close" />
+                <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-8 pt-14">
+                <h2 className="mb-6 text-2xl font-bold text-primary-800 dark:text-primary-100">
+                  Edit Profile Picture
+                </h2>
 
                 <div className="flex flex-col items-center space-y-6">
                   <div className="relative">
@@ -510,7 +510,7 @@ export default function AccountPage() {
                     </p>
                   </div>
 
-                  <div className="flex space-x-4 w-full">
+                  <div className="flex w-full space-x-4">
                     <Button variant="default" size="md" onClick={() => { setShowEditProfile(false); setProfileImage(user.profileImage || ''); setProfileImageFile(null) }} className="flex-1 justify-center">
                       Cancel
                     </Button>
@@ -518,6 +518,7 @@ export default function AccountPage() {
                       Save Changes
                     </Button>
                   </div>
+                </div>
                 </div>
               </motion.div>
             </motion.div>
