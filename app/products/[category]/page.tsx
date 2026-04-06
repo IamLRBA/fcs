@@ -740,7 +740,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 syncScrollEdgeLines
                 syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
                 hideScrollbar
-                className="pt-2"
+                className="mx-auto w-full max-w-[28rem] pt-2"
                 scrollClassName="py-3"
                 scrollAriaLabel="Product image thumbnails"
               >

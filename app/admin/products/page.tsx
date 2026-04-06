@@ -543,12 +543,12 @@ export default function AdminProductsPage() {
                         showEdgeFades={false}
                         syncScrollEdgeLines
                         hideScrollbar
-                        className="pt-2"
+                        className="mx-auto w-full max-w-[22rem] pt-2"
                         scrollClassName="py-3"
                         scrollAriaLabel="Admin product image thumbnails"
                         syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
                       >
-                        <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-start gap-2 px-1 md:gap-3">
+                        <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-center gap-2 px-1 md:gap-3">
                           {detailsProduct.images.map((img, index) => {
                             const isActive = detailsImageIndex === index
                             return (
@@ -760,7 +760,7 @@ export default function AdminProductsPage() {
                                         setDraggingImageIndex(null)
                                       }}
                                       aria-current={isActive ? 'true' : undefined}
-                                      className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                      className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
                                         isActive
                                           ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
                                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
@@ -784,7 +784,7 @@ export default function AdminProductsPage() {
                                           e.stopPropagation()
                                           removeEditThumbWithSpin(index)
                                         }}
-                                        className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
+                                        className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
                                         aria-label={`Remove image ${index + 1}`}
                                       >
                                         {editThumbRemovingIndex === index ? (
@@ -1025,7 +1025,7 @@ export default function AdminProductsPage() {
                                       draggingNewImageIndexRef.current = null
                                     }}
                                     aria-current={isMain ? 'true' : undefined}
-                                    className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                    className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
                                       isMain
                                         ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
                                         : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
@@ -1049,7 +1049,7 @@ export default function AdminProductsPage() {
                                         e.stopPropagation()
                                         removeProductImageWithSpin(index)
                                       }}
-                                      className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
+                                      className="focus-ring-none absolute right-0 top-0 z-30 flex aspect-square h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full bg-red-500 p-0 text-white shadow-md hover:bg-red-600"
                                       aria-label={`Remove image ${index + 1}`}
                                     >
                                       {addRemovingIndex === index ? (
