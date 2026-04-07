@@ -9,6 +9,7 @@ import { downloadReceipt, generateReceiptImage } from '@/lib/utils/receipt-gener
 import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
 
@@ -374,7 +375,7 @@ export default function OrderConfirmationPage() {
               Thank you for shopping with <MysticalPiecesWord />!
             </p>
             <div className="text-gray-500 dark:text-primary-400 text-xs space-y-1">
-              <p>Email: jerrylarubafestus@gmail.com</p>
+              <p>Email: {SHOP_EMAIL}</p>
               <p>Phone: +256 755 915 549</p>
               <p className="mt-2">
                 © {new Date().getFullYear()} <MysticalPiecesWord /> . All rights reserved.

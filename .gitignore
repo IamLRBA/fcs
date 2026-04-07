@@ -68,6 +68,7 @@ jspm_packages/
 
 # next.js build output
 .next
+tsconfig.tsbuildinfo
 
 # Large video files (too big for GitHub)
 public/assets/videos/3d-architecture-demo.mp4

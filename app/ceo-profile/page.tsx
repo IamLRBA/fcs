@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { IconBrandWhatsapp, IconBrandTiktok, IconBrandSnapchat, IconBrandX } from '@tabler/icons-react'
 import { SOCIAL_LINKS } from '@/lib/constants/social'
+import { CEO_EMAIL } from '@/lib/constants/brand-contact'
 import { 
   Mail, 
   Instagram, 
@@ -562,8 +563,8 @@ export default function CEOProfile() {
                 <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <Mail className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
-                  <Button href="mailto:jerrylarubafestus@gmail.com" variant="default" className="inline-flex items-center justify-center px-6">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">{CEO_EMAIL}</p>
+                  <Button href={`mailto:${CEO_EMAIL}`} variant="default" className="inline-flex items-center justify-center px-6">
                     Email Me
                   </Button>
                 </div>
@@ -602,8 +603,8 @@ export default function CEOProfile() {
                 <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <IconBrandWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 755 915 549</p>
-                  <Button href="https://wa.me/256755915549" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 774 948 086</p>
+                  <Button href="https://wa.me/256774948086" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
                     Text Me
                   </Button>
                 </div>

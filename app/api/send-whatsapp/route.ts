@@ -11,46 +11,6 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // Try Twilio first if configured
-    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_WHATSAPP_NUMBER) {
-      try {
-        const twilio = require('twilio')
-        const client = twilio(
-          process.env.TWILIO_ACCOUNT_SID,
-          process.env.TWILIO_AUTH_TOKEN
-        )
-        
-        const fromNumber = process.env.TWILIO_WHATSAPP_NUMBER.startsWith('whatsapp:')
-          ? process.env.TWILIO_WHATSAPP_NUMBER
-          : `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`
-        
-        const toNumber = phone.startsWith('whatsapp:')
-          ? phone
-          : `whatsapp:${phone}`
-        
-        const result = await client.messages.create({
-          from: fromNumber,
-          to: toNumber,
-          body: message
-        })
-        
-        console.log('WhatsApp message sent via Twilio:', {
-          to: phone,
-          messageSid: result.sid,
-          status: result.status
-        })
-        
-        return NextResponse.json({ 
-          success: true, 
-          message: 'WhatsApp message sent successfully via Twilio',
-          messageSid: result.sid
-        })
-      } catch (twilioError: any) {
-        console.warn('Twilio failed, trying alternatives:', twilioError.message)
-        // Fall through to alternatives
-      }
-    }
-    
     // Try WhatsApp Business API (Meta) if configured
     if (process.env.WHATSAPP_ACCESS_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID) {
       try {
@@ -152,7 +112,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       message: 'WhatsApp message logged (no WhatsApp service configured)',
-      note: 'Configure Twilio, Meta Business API, or Green API to send actual messages'
+      note: 'Configure Meta Business API or Green API to send actual messages'
     })
   } catch (error: any) {
     console.error('Error sending WhatsApp message:', error)

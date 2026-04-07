@@ -5,11 +5,12 @@ import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
 import { IconBrandWhatsapp } from '@tabler/icons-react'
 import Button from '@/components/ui/Button'
+import { SHOP_EMAIL, SHOP_WHATSAPP_E164 } from '@/lib/constants/brand-contact'
 
 const contactInfo = [
-  { title: 'EᗰᗩIᒪ', subtitle: 'jerrylarubafestus@gmail.com', icon: Mail, buttonText: 'Email Us', action: () => window.open('mailto:jerrylarubafestus@gmail.com', '_blank'), color: 'from-primary-500 to-primary-600' },
-  { title: 'ᑭᕼOᑎE', subtitle: '+256 774 948 086', icon: Phone, buttonText: 'Call Us', action: () => { const numbers = ['+256774948086', '+256755915549']; const selected = window.confirm(`Choose a number to call:\n1. ${numbers[0]}\n2. ${numbers[1]}`); if (selected !== null) { const number = numbers[selected ? 1 : 0]; window.open(`tel:${number}`, '_blank') } }, color: 'from-accent-500 to-accent-600' },
-  { title: 'ᗯᕼᗩTᔕᗩᑭᑭ', subtitle: '+256 755 915 549', icon: IconBrandWhatsapp, buttonText: 'Text Us', action: () => window.open('https://wa.me/256755915549', '_blank'), color: 'from-accent-500 to-accent-600' },
+  { title: 'EᗰᗩIᒪ', subtitle: SHOP_EMAIL, icon: Mail, buttonText: 'Email Us', action: () => window.open(`mailto:${SHOP_EMAIL}`, '_blank'), color: 'from-primary-500 to-primary-600' },
+  { title: 'ᑭᕼOᑎE', subtitle: '+256 774 948 086', icon: Phone, buttonText: 'Call Us', action: () => window.open(`tel:${SHOP_WHATSAPP_E164}`, '_blank'), color: 'from-accent-500 to-accent-600' },
+  { title: 'ᗯᕼᗩTᔕᗩᑭᑭ', subtitle: '+256 774 948 086', icon: IconBrandWhatsapp, buttonText: 'Text Us', action: () => window.open('https://wa.me/256774948086', '_blank'), color: 'from-accent-500 to-accent-600' },
   { title: 'ᒪOᑕᗩTIOᑎ', subtitle: 'Kampala, Uganda', icon: MapPin, buttonText: 'Find Us', action: () => window.open('https://maps.google.com/?q=Kampala,Uganda', '_blank'), color: 'from-primary-500 to-primary-600' },
 ]
 
@@ -28,13 +29,13 @@ export default function Contact() {
     setIsSubmitting(true)
     try {
       if (contactMethod === 'email') {
-        const mailtoLink = `mailto:jerrylarubafestus@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+        const mailtoLink = `mailto:${SHOP_EMAIL}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
           `Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
         )}`
         window.open(mailtoLink, '_blank')
       } else {
         const whatsappMessage = `*New Contact Form Submission*\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Email:* ${formData.email}\n*Subject:* ${formData.subject}\n\n*Message:*\n${formData.message}`
-        const whatsappLink = `https://wa.me/256755915549?text=${encodeURIComponent(whatsappMessage)}`
+        const whatsappLink = `https://wa.me/256774948086?text=${encodeURIComponent(whatsappMessage)}`
         window.open(whatsappLink, '_blank')
       }
       setFormData({ firstName: '', lastName: '', email: '', subject: '', message: '' })
