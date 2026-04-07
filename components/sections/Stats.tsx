@@ -13,10 +13,10 @@ import {
 import Companies from './Companies'
 
 const statsData = [
-  { icon: Users, number: 500, suffix: "+", label: "Happy Customers", description: "Satisfied fashion enthusiasts", color: "from-primary-400 to-primary-600" },
-  { icon: Award, number: 1200, suffix: "+", label: "Items Sold", description: "Unique thrifted & new pieces", color: "from-accent-400 to-accent-600" },
-  { icon: Clock, number: 3, suffix: "+", label: "Years Curating", description: "Fashion expertise & style", color: "from-primary-500 to-primary-700" },
-  { icon: Star, number: 98, suffix: "%", label: "Client Satisfaction", description: "Exceeding expectations", color: "from-accent-500 to-accent-700" },
+  { icon: Users, number: 500, suffix: '+', label: 'Happy Customers', description: 'Satisfied fashion enthusiasts' },
+  { icon: Award, number: 1200, suffix: '+', label: 'Items Sold', description: 'Unique thrifted & new pieces' },
+  { icon: Clock, number: 3, suffix: '+', label: 'Years Curating', description: 'Fashion expertise & style' },
+  { icon: Star, number: 98, suffix: '%', label: 'Client Satisfaction', description: 'Exceeding expectations' },
 ]
 
 const AnimatedCounter = ({ target, suffix = "", duration = 2000, triggerAnimation = false }: { target: number, suffix?: string, duration?: number, triggerAnimation?: boolean }) => {
@@ -110,10 +110,10 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={isInView ? { scale: 1, rotate: 0 } : {}}
-          transition={{ duration: 0.6, delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
-          className={`w-12 h-12 mx-auto mb-4 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
+          transition={{ duration: 0.6, delay: index * 0.1 + 0.2, type: 'spring', stiffness: 200 }}
+          className="mx-auto mb-4 flex h-12 w-12 items-center justify-center text-primary-700 dark:text-primary-200 group-hover:scale-110 transition-transform duration-300"
         >
-          <stat.icon className="w-6 h-6 text-white" />
+          <stat.icon className="h-7 w-7" strokeWidth={1.5} aria-hidden />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}

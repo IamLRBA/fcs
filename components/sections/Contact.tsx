@@ -1,23 +1,64 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Mail, Phone, MapPin, Send } from 'lucide-react'
+import { useState, type ComponentType } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Mail, Phone, MapPin, Copy, Check } from 'lucide-react'
 import { IconBrandWhatsapp } from '@tabler/icons-react'
 import Button from '@/components/ui/Button'
-import { SHOP_EMAIL, SHOP_WHATSAPP_E164 } from '@/lib/constants/brand-contact'
+import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 
-const contactInfo = [
-  { title: 'EᗰᗩIᒪ', subtitle: SHOP_EMAIL, icon: Mail, buttonText: 'Email Us', action: () => window.open(`mailto:${SHOP_EMAIL}`, '_blank'), color: 'from-primary-500 to-primary-600' },
-  { title: 'ᑭᕼOᑎE', subtitle: '+256 774 948 086', icon: Phone, buttonText: 'Call Us', action: () => window.open(`tel:${SHOP_WHATSAPP_E164}`, '_blank'), color: 'from-accent-500 to-accent-600' },
-  { title: 'ᗯᕼᗩTᔕᗩᑭᑭ', subtitle: '+256 774 948 086', icon: IconBrandWhatsapp, buttonText: 'Text Us', action: () => window.open('https://wa.me/256774948086', '_blank'), color: 'from-accent-500 to-accent-600' },
-  { title: 'ᒪOᑕᗩTIOᑎ', subtitle: 'Kampala, Uganda', icon: MapPin, buttonText: 'Find Us', action: () => window.open('https://maps.google.com/?q=Kampala,Uganda', '_blank'), color: 'from-primary-500 to-primary-600' },
-]
+const CALL_NUMBERS = [
+  { label: '+256 774 948 086', tel: '+256774948086' },
+  { label: '+256 755 915 549', tel: '+256755915549' },
+] as const
 
 export default function Contact() {
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', subject: '', message: '' })
   const [contactMethod, setContactMethod] = useState<'email' | 'whatsapp'>('email')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [phoneDialogOpen, setPhoneDialogOpen] = useState(false)
+  const [copiedTel, setCopiedTel] = useState<string | null>(null)
+
+  const copyNumber = async (tel: string) => {
+    try {
+      await navigator.clipboard.writeText(tel)
+      setCopiedTel(tel)
+      window.setTimeout(() => setCopiedTel(null), 2000)
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const contactCards = [
+    {
+      title: 'EᗰᗩIᒪ',
+      subtitle: SHOP_EMAIL,
+      icon: Mail,
+      buttonText: 'Email Us',
+      onClick: () => window.open(`mailto:${SHOP_EMAIL}`, '_blank'),
+    },
+    {
+      title: 'ᑭᕼOᑎE',
+      subtitle: '+256 774 948 086',
+      icon: Phone,
+      buttonText: 'Call Us',
+      onClick: () => setPhoneDialogOpen(true),
+    },
+    {
+      title: 'ᗯᕼᗩTᔕᗩᑭᑭ',
+      subtitle: '+256 774 948 086',
+      icon: IconBrandWhatsapp,
+      buttonText: 'Text Us',
+      onClick: () => window.open('https://wa.me/256774948086', '_blank'),
+    },
+    {
+      title: 'ᒪOᑕᗩTIOᑎ',
+      subtitle: 'Kampala, Uganda',
+      icon: MapPin,
+      buttonText: 'Find Us',
+      onClick: () => window.open('https://maps.google.com/?q=Kampala,Uganda', '_blank'),
+    },
+  ] as const
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -48,6 +89,9 @@ export default function Contact() {
     }
   }
 
+  const inputClass =
+    'input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300'
+
   return (
     <section className="section relative overflow-hidden">
       <div className="container-custom">
@@ -56,9 +100,63 @@ export default function Contact() {
           <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">Any questions about our fashion collection? Need styling advice? Contact us and we're here to help you find answers.</p>
         </motion.div>
 
+        <AnimatePresence>
+          {phoneDialogOpen ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="phone-dialog-title"
+              onClick={() => setPhoneDialogOpen(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="w-full max-w-[280px] rounded-xl border border-primary-500/30 bg-white/95 p-4 shadow-xl backdrop-blur-md dark:border-primary-600/40 dark:bg-neutral-900/95"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h4 id="phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
+                  Call us
+                </h4>
+                <ul className="space-y-2">
+                  {CALL_NUMBERS.map(({ label, tel }) => (
+                    <li
+                      key={tel}
+                      className="flex items-center justify-between gap-2 rounded-lg border border-neutral-200/80 bg-neutral-50/80 px-2.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60"
+                    >
+                      <a href={`tel:${tel}`} className="min-w-0 flex-1 text-xs font-medium text-primary-800 dark:text-primary-200">
+                        {label}
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => copyNumber(tel)}
+                        className="shrink-0 rounded-md p-1.5 text-primary-600 hover:bg-primary-100/80 dark:text-primary-300 dark:hover:bg-primary-900/50"
+                        aria-label={`Copy ${label}`}
+                      >
+                        {copiedTel === tel ? <Check className="h-4 w-4" strokeWidth={1.75} /> : <Copy className="h-4 w-4" strokeWidth={1.75} />}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  onClick={() => setPhoneDialogOpen(false)}
+                  className="mt-3 w-full rounded-lg py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                >
+                  Close
+                </button>
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {contactInfo.map((info, index) => {
-            const Icon = info.icon as any
+          {contactCards.map((info, index) => {
+            const Icon = info.icon as ComponentType<{ className?: string }>
             return (
               <motion.div key={info.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 * index }} className="group">
                 <div className="hero-glass-frame relative h-full backdrop-blur-lg">
@@ -67,7 +165,7 @@ export default function Contact() {
                   <Icon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">{info.title}</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">{info.subtitle}</p>
-                  <Button variant="default" onClick={info.action} className="inline-flex items-center justify-center px-6">
+                  <Button variant="default" onClick={info.onClick} className="inline-flex items-center justify-center px-6">
                     {info.buttonText}
                   </Button>
                 </div>
@@ -86,24 +184,24 @@ export default function Contact() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">First Name *</label>
-                  <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="Enter your first name" />
+                  <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} required className={inputClass} placeholder="Enter your first name" />
                 </div>
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Last Name *</label>
-                  <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="Enter your last name" />
+                  <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} required className={inputClass} placeholder="Enter your last name" />
                 </div>
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Email Address *</label>
-                <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="Enter your email address" />
+                <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required className={inputClass} placeholder="Enter your email address" />
               </div>
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Subject *</label>
-                <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleInputChange} required className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300" placeholder="What is this about?" />
+                <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleInputChange} required className={inputClass} placeholder="What is this about?" />
               </div>
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">Message *</label>
-                <textarea id="message" name="message" value={formData.message} onChange={handleInputChange} required rows={5} className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 resize-none" placeholder="Tell us about your project or inquiry..." />
+                <textarea id="message" name="message" value={formData.message} onChange={handleInputChange} required rows={5} className={`${inputClass} resize-none`} placeholder="Tell us about your project or inquiry..." />
               </div>
               <div>
                 <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-4">How would you like to be contacted? *</label>
