@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { FileText, CheckCircle, AlertCircle, Scale, Users, Shield } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 
 function renderWithMysticalPieces(content: ReactNode, keyPrefix = 'mysticalpieces'): ReactNode {
   // If content is already a React element, return it as-is
@@ -188,7 +189,7 @@ export default function TermsConditions() {
             If you have any questions about these Terms and Conditions, please contact us:
           </p>
           <div className="space-y-2 text-neutral-700 dark:text-neutral-200">
-            <p><strong>Email:</strong> jerrylarubafestus@gmail.com</p>
+            <p><strong>Email:</strong> {SHOP_EMAIL}</p>
             <p><strong>Phone:</strong> +256774948086</p>
             <p><strong>Address:</strong> Kampala, Uganda</p>
           </div>

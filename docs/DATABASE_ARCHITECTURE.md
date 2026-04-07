@@ -282,7 +282,7 @@ See **.env.example** in project root. Summary:
 
 - **Database:** `DATABASE_URL`, optionally `DIRECT_URL`.
 - **Auth/sessions:** e.g. `NEXTAUTH_SECRET`, `NEXTAUTH_URL` (if using NextAuth); or `SESSION_SECRET` for custom sessions.
-- **Existing:** Keep `SENDGRID_*`, `SMTP_*`, `TWILIO_*`, `WHATSAPP_*`, `GREEN_API_*`, `FROM_EMAIL`, `FROM_NAME` as already used.
+- **Existing:** Keep `SENDGRID_*`, `SMTP_*`, `WHATSAPP_*`, `GREEN_API_*`, `FROM_EMAIL`, `FROM_NAME` as already used.
 
 ---
 

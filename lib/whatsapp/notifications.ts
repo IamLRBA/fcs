@@ -1,4 +1,5 @@
 import type { Order } from '@/lib/cart'
+import { SHOP_EMAIL, SHOP_WHATSAPP_E164 } from '@/lib/constants/brand-contact'
 
 export interface WhatsAppConfig {
   phone: string
@@ -7,7 +8,7 @@ export interface WhatsAppConfig {
 
 export class WhatsAppNotifications {
   // Business WhatsApp number (configure this)
-  private static BUSINESS_PHONE = '+256755915549' // Format: +256755915549 (international format without spaces)
+  private static BUSINESS_PHONE = SHOP_WHATSAPP_E164
 
   /**
    * Format phone number for WhatsApp API
@@ -41,7 +42,7 @@ export class WhatsAppNotifications {
       return `${index + 1}. ${item.name}${item.size ? ` (Size: ${item.size})` : ''}${item.color ? ` - ${item.color}` : ''}\n   Qty: ${item.quantity} × UGX ${item.price.toLocaleString()} = UGX ${(item.price * item.quantity).toLocaleString()}`
     }).join('\n\n')
 
-    const message = `🎉 *Order Confirmed!*\n\nDear ${order.customer.fullName},\n\nThank you for your order! Your order has been received and is being processed.\n\n*Order Details:*\n━━━━━━━━━━━━━━━━━━━━\n📦 Order ID: ${order.id}\n📅 Date: ${new Date(order.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}\n📊 Status: ${order.status.toUpperCase()}\n\n*Items Ordered:*\n${itemsText}\n\n*Order Summary:*\n━━━━━━━━━━━━━━━━━━━━\nSubtotal: UGX ${order.subtotal.toLocaleString()}\nDelivery: ${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}\n*Total: UGX ${order.total.toLocaleString()}*\n\n*Delivery Information:*\n━━━━━━━━━━━━━━━━━━━━\n📍 Address: ${order.customer.address.street}, ${order.customer.address.city}\n${order.notes ? `📝 Notes: ${order.notes}\n` : ''}\n💳 *Payment:* Cash on Delivery\n📦 *Delivery:* Expected within 2-3 business days\n\nYou will receive an email confirmation shortly.\n\nIf you have any questions, please contact us:\n📧 Email: jerrylarubafestus@gmail.com\n📱 WhatsApp: ${this.BUSINESS_PHONE}\n\nThank you for choosing MysteryPieces! 🙏`
+    const message = `🎉 *Order Confirmed!*\n\nDear ${order.customer.fullName},\n\nThank you for your order! Your order has been received and is being processed.\n\n*Order Details:*\n━━━━━━━━━━━━━━━━━━━━\n📦 Order ID: ${order.id}\n📅 Date: ${new Date(order.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}\n📊 Status: ${order.status.toUpperCase()}\n\n*Items Ordered:*\n${itemsText}\n\n*Order Summary:*\n━━━━━━━━━━━━━━━━━━━━\nSubtotal: UGX ${order.subtotal.toLocaleString()}\nDelivery: ${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}\n*Total: UGX ${order.total.toLocaleString()}*\n\n*Delivery Information:*\n━━━━━━━━━━━━━━━━━━━━\n📍 Address: ${order.customer.address.street}, ${order.customer.address.city}\n${order.notes ? `📝 Notes: ${order.notes}\n` : ''}\n💳 *Payment:* Cash on Delivery\n📦 *Delivery:* Expected within 2-3 business days\n\nYou will receive an email confirmation shortly.\n\nIf you have any questions, please contact us:\n📧 Email: ${SHOP_EMAIL}\n📱 WhatsApp: ${this.BUSINESS_PHONE}\n\nThank you for choosing MysticalPIECES! 🙏`
 
     return {
       phone: this.formatPhoneNumber(order.customer.phone),
@@ -148,6 +149,11 @@ export class WhatsAppNotifications {
 
   static customerOrderReady(order: Order): WhatsAppConfig {
     const message = `✨ *Your order is ready!*\n\nDear ${order.customer.fullName},\n\nYour order *${order.id}* is ready and will be dispatched shortly.\n\n📦 *Expected delivery:* within *2–3 business days*\n📍 *To:* ${order.customer.address.street}, ${order.customer.address.city}\n\n💰 Total (COD): *UGX ${order.total.toLocaleString()}*\n\nThank you for choosing MysticalPIECES! 🙏`
+    return { phone: this.formatPhoneNumber(order.customer.phone), message }
+  }
+
+  static customerOrderProcessing(order: Order): WhatsAppConfig {
+    const message = `🔄 *Your order is being processed*\n\nDear ${order.customer.fullName},\n\nWe have started preparing your order *${order.id}*.\n\n📍 Delivery: ${order.customer.address.street}, ${order.customer.address.city}\n💰 Total (COD): *UGX ${order.total.toLocaleString()}*\n\nWe will notify you again when your order is ready and when it is delivered.\n\nThank you for choosing MysticalPIECES! 🙏`
     return { phone: this.formatPhoneNumber(order.customer.phone), message }
   }
 

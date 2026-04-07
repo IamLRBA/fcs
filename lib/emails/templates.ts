@@ -1,4 +1,5 @@
 import type { Order } from '@/lib/cart'
+import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 
 export interface EmailConfig {
   to: string
@@ -13,6 +14,43 @@ export interface EmailConfig {
 }
 
 export class EmailTemplates {
+  static customerOrderProcessing(order: Order): EmailConfig {
+    const subject = `We're preparing your order — ${order.id} — MysticalPIECES`
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <h1 style="color: #6F4E37;">Your order is now being processed</h1>
+    <p>Dear ${order.customer.fullName},</p>
+    <p>Good news — we have started preparing your order <strong>${order.id}</strong>.</p>
+    <p>We are now getting your items ready for dispatch and delivery.</p>
+    <p style="background: #f9fafb; padding: 12px; border-radius: 8px;">
+      Delivery address:<br>${order.customer.address.street}<br>${order.customer.address.city}
+    </p>
+    <p>Total (Cash on Delivery): <strong>UGX ${order.total.toLocaleString()}</strong></p>
+    <p>We will notify you again when your order is ready and when it is delivered.</p>
+    <p>Thank you for shopping with MysticalPIECES!</p>
+  </div>
+</body>
+</html>`
+    const text = `Dear ${order.customer.fullName},
+
+Your order ${order.id} is now being processed.
+
+Delivery address:
+${order.customer.address.street}, ${order.customer.address.city}
+
+Total (COD): UGX ${order.total.toLocaleString()}
+
+We will notify you again when your order is ready and delivered.
+
+Thank you for shopping with MysticalPIECES.
+`
+    return { to: order.customer.email, subject, html: html.trim(), text: text.trim() }
+  }
+
   static buyerConfirmation(order: Order, receiptImage?: string): EmailConfig {
     const subject = `Order Confirmed - ${order.id} - MysticalPIECES`
     
@@ -101,7 +139,7 @@ export class EmailTemplates {
     
     <div class="footer">
       <p>MysticalPIECES | Mystical Thrift Fashion & Soulful Style Curation</p>
-      <p>Email: jerrylarubafestus@gmail.com | Phone: +256 755 915 549</p>
+      <p>Email: ${SHOP_EMAIL} | Phone: +256 755 915 549</p>
       <p>© ${new Date().getFullYear()} MysticalPIECES. All rights reserved.</p>
     </div>
   </div>
@@ -147,7 +185,7 @@ Delivery: Expected within 2-3 business days
 Thank you for choosing MysticalPIECES!
 
 MysticalPIECES
-Email: jerrylarubafestus@gmail.com
+Email: ${SHOP_EMAIL}
 Phone: +256 755 915 549
     `
     
@@ -312,7 +350,7 @@ Next Steps:
     `
     
     return {
-      to: 'jerrylarubafestus@gmail.com', // Business email
+      to: SHOP_EMAIL,
       subject,
       html: html.trim(),
       text: text.trim()

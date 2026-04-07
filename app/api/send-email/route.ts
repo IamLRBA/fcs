@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { EmailConfig } from '@/lib/emails/templates'
+import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +12,7 @@ export async function POST(request: NextRequest) {
         const sgMail = require('@sendgrid/mail')
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
         
-        const fromEmail = process.env.FROM_EMAIL || 'noreply@mysticalpieces.com'
+        const fromEmail = process.env.FROM_EMAIL || SHOP_EMAIL
         const fromName = process.env.FROM_NAME || 'Mystical PIECES'
         
         const attachments = emailConfig.attachment ? [{

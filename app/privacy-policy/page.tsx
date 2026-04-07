@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Shield, Eye, Lock, Users, FileText } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 
 export default function PrivacyPolicy() {
   const sections = [
@@ -141,7 +142,7 @@ export default function PrivacyPolicy() {
             If you have any questions about this Privacy Policy or our data practices, please contact us:
           </p>
           <div className="space-y-2 text-neutral-700 dark:text-neutral-200">
-            <p><strong>Email:</strong> jerrylarubafestus@gmail.com</p>
+            <p><strong>Email:</strong> {SHOP_EMAIL}</p>
             <p><strong>Phone:</strong> +256774948086</p>
             <p><strong>Address:</strong> Kampala, Uganda</p>
           </div>

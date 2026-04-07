@@ -3,6 +3,12 @@ import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import { postSendEmail, postSendWhatsApp } from '@/lib/server/internal-api'
 
+export async function notifyOrderProcessing(order: Order): Promise<void> {
+  await postSendEmail(EmailTemplates.customerOrderProcessing(order))
+  const wa = WhatsAppNotifications.customerOrderProcessing(order)
+  await postSendWhatsApp(wa.phone, wa.message)
+}
+
 export async function notifyOrderReady(order: Order): Promise<void> {
   await postSendEmail(EmailTemplates.customerOrderReady(order))
   const wa = WhatsAppNotifications.customerOrderReady(order)

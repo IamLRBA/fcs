@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { prismaOrderToClientOrder } from '@/lib/orders/prisma-order-map'
-import { notifyOrderDelivered, notifyOrderReady } from '@/lib/orders/notify-customer-order'
+import {
+  notifyOrderDelivered,
+  notifyOrderProcessing,
+  notifyOrderReady,
+} from '@/lib/orders/notify-customer-order'
 import type { OrderStatus } from '@prisma/client'
 
 type PatchBody = {
@@ -12,7 +16,7 @@ const STEPS: Record<
   Exclude<PatchBody['action'], 'cancel_order' | 'undo_cancel'>,
   { from: OrderStatus; to: OrderStatus; notify: boolean }
 > = {
-  start_progress: { from: 'pending', to: 'confirmed', notify: false },
+  start_progress: { from: 'pending', to: 'confirmed', notify: true },
   mark_ready: { from: 'confirmed', to: 'dispatched', notify: true },
   delivered: { from: 'dispatched', to: 'delivered', notify: true },
 }
@@ -138,7 +142,9 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
 
     if (step.notify) {
       try {
-        if (step.to === 'dispatched') {
+        if (step.to === 'confirmed') {
+          await notifyOrderProcessing(order)
+        } else if (step.to === 'dispatched') {
           await notifyOrderReady(order)
         } else if (step.to === 'delivered') {
           await notifyOrderDelivered(order)
