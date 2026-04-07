@@ -12,7 +12,7 @@ import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
 import BackgroundOverlayPortal from '@/components/common/BackgroundOverlayPortal'
 
 export const metadata: Metadata = {
-  title: 'MysticalPIECES — Future-Facing Thrift Store & Boutique',
+  title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
   description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
   keywords: 'futuristic thrift fashion, modern vintage clothing, conscious style, sustainable fashion, intuitive wardrobe, future-forward thrift, curated fashion pieces',
   authors: [{ name: 'LRBA', url: 'https://mysticalpieces.com' }],
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'MysticalPIECES — Future-Facing Thrift Store & Boutique',
+    title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
     description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
     url: 'https://mysticalpieces.com',
     siteName: 'MysticalPIECES',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MysticalPIECES — Future-Facing Thrift Store & Boutique',
+    title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
     description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
     images: ['/assets/images/og-image.jpg'],
   },
