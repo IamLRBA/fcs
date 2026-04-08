@@ -39,6 +39,18 @@ const subcategoriesMap: Record<string, string[]> = {
   'footwear': ['gentle', 'sneakers', 'sandals', 'boots'],
   'accessories': ['rings-necklaces', 'shades-glasses', 'bracelets-watches', 'decor']
 }
+const subcategoryDisplayMap: Record<string, string> = {
+  'rings-necklaces': 'Headwear',
+  'shades-glasses': 'Eyewear',
+  'bracelets-watches': 'Wristwear',
+  decor: 'More',
+}
+const formatSubcategoryLabel = (slug: string) =>
+  subcategoryDisplayMap[slug] ??
+  slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
 const conditions = ['Like New', 'Good', 'Fair', 'Worn']
 const PAGE_SIZE = 10
 
@@ -1000,7 +1012,7 @@ export default function AdminProductsPage() {
                       <div>
                         <label className="block text-sm font-medium mb-1">Subcategory *</label>
                         <select required value={newProduct.section} onChange={(e) => setNewProduct({ ...newProduct, section: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
-                          {subcategoriesMap[newProduct.category]?.map(s => <option key={s} value={s}>{s}</option>)}
+                          {subcategoriesMap[newProduct.category]?.map(s => <option key={s} value={s}>{formatSubcategoryLabel(s)}</option>)}
                         </select>
                       </div>
                       <div>

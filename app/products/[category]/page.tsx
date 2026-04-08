@@ -32,6 +32,20 @@ interface Product {
   isActive?: boolean
 }
 
+const SUBCATEGORY_DISPLAY_MAP: Record<string, string> = {
+  'rings-necklaces': 'Headwear',
+  'shades-glasses': 'Eyewear',
+  'bracelets-watches': 'Wristwear',
+  decor: 'More',
+}
+
+const formatSectionLabel = (section: string) =>
+  SUBCATEGORY_DISPLAY_MAP[section] ??
+  section
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
 function SubcategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
   const [idx, setIdx] = useState(0)
   const safeIdx = Math.min(idx, Math.max(0, paths.length - 1))
@@ -245,10 +259,7 @@ export default function ProductCategoryPage() {
 
   const sectionNavItems = sections.map((section) => ({
     id: section,
-    label: section
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' '),
+    label: formatSectionLabel(section),
   }))
 
   // Get category-specific animation config (opening transitions only)
@@ -546,9 +557,7 @@ export default function ProductCategoryPage() {
             </motion.div>
             
             <h2 className="text-4xl font-bold text-center mb-12 capitalize">
-              {section.split('-').map(word => 
-                word.charAt(0).toUpperCase() + word.slice(1)
-              ).join(' ')}
+              {formatSectionLabel(section)}
             </h2>
             
             {visibleProducts.length === 0 ? (
