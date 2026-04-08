@@ -718,7 +718,7 @@ export default function AdminProductsPage() {
                               sizes="224px"
                               loading="lazy"
                             />
-                          </div>
+                        </div>
                           <HorizontalScrollAffordance
                             showEdgeFades={false}
                             syncScrollEdgeLines
@@ -1087,7 +1087,7 @@ export default function AdminProductsPage() {
                               sizes="224px"
                               loading="lazy"
                             />
-                          </div>
+                            </div>
                           <HorizontalScrollAffordance
                             showEdgeFades={false}
                             syncScrollEdgeLines
@@ -1194,7 +1194,7 @@ export default function AdminProductsPage() {
                                         <X className="h-2.5 w-2.5" aria-hidden />
                                       )}
                                     </button>
-                                  </div>
+                        </div>
                                 )
                               })}
                             </div>

@@ -405,22 +405,25 @@ export default function AboutUs() {
         >
           <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">
             <span className="text-primary-600 dark:text-primary-200">ᔕᕼOᑭᑭIᑎG</span>{' '}
-            <span className="text-primary-800 dark:text-primary-100">Procedure</span>
+            <span className="text-primary-800 dark:text-primary-100">Philosophy</span>
           </h3>
           
           <div className="space-y-16 flex flex-col items-center max-w-4xl mx-auto">
             {[
               {
-                image: "/assets/images/sections/fashion/procedure-1.jpg",
-                title: "Click product image to visit product page"
+                image: "/assets/images/sections/fashion/philosophy-1.jpg",
+                title: "Mysticism",
+                description: "There is a deeper reality beyond the visible world. Find meaning in what others might overlook."
               },
               {
-                image: "/assets/images/sections/fashion/procedure-2.jpg",
-                title: "Click/Select product category to visit directly"
+                image: "/assets/images/sections/fashion/philosophy-2.jpg",
+                title: "Anarchism",
+                description: "Every item you choose can be you shaping your own path and challenging the ordinary-fashion norm."
               },
               {
-                image: "/assets/images/sections/fashion/procedure-3.jpg",
-                title: "Visit and add selected products to cart"
+                image: "/assets/images/sections/fashion/philosophy-3.jpg",
+                title: "Self-Discovery",
+                description: "Evolve with pieces that resonate with your spirit and also help you see yourself more clearly."
               }
             ].map((mission, index) => (
               <motion.div
@@ -461,6 +464,13 @@ export default function AboutUs() {
                       index % 2 === 0 ? '' : 'text-right'
                     }`}>0{index + 1}</div>
                     <h4 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">{mission.title}</h4>
+                    <p className={`text-primary-600 dark:text-primary-300 text-lg ${
+                      index % 2 === 0
+                        ? 'max-w-md'
+                        : 'max-w-md ml-auto'
+                    }`}>
+                      {mission.description}
+                    </p>
                   </div>
                 </div>
               </motion.div>
