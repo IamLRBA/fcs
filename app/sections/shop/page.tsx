@@ -475,14 +475,35 @@ export default function ShopPage() {
               <p className="text-neutral-700 dark:text-primary-300 mb-6 sm:mb-8">
                 Curated collections that capture different moods and aesthetics
               </p>
-              <div className="w-full max-w-2xl mx-auto px-1 overflow-x-auto pb-1">
-                <SegmentedPillNav
-                  items={moodNavItems}
-                  value={selectedMood}
-                  onSelect={changeMood}
-                  disabled={isUpdatingImages}
-                  className="!max-w-none min-w-[18rem] sm:min-w-0"
-                />
+              {/* Desktop: single row. Mobile: split into two rows (2 + 2) to avoid overflow. */}
+              <div className="w-full max-w-2xl mx-auto px-1 pb-1">
+                <div className="hidden sm:block">
+                  <SegmentedPillNav
+                    items={moodNavItems}
+                    value={selectedMood}
+                    onSelect={changeMood}
+                    disabled={isUpdatingImages}
+                    className="!max-w-none"
+                  />
+                </div>
+                <div className="sm:hidden space-y-2">
+                  <SegmentedPillNav
+                    items={moodNavItems.slice(0, 2)}
+                    value={['inspiration', 'elegance'].includes(selectedMood) ? selectedMood : null}
+                    onSelect={changeMood}
+                    disabled={isUpdatingImages}
+                    hideIndicatorUntilSelected
+                    className="!max-w-none"
+                  />
+                  <SegmentedPillNav
+                    items={moodNavItems.slice(2, 4)}
+                    value={['urban', 'nature'].includes(selectedMood) ? selectedMood : null}
+                    onSelect={changeMood}
+                    disabled={isUpdatingImages}
+                    hideIndicatorUntilSelected
+                    className="!max-w-none"
+                  />
+                </div>
               </div>
             </div>
             

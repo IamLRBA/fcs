@@ -55,9 +55,9 @@ const teamMembers: Array<{
     image: '/assets/images/team/joshua-nsereko.jpg',
     hoverImage: '/assets/images/team/joshua-nsereko-hover.jpg',
     social: [
-      { kind: 'linkedin', href: 'https://www.linkedin.com/in/', label: "Joshua's LinkedIn" },
-      { kind: 'whatsapp', href: 'https://wa.me/256774948086', label: 'WhatsApp Mystical PIECES' },
-      { kind: 'email', href: 'mailto:mysticalpieces@gmail.com', label: 'Email Mystical PIECES' },
+      { kind: 'linkedin', href: 'https://www.linkedin.com/in/jnsereko/', label: "Joshua's LinkedIn" },
+      { kind: 'whatsapp', href: 'https://wa.me/256740383427', label: "Joshua's WhatsApp" },
+      { kind: 'email', href: 'mailto:nserekojowashi@gmail.com', label: "Joshua's email" },
       { kind: 'github', href: 'https://github.com/jnsereko', label: "Joshua's GitHub" },
     ],
   },
@@ -87,10 +87,10 @@ const teamMembers: Array<{
     image: '/assets/images/team/dingwa.jpg',
     hoverImage: '/assets/images/team/dingwa-hover.jpg',
     social: [
-      { kind: 'x', href: 'https://x.com/elenapetrov', label: "Dingwa's X" },
-      { kind: 'tiktok', href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1', label: "Dingwa's TikTok" },
-      { kind: 'email', href: 'mailto:elena@mysticalpieces.com', label: "Dingwa's email" },
-      { kind: 'whatsapp', href: 'https://wa.me/256774948086', label: 'WhatsApp Mystical PIECES' },
+      { kind: 'x', href: 'https://x.com/mulindwayusfu?s=21', label: "Dingwa's X" },
+      { kind: 'tiktok', href: 'https://www.tiktok.com/@dingwa0?_r=1&_t=ZS-95LcTo6uMfg', label: "Dingwa's TikTok" },
+      { kind: 'email', href: 'mailto:Mulindway3@gmail.com', label: "Dingwa's email" },
+      { kind: 'whatsapp', href: 'https://wa.me/256757087093', label: "Dingwa's WhatsApp" },
     ],
   },
 ]
