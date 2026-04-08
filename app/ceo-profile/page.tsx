@@ -473,7 +473,7 @@ export default function CEOProfile() {
                             : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                         }`}
                       >
-                        <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                        <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
                           <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover object-center" />
                         </span>
                       </button>

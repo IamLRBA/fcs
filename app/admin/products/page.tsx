@@ -611,7 +611,7 @@ export default function AdminProductsPage() {
                                     : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                 }`}
                               >
-                                <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                                <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
                                   <SafeImage
                                     src={img}
                                     alt={`${detailsProduct.name} ${index + 1}`}
@@ -813,7 +813,7 @@ export default function AdminProductsPage() {
                                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                       }`}
                                     >
-                                      <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                                      <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
                                         <SafeImage
                                           src={img}
                                           alt={`Edit image ${index + 1}`}
@@ -1179,7 +1179,7 @@ export default function AdminProductsPage() {
                                         : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                     }`}
                                   >
-                                    <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                                    <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
                                       <SafeImage
                                         src={img}
                                         alt={`New product image ${index + 1}`}
