@@ -26,6 +26,11 @@ interface Product {
   }
 }
 
+function getThumbPathVariants(folder: string, thumbIndex: number): string[] {
+  const base = `/assets/images/products-sections/fashion/${folder}/thumb${thumbIndex}`
+  return [`${base}.jpg`, `${base}.JPG`, `${base}.jpeg`, `${base}.png`, `${base}.webp`]
+}
+
 function FashionCategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
   const [idx, setIdx] = useState(0)
   const safeIdx = Math.min(idx, Math.max(0, paths.length - 1))
@@ -177,7 +182,7 @@ export default function FashionProducts() {
     }
 
     const folders = folderMap[slug] || [slug]
-    return folders.map(folder => `/assets/images/products-sections/fashion/${folder}/thumb${thumbIndex}.jpg`)
+    return folders.flatMap((folder) => getThumbPathVariants(folder, thumbIndex))
   }
   
   return (

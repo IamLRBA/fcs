@@ -467,9 +467,9 @@ export default function CEOProfile() {
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => setCurrentImageIndex(index)}
                         aria-current={isActive ? 'true' : undefined}
-                        className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                        className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
                           isActive
-                            ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                            ? 'z-[1] border-2 border-primary-600 shadow-md dark:border-primary-400'
                             : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                         }`}
                       >
@@ -640,7 +640,7 @@ export default function CEOProfile() {
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
               <div className="relative rounded-bl-xl rounded-tl-xl rounded-br-none rounded-tr-none border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
-                <ModalCloseButton onClose={() => setPhoneDialogOpen(false)} className="focus-ring-none absolute right-2 top-2 z-10" aria-label="Close call dialog" />
+                <ModalCloseButton onClose={() => setPhoneDialogOpen(false)} className="focus-ring-none absolute -right-4 -top-4 z-10" aria-label="Close call dialog" />
                 <h4 id="ceo-phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
                   Call Me
                 </h4>

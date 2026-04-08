@@ -122,7 +122,7 @@ export default function Contact() {
               >
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
                 <div className="relative rounded-bl-xl rounded-tl-xl rounded-br-none rounded-tr-none border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
-                  <ModalCloseButton onClose={() => setPhoneDialogOpen(false)} className="focus-ring-none absolute right-2 top-2 z-10" aria-label="Close call dialog" />
+                  <ModalCloseButton onClose={() => setPhoneDialogOpen(false)} className="focus-ring-none absolute -right-4 -top-4 z-10" aria-label="Close call dialog" />
                   <h4 id="phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
                     Call Us
                   </h4>
