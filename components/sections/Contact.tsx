@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Mail, Phone, MapPin, Copy, Check } from 'lucide-react'
 import { IconBrandWhatsapp } from '@tabler/icons-react'
 import Button from '@/components/ui/Button'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 
 const CALL_NUMBERS = [
@@ -116,11 +117,12 @@ export default function Contact() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="hero-glass-frame relative w-full max-w-[300px] backdrop-blur-lg"
+                className="hero-glass-frame relative w-full max-w-[272px] backdrop-blur-lg"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                <div className="relative rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
+                <div className="relative rounded-bl-xl rounded-tl-xl rounded-br-none rounded-tr-none border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
+                  <ModalCloseButton onClose={() => setPhoneDialogOpen(false)} className="focus-ring-none absolute right-2 top-2 z-10" aria-label="Close call dialog" />
                   <h4 id="phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
                     Call Us
                   </h4>
@@ -139,11 +141,6 @@ export default function Contact() {
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-3 flex justify-center">
-                    <Button type="button" variant="default" size="sm" onClick={() => setPhoneDialogOpen(false)} className="focus-ring-none px-4">
-                      Close
-                    </Button>
-                  </div>
                 </div>
               </motion.div>
             </motion.div>

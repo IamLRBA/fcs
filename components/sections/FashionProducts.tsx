@@ -37,7 +37,7 @@ function FashionCategoryThumb({ paths, alt }: { paths: string[]; alt: string }) 
       fill
       className="object-cover transition-transform duration-300 group-hover:scale-110"
       sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 192px"
-      loading="lazy"
+      loading="eager"
       onError={() => setIdx((i) => (i < paths.length - 1 ? i + 1 : i))}
     />
   )
@@ -142,10 +142,10 @@ const products: Product[] = [
     image: '/assets/images/products-sections/fashion/accessories.jpg',
     slug: 'accessories',
     subcategories: [
-      { name: 'Rings & Necklaces', slug: 'rings-necklaces' },
-      { name: 'Shades & Glasses', slug: 'shades-glasses' },
-      { name: 'Bracelets & Watches', slug: 'bracelets-watches' },
-      { name: 'Decor', slug: 'decor' }
+      { name: 'Headwear', slug: 'rings-necklaces' },
+      { name: 'Eyewear', slug: 'shades-glasses' },
+      { name: 'Wristwear', slug: 'bracelets-watches' },
+      { name: 'More', slug: 'decor' }
     ],
     quote: {
       text: 'Accessories are like vitamins to fashion – they enhance the outfit.',

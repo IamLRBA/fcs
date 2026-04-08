@@ -16,19 +16,19 @@ function TeamSocialIcon({ kind }: { kind: TeamSocialKind }) {
   const stroke = 1.5
   switch (kind) {
     case 'linkedin':
-      return <Linkedin className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+      return <Linkedin className="h-5 w-5" strokeWidth={stroke} aria-hidden />
     case 'github':
-      return <Github className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+      return <Github className="h-5 w-5" strokeWidth={stroke} aria-hidden />
     case 'email':
-      return <Mail className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+      return <Mail className="h-5 w-5" strokeWidth={stroke} aria-hidden />
     case 'whatsapp':
-      return <IconBrandWhatsapp className="h-4 w-4" aria-hidden />
+      return <IconBrandWhatsapp className="h-5 w-5" aria-hidden />
     case 'x':
-      return <IconBrandX className="h-4 w-4" aria-hidden />
+      return <IconBrandX className="h-5 w-5" aria-hidden />
     case 'tiktok':
-      return <IconBrandTiktok className="h-4 w-4" aria-hidden />
+      return <IconBrandTiktok className="h-5 w-5" aria-hidden />
     case 'instagram':
-      return <Instagram className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+      return <Instagram className="h-5 w-5" strokeWidth={stroke} aria-hidden />
     default:
       return null
   }
@@ -295,7 +295,13 @@ export default function AboutUs() {
                   >
                     <div className="mb-6 flex flex-wrap justify-center gap-3 border-t border-primary-100 pt-4 pb-2 dark:border-primary-800/60">
                       {member.social.map((link) => (
-                        <div key={`${member.id}-${link.kind}`}>
+                        <motion.div
+                          key={`${member.id}-${link.kind}`}
+                          className="social-link"
+                          whileHover={{ scale: 1.1, y: -2 }}
+                          whileTap={{ scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                        >
                           <Button
                             variant="circle"
                             className="focus-ring-none"
@@ -307,7 +313,7 @@ export default function AboutUs() {
                           >
                             <TeamSocialIcon kind={link.kind} />
                           </Button>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   </motion.div>

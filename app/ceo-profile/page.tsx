@@ -24,15 +24,16 @@ import {
   Twitter
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import EducationalJourney from '@/components/sections/EducationalJourney'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 
 export default function CEOProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const galleryThumbnailRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -91,17 +92,6 @@ export default function CEOProfile() {
 
   const closeImageModal = () => {
     setSelectedImage(null)
-  }
-
-  const scrollGalleryThumbnails = (direction: 'left' | 'right') => {
-    const el = galleryThumbnailRef.current
-    if (el) {
-      const amount = Math.max(200, Math.floor(el.clientWidth * 0.5))
-      el.scrollBy({
-        left: direction === 'left' ? -amount : amount,
-        behavior: 'smooth'
-      })
-    }
   }
 
   // Scroll-based animations
@@ -190,9 +180,12 @@ export default function CEOProfile() {
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
               <div className="relative p-2 sm:p-3 rounded-full">
                 <div className="w-44 h-44 sm:w-48 sm:h-48 relative overflow-hidden rounded-full border-4 border-primary-200/60 dark:border-primary-700/50 shadow-2xl">
-                  <img
+                  <Image
                     src="/assets/images/ceo-profile.jpg"
                     alt="LRBA - CEO"
+                    width={192}
+                    height={192}
+                    priority
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -429,13 +422,13 @@ export default function CEOProfile() {
                 <span className="text-2xl">⟹</span>
               </Button>
               <div className="flex w-full justify-center px-2 sm:px-8 md:px-12 lg:px-16">
-                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-[calc(100vw-1rem)] sm:max-w-full min-w-0 overflow-hidden">
+                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-[calc(100vw-2rem)] sm:max-w-full min-w-0 overflow-hidden">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
                   <div className="relative p-2 sm:p-3 rounded-2xl border border-primary-200/40 dark:border-primary-700/40 flex items-center justify-center">
                     <img
                       src={galleryImages[currentImageIndex]}
                       alt={`CEO Image ${currentImageIndex + 1}`}
-                      className="max-h-[600px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl max-w-[min(calc(100vw-2.5rem),56rem)] sm:max-w-[min(calc(100vw-6rem),56rem)] md:max-w-[min(calc(100vw-8rem),56rem)]"
+                      className="max-h-[560px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl max-w-[min(calc(100vw-3.5rem),56rem)] sm:max-w-[min(calc(100vw-6rem),56rem)] md:max-w-[min(calc(100vw-8rem),56rem)]"
                       onClick={() => openImageModal(currentImageIndex)}
                     />
                     <motion.button
@@ -453,78 +446,41 @@ export default function CEOProfile() {
               </div>
             </div>
 
-            {/* Thumbnails — w-fit so container length follows thumbnail count; always center-aligned */}
+            {/* Thumbnails — match quick-view style with side vertical rails */}
             {galleryImages.length > 1 && (
-              <div className="flex justify-center w-full mt-6">
-                <div className="hero-glass-frame hero-glass-frame-compact relative w-max max-w-full rounded-2xl backdrop-blur-lg overflow-hidden mx-auto">
-                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
-                  <div className="relative flex flex-col items-center py-2 px-2 sm:px-3 min-w-0">
-                    <div className="flex items-center justify-center gap-2 w-full max-w-full min-w-0">
-                      {galleryImages.length > 3 && (
-                        <Button
-                          type="button"
-                          variant="circle"
-                          size="icon"
-                          onClick={() => scrollGalleryThumbnails('left')}
-                          className="flex-shrink-0 focus-ring-none z-10"
-                          aria-label="Scroll thumbnails left"
-                        >
-                          <span className="text-lg">⟸</span>
-                        </Button>
-                      )}
-                      {galleryImages.length > 3 && <div className="hidden md:block h-8 w-px bg-primary-300/70 dark:bg-primary-700/70 rounded-full" />}
-                      <div
-                        ref={galleryThumbnailRef}
-                        className="gallery-thumbnail-row flex w-max max-w-[calc(100vw-4rem)] sm:max-w-full items-center justify-center gap-2 md:gap-3 overflow-x-auto scroll-smooth py-2 px-1 mx-auto min-w-0"
-                        style={{ scrollbarWidth: 'thin' }}
+              <HorizontalScrollAffordance
+                showEdgeFades={false}
+                syncScrollEdgeLines
+                syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                hideScrollbar
+                className="mx-auto mt-6 w-full max-w-[26rem] px-1 sm:max-w-[30rem]"
+                scrollClassName="py-3"
+                scrollAriaLabel="CEO gallery thumbnails"
+              >
+                <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-center gap-2 px-1 md:gap-3">
+                  {galleryImages.map((img, index) => {
+                    const isActive = currentImageIndex === index
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => setCurrentImageIndex(index)}
+                        aria-current={isActive ? 'true' : undefined}
+                        className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                          isActive
+                            ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                            : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
+                        }`}
                       >
-                        {galleryImages.map((img, index) => (
-                          <button
-                            type="button"
-                            key={index}
-                            onClick={() => setCurrentImageIndex(index)}
-                            className={`flex flex-shrink-0 items-center justify-center h-14 w-14 md:h-16 md:w-16 rounded-xl overflow-hidden transition-all duration-200 focus-ring-none outline-none ring-0 border-2 backdrop-blur-sm ${
-                              currentImageIndex === index
-                                ? 'border-primary-500 dark:border-primary-400 scale-105 bg-primary-100/40 dark:bg-neutral-800/60'
-                                : 'border-primary-200/50 dark:border-primary-600/40 hover:border-primary-400/80 bg-primary-50/30 dark:bg-neutral-900/40'
-                            }`}
-                            aria-label={`View photo ${index + 1}`}
-                          >
-                            <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover object-center rounded-lg" />
-                          </button>
-                        ))}
-                      </div>
-                      {galleryImages.length > 3 && <div className="hidden md:block h-8 w-px bg-primary-300/70 dark:bg-primary-700/70 rounded-full" />}
-                      {galleryImages.length > 3 && (
-                        <Button
-                          type="button"
-                          variant="circle"
-                          size="icon"
-                          onClick={() => scrollGalleryThumbnails('right')}
-                          className="flex-shrink-0 focus-ring-none z-10"
-                          aria-label="Scroll thumbnails right"
-                        >
-                          <span className="text-lg">⟹</span>
-                        </Button>
-                      )}
-                    </div>
-                    {/* Dots inside semi-transparent thumbnail container */}
-                    <div className="flex justify-center gap-2 pt-2 pb-1">
-                      {galleryImages.map((_, index) => (
-                        <button
-                          type="button"
-                          key={index}
-                          onClick={() => setCurrentImageIndex(index)}
-                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 focus-ring-none ${
-                            index === currentImageIndex ? 'bg-primary-600 scale-125' : 'bg-neutral-300 dark:bg-neutral-600 hover:bg-neutral-400 dark:hover:bg-neutral-500'
-                          }`}
-                          aria-label={`Go to photo ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                        <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                          <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover object-center" />
+                        </span>
+                      </button>
+                    )
+                  })}
                 </div>
-              </div>
+              </HorizontalScrollAffordance>
             )}
           </div>
         </motion.div>
@@ -680,10 +636,11 @@ export default function CEOProfile() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="hero-glass-frame relative w-full max-w-[300px] backdrop-blur-lg"
+              className="hero-glass-frame relative w-full max-w-[272px] backdrop-blur-lg"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
+              <div className="relative rounded-bl-xl rounded-tl-xl rounded-br-none rounded-tr-none border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
+                <ModalCloseButton onClose={() => setPhoneDialogOpen(false)} className="focus-ring-none absolute right-2 top-2 z-10" aria-label="Close call dialog" />
                 <h4 id="ceo-phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
                   Call Me
                 </h4>
@@ -699,11 +656,6 @@ export default function CEOProfile() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 flex justify-center">
-                  <Button type="button" variant="default" size="sm" onClick={() => setPhoneDialogOpen(false)} className="focus-ring-none px-4">
-                    Close
-                  </Button>
-                </div>
               </div>
             </motion.div>
           </motion.div>
