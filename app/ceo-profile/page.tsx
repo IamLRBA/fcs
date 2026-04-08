@@ -683,7 +683,7 @@ export default function CEOProfile() {
               className="relative flex h-full w-full max-h-full flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <ModalCloseButton onClose={closeImageModal} className="absolute right-6 top-6 z-20 shrink-0" aria-label="Close photo" />
+              <ModalCloseButton onClose={closeImageModal} className="absolute right-4 top-24 sm:right-6 sm:top-6 z-20 shrink-0" aria-label="Close photo" />
               <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto p-8">
                 <img
                   src={galleryImages[selectedImage]}
