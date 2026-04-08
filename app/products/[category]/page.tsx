@@ -64,6 +64,11 @@ function SubcategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
   )
 }
 
+function getThumbPathVariants(folder: string, thumbIndex: number): string[] {
+  const base = `/assets/images/products-sections/fashion/${folder}/thumb${thumbIndex}`
+  return [`${base}.jpg`, `${base}.JPG`, `${base}.jpeg`, `${base}.png`, `${base}.webp`]
+}
+
 const ProductGridCard = memo(function ProductGridCard({
   product,
   index,
@@ -240,8 +245,34 @@ export default function ProductCategoryPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <h1 className="text-2xl font-semibold">Loading products...</h1>
+      <div className="min-h-screen bg-unified relative overflow-hidden pt-20">
+        <section className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4">
+          <div className="relative max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-6">
+              <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+                <div className="rounded-2xl border border-primary-500/30 dark:border-primary-500/40 p-6 sm:p-8">
+                  <div className="skeleton w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl" />
+                </div>
+              </div>
+              <div className="skeleton h-14 w-64 md:w-96 rounded-xl" />
+            </div>
+            <div className="skeleton h-12 w-full max-w-2xl mx-auto rounded-xl mb-8" />
+            <div className="flex justify-center gap-3 flex-wrap">
+              <div className="skeleton h-10 w-28 rounded-full" />
+              <div className="skeleton h-10 w-28 rounded-full" />
+              <div className="skeleton h-10 w-28 rounded-full" />
+              <div className="skeleton h-10 w-28 rounded-full" />
+            </div>
+          </div>
+        </section>
+        <div className="max-w-7xl mx-auto px-4 pb-20">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-5">
+            <div className="skeleton w-[min(180px,calc(100vw-2.25rem))] sm:w-[204px] md:w-[220px] h-[340px] rounded-xl" />
+            <div className="skeleton w-[min(180px,calc(100vw-2.25rem))] sm:w-[204px] md:w-[220px] h-[340px] rounded-xl" />
+            <div className="skeleton w-[min(180px,calc(100vw-2.25rem))] sm:w-[204px] md:w-[220px] h-[340px] rounded-xl" />
+          </div>
+        </div>
       </div>
     )
   }
@@ -367,19 +398,19 @@ export default function ProductCategoryPage() {
     const thumbIndex = subcategories.indexOf(sectionSlug) + 1
     
     if (thumbIndex > 0) {
-      return `/assets/images/products-sections/fashion/${categorySlug}/thumb${thumbIndex}.jpg`
+      return getThumbPathVariants(categorySlug, thumbIndex)[0]
     }
     
     return '/assets/images/placeholder.jpg'
   }
 
   const getSubcategoryImageCandidates = (categorySlug: string, sectionSlug: string): string[] => {
-    const paths = [getSubcategoryImage(categorySlug, sectionSlug)]
+    const subcategories = [...(CATEGORY_SUBCATEGORY_SLUGS[categorySlug] ?? [])]
+    const thumbIndex = subcategories.indexOf(sectionSlug) + 1
+    const paths = thumbIndex > 0 ? [...getThumbPathVariants(categorySlug, thumbIndex)] : [getSubcategoryImage(categorySlug, sectionSlug)]
     if (categorySlug === 'pants-and-shorts') {
-      paths.push(
-        `/assets/images/products-sections/fashion/bottoms/thumb${(sections.indexOf(sectionSlug) % 4) + 1}.jpg`,
-        `/assets/images/products-sections/fashion/pants/thumb${(sections.indexOf(sectionSlug) % 4) + 1}.jpg`
-      )
+      const normalized = thumbIndex > 0 ? thumbIndex : (sections.indexOf(sectionSlug) % 4) + 1
+      paths.push(...getThumbPathVariants('bottoms', normalized), ...getThumbPathVariants('pants', normalized))
     }
     // Avoid using Set spreading (can break TS build with older targets)
     const unique: string[] = []
@@ -575,6 +606,21 @@ export default function ProductCategoryPage() {
                     Check Other Products
                   </Button>
                 </div>
+              </div>
+            ) : visibleProducts.length <= 3 ? (
+              <div className="flex min-h-[1px] w-full flex-wrap items-stretch justify-center gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5">
+                {visibleProducts.map((product: Product, index: number) => (
+                  <div
+                    key={product.id}
+                    className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
+                  >
+                    <ProductGridCard
+                      product={product}
+                      index={index}
+                      onOpen={openProductModal}
+                    />
+                  </div>
+                ))}
               </div>
             ) : (
             <HorizontalScrollAffordance
@@ -779,9 +825,9 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setCurrentImageIndex(index)}
                       aria-current={isActive ? 'true' : undefined}
-                      className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                      className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
                         isActive
-                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                          ? 'z-[1] border-2 border-primary-600 shadow-md dark:border-primary-400'
                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                       }`}
                     >

@@ -605,9 +605,9 @@ export default function AdminProductsPage() {
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={() => setDetailsImageIndex(index)}
                                 aria-current={isActive ? 'true' : undefined}
-                                className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                                className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
                                   isActive
-                                    ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                                    ? 'z-[1] border-2 border-primary-600 shadow-md dark:border-primary-400'
                                     : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                 }`}
                               >
@@ -807,9 +807,9 @@ export default function AdminProductsPage() {
                                         setDraggingImageIndex(null)
                                       }}
                                       aria-current={isActive ? 'true' : undefined}
-                                      className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                      className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
                                         isActive
-                                          ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                                          ? 'z-[1] border-2 border-primary-600 shadow-md dark:border-primary-400'
                                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                       }`}
                                     >
@@ -1173,9 +1173,9 @@ export default function AdminProductsPage() {
                                       draggingNewImageIndexRef.current = null
                                     }}
                                     aria-current={isMain ? 'true' : undefined}
-                                    className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border-2 bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
+                                    className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 cursor-grab overflow-hidden rounded-xl border bg-neutral-100 transition-all duration-200 active:cursor-grabbing sm:max-w-none sm:w-12 md:w-14 dark:bg-neutral-800/40 touch-none ${
                                       isMain
-                                        ? 'z-[1] border-primary-600 shadow-md ring-2 ring-primary-500/80 ring-offset-2 ring-offset-white dark:border-primary-400 dark:ring-primary-400/70 dark:ring-offset-neutral-900'
+                                        ? 'z-[1] border-2 border-primary-600 shadow-md dark:border-primary-400'
                                         : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                     }`}
                                   >
