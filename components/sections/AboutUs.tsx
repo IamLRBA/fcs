@@ -12,9 +12,6 @@ import { IconBrandWhatsapp, IconBrandX, IconBrandTiktok } from '@tabler/icons-re
 
 type TeamSocialKind = 'linkedin' | 'github' | 'email' | 'whatsapp' | 'x' | 'tiktok' | 'instagram'
 
-const teamSocialOutlineClass =
-  'flex h-9 w-9 items-center justify-center rounded-full border border-primary-400/55 bg-transparent text-primary-700 transition-colors hover:bg-primary-100/35 dark:border-primary-500/45 dark:text-primary-200 dark:hover:bg-primary-800/45'
-
 function TeamSocialIcon({ kind }: { kind: TeamSocialKind }) {
   const stroke = 1.5
   switch (kind) {
@@ -83,7 +80,7 @@ const teamMembers: Array<{
     name: 'ᗪIᑎGᗯᗩ',
     position: 'Fashion Curator',
     description:
-      'A passionate fashion curator with an eye for unique finds and sustainable style. Dingwa specializes in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.',
+      'The heart of the brand, Dingwa is a passionate fashion curator with an eye for unique finds and sustainable style. Dingwa specializes in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.',
     image: '/assets/images/team/dingwa.jpg',
     hoverImage: '/assets/images/team/dingwa-hover.jpg',
     social: [
@@ -150,9 +147,6 @@ export default function AboutUs() {
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
               <MysticalPiecesWord />  began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
-            </p>
-            <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
-              We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
             </p>
             <div className="hero-glass-frame relative inline-block backdrop-blur-lg rounded-full">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
@@ -284,7 +278,7 @@ export default function AboutUs() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-primary-600 dark:text-primary-300 text-sm leading-relaxed mb-4">
+                    <p className="text-center text-primary-600 dark:text-primary-300 text-sm leading-relaxed mb-4">
                       {member.description}
                     </p>
                   </motion.div>
@@ -301,17 +295,19 @@ export default function AboutUs() {
                   >
                     <div className="mb-6 flex flex-wrap justify-center gap-3 border-t border-primary-100 pt-4 pb-2 dark:border-primary-800/60">
                       {member.social.map((link) => (
-                        <a
-                          key={`${member.id}-${link.kind}`}
-                          href={link.href}
-                          {...(link.kind === 'email'
-                            ? {}
-                            : { target: '_blank', rel: 'noopener noreferrer' })}
-                          aria-label={link.label}
-                          className={teamSocialOutlineClass}
-                        >
-                          <TeamSocialIcon kind={link.kind} />
-                        </a>
+                        <div key={`${member.id}-${link.kind}`}>
+                          <Button
+                            variant="circle"
+                            className="focus-ring-none"
+                            href={link.href}
+                            {...(link.kind === 'email'
+                              ? {}
+                              : { target: '_blank', rel: 'noopener noreferrer' })}
+                            aria-label={link.label}
+                          >
+                            <TeamSocialIcon kind={link.kind} />
+                          </Button>
+                        </div>
                       ))}
                     </div>
                   </motion.div>

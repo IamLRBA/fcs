@@ -350,6 +350,9 @@ export default function ShopPage() {
             <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Procedure</span>
           </h2>
+          <p className="mx-auto mb-12 max-w-3xl text-center text-base md:text-lg text-neutral-700 dark:text-primary-300">
+            Get familiar with our process, then proceed to check out products.
+          </p>
           
           <div className="space-y-16 flex flex-col items-center">
             {/* Philosophy Item 1 */}
@@ -366,7 +369,7 @@ export default function ShopPage() {
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <SafeImage
-                    src="/assets/images/sections/fashion/procedure-shop-1.jpg"
+                    src="/assets/images/sections/fashion/shop-1.jpg"
                     alt="Click product image to visit product page"
                     width={96}
                     height={96}
@@ -397,7 +400,7 @@ export default function ShopPage() {
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-400/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <SafeImage
-                    src="/assets/images/sections/fashion/procedure-shop-2.jpg"
+                    src="/assets/images/sections/fashion/shop-2.jpg"
                     alt="Click/Select product category to visit directly"
                     width={96}
                     height={96}
@@ -428,7 +431,7 @@ export default function ShopPage() {
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-200/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <SafeImage
-                    src="/assets/images/sections/fashion/procedure-shop-3.jpg"
+                    src="/assets/images/sections/fashion/shop-3.jpg"
                     alt="Visit and add selected products to cart"
                     width={96}
                     height={96}

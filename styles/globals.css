@@ -106,6 +106,16 @@
     border-radius: 4px;
   }
 
+  @media (max-width: 640px) {
+    button:focus,
+    button:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+      --tw-ring-offset-shadow: 0 0 #0000 !important;
+      --tw-ring-shadow: 0 0 #0000 !important;
+    }
+  }
+
   /* Skip link styles */
   .skip-link {
     position: absolute;

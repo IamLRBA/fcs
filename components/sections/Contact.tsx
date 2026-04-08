@@ -116,39 +116,35 @@ export default function Contact() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="w-full max-w-[280px] rounded-xl border border-primary-500/30 bg-white/95 p-4 shadow-xl backdrop-blur-md dark:border-primary-600/40 dark:bg-neutral-900/95"
+                className="hero-glass-frame relative w-full max-w-[300px] backdrop-blur-lg"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h4 id="phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
-                  Call us
-                </h4>
-                <ul className="space-y-2">
-                  {CALL_NUMBERS.map(({ label, tel }) => (
-                    <li
-                      key={tel}
-                      className="flex items-center justify-between gap-2 rounded-lg border border-neutral-200/80 bg-neutral-50/80 px-2.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60"
-                    >
-                      <a href={`tel:${tel}`} className="min-w-0 flex-1 text-xs font-medium text-primary-800 dark:text-primary-200">
-                        {label}
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => copyNumber(tel)}
-                        className="shrink-0 rounded-md p-1.5 text-primary-600 hover:bg-primary-100/80 dark:text-primary-300 dark:hover:bg-primary-900/50"
-                        aria-label={`Copy ${label}`}
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="relative rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
+                  <h4 id="phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
+                    Call Us
+                  </h4>
+                  <ul className="space-y-2">
+                    {CALL_NUMBERS.map(({ label, tel }) => (
+                      <li
+                        key={tel}
+                        className="flex items-center justify-between gap-2 rounded-xl border border-primary-200/70 bg-white/70 px-2.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60"
                       >
-                        {copiedTel === tel ? <Check className="h-4 w-4" strokeWidth={1.75} /> : <Copy className="h-4 w-4" strokeWidth={1.75} />}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  onClick={() => setPhoneDialogOpen(false)}
-                  className="mt-3 w-full rounded-lg py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-                >
-                  Close
-                </button>
+                        <a href={`tel:${tel}`} className="min-w-0 flex-1 text-xs font-medium text-primary-800 dark:text-primary-200">
+                          {label}
+                        </a>
+                        <Button type="button" variant="circle" size="icon" onClick={() => copyNumber(tel)} className="focus-ring-none h-8 w-8">
+                          {copiedTel === tel ? <Check className="h-4 w-4" strokeWidth={1.75} /> : <Copy className="h-4 w-4" strokeWidth={1.75} />}
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 flex justify-center">
+                    <Button type="button" variant="default" size="sm" onClick={() => setPhoneDialogOpen(false)} className="focus-ring-none px-4">
+                      Close
+                    </Button>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           ) : null}
