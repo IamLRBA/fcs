@@ -401,6 +401,13 @@ export default function ProductCategoryPage() {
 
   // Helper function to get subcategory image based on category and section
   const getSubcategoryImage = (categorySlug: string, sectionSlug: string): string => {
+    if (categorySlug === 'pants-and-shorts' && sectionSlug === 'gentle') {
+      return '/assets/images/products-sections/fashion/pants-and-shorts/thumb1.jpg'
+    }
+    if (categorySlug === 'accessories' && sectionSlug === 'rings-necklaces') {
+      return '/assets/images/products-sections/fashion/accessories/thumb1.jpg'
+    }
+
     const subcategories = [...(CATEGORY_SUBCATEGORY_SLUGS[categorySlug] ?? [])]
     const thumbIndex = subcategories.indexOf(sectionSlug) + 1
     
@@ -412,6 +419,13 @@ export default function ProductCategoryPage() {
   }
 
   const getSubcategoryImageCandidates = (categorySlug: string, sectionSlug: string): string[] => {
+    if (categorySlug === 'pants-and-shorts' && sectionSlug === 'gentle') {
+      return ['/assets/images/products-sections/fashion/pants-and-shorts/thumb1.jpg']
+    }
+    if (categorySlug === 'accessories' && sectionSlug === 'rings-necklaces') {
+      return ['/assets/images/products-sections/fashion/accessories/thumb1.jpg']
+    }
+
     const subcategories = [...(CATEGORY_SUBCATEGORY_SLUGS[categorySlug] ?? [])]
     const thumbIndex = subcategories.indexOf(sectionSlug) + 1
     const paths = thumbIndex > 0 ? [...getThumbPathVariants(categorySlug, thumbIndex)] : [getSubcategoryImage(categorySlug, sectionSlug)]

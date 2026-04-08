@@ -184,6 +184,13 @@ export default function FashionProducts() {
 
   const toggle = (id: number) => setExpandedId(expandedId === id ? null : id)
   const getThumbnailCandidates = (slug: string, thumbIndex: number) => {
+    if (slug === 'pants-and-shorts' && thumbIndex === 1) {
+      return ['/assets/images/products-sections/fashion/pants-and-shorts/thumb1.jpg']
+    }
+    if (slug === 'accessories' && thumbIndex === 1) {
+      return ['/assets/images/products-sections/fashion/accessories/thumb1.jpg']
+    }
+
     const folderMap: Record<string, string[]> = {
       'pants-and-shorts': ['pants-and-shorts', 'bottoms', 'pants'],
     }

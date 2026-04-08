@@ -74,7 +74,11 @@ export default function CEOProfile() {
     '/assets/images/ceo-2.jpg',
     '/assets/images/ceo-3.jpg',
     '/assets/images/ceo-4.jpg',
-    '/assets/images/ceo-5.jpg'
+    '/assets/images/ceo-5.jpg',
+    '/assets/images/ceo-6.jpg',
+    '/assets/images/ceo-7.jpg',
+    '/assets/images/ceo-8.jpg',
+    '/assets/images/ceo-9.jpg'
   ]
 
   const nextImage = () => {
@@ -428,7 +432,7 @@ export default function CEOProfile() {
                     <img
                       src={galleryImages[currentImageIndex]}
                       alt={`CEO Image ${currentImageIndex + 1}`}
-                      className="max-h-[560px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl max-w-[min(calc(100vw-3.5rem),56rem)] sm:max-w-[min(calc(100vw-6rem),56rem)] md:max-w-[min(calc(100vw-8rem),56rem)]"
+                      className="max-h-[560px] w-auto h-auto object-contain block transition-transform duration-500 hover:scale-[1.02] cursor-pointer rounded-xl shadow-2xl hover:shadow-3xl max-w-[min(calc(100vw-4.5rem),56rem)] sm:max-w-[min(calc(100vw-6rem),56rem)] md:max-w-[min(calc(100vw-8rem),56rem)]"
                       onClick={() => openImageModal(currentImageIndex)}
                     />
                     <motion.button
@@ -646,8 +650,8 @@ export default function CEOProfile() {
                 </h4>
                 <ul className="space-y-2">
                   {CALL_NUMBERS.map(({ label, tel }) => (
-                    <li key={tel} className="flex items-center justify-between gap-2 rounded-xl border border-primary-200/70 bg-white/70 px-2.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60">
-                      <a href={`tel:${tel}`} className="min-w-0 flex-1 text-xs font-medium text-primary-800 dark:text-primary-200">
+                    <li key={tel} className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl border border-primary-200/70 bg-white/70 pl-3 pr-1.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60">
+                      <a href={`tel:${tel}`} className="min-w-0 text-[12px] font-medium tracking-wide text-primary-800 dark:text-primary-200 whitespace-nowrap">
                         {label}
                       </a>
                       <Button type="button" variant="circle" size="icon" onClick={() => copyNumber(tel)} className="focus-ring-none h-8 w-8">
