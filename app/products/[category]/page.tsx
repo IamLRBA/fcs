@@ -66,7 +66,14 @@ function SubcategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
 
 function getThumbPathVariants(folder: string, thumbIndex: number): string[] {
   const base = `/assets/images/products-sections/fashion/${folder}/thumb${thumbIndex}`
-  return [`${base}.jpg`, `${base}.JPG`, `${base}.jpeg`, `${base}.png`, `${base}.webp`]
+  const cacheBust = 'v=20260408'
+  return [
+    `${base}.jpg?${cacheBust}`,
+    `${base}.JPG?${cacheBust}`,
+    `${base}.jpeg?${cacheBust}`,
+    `${base}.png?${cacheBust}`,
+    `${base}.webp?${cacheBust}`,
+  ]
 }
 
 const ProductGridCard = memo(function ProductGridCard({
@@ -831,7 +838,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                       }`}
                     >
-                      <span className="absolute inset-1.5 overflow-hidden rounded-lg bg-neutral-50 dark:bg-neutral-900/50">
+                      <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
                         <SafeImage
                           src={img}
                           alt={`${product.name} ${index + 1}`}

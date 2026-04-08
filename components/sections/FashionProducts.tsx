@@ -28,7 +28,14 @@ interface Product {
 
 function getThumbPathVariants(folder: string, thumbIndex: number): string[] {
   const base = `/assets/images/products-sections/fashion/${folder}/thumb${thumbIndex}`
-  return [`${base}.jpg`, `${base}.JPG`, `${base}.jpeg`, `${base}.png`, `${base}.webp`]
+  const cacheBust = 'v=20260408'
+  return [
+    `${base}.jpg?${cacheBust}`,
+    `${base}.JPG?${cacheBust}`,
+    `${base}.jpeg?${cacheBust}`,
+    `${base}.png?${cacheBust}`,
+    `${base}.webp?${cacheBust}`,
+  ]
 }
 
 function FashionCategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {

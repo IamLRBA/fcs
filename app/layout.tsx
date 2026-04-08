@@ -10,6 +10,7 @@ import AccountPromptPopup from '@/components/ui/AccountPromptPopup'
 import BackToTop from '@/components/ui/BackToTop'
 import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
 import BackgroundOverlayPortal from '@/components/common/BackgroundOverlayPortal'
+import ScrollToTopOnRouteChange from '@/components/common/ScrollToTopOnRouteChange'
 
 export const metadata: Metadata = {
   title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
@@ -85,6 +86,7 @@ export default function RootLayout({
         <Providers>
           <ErrorBoundary>
             <BackgroundOverlayPortal />
+            <ScrollToTopOnRouteChange />
             <div className="relative z-10 min-h-screen flex flex-col">
               <SkipToContent />
               <Navbar />
