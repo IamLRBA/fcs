@@ -348,7 +348,7 @@ export default function ShopPage() {
         >
           <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
             <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
-            <span className="text-neutral-700 dark:text-primary-300">Philosophy</span>
+            <span className="text-neutral-700 dark:text-primary-300">Procedure</span>
           </h2>
           
           <div className="space-y-16 flex flex-col items-center">
@@ -366,8 +366,8 @@ export default function ShopPage() {
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <SafeImage
-                    src="/assets/images/sections/fashion/philosophy-1.jpg"
-                    alt="Mysticism"
+                    src="/assets/images/sections/fashion/procedure-shop-1.jpg"
+                    alt="Click product image to visit product page"
                     width={96}
                     height={96}
                     className="w-24 h-24 object-cover rounded-xl"
@@ -379,10 +379,7 @@ export default function ShopPage() {
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">01</div>
-                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Mysticism</h3>
-                <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                  There is a deeper reality beyond the visible world. Find meaning in what others might overlook.
-                </p>
+                <h3 className="text-base md:text-lg font-semibold leading-snug max-w-sm mb-2 text-neutral-850 dark:text-primary-50">Click product image to visit product page</h3>
               </div>
             </motion.div>
             
@@ -400,8 +397,8 @@ export default function ShopPage() {
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-400/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <SafeImage
-                    src="/assets/images/sections/fashion/philosophy-2.jpg"
-                    alt="Sustainability"
+                    src="/assets/images/sections/fashion/procedure-shop-2.jpg"
+                    alt="Click/Select product category to visit directly"
                     width={96}
                     height={96}
                     className="w-24 h-24 object-cover rounded-xl"
@@ -413,10 +410,7 @@ export default function ShopPage() {
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">02</div>
-                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Anarchism</h3>
-                <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                Every item you choose can be you shaping your own path and challenging the ordinary-fashion norm. 
-                </p>
+                <h3 className="text-base md:text-lg font-semibold leading-snug max-w-sm mb-2 text-neutral-850 dark:text-primary-50">Click/Select product category to visit directly</h3>
               </div>
             </motion.div>
             
@@ -434,8 +428,8 @@ export default function ShopPage() {
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                 <div className="bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-200/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
                   <SafeImage
-                    src="/assets/images/sections/fashion/philosophy-3.jpg"
-                    alt="Self-Discovery"
+                    src="/assets/images/sections/fashion/procedure-shop-3.jpg"
+                    alt="Visit and add selected products to cart"
                     width={96}
                     height={96}
                     className="w-24 h-24 object-cover rounded-xl"
@@ -447,10 +441,7 @@ export default function ShopPage() {
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">03</div>
-                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Self-Discovery</h3>
-                <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                Evolve with pieces that resonate with your spirit and also help you see yourself more clearly. 
-                </p>
+                <h3 className="text-base md:text-lg font-semibold leading-snug max-w-sm mb-2 text-neutral-850 dark:text-primary-50">Visit and add selected products to cart</h3>
               </div>
             </motion.div>
           </div>
@@ -484,14 +475,35 @@ export default function ShopPage() {
               <p className="text-neutral-700 dark:text-primary-300 mb-6 sm:mb-8">
                 Curated collections that capture different moods and aesthetics
               </p>
-              <div className="w-full max-w-2xl mx-auto px-1 overflow-x-auto pb-1">
-                <SegmentedPillNav
-                  items={moodNavItems}
-                  value={selectedMood}
-                  onSelect={changeMood}
-                  disabled={isUpdatingImages}
-                  className="!max-w-none min-w-[18rem] sm:min-w-0"
-                />
+              {/* Desktop: single row. Mobile: split into two rows (2 + 2) to avoid overflow. */}
+              <div className="w-full max-w-2xl mx-auto px-1 pb-1">
+                <div className="hidden sm:block">
+                  <SegmentedPillNav
+                    items={moodNavItems}
+                    value={selectedMood}
+                    onSelect={changeMood}
+                    disabled={isUpdatingImages}
+                    className="!max-w-none"
+                  />
+                </div>
+                <div className="sm:hidden space-y-2">
+                  <SegmentedPillNav
+                    items={moodNavItems.slice(0, 2)}
+                    value={['inspiration', 'elegance'].includes(selectedMood) ? selectedMood : null}
+                    onSelect={changeMood}
+                    disabled={isUpdatingImages}
+                    hideIndicatorUntilSelected
+                    className="!max-w-none"
+                  />
+                  <SegmentedPillNav
+                    items={moodNavItems.slice(2, 4)}
+                    value={['urban', 'nature'].includes(selectedMood) ? selectedMood : null}
+                    onSelect={changeMood}
+                    disabled={isUpdatingImages}
+                    hideIndicatorUntilSelected
+                    className="!max-w-none"
+                  />
+                </div>
               </div>
             </div>
             

@@ -7,66 +7,92 @@ import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import AnimatedImageBannerAboutUs from './AnimatedImageBannerAboutUs'
-import { 
-  Building2, 
-  Music, 
-  Palette, 
-  Code, 
-  Shirt,
-  Linkedin,
-  Instagram,
-  Mail,
-  ExternalLink,
-  Zap
-} from 'lucide-react'
+import { Linkedin, Instagram, Mail, ExternalLink, Github } from 'lucide-react'
 import { IconBrandWhatsapp, IconBrandX, IconBrandTiktok } from '@tabler/icons-react'
 
-const teamMembers = [
+type TeamSocialKind = 'linkedin' | 'github' | 'email' | 'whatsapp' | 'x' | 'tiktok' | 'instagram'
+
+const teamSocialOutlineClass =
+  'flex h-9 w-9 items-center justify-center rounded-full border border-primary-400/55 bg-transparent text-primary-700 transition-colors hover:bg-primary-100/35 dark:border-primary-500/45 dark:text-primary-200 dark:hover:bg-primary-800/45'
+
+function TeamSocialIcon({ kind }: { kind: TeamSocialKind }) {
+  const stroke = 1.5
+  switch (kind) {
+    case 'linkedin':
+      return <Linkedin className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+    case 'github':
+      return <Github className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+    case 'email':
+      return <Mail className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+    case 'whatsapp':
+      return <IconBrandWhatsapp className="h-4 w-4" aria-hidden />
+    case 'x':
+      return <IconBrandX className="h-4 w-4" aria-hidden />
+    case 'tiktok':
+      return <IconBrandTiktok className="h-4 w-4" aria-hidden />
+    case 'instagram':
+      return <Instagram className="h-4 w-4" strokeWidth={stroke} aria-hidden />
+    default:
+      return null
+  }
+}
+
+const teamMembers: Array<{
+  id: number
+  name: string
+  position: string
+  description: string
+  image: string
+  hoverImage: string
+  social: { kind: TeamSocialKind; href: string; label: string }[]
+}> = [
   {
     id: 1,
-    name: "ᒍOᔕᕼᑌᗩ",
-    position: "Creative Director",
-    description: "A visionary creative director with over 8 years of experience in fashion curation and style direction. Joshua leads our artistic vision and ensures every piece meets the highest style standards.",
-    image: "/assets/images/team/joshua-nsereko.jpg",
-    hoverImage: "/assets/images/team/joshua-nsereko-hover.jpg",
-    social: {
-      linkedin: "https://linkedin.com/in/sarahchen",
-      instagram: "https://instagram.com/sarahchen",
-      x: "https://x.com/sarahchen",
-      whatsapp: "+1234567890",
-      email: "sarah@mysticalpieces.com"
-    }
+    name: 'ᒍOᔕᕼᑌᗩ',
+    position: 'Creative Director',
+    description:
+      'A visionary creative director with over 8 years of experience in fashion curation and style direction. Joshua leads our artistic vision and ensures every piece meets the highest style standards.',
+    image: '/assets/images/team/joshua-nsereko.jpg',
+    hoverImage: '/assets/images/team/joshua-nsereko-hover.jpg',
+    social: [
+      { kind: 'linkedin', href: 'https://www.linkedin.com/in/jnsereko/', label: "Joshua's LinkedIn" },
+      { kind: 'whatsapp', href: 'https://wa.me/256740383427', label: "Joshua's WhatsApp" },
+      { kind: 'email', href: 'mailto:nserekojowashi@gmail.com', label: "Joshua's email" },
+      { kind: 'github', href: 'https://github.com/jnsereko', label: "Joshua's GitHub" },
+    ],
   },
   {
     id: 2,
-    name: "ᑎOᗩᕼ",
-    position: "Technical Lead",
-    description: "A tech-savvy professional with expertise in e-commerce and digital platforms. Noah ensures our online shopping experience is seamless and our digital presence is cutting-edge.",
-    image: "/assets/images/team/noah-tayebwa.png",
-    hoverImage: "/assets/images/team/noah-tayebwa-hover.jpg",
-    social: {
-      linkedin: "https://www.linkedin.com/in/ndacyayisenga-droid/",
-      instagram: "https://www.instagram.com/p/DCKOuHEChyu/?igsh=MW5uemhmaW15dTRtag==",
-      x: "https://twitter.com/NdacyayisengaN1",
-      whatsapp: "https://wa.me/256750571027",
-      email: "mailto:ndacyayinoah@gmail.com"
-    }
+    name: 'ᑎOᗩᕼ',
+    position: 'Technical Lead',
+    description:
+      'A tech-savvy professional with expertise in e-commerce and digital platforms. Noah ensures our online shopping experience is seamless and our digital presence is cutting-edge.',
+    image: '/assets/images/team/noah-tayebwa.jpg',
+    hoverImage: '/assets/images/team/noah-tayebwa-hover.jpg',
+    social: [
+      { kind: 'linkedin', href: 'https://www.linkedin.com/in/ndacyayisenga-droid/', label: "Noah's LinkedIn" },
+      { kind: 'instagram', href: 'https://www.instagram.com/p/DCKOuHEChyu/?igsh=MW5uemhmaW15dTRtag==', label: "Noah's Instagram" },
+      { kind: 'x', href: 'https://twitter.com/NdacyayisengaN1', label: "Noah's X" },
+      { kind: 'whatsapp', href: 'https://wa.me/256750571027', label: "Noah's WhatsApp" },
+      { kind: 'email', href: 'mailto:ndacyayinoah@gmail.com', label: "Noah's email" },
+      { kind: 'github', href: 'https://github.com/Ndacyayisenga-droid', label: "Noah's GitHub" },
+    ],
   },
   {
     id: 3,
-    name: "ᗪIᑎGᗯᗩ",
-    position: "Fashion Curator",
-    description: "A passionate fashion curator with an eye for unique finds and sustainable style. Dingwa specializes in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.",
-    image: "/assets/images/team/dingwa.jpg",
-    hoverImage: "/assets/images/team/dingwa-hover.jpg",
-    social: {
-      tiktok: "https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1",
-      instagram: "https://instagram.com/elenapetrov",
-      x: "https://x.com/elenapetrov",
-      whatsapp: "+1234567890",
-      email: "elena@mysticalpieces.com"
-    }
-  }
+    name: 'ᗪIᑎGᗯᗩ',
+    position: 'Fashion Curator',
+    description:
+      'A passionate fashion curator with an eye for unique finds and sustainable style. Dingwa specializes in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.',
+    image: '/assets/images/team/dingwa.jpg',
+    hoverImage: '/assets/images/team/dingwa-hover.jpg',
+    social: [
+      { kind: 'x', href: 'https://x.com/mulindwayusfu?s=21', label: "Dingwa's X" },
+      { kind: 'tiktok', href: 'https://www.tiktok.com/@dingwa0?_r=1&_t=ZS-95LcTo6uMfg', label: "Dingwa's TikTok" },
+      { kind: 'email', href: 'mailto:Mulindway3@gmail.com', label: "Dingwa's email" },
+      { kind: 'whatsapp', href: 'https://wa.me/256757087093', label: "Dingwa's WhatsApp" },
+    ],
+  },
 ]
 
 export default function AboutUs() {
@@ -273,56 +299,20 @@ export default function AboutUs() {
                     transition={{ duration: 0.3, delay: 0.1 }}
                     className="overflow-hidden"
                   >
-                    <div className="flex justify-center space-x-3 pt-4 border-t border-primary-100">
-                      {member.social.tiktok ? (
+                    <div className="mb-6 flex flex-wrap justify-center gap-3 border-t border-primary-100 pt-4 pb-2 dark:border-primary-800/60">
+                      {member.social.map((link) => (
                         <a
-                          href={member.social.tiktok}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
+                          key={`${member.id}-${link.kind}`}
+                          href={link.href}
+                          {...(link.kind === 'email'
+                            ? {}
+                            : { target: '_blank', rel: 'noopener noreferrer' })}
+                          aria-label={link.label}
+                          className={teamSocialOutlineClass}
                         >
-                          <IconBrandTiktok className="w-4 h-4" />
+                          <TeamSocialIcon kind={link.kind} />
                         </a>
-                      ) : (
-                        <a
-                          href={member.social.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
-                        >
-                          <Linkedin className="w-4 h-4" />
-                        </a>
-                      )}
-                      <a
-                        href={member.social.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
-                      >
-                        <Instagram className="w-4 h-4" />
-                      </a>
-                      <a
-                        href={member.social.x}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
-                      >
-                        <IconBrandX className="w-4 h-4" />
-                      </a>
-                      <a
-                        href={`https://wa.me/${member.social.whatsapp}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
-                      >
-                        <IconBrandWhatsapp className="w-4 h-4" />
-                      </a>
-                      <a
-                        href={`mailto:${member.social.email}`}
-                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
-                      >
-                        <Mail className="w-4 h-4" />
-                      </a>
+                      ))}
                     </div>
                   </motion.div>
                   
@@ -345,29 +335,29 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ ᐯᗩᒪᑌEᔕ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">OUR EXPERTISE</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 px-8 md:px-12 lg:px-16">
             {[
               {
                 image: "/assets/images/sections/home/values-1.jpg",
-                title: "Intuition",
-                description: "We follow subtle cues to choose pieces that resonate now and stay relevant next season."
-              },
-              {
-                image: "/assets/images/sections/home/values-4.jpg",
-                title: "Connection",
-                description: "Each piece links past and new wardrobes, nurturing a conscious style community."
-              },
-              {
-                image: "/assets/images/sections/home/values-3.jpg",
-                title: "Sustainability",
-                description: "We honor Earth by extending the life of quality garments and reducing fashion waste."
+                title: "Thrift Sourcing",
+                description: "We actively source unique, high-quality thrift pieces for you."
               },
               {
                 image: "/assets/images/sections/home/values-2.jpg",
-                title: "Expression",
-                description: "We champion refined self-expression, letting minimal silhouettes deliver bold identities."
+                title: "Style Consultation",
+                description: "We help you style outfits that reflect your personality and aesthetic."
+              },
+              {
+                image: "/assets/images/sections/home/values-3.jpg",
+                title: "Circular Styling",
+                description: "We restore pre-loved treasures making circular fashion effortless and stylish."
+              },
+              {
+                image: "/assets/images/sections/home/values-4.jpg",
+                title: "Seamless Delivery",
+                description: "We deliver curated fashion pieces with a thoughtful, aesthetic unboxing experience."
               }
             ].map((value, index) => (
               <motion.div
@@ -413,24 +403,27 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 1.0 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ ᗰIᔕᔕIOᑎᔕ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">
+            <span className="text-primary-600 dark:text-primary-200">ᔕᕼOᑭᑭIᑎG</span>{' '}
+            <span className="text-primary-800 dark:text-primary-100">Philosophy</span>
+          </h3>
           
           <div className="space-y-16 flex flex-col items-center max-w-4xl mx-auto">
             {[
               {
-                image: "/assets/images/sections/home/missions-1.jpg",
-                title: "Future Sourcing",
-                description: "To scout standout garments with enduring build, striking detail, and forward aesthetics."
+                image: "/assets/images/sections/fashion/philosophy-1.jpg",
+                title: "Mysticism",
+                description: "There is a deeper reality beyond the visible world. Find meaning in what others might overlook."
               },
               {
-                image: "/assets/images/sections/home/missions-2.jpg",
-                title: "Circular Styling",
-                description: "To restore pre-loved treasures with care, making circular fashion effortless and stylish."
+                image: "/assets/images/sections/fashion/philosophy-2.jpg",
+                title: "Anarchism",
+                description: "Every item you choose can be you shaping your own path and challenging the ordinary-fashion norm."
               },
               {
-                image: "/assets/images/sections/home/missions-3.jpg",
-                title: "Signature Revelation",
-                description: "To help you distill a personal look that feels intuitive, modern, and unmistakably yours."
+                image: "/assets/images/sections/fashion/philosophy-3.jpg",
+                title: "Self-Discovery",
+                description: "Evolve with pieces that resonate with your spirit and also help you see yourself more clearly."
               }
             ].map((mission, index) => (
               <motion.div
@@ -472,7 +465,7 @@ export default function AboutUs() {
                     }`}>0{index + 1}</div>
                     <h4 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">{mission.title}</h4>
                     <p className={`text-primary-600 dark:text-primary-300 text-lg ${
-                      index % 2 === 0 
+                      index % 2 === 0
                         ? 'max-w-md'
                         : 'max-w-md ml-auto'
                     }`}>
