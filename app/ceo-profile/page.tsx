@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { IconBrandWhatsapp, IconBrandTiktok, IconBrandSnapchat, IconBrandX } from '@tabler/icons-react'
-import { SOCIAL_LINKS } from '@/lib/constants/social'
 import { CEO_EMAIL } from '@/lib/constants/brand-contact'
 import { 
   Mail, 
@@ -13,6 +12,8 @@ import {
   Phone, 
   X,
   Maximize2,
+  Copy,
+  Check,
   Send,
   Building2,
   Music,
@@ -20,8 +21,7 @@ import {
   Code,
   Shirt,
   MessageCircle,
-  Twitter,
-  Youtube
+  Twitter
 } from 'lucide-react'
 import Link from 'next/link'
 import EducationalJourney from '@/components/sections/EducationalJourney'
@@ -111,6 +111,32 @@ export default function CEOProfile() {
 
   const [expandedSkills, setExpandedSkills] = useState<{ [key: string]: boolean }>({})
   const [showBackButton, setShowBackButton] = useState(true)
+  const [phoneDialogOpen, setPhoneDialogOpen] = useState(false)
+  const [copiedTel, setCopiedTel] = useState<string | null>(null)
+
+  const CALL_NUMBERS = [
+    { label: '+256 774 948 086', tel: '+256774948086' },
+    { label: '+256 755 915 549', tel: '+256755915549' },
+  ] as const
+
+  const copyNumber = async (tel: string) => {
+    try {
+      await navigator.clipboard.writeText(tel)
+      setCopiedTel(tel)
+      window.setTimeout(() => setCopiedTel(null), 2000)
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const CEO_SOCIAL_LINKS = [
+    { name: 'Email', icon: Mail, href: `mailto:${CEO_EMAIL}` },
+    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/iamlrba?igsh=MXcwcTF3b3R6ZG9yeQ%3D%3D&utm_source=qr' },
+    { name: 'TikTok', icon: IconBrandTiktok, href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1' },
+    { name: 'X (Twitter)', icon: IconBrandX, href: 'https://x.com/iamlrba?s=11' },
+    { name: 'WhatsApp', icon: IconBrandWhatsapp, href: 'https://wa.me/256774948086' },
+    { name: 'GitHub', icon: Github, href: 'https://github.com/IamLRBA' },
+  ] as const
 
   const toggleSkill = (category: string) => {
     setExpandedSkills(prev => ({
@@ -402,8 +428,8 @@ export default function CEOProfile() {
               <Button type="button" variant="default" size="icon" onClick={nextImage} className="absolute right-0 sm:right-1 md:right-2 top-1/2 -translate-y-1/2 w-12 h-12 shadow-lg hover:shadow-xl flex items-center justify-center focus-ring-none z-10">
                 <span className="text-2xl">⟹</span>
               </Button>
-              <div className="flex w-full justify-center px-3 sm:px-8 md:px-12 lg:px-16">
-                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-full min-w-0 overflow-hidden">
+              <div className="flex w-full justify-center px-2 sm:px-8 md:px-12 lg:px-16">
+                <div className="hero-glass-frame relative group rounded-2xl backdrop-blur-lg w-fit max-w-[calc(100vw-1rem)] sm:max-w-full min-w-0 overflow-hidden">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
                   <div className="relative p-2 sm:p-3 rounded-2xl border border-primary-200/40 dark:border-primary-700/40 flex items-center justify-center">
                     <img
@@ -446,6 +472,7 @@ export default function CEOProfile() {
                           <span className="text-lg">⟸</span>
                         </Button>
                       )}
+                      {galleryImages.length > 3 && <div className="hidden md:block h-8 w-px bg-primary-300/70 dark:bg-primary-700/70 rounded-full" />}
                       <div
                         ref={galleryThumbnailRef}
                         className="gallery-thumbnail-row flex w-max max-w-[calc(100vw-4rem)] sm:max-w-full items-center justify-center gap-2 md:gap-3 overflow-x-auto scroll-smooth py-2 px-1 mx-auto min-w-0"
@@ -467,6 +494,7 @@ export default function CEOProfile() {
                           </button>
                         ))}
                       </div>
+                      {galleryImages.length > 3 && <div className="hidden md:block h-8 w-px bg-primary-300/70 dark:bg-primary-700/70 rounded-full" />}
                       {galleryImages.length > 3 && (
                         <Button
                           type="button"
@@ -512,7 +540,7 @@ export default function CEOProfile() {
         >
           <h3 className="text-3xl font-bold text-primary-900 dark:text-primary-100 mb-8 text-center">ᑕOᑎᑎEᑕT ᗯITᕼ ᗰE</h3>
           <div className="social-links flex justify-center flex-wrap gap-6 mb-8">
-            {SOCIAL_LINKS.map((social) => {
+            {CEO_SOCIAL_LINKS.map((social) => {
               const Icon = social.icon as any
               return (
                 <motion.div key={social.name} className="social-link" whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }}>
@@ -584,7 +612,7 @@ export default function CEOProfile() {
                   <Phone className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 774 948 086</p>
-                  <Button href="tel:+256774948086" variant="default" className="inline-flex items-center justify-center px-6">
+                  <Button onClick={() => setPhoneDialogOpen(true)} variant="default" className="inline-flex items-center justify-center px-6">
                     Call Me
                   </Button>
                 </div>
@@ -635,6 +663,53 @@ export default function CEOProfile() {
       </section>
 
       {/* Image Modal */}
+      <AnimatePresence>
+        {phoneDialogOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[120] flex items-center justify-center bg-black/40 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ceo-phone-dialog-title"
+            onClick={() => setPhoneDialogOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="hero-glass-frame relative w-full max-w-[300px] backdrop-blur-lg"
+            >
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              <div className="relative rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
+                <h4 id="ceo-phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
+                  Call Me
+                </h4>
+                <ul className="space-y-2">
+                  {CALL_NUMBERS.map(({ label, tel }) => (
+                    <li key={tel} className="flex items-center justify-between gap-2 rounded-xl border border-primary-200/70 bg-white/70 px-2.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60">
+                      <a href={`tel:${tel}`} className="min-w-0 flex-1 text-xs font-medium text-primary-800 dark:text-primary-200">
+                        {label}
+                      </a>
+                      <Button type="button" variant="circle" size="icon" onClick={() => copyNumber(tel)} className="focus-ring-none h-8 w-8">
+                        {copiedTel === tel ? <Check className="h-4 w-4" strokeWidth={1.75} /> : <Copy className="h-4 w-4" strokeWidth={1.75} />}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 flex justify-center">
+                  <Button type="button" variant="default" size="sm" onClick={() => setPhoneDialogOpen(false)} className="focus-ring-none px-4">
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
       <AnimatePresence>
         {selectedImage !== null && (
           <motion.div

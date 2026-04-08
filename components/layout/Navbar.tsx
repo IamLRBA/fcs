@@ -296,7 +296,7 @@ export default function Navbar() {
                           const hoverBg =
                             item.name === 'Shop' ? '' : 'hover:bg-primary-50 dark:hover:bg-neutral-700/50'
                           return (
-                            <Link key={item.name} href={item.href} className={`focus-ring-none flex items-center space-x-3 px-4 py-3 transition-all duration-200 ${hoverBg} ${active ? 'text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-neutral-700/30' : 'text-neutral-600 dark:text-neutral-300 hover:text-primary-700 dark:hover:text-primary-200'}`}>
+                            <Link key={item.name} href={item.href} className={`focus-ring-none flex items-center space-x-3 px-4 py-3 transition-all duration-200 ${hoverBg} ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-300 hover:text-primary-700 dark:hover:text-primary-200'}`}>
                               <Icon className="w-4 h-4 transition-colors" />
                               <span className="font-light">{item.name}</span>
                             </Link>
@@ -508,7 +508,7 @@ export default function Navbar() {
                                 onClick={closeMenu}
                                 className={`focus-ring-none group flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
                                   active
-                                    ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'
+                                    ? 'text-primary-700 dark:text-primary-300'
                                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/50'
                                 }`}
                               >
