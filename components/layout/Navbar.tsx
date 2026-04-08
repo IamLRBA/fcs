@@ -69,11 +69,9 @@ interface SearchResult {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [menuSurfaceLocked, setMenuSurfaceLocked] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isPortalsOpen, setIsPortalsOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [navSurfaceClass, setNavSurfaceClass] = useState('bg-transparent')
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredSuggestions, setFilteredSuggestions] = useState<SearchResult[]>([])
   const [allProducts, setAllProducts] = useState<Product[]>([])
@@ -123,22 +121,24 @@ export default function Navbar() {
     }
   }, [])
 
-  useEffect(() => {
-    if (isOpen || menuSurfaceLocked || isSettingsOpen) return
-    setNavSurfaceClass(isScrolled ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent')
-  }, [isScrolled, isOpen, menuSurfaceLocked, isSettingsOpen])
+  /** Solid shell whenever the page is scrolled or a dropdown/menu needs contrast (always derived live from scroll). */
+  const navShellSolid = isScrolled || isOpen || isSettingsOpen
+  const navShellBgClass = navShellSolid
+    ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg'
+    : 'bg-transparent'
 
   const handleMenuToggle = () => {
     if (!isOpen) {
-      setNavSurfaceClass(isScrolled ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent')
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
-      setMenuSurfaceLocked(true)
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = null
+      }
       setIsOpen(true)
       return
     }
     closeTimerRef.current = setTimeout(() => {
       setIsOpen(false)
-      setMenuSurfaceLocked(false)
+      closeTimerRef.current = null
     }, 220)
   }
 
@@ -224,7 +224,10 @@ export default function Navbar() {
   }
 
   const closeMenu = () => {
-    setMenuSurfaceLocked(false)
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
     setIsOpen(false)
     setIsSearchOpen(false)
     setIsPortalsOpen(false)
@@ -237,11 +240,7 @@ export default function Navbar() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`navbar-shell fixed top-0 left-4 right-0 lg:left-4 lg:right-4 z-[1010] transition-all duration-300 ${
-          (isOpen || menuSurfaceLocked || isSettingsOpen) ? navSurfaceClass : (isScrolled
-            ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg'
-            : 'bg-transparent')
-        }`}
+        className={`navbar-shell fixed top-0 left-4 right-0 lg:left-4 lg:right-4 z-[1010] transition-all duration-300 ${navShellBgClass}`}
       >
         <div className="container-custom">
           <div className="flex items-center justify-between h-16 relative">
@@ -375,7 +374,7 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Link>
-              <SettingsDropdown onOpenChange={setIsSettingsOpen} />
+              <SettingsDropdown onOpenChange={setIsSettingsOpen} onAfterAuthNavigation={closeMenu} />
             </div>
 
             <button onClick={handleMenuToggle} className="focus-ring-none lg:hidden absolute right-0 p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center" aria-label="Menu">
@@ -620,7 +619,7 @@ export default function Navbar() {
                 {/* Mobile Settings - icon only, aligned with other items */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-start px-4 py-3 rounded-xl text-neutral-700 dark:text-neutral-300">
-                    <SettingsDropdown variant="mobile" onOpenChange={setIsSettingsOpen} />
+                    <SettingsDropdown variant="mobile" onOpenChange={setIsSettingsOpen} onAfterAuthNavigation={closeMenu} />
                   </div>
                 </div>
               </div>

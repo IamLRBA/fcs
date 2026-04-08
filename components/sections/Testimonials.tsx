@@ -17,6 +17,8 @@ interface Testimonial {
   company: string
   image: string
   rating: number
+  /** Site visitor reviews — shown in B&W like a print testimonial */
+  fromUserReview?: boolean
 }
 
 const defaultTestimonials: Testimonial[] = [
@@ -81,7 +83,7 @@ export default function Testimonials() {
       const userReviews = AuthManager.getAllReviews()
       
       // Ensure reviews have the latest profile images from users
-      const users = AuthManager.getUsersList?.() || []
+      const users = AuthManager.getUsersList()
       const reviewsWithUpdatedImages = userReviews.map((review: any) => {
         // Find the user who wrote this review
         const reviewUser = users.find((u: any) => u.fullName === review.author)
@@ -101,7 +103,8 @@ export default function Testimonials() {
         author: review.author || 'Customer',
         company: 'Verified Customer',
         image: review.image || '/assets/images/testimonials/default.jpg',
-        rating: review.rating || 5
+        rating: review.rating || 5,
+        fromUserReview: true,
       }))
       
       setTestimonialsData([...defaultTestimonials, ...reviewsAsTestimonials])
@@ -322,7 +325,7 @@ export default function Testimonials() {
                           alt={testimonial.author}
                           width={40}
                           height={40}
-                          className="w-full h-full rounded-full object-cover grayscale"
+                          className={`w-full h-full rounded-full object-cover ${testimonial.fromUserReview ? 'grayscale' : ''}`}
                           sizes="40px"
                           loading="lazy"
                         />
@@ -391,7 +394,7 @@ export default function Testimonials() {
                         alt={selectedTestimonial.author}
                         width={48}
                         height={48}
-                        className="w-full h-full rounded-full object-cover grayscale"
+                        className={`w-full h-full rounded-full object-cover ${selectedTestimonial.fromUserReview ? 'grayscale' : ''}`}
                         sizes="48px"
                         loading="lazy"
                       />

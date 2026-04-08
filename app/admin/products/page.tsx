@@ -958,9 +958,8 @@ export default function AdminProductsPage() {
                       </label>
                     </div>
                   </div>
-                  <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex gap-3 flex-shrink-0">
+                  <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex justify-center flex-shrink-0">
                     <Button type="submit" variant="default">Save changes</Button>
-                    <Button type="button" variant="default" onClick={() => setEditingProduct(null)}>Cancel</Button>
                   </div>
                 </form>
               </motion.div>
@@ -1227,9 +1226,8 @@ export default function AdminProductsPage() {
                       <input value={newProduct.colors.join(', ')} onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value.split(',').map(c => c.trim()).filter(Boolean) })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" placeholder="Red, Blue" />
                     </div>
                   </div>
-                  <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex gap-3 flex-shrink-0">
+                  <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex justify-center flex-shrink-0">
                     <Button type="submit" variant="default">Add product</Button>
-                    <Button type="button" variant="default" onClick={() => setShowAddModal(false)}>Cancel</Button>
                   </div>
                 </form>
               </motion.div>
@@ -1292,16 +1290,7 @@ export default function AdminProductsPage() {
                     {DELETE_REASON_OPTIONS.find((opt) => opt.key === deleteReason)?.description}
                   </p>
                 </div>
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button
-                    type="button"
-                    variant="default"
-                    size="sm"
-                    disabled={deleteBusy}
-                    onClick={() => setDeleteTarget(null)}
-                  >
-                    Cancel
-                  </Button>
+                <div className="mt-6 flex justify-center">
                   <Button
                     type="button"
                     variant="default"

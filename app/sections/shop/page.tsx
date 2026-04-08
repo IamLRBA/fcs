@@ -319,14 +319,6 @@ export default function ShopPage() {
           >
             "Build a wardrobe that Is authentically yours"
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-primary-100 max-w-3xl mx-auto px-4"
-          >
-            Understand our philosophy and continue to discover unique pieces, from vintage gems to contemporary styles.
-          </motion.div>
         </motion.div>
 
         {/* Background Elements */}

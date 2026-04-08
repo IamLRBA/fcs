@@ -55,9 +55,9 @@ export default function AdminLoginPage() {
         className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/login" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="btn-unified-circle flex-shrink-0">⟸</span>
-          <span className="text-sm font-medium">Back to Home</span>
+          <span className="text-sm font-medium">Back</span>
         </Link>
       </motion.div>
       <div className="max-w-md w-full mt-10 sm:mt-16 pt-16">
@@ -92,7 +92,7 @@ export default function AdminLoginPage() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
+                  className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                   placeholder="Enter username"
                 />
               </div>
@@ -109,7 +109,7 @@ export default function AdminLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
+                  className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
                   placeholder="Enter password"
                 />
               </div>

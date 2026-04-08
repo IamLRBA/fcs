@@ -12,6 +12,7 @@ import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
+import { formatOrderReceiptDisplayName } from '@/lib/utils/order-display'
 
 export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null)
@@ -231,8 +232,9 @@ export default function OrderConfirmationPage() {
               </div>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm text-gray-600 dark:text-primary-300">
                 <div className="text-left w-full sm:w-auto">
-                  <p className="font-semibold text-gray-900 dark:text-primary-100">Order Receipt</p>
-                  <p className="mt-1 dark:text-primary-300 break-all">{order.id}</p>
+                  <p className="font-semibold text-gray-900 dark:text-primary-100">Order</p>
+                  <p className="mt-1 dark:text-primary-300 break-words font-medium">{formatOrderReceiptDisplayName(order)}</p>
+                  <p className="mt-1 text-xs text-gray-500 dark:text-neutral-500 break-all">Reference: {order.id}</p>
                 </div>
                 <div className="text-left sm:text-right w-full sm:w-auto">
                   <p className="font-semibold text-gray-900 dark:text-primary-100">Date</p>

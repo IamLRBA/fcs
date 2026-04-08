@@ -74,13 +74,13 @@ export default function CartPage() {
     <div className="min-h-screen bg-unified pt-24 pb-20">
       {/* Fixed Back Button */}
       <motion.div
-        animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120, y: showBackButton ? 0 : -20 }}
         transition={{ duration: 0.3 }}
-        className="fixed top-20 left-8 z-50 pointer-events-none"
+        className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop" className="focus-ring-none inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
-          <span className="text-lg font-medium">⟸</span>
+        <Link href="/sections/shop" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Continue Shopping</span>
         </Link>
       </motion.div>
@@ -91,8 +91,8 @@ export default function CartPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0 flex-1">
               <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">Shopping Cart</h1>
               <p className="text-neutral-600 dark:text-primary-300">
                 {cart.length === 0 
@@ -102,7 +102,7 @@ export default function CartPage() {
               </p>
             </div>
             {cart.length > 0 && (
-              <Button variant="default" size="sm" onClick={clearCart} className="!border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300">
+              <Button variant="default" size="sm" onClick={clearCart} className="shrink-0 self-start sm:mt-2 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300">
                 Clear Cart
               </Button>
             )}
