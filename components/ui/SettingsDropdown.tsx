@@ -14,9 +14,11 @@ interface SettingsDropdownProps {
   /** When 'mobile', dropdown panel is centered and in-flow so the menu container expands when open */
   variant?: 'desktop' | 'mobile'
   onOpenChange?: (isOpen: boolean) => void
+  /** e.g. close the navbar mobile drawer after navigating to login/account */
+  onAfterAuthNavigation?: () => void
 }
 
-export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: SettingsDropdownProps) {
+export default function SettingsDropdown({ variant = 'desktop', onOpenChange, onAfterAuthNavigation }: SettingsDropdownProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [surfaceLocked, setSurfaceLocked] = useState(false)
@@ -24,6 +26,7 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
   const [theme, setTheme] = useState<Theme>('system')
   const [mounted, setMounted] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAdminSession, setIsAdminSession] = useState(false)
   const [rotation, setRotation] = useState(0)
   const router = useRouter()
   useScrollLock((isOpen || surfaceLocked) && variant === 'desktop')
@@ -35,13 +38,19 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
       setTheme(savedTheme)
     }
     setIsAuthenticated(AuthManager.isAuthenticated())
+    setIsAdminSession(AuthManager.isAdmin())
 
     const handleAuthChange = () => {
       setIsAuthenticated(AuthManager.isAuthenticated())
+      setIsAdminSession(AuthManager.isAdmin())
     }
 
     window.addEventListener('authStateChanged', handleAuthChange)
-    return () => window.removeEventListener('authStateChanged', handleAuthChange)
+    window.addEventListener('adminStateChanged', handleAuthChange)
+    return () => {
+      window.removeEventListener('authStateChanged', handleAuthChange)
+      window.removeEventListener('adminStateChanged', handleAuthChange)
+    }
   }, [])
 
   useEffect(() => {
@@ -120,6 +129,22 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
     AuthManager.logout()
     handleClose()
     router.push('/')
+  }
+
+  const handleAdminLogout = () => {
+    AuthManager.adminLogout()
+    handleClose()
+    router.push('/')
+  }
+
+  const navigateAuth = (path: string) => {
+    if (variant === 'mobile') {
+      onAfterAuthNavigation?.()
+      router.push(path)
+      return
+    }
+    handleClose()
+    router.push(path)
   }
 
   const themes = [
@@ -231,32 +256,26 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange }: 
                 {isAuthenticated ? (
                   <>
                     <button
-                      onClick={() => {
-                        handleClose()
-                        router.push('/account')
-                      }}
+                      type="button"
+                      onClick={() => navigateAuth('/account')}
                       className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors"
                     >
                       <User className="w-5 h-5" />
                       <span className="font-medium">Account</span>
                     </button>
                     <div className="divider-faded mx-0" />
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                    >
+                    <button type="button" onClick={handleLogout} className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                       <LogOut className="w-5 h-5" />
-                      <span className="font-medium">Logout</span>
+                      <span className="font-medium">Log Out</span>
                     </button>
                   </>
+                ) : isAdminSession ? (
+                  <button type="button" onClick={handleAdminLogout} className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                    <LogOut className="w-5 h-5" />
+                    <span className="font-medium">Log Out</span>
+                  </button>
                 ) : (
-                  <button
-                    onClick={() => {
-                      handleClose()
-                      router.push('/login')
-                    }}
-                    className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors"
-                  >
+                  <button type="button" onClick={() => navigateAuth('/login')} className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors">
                     <User className="w-5 h-5" />
                     <span className="font-medium">Login / Sign Up</span>
                   </button>

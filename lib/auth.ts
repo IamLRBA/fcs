@@ -185,10 +185,10 @@ export class AuthManager {
   }
 
   // Reviews
-  static addReview(text: string, rating: number, productId?: string, productName?: string): { success: boolean; review?: Review } {
+  static addReview(text: string, rating: number, productId?: string, productName?: string): { success: boolean; error?: string; review?: Review } {
     const user = this.getCurrentUser()
     if (!user) {
-      return { success: false }
+      return { success: false, error: 'Not signed in' }
     }
 
     const review: Review = {
@@ -200,9 +200,13 @@ export class AuthManager {
       productName
     }
 
-    // Add to user's reviews
+    // Add to user's reviews (DB-backed users may not exist in local USERS_KEY — still sync session + testimonials)
     const userReviews = user.reviews || []
-    this.updateUser(user.id, { reviews: [...userReviews, review] })
+    const mergedReviews = [...userReviews, review]
+    const persisted = this.updateUser(user.id, { reviews: mergedReviews })
+    if (!persisted) {
+      this.setCurrentUser({ ...user, reviews: mergedReviews })
+    }
 
     // Add to global reviews (for testimonials)
     const allReviews = this.getAllReviews()

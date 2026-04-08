@@ -325,13 +325,12 @@ export default function AdminAccountsPage() {
                   placeholder="New password (min 6 characters)"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="input-overlay mb-4 w-full rounded-lg px-3 py-2 dark:bg-neutral-700 dark:text-white"
+                  className="input-overlay mb-4 w-full rounded-lg px-3 py-2 text-base md:text-sm dark:bg-neutral-700 dark:text-white"
                 />
-                <div className="flex gap-3">
+                <div className="flex justify-center">
                   <Button type="button" variant="default" onClick={() => submitResetPassword(resetUserId)}>
                     Set password
                   </Button>
-                  <Button type="button" variant="default" onClick={() => setResetUserId(null)}>Cancel</Button>
                 </div>
               </div>
             </div>
@@ -364,13 +363,16 @@ export default function AdminAccountsPage() {
                   <p className="mb-4 text-sm text-neutral-700 dark:text-neutral-300">
                     Are you sure you want to delete this account?
                   </p>
-                  <div className="flex gap-3">
-                    <Button type="button" variant="filled" onClick={confirmDeleteUser} className="inline-flex items-center gap-2 !border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white">
-                      <Trash2 className="h-4 w-4" />
-                      <span>Delete</span>
-                    </Button>
-                    <Button type="button" variant="default" onClick={() => setPendingDeleteUser(null)}>
-                      Cancel
+                  <div className="flex justify-center">
+                    <Button
+                      type="button"
+                      variant="default"
+                      size="icon"
+                      onClick={confirmDeleteUser}
+                      className="focus-ring-none h-10 w-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300"
+                      aria-label="Delete account"
+                    >
+                      <Trash2 className="h-5 w-5" />
                     </Button>
                   </div>
                 </div>

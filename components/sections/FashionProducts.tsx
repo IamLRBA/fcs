@@ -261,7 +261,7 @@ export default function FashionProducts() {
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
                     <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mt-2 max-w-md">{s.description}</p>
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button variant="default" size="sm" onClick={() => toggle(s.id)} className="inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
+                      <Button variant="default" size="sm" onClick={() => toggle(s.id)} className="inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4 outline-none focus:outline-none focus-visible:outline-none ring-0 focus-visible:ring-0 [-webkit-tap-highlight-color:transparent] touch-manipulation">
                         <span>{expandedId === s.id ? 'Minimize Categories' : 'Select Categories'}</span>
                         <AnimatePresence mode="wait">{expandedId === s.id ? <motion.span key="m" className="inline-flex items-center shrink-0" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}><Minus size={20} /></motion.span> : <motion.span key="p" className="inline-flex items-center shrink-0" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}><Plus size={20} /></motion.span>}</AnimatePresence>
                       </Button>

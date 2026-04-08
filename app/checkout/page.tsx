@@ -186,9 +186,9 @@ export default function CheckoutPage() {
         className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/cart" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="btn-unified-circle flex-shrink-0">⟸</span>
-          <span className="text-sm font-medium">Back to Shopping</span>
+          <span className="text-sm font-medium">Back to Cart</span>
         </Link>
       </motion.div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20">
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Enter your full name"
                   />
                   {errors.fullName && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.fullName}</p>}
@@ -308,7 +308,7 @@ export default function CheckoutPage() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="your.email@example.com"
                   />
                   {errors.email && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.email}</p>}
@@ -323,7 +323,7 @@ export default function CheckoutPage() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="+256 700 000 000"
                   />
                   {errors.phone && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.phone}</p>}
@@ -338,7 +338,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={formData.street}
                     onChange={(e) => setFormData({ ...formData, street: e.target.value })}
-                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Street, Building, House Number"
                   />
                   {errors.street && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.street}</p>}
@@ -353,7 +353,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                    className="input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Kampala, Mukono, etc."
                   />
                   {errors.city && <p className="mt-1 text-red-500 dark:text-red-400 text-sm">{errors.city}</p>}
@@ -406,7 +406,7 @@ export default function CheckoutPage() {
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     rows={4}
-                    className="input-overlay w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 resize-none"
+                    className="input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 resize-none"
                     placeholder="Any special instructions for delivery..."
                   />
                 </div>

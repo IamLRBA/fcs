@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, memo } from 'react'
+import { useState, useEffect, useLayoutEffect, useCallback, useRef, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -158,6 +158,67 @@ const ProductGridCard = memo(function ProductGridCard({
     </motion.div>
   )
 })
+
+function ProductSectionCards({
+  section,
+  visibleProducts,
+  openProductModal,
+}: {
+  section: string
+  visibleProducts: Product[]
+  openProductModal: (p: Product) => void
+}) {
+  const innerRef = useRef<HTMLDivElement>(null)
+  const [centerRow, setCenterRow] = useState(true)
+
+  useLayoutEffect(() => {
+    const inner = innerRef.current
+    if (!inner) return
+    const scrollport = inner.parentElement
+    if (!scrollport) return
+    const measure = () => {
+      const overflow = inner.scrollWidth > scrollport.clientWidth + 2
+      setCenterRow(!overflow)
+    }
+    measure()
+    const ro = new ResizeObserver(() => requestAnimationFrame(measure))
+    ro.observe(inner)
+    ro.observe(scrollport)
+    scrollport.addEventListener('scroll', measure, { passive: true })
+    return () => {
+      ro.disconnect()
+      scrollport.removeEventListener('scroll', measure)
+    }
+  }, [visibleProducts])
+
+  const label = section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const innerClass = `flex min-h-[1px] flex-row items-stretch gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
+    centerRow ? 'w-full min-w-0 justify-center' : 'w-max min-w-full justify-start'
+  }`
+
+  return (
+    <HorizontalScrollAffordance
+      showEdgeFades={false}
+      syncScrollEdgeLines
+      syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+      hideScrollbar
+      className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-0 sm:mb-10 sm:px-0 md:mb-12"
+      scrollClassName="pt-6 pb-8"
+      scrollAriaLabel={`${label} products`}
+    >
+      <div ref={innerRef} className={innerClass}>
+        {visibleProducts.map((product: Product, index: number) => (
+          <div
+            key={product.id}
+            className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
+          >
+            <ProductGridCard product={product} index={index} onOpen={openProductModal} />
+          </div>
+        ))}
+      </div>
+    </HorizontalScrollAffordance>
+  )
+}
 
 export default function ProductCategoryPage() {
   const params = useParams()
@@ -621,46 +682,12 @@ export default function ProductCategoryPage() {
                   </Button>
                 </div>
               </div>
-            ) : visibleProducts.length <= 3 ? (
-              <div className="flex min-h-[1px] w-full flex-wrap items-stretch justify-center gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5">
-                {visibleProducts.map((product: Product, index: number) => (
-                  <div
-                    key={product.id}
-                    className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
-                  >
-                    <ProductGridCard
-                      product={product}
-                      index={index}
-                      onOpen={openProductModal}
-                    />
-                  </div>
-                ))}
-              </div>
             ) : (
-            <HorizontalScrollAffordance
-              showEdgeFades={false}
-              syncScrollEdgeLines
-              syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
-              hideScrollbar
-              className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-0 sm:mb-10 sm:px-0 md:mb-12"
-              scrollClassName="pt-6 pb-8"
-              scrollAriaLabel={`${section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} products`}
-            >
-              <div className="flex min-h-[1px] min-w-full w-max flex-row items-stretch justify-center gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5">
-                {visibleProducts.map((product: Product, index: number) => (
-                  <div
-                    key={product.id}
-                    className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
-                  >
-                    <ProductGridCard
-                      product={product}
-                      index={index}
-                      onOpen={openProductModal}
-                    />
-                  </div>
-                ))}
-              </div>
-            </HorizontalScrollAffordance>
+              <ProductSectionCards
+                section={section}
+                visibleProducts={visibleProducts}
+                openProductModal={openProductModal}
+              />
             )}
           </motion.section>
           )

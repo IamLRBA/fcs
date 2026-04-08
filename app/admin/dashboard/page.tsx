@@ -221,10 +221,6 @@ export default function AdminDashboard() {
                     )
                   })}
                 </div>
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 text-center mt-3 max-w-xl mx-auto leading-snug">
-                  When an order is marked <strong>delivered</strong>, each line item with a catalog product is removed from the shop and recorded as{' '}
-                  <strong>purchased</strong> (<code className="text-[10px]">PRODUCT_BOUGHT</code>). Revenue and items-sold charts use delivered orders; product counts reflect the live catalog.
-                </p>
               </div>
 
               {/* Analytics */}
