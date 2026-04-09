@@ -47,6 +47,17 @@ export default function Home() {
   const heroScale = useTransform(heroScrollY, [0, 1], [1, 0.8])
   const heroOpacity = useTransform(heroScrollY, [0, 0.5], [1, 0])
   const heroY = useTransform(heroScrollY, [0, 1], [0, -100])
+
+  /** Scroll-linked hero motion reads as background “zoom” on phones; keep desktop only. */
+  const [heroScrollMotionEnabled, setHeroScrollMotionEnabled] = useState(true)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(min-width: 768px)')
+    const sync = () => setHeroScrollMotionEnabled(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
   
   const portalsScale = useTransform(portalsScrollY, [0, 0.5, 1], [1, 1.1, 1])
   const testimonialsScale = useTransform(testimonialsScrollY, [0, 0.5, 1], [1, 1.05, 1])
@@ -108,7 +119,11 @@ export default function Home() {
                 <div className="relative z-10 text-center">
                   <motion.div 
                     className="container-custom"
-                    style={{ scale: heroScale, opacity: heroOpacity, y: heroY }}
+                    style={
+                      heroScrollMotionEnabled
+                        ? { scale: heroScale, opacity: heroOpacity, y: heroY }
+                        : { scale: 1, opacity: 1, y: 0 }
+                    }
                   >
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
@@ -116,19 +131,19 @@ export default function Home() {
                       transition={{ duration: 0.8, delay: 0.2 }}
                       className="mb-8"
                     >
-                      <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4">
-                        <LogoMark animated size={250} className="md:scale-[0.8] md:-mb-16" />
-                        <div className="flex flex-col items-center gap-2 w-full">
-                          <h1 className="text-3xl sm:text-4xl md:text-7xl font-light leading-tight mb-1">
+                      <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4 xl:gap-7 2xl:gap-9">
+                        <LogoMark animated size={250} className="md:scale-[0.8] md:-mb-16 xl:-mb-20 2xl:-mb-24" />
+                        <div className="flex flex-col items-center gap-2 xl:gap-4 w-full">
+                          <h1 className="text-3xl sm:text-4xl md:text-7xl font-light leading-tight mb-1 xl:mb-3">
                             <MysticalPiecesWord mysticalClassName="text-primary-800 dark:text-primary-100" piecesClassName="text-accent-600 dark:text-accent-400" />
                           </h1>
-                          <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full" />
-                          <p className="text-lg text-primary-600 dark:text-primary-300 max-w-2xl">
+                          <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full xl:my-1" />
+                          <p className="text-lg xl:text-xl text-primary-600 dark:text-primary-300 max-w-2xl xl:mt-1">
                           Mystical Thrift Fashion & Soulful Style Curators
                           </p>
                         </div>
                         {/* Home hero only: semi-transparent glass around each CTA; md+ more gap + padding */}
-                        <div className="hero-cta-buttons hero-cta-home-glass flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 lg:gap-12 justify-center items-stretch sm:items-center">
+                        <div className="hero-cta-buttons hero-cta-home-glass mt-2 xl:mt-6 2xl:mt-8 flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 lg:gap-12 xl:gap-16 2xl:gap-20 justify-center items-stretch sm:items-center">
                           <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-lg rounded-full shrink-0">
                             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
                             <div className="relative rounded-full p-1 sm:p-1.5 md:p-2">

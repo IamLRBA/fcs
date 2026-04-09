@@ -136,10 +136,18 @@
   html {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
     scroll-behavior: smooth;
     -webkit-scroll-behavior: smooth;
     overscroll-behavior: none;
+  }
+
+  @supports not (overflow: clip) {
+    html {
+      overflow-x: hidden;
+    }
   }
   
   @keyframes spin-slow {
@@ -158,6 +166,9 @@
   body {
     margin: 0;
     padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
     font-family: var(--font-family-primary);
     background-color: transparent;
     color: var(--color-text-primary);
@@ -169,6 +180,12 @@
     text-rendering: optimizeLegibility;
     transition: background-color 0.3s ease, color 0.3s ease;
     overscroll-behavior: none;
+  }
+
+  @supports not (overflow: clip) {
+    body {
+      overflow-x: hidden;
+    }
   }
 
   body,

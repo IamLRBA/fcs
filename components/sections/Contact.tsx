@@ -40,7 +40,7 @@ export default function Contact() {
     },
     {
       title: 'ᑭᕼOᑎE',
-      subtitle: '+256 774 948 086',
+      subtitle: 'Click to Call',
       icon: Phone,
       buttonText: 'Call Us',
       onClick: () => setPhoneDialogOpen(true),
@@ -117,7 +117,7 @@ export default function Contact() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="hero-glass-frame relative w-full max-w-[272px] backdrop-blur-lg"
+                className="hero-glass-frame relative w-full max-w-[min(100%,340px)] backdrop-blur-lg"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
@@ -130,9 +130,9 @@ export default function Contact() {
                     {CALL_NUMBERS.map(({ label, tel }) => (
                       <li
                         key={tel}
-                        className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl border border-primary-200/70 bg-white/70 pl-3 pr-1.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60"
+                        className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-primary-200/70 bg-white/70 pl-2 pr-2 py-2.5 dark:border-neutral-600/60 dark:bg-neutral-800/60"
                       >
-                        <a href={`tel:${tel}`} className="min-w-0 text-[12px] font-medium tracking-wide text-primary-800 dark:text-primary-200 whitespace-nowrap">
+                        <a href={`tel:${tel}`} className="min-w-0 text-[11px] font-medium tracking-wide text-primary-800 dark:text-primary-200 sm:text-xs">
                           {label}
                         </a>
                         <Button type="button" variant="circle" size="icon" onClick={() => copyNumber(tel)} className="focus-ring-none h-8 w-8">

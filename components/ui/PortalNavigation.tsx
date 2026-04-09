@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { HiMiniShoppingBag } from 'react-icons/hi2'
 import Button from '@/components/ui/Button'
@@ -21,7 +20,6 @@ export default function PortalNavigation() {
   const router = useRouter()
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [transitioningPortal, setTransitioningPortal] = useState<any>(null)
-  const [isPageLoading, setIsPageLoading] = useState(false)
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -54,16 +52,17 @@ export default function PortalNavigation() {
     e.preventDefault()
     setTransitioningPortal(portal)
     setIsTransitioning(true)
-    setIsPageLoading(true)
 
-    // Start navigation immediately but keep portal visible
-    router.push(portal.href)
+    const portalEffectMs = 2000
+    const overlayClearMs = 3800
 
-    // Hide portal after a delay to allow page to load
-    setTimeout(() => {
+    window.setTimeout(() => {
+      router.push(portal.href)
+    }, portalEffectMs)
+
+    window.setTimeout(() => {
       setIsTransitioning(false)
-      setIsPageLoading(false)
-    }, 3000) // 3 seconds to allow page loading
+    }, overlayClearMs)
   }
 
   return (

@@ -129,7 +129,7 @@ export default function CEOProfile() {
     { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/iamlrba?igsh=MXcwcTF3b3R6ZG9yeQ%3D%3D&utm_source=qr' },
     { name: 'TikTok', icon: IconBrandTiktok, href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1' },
     { name: 'X (Twitter)', icon: IconBrandX, href: 'https://x.com/iamlrba?s=11' },
-    { name: 'WhatsApp', icon: IconBrandWhatsapp, href: 'https://wa.me/256774948086' },
+    { name: 'WhatsApp', icon: IconBrandWhatsapp, href: 'https://wa.me/256755915549' },
     { name: 'GitHub', icon: Github, href: 'https://github.com/IamLRBA' },
   ] as const
 
@@ -572,7 +572,7 @@ export default function CEOProfile() {
                 <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <Phone className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 774 948 086</p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Click to Call</p>
                   <Button onClick={() => setPhoneDialogOpen(true)} variant="default" className="inline-flex items-center justify-center px-6">
                     Call Me
                   </Button>
@@ -592,8 +592,8 @@ export default function CEOProfile() {
                 <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <IconBrandWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 774 948 086</p>
-                  <Button href="https://wa.me/256774948086" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 755 915 549</p>
+                  <Button href="https://wa.me/256755915549" variant="default" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6">
                     Text Me
                   </Button>
                 </div>
@@ -641,7 +641,7 @@ export default function CEOProfile() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="hero-glass-frame relative w-full max-w-[272px] backdrop-blur-lg"
+              className="hero-glass-frame relative w-full max-w-[min(100%,340px)] backdrop-blur-lg"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
               <div className="relative rounded-bl-xl rounded-tl-xl rounded-br-none rounded-tr-none border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
@@ -651,8 +651,8 @@ export default function CEOProfile() {
                 </h4>
                 <ul className="space-y-2">
                   {CALL_NUMBERS.map(({ label, tel }) => (
-                    <li key={tel} className="grid w-full grid-cols-[1fr_auto] items-center gap-2 rounded-xl border border-primary-200/70 bg-white/70 pl-3 pr-1.5 py-2 dark:border-neutral-600/60 dark:bg-neutral-800/60">
-                      <a href={`tel:${tel}`} className="min-w-0 text-[12px] font-medium tracking-wide text-primary-800 dark:text-primary-200 whitespace-nowrap">
+                    <li key={tel} className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-primary-200/70 bg-white/70 pl-2 pr-2 py-2.5 dark:border-neutral-600/60 dark:bg-neutral-800/60">
+                      <a href={`tel:${tel}`} className="min-w-0 text-[11px] font-medium tracking-wide text-primary-800 dark:text-primary-200 sm:text-xs">
                         {label}
                       </a>
                       <Button type="button" variant="circle" size="icon" onClick={() => copyNumber(tel)} className="focus-ring-none h-8 w-8">
