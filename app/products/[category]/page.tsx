@@ -224,9 +224,15 @@ function ProductSectionCards({
   const label = section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const innerClass = `flex min-h-[1px] flex-row items-stretch gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
     rowMode === 'center'
-      ? 'max-md:w-full max-md:min-w-0 max-md:justify-center md:w-max md:max-w-full md:shrink-0 md:justify-start md:mx-auto'
+      ? 'max-md:w-full max-md:min-w-0 max-md:justify-center md:w-max md:shrink-0 md:justify-start'
       : 'w-max min-w-full justify-start'
   }`
+
+  /** Desktop: margin auto inside overflow-x often fails; flex wrapper centers the row. */
+  const centerWrapClass =
+    rowMode === 'center'
+      ? 'max-md:contents md:flex md:w-full md:min-w-0 md:justify-center'
+      : 'contents'
 
   return (
     <HorizontalScrollAffordance
@@ -238,15 +244,17 @@ function ProductSectionCards({
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel={`${label} products`}
     >
-      <div ref={innerRef} className={innerClass}>
-        {visibleProducts.map((product: Product, index: number) => (
-          <div
-            key={product.id}
-            className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
-          >
-            <ProductGridCard product={product} index={index} onOpen={openProductModal} />
-          </div>
-        ))}
+      <div className={centerWrapClass}>
+        <div ref={innerRef} className={innerClass}>
+          {visibleProducts.map((product: Product, index: number) => (
+            <div
+              key={product.id}
+              className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
+            >
+              <ProductGridCard product={product} index={index} onOpen={openProductModal} />
+            </div>
+          ))}
+        </div>
       </div>
     </HorizontalScrollAffordance>
   )
