@@ -23,11 +23,11 @@ type HorizontalScrollAffordanceProps = {
   keyboardFocusable?: boolean
   /** Edge gradient fades (default true). Set false when using border treatments instead. */
   showEdgeFades?: boolean
-  /** Inset vertical rails on the scrollport (always visible; see `.slider-sync-edge-inset-rails`). */
+  /** Straight vertical rails; visibility matches left/right scroll arrows. */
   syncScrollEdgeLines?: boolean
   /** Use scrollbar-hide instead of a visible horizontal scrollbar */
   hideScrollbar?: boolean
-  /** Optional extra classes on the scrollport (default: inset rail box-shadow from globals.css). */
+  /** Rail bar colour class (default: same hues as company marquee — globals.css). */
   syncScrollEdgeLineClassName?: string
 }
 
@@ -100,17 +100,15 @@ export default function HorizontalScrollAffordance({
     }
   }
 
-  /** Inset rails are painted on the scroller; optional extra classes from callers */
-  const railInsetClass =
+  const railBarClass =
     (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) || SLIDER_SYNC_EDGE_LINE_CLASS
 
-  /* Do not use focus-ring-none here: global CSS sets box-shadow:none !important on it and kills inset rails/borders. */
+  /* Do not use focus-ring-none on the scroller: it forces box-shadow: none !important. */
   const scrollerClassName = [
     'overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400',
     hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]',
     scrollClassName,
-    syncScrollEdgeLines ? railInsetClass : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -152,6 +150,23 @@ export default function HorizontalScrollAffordance({
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-2 right-0 z-[2] w-8 sm:w-12 rounded-r-lg bg-gradient-to-l from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
+                canRight ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          </>
+        )}
+
+        {syncScrollEdgeLines && (
+          <>
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute inset-y-0 left-0 z-[5] rounded-none ${railBarClass} transition-opacity duration-200 ${
+                canLeft ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute inset-y-0 right-0 z-[5] rounded-none ${railBarClass} transition-opacity duration-200 ${
                 canRight ? 'opacity-100' : 'opacity-0'
               }`}
             />
