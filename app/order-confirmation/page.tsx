@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { CheckCircle, Download, Home, Package } from 'lucide-react'
 import { OrderManager, type Order } from '@/lib/cart'
 import { downloadReceipt, generateReceiptImage } from '@/lib/utils/receipt-generator'
 import { EmailTemplates } from '@/lib/emails/templates'
-import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import Button from '@/components/ui/Button'
@@ -19,7 +18,13 @@ export default function OrderConfirmationPage() {
   const [orderId, setOrderId] = useState<string>('')
   const [isDownloading, setIsDownloading] = useState(false)
   const [notificationsSent, setNotificationsSent] = useState(false)
-  const receiptRef = useRef<HTMLDivElement>(null)
+  const receiptRef = useRef<HTMLDivElement | null>(null)
+  const [receiptMounted, setReceiptMounted] = useState(false)
+
+  const setReceiptNode = useCallback((node: HTMLDivElement | null) => {
+    receiptRef.current = node
+    setReceiptMounted(!!node)
+  }, [])
 
   // Validate email format
   const isValidEmail = (email: string): boolean => {
@@ -27,13 +32,7 @@ export default function OrderConfirmationPage() {
     return emailRegex.test(email)
   }
 
-  // Validate phone number format (basic check)
-  const isValidPhone = (phone: string): boolean => {
-    const phoneRegex = /^[\d\s\+\-\(\)]{10,}$/
-    return phoneRegex.test(phone.replace(/\s/g, ''))
-  }
-
-  // Send order notifications (email and WhatsApp)
+  // Send receipt email (order summary already sent when the order was placed)
   const sendOrderNotifications = async () => {
     if (!order || notificationsSent || !receiptRef.current) return
 
@@ -44,64 +43,22 @@ export default function OrderConfirmationPage() {
         backgroundColor: '#ffffff'
       })
 
-      // Validate customer email and phone
       const customerEmail = order.customer?.email || ''
-      const customerPhone = order.customer?.phone || ''
 
-      // Send customer email with receipt if email is valid
+      // Order summary emails and WhatsApp are sent immediately when the order hits the API.
+      // Here we only send the receipt image so the customer has a copy in the inbox.
       if (customerEmail && isValidEmail(customerEmail)) {
         try {
-          const customerEmailConfig = EmailTemplates.buyerConfirmation(order, receiptImage)
+          const receiptConfig = EmailTemplates.buyerReceiptAttachment(order, receiptImage)
           await fetch('/api/send-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(customerEmailConfig)
+            body: JSON.stringify(receiptConfig),
           })
-          console.log('Customer email sent successfully')
+          console.log('Receipt email sent successfully')
         } catch (error) {
-          console.error('Error sending customer email:', error)
+          console.error('Error sending receipt email:', error)
         }
-      }
-
-      // Send customer WhatsApp if phone is valid
-      if (customerPhone && isValidPhone(customerPhone)) {
-        try {
-          const customerWhatsApp = WhatsAppNotifications.customerConfirmation(order, receiptImage)
-          await fetch('/api/send-whatsapp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(customerWhatsApp)
-          })
-          console.log('Customer WhatsApp sent successfully')
-        } catch (error) {
-          console.error('Error sending customer WhatsApp:', error)
-        }
-      }
-
-      // Send admin email
-      try {
-        const adminEmailConfig = EmailTemplates.sellerNotification(order)
-        await fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(adminEmailConfig)
-        })
-        console.log('Admin email sent successfully')
-      } catch (error) {
-        console.error('Error sending admin email:', error)
-      }
-
-      // Send admin WhatsApp
-      try {
-        const adminWhatsApp = WhatsAppNotifications.businessNotification(order)
-        await fetch('/api/send-whatsapp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(adminWhatsApp)
-        })
-        console.log('Admin WhatsApp sent successfully')
-      } catch (error) {
-        console.error('Error sending admin WhatsApp:', error)
       }
 
       setNotificationsSent(true)
@@ -123,17 +80,14 @@ export default function OrderConfirmationPage() {
     }
   }, [])
 
-  // Send notifications when order and receipt are ready
   useEffect(() => {
-    if (order && receiptRef.current && !notificationsSent) {
-      // Small delay to ensure receipt is fully rendered
-      const timer = setTimeout(() => {
-        sendOrderNotifications()
-      }, 1000)
-      return () => clearTimeout(timer)
-    }
+    if (!order || !receiptMounted || notificationsSent) return
+    const timer = window.setTimeout(() => {
+      sendOrderNotifications()
+    }, 1000)
+    return () => window.clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order, notificationsSent])
+  }, [order, receiptMounted, notificationsSent])
 
   const handleDownloadReceipt = async () => {
     if (!receiptRef.current || !order) return
@@ -196,7 +150,7 @@ export default function OrderConfirmationPage() {
           </p>
           {notificationsSent && (
             <p className="text-sm text-green-600 dark:text-green-400 mt-2">
-              ✓ Confirmation email and WhatsApp sent to your contact details
+              ✓ Receipt sent to your email (if you provided one)
             </p>
           )}
         </motion.div>
@@ -210,7 +164,7 @@ export default function OrderConfirmationPage() {
         >
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <motion.div
-            ref={receiptRef}
+            ref={setReceiptNode}
             data-receipt
             className="bg-white dark:bg-neutral-800 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 receipt-container border border-neutral-200 dark:border-neutral-700"
             style={{

@@ -8,451 +8,312 @@ export interface EmailConfig {
   text: string
   attachment?: {
     filename: string
-    content: string // base64 encoded content
-    type: string // MIME type
+    content: string
+    type: string
   }
 }
 
-export class EmailTemplates {
-  static customerOrderProcessing(order: Order): EmailConfig {
-    const subject = `We're preparing your order — ${order.id} — MysticalPIECES`
-    const html = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-    <h1 style="color: #6F4E37;">Your order is now being processed</h1>
-    <p>Dear ${order.customer.fullName},</p>
-    <p>Good news — we have started preparing your order <strong>${order.id}</strong>.</p>
-    <p>We are now getting your items ready for dispatch and delivery.</p>
-    <p style="background: #f9fafb; padding: 12px; border-radius: 8px;">
-      Delivery address:<br>${order.customer.address.street}<br>${order.customer.address.city}
-    </p>
-    <p>Total (Cash on Delivery): <strong>UGX ${order.total.toLocaleString()}</strong></p>
-    <p>We will notify you again when your order is ready and when it is delivered.</p>
-    <p>Thank you for shopping with MysticalPIECES!</p>
+/** MysticalPIECES palette — matches site primary / paper tones */
+const C = {
+  primary: '#6F4E37',
+  accent: '#8B7A5A',
+  text: '#2C2825',
+  muted: '#5C534C',
+  border: '#D4C4B0',
+  paper: '#FAF7F3',
+  white: '#FFFFFF',
+}
+
+function esc(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+function formatOrderDate(ts: string): string {
+  return new Date(ts).toLocaleDateString('en-GB', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+function orderItemsAndTotalsHtml(order: Order): string {
+  const rows = order.items
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid ${C.border};vertical-align:top;">
+          <div style="font-weight:600;color:${C.text};">${esc(item.name)}</div>
+          <div style="font-size:13px;color:${C.muted};margin-top:4px;">${esc(item.sku)}${item.size ? ` · Size ${esc(item.size)}` : ''}${item.color ? ` · ${esc(item.color)}` : ''}</div>
+        </td>
+        <td style="padding:10px 0;border-bottom:1px solid ${C.border};text-align:right;white-space:nowrap;color:${C.text};">${item.quantity} × UGX ${item.price.toLocaleString()}</td>
+        <td style="padding:10px 0;border-bottom:1px solid ${C.border};text-align:right;white-space:nowrap;font-weight:600;color:${C.primary};">UGX ${(item.price * item.quantity).toLocaleString()}</td>
+      </tr>`
+    )
+    .join('')
+
+  return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:16px 0;">
+      <thead>
+        <tr>
+          <th align="left" style="padding:8px 0;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:${C.muted};border-bottom:2px solid ${C.primary};">Item</th>
+          <th align="right" style="padding:8px 0;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:${C.muted};border-bottom:2px solid ${C.primary};">Qty / unit</th>
+          <th align="right" style="padding:8px 0;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:${C.muted};border-bottom:2px solid ${C.primary};">Line</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:15px;color:${C.text};">
+      <tr><td style="padding:6px 0;">Subtotal</td><td align="right">UGX ${order.subtotal.toLocaleString()}</td></tr>
+      <tr><td style="padding:6px 0;">Delivery</td><td align="right">${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}</td></tr>
+      <tr><td style="padding:12px 0 0;font-weight:700;font-size:17px;color:${C.primary};">Total (cash on delivery)</td><td align="right" style="padding:12px 0 0;font-weight:700;font-size:17px;color:${C.primary};">UGX ${order.total.toLocaleString()}</td></tr>
+    </table>`
+}
+
+function deliveryBlockHtml(order: Order): string {
+  return `
+    <div style="margin-top:20px;padding:16px;background:${C.paper};border-left:3px solid ${C.primary};">
+      <div style="font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:${C.muted};margin-bottom:8px;">Delivery</div>
+      <div style="color:${C.text};line-height:1.5;">${esc(order.customer.fullName)}<br>${esc(order.customer.phone)}<br>${esc(order.customer.address.street)}<br>${esc(order.customer.address.city)}</div>
+      ${order.notes ? `<p style="margin:12px 0 0;color:${C.muted};font-size:14px;"><strong style="color:${C.text};">Note:</strong> ${esc(order.notes)}</p>` : ''}
+    </div>`
+}
+
+function wrapEmail(title: string, lead: string, bodyHtml: string): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="color-scheme" content="light"></head>
+<body style="margin:0;padding:24px 16px;background:#E8E2DA;font-family:Georgia,'Times New Roman',serif;">
+  <div style="max-width:560px;margin:0 auto;background:${C.white};border:1px solid ${C.border};">
+    <div style="padding:24px 28px 8px;border-bottom:1px solid ${C.border};">
+      <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${C.accent};">MysticalPIECES</div>
+      <h1 style="margin:12px 0 0;font-size:22px;font-weight:600;color:${C.primary};font-family:Georgia,serif;">${title}</h1>
+    </div>
+    <div style="padding:24px 28px 32px;color:${C.text};font-size:15px;line-height:1.6;">
+      ${lead}
+      ${bodyHtml}
+      <p style="margin-top:28px;font-size:14px;color:${C.muted};">Questions? Reply to this email or write to ${SHOP_EMAIL}.</p>
+    </div>
+    <div style="padding:16px 28px;background:${C.paper};border-top:1px solid ${C.border};font-size:12px;color:${C.muted};line-height:1.5;">
+      MysticalPIECES · Mystical Thrift Fashion<br>
+      ${SHOP_EMAIL}
+    </div>
   </div>
 </body>
 </html>`
+}
+
+export class EmailTemplates {
+  static buyerConfirmation(order: Order, receiptImage?: string): EmailConfig {
+    const subject = `Order confirmed — ${order.id} — MysticalPIECES`
+    const lead = `<p style="margin:0 0 16px;">Dear ${esc(order.customer.fullName)},</p>
+      <p style="margin:0 0 16px;">Thank you for your order. We have received it and will prepare it for delivery. A summary is below.</p>`
+
+    const body = `
+      <p style="margin:0 0 8px;"><strong>Order</strong> ${esc(order.id)} · ${formatOrderDate(order.timestamp)} · ${esc(order.status)}</p>
+      ${orderItemsAndTotalsHtml(order)}
+      ${deliveryBlockHtml(order)}
+      <p style="margin:20px 0 0;font-size:14px;color:${C.muted};">Payment is cash on delivery. We will email you again when the order moves to the next stage.</p>`
+
+    const html = wrapEmail('Order confirmation', lead, body)
     const text = `Dear ${order.customer.fullName},
 
-Your order ${order.id} is now being processed.
+Thank you for your order. We have received it and will prepare it for delivery.
 
-Delivery address:
-${order.customer.address.street}, ${order.customer.address.city}
+Order ${order.id} · ${formatOrderDate(order.timestamp)} · ${order.status}
 
-Total (COD): UGX ${order.total.toLocaleString()}
+Items:
+${order.items.map((i) => `- ${i.name} (${i.sku}) qty ${i.quantity} — UGX ${(i.price * i.quantity).toLocaleString()}`).join('\n')}
 
-We will notify you again when your order is ready and delivered.
+Subtotal UGX ${order.subtotal.toLocaleString()}
+Delivery ${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}
+Total (COD) UGX ${order.total.toLocaleString()}
 
-Thank you for shopping with MysticalPIECES.
-`
-    return { to: order.customer.email, subject, html: html.trim(), text: text.trim() }
-  }
+Deliver to:
+${order.customer.fullName}
+${order.customer.phone}
+${order.customer.address.street}
+${order.customer.address.city}
+${order.notes ? `\nNote: ${order.notes}` : ''}
 
-  static buyerConfirmation(order: Order, receiptImage?: string): EmailConfig {
-    const subject = `Order Confirmed - ${order.id} - MysticalPIECES`
-    
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, #6F4E37 0%, #8B7A5A 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-    .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
-    .order-info { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #6F4E37; }
-    .order-item { padding: 15px; border-bottom: 1px solid #e5e7eb; }
-    .order-item:last-child { border-bottom: none; }
-    .total { font-size: 20px; font-weight: bold; color: #6F4E37; margin-top: 15px; }
-    .footer { background: #374151; color: white; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px; }
-    .button { display: inline-block; background: #6F4E37; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 10px 0; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>Order Confirmed! 🎉</h1>
-      <p>Thank you for shopping with MysticalPIECES</p>
-    </div>
-    
-    <div class="content">
-      <p>Dear ${order.customer.fullName},</p>
-      
-      <p>We're thrilled to confirm your order! Your order has been received and is being processed.</p>
-      
-      <div class="order-info">
-        <h2>Order Details</h2>
-        <p><strong>Order Number:</strong> ${order.id}</p>
-        <p><strong>Order Date:</strong> ${new Date(order.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p><strong>Status:</strong> ${order.status.toUpperCase()}</p>
-      </div>
-      
-      <h3>Items Ordered:</h3>
-      ${order.items.map(item => `
-        <div class="order-item">
-          <strong>${item.name}</strong> - ${item.sku}<br>
-          ${item.size ? `Size: ${item.size} | ` : ''}
-          ${item.color ? `Color: ${item.color} | ` : ''}
-          Quantity: ${item.quantity}<br>
-          <strong>UGX ${(item.price * item.quantity).toLocaleString()}</strong>
-        </div>
-      `).join('')}
-      
-      <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
-        <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-          <span>Subtotal:</span>
-          <span>UGX ${order.subtotal.toLocaleString()}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-          <span>Delivery Fee:</span>
-          <span>${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 15px 0; border-top: 2px solid #6F4E37;">
-          <span class="total">Total:</span>
-          <span class="total">UGX ${order.total.toLocaleString()}</span>
-        </div>
-      </div>
-      
-      <div class="order-info">
-        <h3>Delivery Information</h3>
-        <p><strong>Name:</strong> ${order.customer.fullName}</p>
-        <p><strong>Phone:</strong> ${order.customer.phone}</p>
-        <p><strong>Address:</strong> ${order.customer.address.street}, ${order.customer.address.city}</p>
-        ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ''}
-      </div>
-      
-      <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px;">
-        <p style="margin: 0;"><strong>💳 Payment:</strong> Cash on Delivery</p>
-        <p style="margin: 10px 0 0 0;"><strong>📦 Delivery:</strong> Expected within 2-3 business days</p>
-      </div>
-      
-      <p>You will receive another email when your order is dispatched.</p>
-      
-      <p>If you have any questions, please don't hesitate to contact us.</p>
-      
-      <p>Thank you for choosing MysticalPIECES!</p>
-    </div>
-    
-    <div class="footer">
-      <p>MysticalPIECES | Mystical Thrift Fashion & Soulful Style Curation</p>
-      <p>Email: ${SHOP_EMAIL} | Phone: +256 755 915 549</p>
-      <p>© ${new Date().getFullYear()} MysticalPIECES. All rights reserved.</p>
-    </div>
-  </div>
-</body>
-</html>
-    `
-    
-    const text = `
-Order Confirmed - MysticalPIECES
+MysticalPIECES · ${SHOP_EMAIL}`
 
-Dear ${order.customer.fullName},
-
-Thank you for your order! Your order has been received and is being processed.
-
-Order Details:
-- Order Number: ${order.id}
-- Order Date: ${new Date(order.timestamp).toLocaleDateString()}
-- Status: ${order.status.toUpperCase()}
-
-Items Ordered:
-${order.items.map(item => `
-  ${item.name} - ${item.sku}
-  ${item.size ? `Size: ${item.size} | ` : ''}
-  ${item.color ? `Color: ${item.color} | ` : ''}
-  Quantity: ${item.quantity}
-  Price: UGX ${(item.price * item.quantity).toLocaleString()}
-`).join('\n')}
-
-Order Summary:
-- Subtotal: UGX ${order.subtotal.toLocaleString()}
-- Delivery Fee: ${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}
-- Total: UGX ${order.total.toLocaleString()}
-
-Delivery Information:
-- Name: ${order.customer.fullName}
-- Phone: ${order.customer.phone}
-- Address: ${order.customer.address.street}, ${order.customer.address.city}
-${order.notes ? `- Notes: ${order.notes}` : ''}
-
-Payment: Cash on Delivery
-Delivery: Expected within 2-3 business days
-
-Thank you for choosing MysticalPIECES!
-
-MysticalPIECES
-Email: ${SHOP_EMAIL}
-Phone: +256 755 915 549
-    `
-    
     const emailConfig: EmailConfig = {
       to: order.customer.email,
       subject,
       html: html.trim(),
-      text: text.trim()
+      text: text.trim(),
     }
-
-    // Add receipt attachment if provided
     if (receiptImage) {
       emailConfig.attachment = {
         filename: `receipt-${order.id}.png`,
-        content: receiptImage, // Already base64 encoded from generateReceiptImage
-        type: 'image/png'
+        content: receiptImage,
+        type: 'image/png',
       }
     }
-
     return emailConfig
   }
 
-  static sellerNotification(order: Order): EmailConfig {
-    const subject = `New Order Received - ${order.id} - MysticalPIECES`
-    
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: #dc2626; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-    .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
-    .order-info { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc2626; }
-    .order-item { padding: 15px; border-bottom: 1px solid #e5e7eb; }
-    .order-item:last-child { border-bottom: none; }
-    .total { font-size: 20px; font-weight: bold; color: #dc2626; margin-top: 15px; }
-    .footer { background: #374151; color: white; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px; }
-    .urgent { background: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin: 20px 0; border-radius: 4px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>🔔 New Order Received!</h1>
-      <p>Action Required</p>
-    </div>
-    
-    <div class="content">
-      <div class="urgent">
-        <p style="margin: 0;"><strong>⚠️ URGENT:</strong> A new order has been placed and requires your attention.</p>
-      </div>
-      
-      <div class="order-info">
-        <h2>Order Details</h2>
-        <p><strong>Order Number:</strong> ${order.id}</p>
-        <p><strong>Order Date:</strong> ${new Date(order.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p><strong>Status:</strong> ${order.status.toUpperCase()}</p>
-      </div>
-      
-      <div class="order-info">
-        <h3>Customer Information</h3>
-        <p><strong>Name:</strong> ${order.customer.fullName}</p>
-        <p><strong>Email:</strong> ${order.customer.email}</p>
-        <p><strong>Phone:</strong> ${order.customer.phone}</p>
-      </div>
-      
-      <h3>Delivery Information</h3>
-      <div class="order-info">
-        <p><strong>Address:</strong> ${order.customer.address.street}, ${order.customer.address.city}</p>
-        <p><strong>Delivery Option:</strong> ${order.deliveryOption === 'kampala' ? 'Kampala (Free)' : `Outside Kampala (Fee: UGX ${order.deliveryFee.toLocaleString()})`}</p>
-        ${order.notes ? `<p><strong>Special Instructions:</strong> ${order.notes}</p>` : ''}
-      </div>
-      
-      <h3>Items Ordered:</h3>
-      ${order.items.map(item => `
-        <div class="order-item">
-          <strong>${item.name}</strong> - ${item.sku}<br>
-          ${item.size ? `Size: ${item.size} | ` : ''}
-          ${item.color ? `Color: ${item.color} | ` : ''}
-          Quantity: ${item.quantity}<br>
-          <strong>UGX ${(item.price * item.quantity).toLocaleString()}</strong>
-        </div>
-      `).join('')}
-      
-      <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
-        <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-          <span>Subtotal:</span>
-          <span>UGX ${order.subtotal.toLocaleString()}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 5px 0;">
-          <span>Delivery Fee:</span>
-          <span>${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 15px 0; border-top: 2px solid #dc2626;">
-          <span class="total">Total:</span>
-          <span class="total">UGX ${order.total.toLocaleString()}</span>
-        </div>
-      </div>
-      
-      <div style="background: #dbeafe; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0; border-radius: 4px;">
-        <p style="margin: 0;"><strong>📋 Next Steps:</strong></p>
-        <ol style="margin: 10px 0 0 20px; padding: 0;">
-          <li>Verify the order details</li>
-          <li>Prepare the items for dispatch</li>
-          <li>Contact the customer to confirm delivery</li>
-          <li>Update order status</li>
-        </ol>
-      </div>
-    </div>
-    
-    <div class="footer">
-      <p>MysticalPIECES | Admin Notification</p>
-      <p>© ${new Date().getFullYear()} MysticalPIECES. All rights reserved.</p>
-    </div>
-  </div>
-</body>
-</html>
-    `
-    
-    const text = `
-New Order Received - MysticalPIECES
-
-URGENT: A new order has been placed and requires your attention.
-
-Order Details:
-- Order Number: ${order.id}
-- Order Date: ${new Date(order.timestamp).toLocaleDateString()}
-- Status: ${order.status.toUpperCase()}
-
-Customer Information:
-- Name: ${order.customer.fullName}
-- Email: ${order.customer.email}
-- Phone: ${order.customer.phone}
-
-Delivery Information:
-- Address: ${order.customer.address.street}, ${order.customer.address.city}
-- Delivery Option: ${order.deliveryOption === 'kampala' ? 'Kampala (Free)' : `Outside Kampala (Fee: UGX ${order.deliveryFee.toLocaleString()})`}
-${order.notes ? `- Special Instructions: ${order.notes}` : ''}
-
-Items Ordered:
-${order.items.map(item => `
-  ${item.name} - ${item.sku}
-  ${item.size ? `Size: ${item.size} | ` : ''}
-  ${item.color ? `Color: ${item.color} | ` : ''}
-  Quantity: ${item.quantity}
-  Price: UGX ${(item.price * item.quantity).toLocaleString()}
-`).join('\n')}
-
-Order Summary:
-- Subtotal: UGX ${order.subtotal.toLocaleString()}
-- Delivery Fee: ${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}
-- Total: UGX ${order.total.toLocaleString()}
-
-Next Steps:
-1. Verify the order details
-2. Prepare the items for dispatch
-3. Contact the customer to confirm delivery
-4. Update order status
-    `
-    
+  /** Second touch: receipt image only (after order API already sent confirmation). */
+  static buyerReceiptAttachment(order: Order, receiptImage: string): EmailConfig {
+    const subject = `Your receipt — ${order.id} — MysticalPIECES`
+    const lead = `<p style="margin:0 0 16px;">Dear ${esc(order.customer.fullName)},</p>
+      <p style="margin:0 0 16px;">Please find your order receipt attached as a PNG image. Keep it for your records.</p>`
+    const body = `<p style="margin:0;color:${C.muted};font-size:14px;">Order ${esc(order.id)} · Total UGX ${order.total.toLocaleString()} (cash on delivery).</p>`
     return {
-      to: SHOP_EMAIL,
+      to: order.customer.email,
       subject,
-      html: html.trim(),
-      text: text.trim()
+      html: wrapEmail('Receipt', lead, body).trim(),
+      text: `Dear ${order.customer.fullName},
+
+Your receipt for order ${order.id} is attached (PNG). Total UGX ${order.total.toLocaleString()} (cash on delivery).
+
+MysticalPIECES · ${SHOP_EMAIL}`.trim(),
+      attachment: {
+        filename: `receipt-${order.id}.png`,
+        content: receiptImage,
+        type: 'image/png',
+      },
     }
   }
 
-  static customerOrderReady(order: Order): EmailConfig {
-    const subject = `Your order is ready — ${order.id} — MysticalPIECES`
-    const html = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-    <h1 style="color: #6F4E37;">Your order is ready</h1>
-    <p>Dear ${order.customer.fullName},</p>
-    <p>Great news — your order <strong>${order.id}</strong> is ready and will be on its way to you soon.</p>
-    <p>We expect delivery within <strong>2–3 business days</strong> to:</p>
-    <p style="background: #f9fafb; padding: 12px; border-radius: 8px;">
-      ${order.customer.address.street}<br>${order.customer.address.city}
-    </p>
-    <p>Total paid on delivery: <strong>UGX ${order.total.toLocaleString()}</strong> (Cash on Delivery)</p>
-    <p>If you have questions, reply to this email or WhatsApp us at +256 755 915 549.</p>
-    <p>Thank you for shopping with MysticalPIECES!</p>
-  </div>
-</body>
-</html>`
-    const text = `Dear ${order.customer.fullName},
+  static sellerNotification(order: Order): EmailConfig {
+    const subject = `New order — ${order.id} — MysticalPIECES`
+    const lead = `<p style="margin:0 0 16px;">A new order has been placed on the store.</p>`
 
-Your order ${order.id} is ready and will arrive within 2-3 business days.
+    const body = `
+      <p style="margin:0 0 8px;"><strong>Order</strong> ${esc(order.id)} · ${formatOrderDate(order.timestamp)} · ${esc(order.status)}</p>
+      <div style="margin:16px 0;padding:16px;background:${C.paper};border-left:3px solid ${C.primary};">
+        <div style="font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:${C.muted};margin-bottom:8px;">Customer</div>
+        <div style="color:${C.text};">${esc(order.customer.fullName)}<br>${esc(order.customer.email)}<br>${esc(order.customer.phone)}</div>
+      </div>
+      ${orderItemsAndTotalsHtml(order)}
+      <div style="margin-top:16px;padding:16px;background:${C.paper};border-left:3px solid ${C.accent};">
+        <div style="font-size:12px;color:${C.muted};margin-bottom:6px;">Delivery option</div>
+        <div style="color:${C.text};">${order.deliveryOption === 'kampala' ? 'Kampala (no delivery fee)' : `Outside Kampala · fee UGX ${order.deliveryFee.toLocaleString()}`}</div>
+        <div style="margin-top:12px;font-size:12px;color:${C.muted};">Address</div>
+        <div style="color:${C.text};">${esc(order.customer.address.street)}<br>${esc(order.customer.address.city)}</div>
+        ${order.notes ? `<p style="margin:12px 0 0;font-size:14px;"><strong>Note:</strong> ${esc(order.notes)}</p>` : ''}
+      </div>`
 
-Delivery address:
+    const html = wrapEmail('New order', lead, body)
+    const text = `New order ${order.id} · ${formatOrderDate(order.timestamp)} · ${order.status}
+
+Customer:
+${order.customer.fullName}
+${order.customer.email}
+${order.customer.phone}
+
+${order.items.map((i) => `- ${i.name} (${i.sku}) qty ${i.quantity} — UGX ${(i.price * i.quantity).toLocaleString()}`).join('\n')}
+
+Subtotal UGX ${order.subtotal.toLocaleString()}
+Delivery ${order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}
+Total UGX ${order.total.toLocaleString()}
+
+${order.customer.address.street}, ${order.customer.address.city}
+${order.notes ? `Note: ${order.notes}` : ''}`
+
+    return { to: SHOP_EMAIL, subject, html: html.trim(), text: text.trim() }
+  }
+
+  static customerOrderProcessing(order: Order): EmailConfig {
+    const subject = `Order in progress — ${order.id} — MysticalPIECES`
+    const lead = `<p style="margin:0 0 16px;">Dear ${esc(order.customer.fullName)},</p>
+      <p style="margin:0 0 16px;">We have started preparing your order. It is now in progress.</p>`
+    const body = `
+      <p style="margin:0;">Order <strong>${esc(order.id)}</strong></p>
+      ${deliveryBlockHtml(order)}
+      <p style="margin:16px 0 0;">Total due on delivery: <strong>UGX ${order.total.toLocaleString()}</strong></p>
+      <p style="margin:16px 0 0;font-size:14px;color:${C.muted};">We will write again when the order is ready to go out, and once it has been delivered.</p>`
+    return {
+      to: order.customer.email,
+      subject,
+      html: wrapEmail('Order in progress', lead, body).trim(),
+      text: `Dear ${order.customer.fullName},
+
+We have started preparing your order ${order.id}. It is now in progress.
+
+Delivery:
 ${order.customer.address.street}, ${order.customer.address.city}
 
 Total (COD): UGX ${order.total.toLocaleString()}
 
-Thank you — MysticalPIECES
-`
-    return { to: order.customer.email, subject, html: html.trim(), text: text.trim() }
+We will notify you when the order is ready and when it is delivered.
+
+MysticalPIECES · ${SHOP_EMAIL}`.trim(),
+    }
+  }
+
+  static customerOrderReady(order: Order): EmailConfig {
+    const subject = `Order ready — ${order.id} — MysticalPIECES`
+    const lead = `<p style="margin:0 0 16px;">Dear ${esc(order.customer.fullName)},</p>
+      <p style="margin:0 0 16px;">Your order is ready and will be dispatched shortly. Delivery usually follows within two to three working days.</p>`
+    const body = `
+      <p style="margin:0;">Order <strong>${esc(order.id)}</strong></p>
+      ${deliveryBlockHtml(order)}
+      <p style="margin:16px 0 0;">Amount due on delivery: <strong>UGX ${order.total.toLocaleString()}</strong> (cash on delivery).</p>`
+    return {
+      to: order.customer.email,
+      subject,
+      html: wrapEmail('Order ready', lead, body).trim(),
+      text: `Dear ${order.customer.fullName},
+
+Your order ${order.id} is ready and will be dispatched shortly. Expect delivery within two to three working days.
+
+${order.customer.address.street}, ${order.customer.address.city}
+
+Total (COD): UGX ${order.total.toLocaleString()}
+
+MysticalPIECES · ${SHOP_EMAIL}`.trim(),
+    }
   }
 
   static customerOrderDelivered(order: Order): EmailConfig {
-    const subject = `Delivered — thank you! — ${order.id} — MysticalPIECES`
-    const html = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-    <h1 style="color: #6F4E37;">Your order has been delivered</h1>
-    <p>Dear ${order.customer.fullName},</p>
-    <p>We hope you love your pieces from MysticalPIECES! Order <strong>${order.id}</strong> is marked as <strong>delivered</strong>.</p>
-    <p>Thank you so much for shopping with us — we truly appreciate your support.</p>
-    <p>We would love to see you again soon. Explore new arrivals anytime on our store.</p>
-    <p style="margin-top: 24px;">With gratitude,<br>MysticalPIECES</p>
-  </div>
-</body>
-</html>`
-    const text = `Dear ${order.customer.fullName},
+    const subject = `Delivered — ${order.id} — MysticalPIECES`
+    const lead = `<p style="margin:0 0 16px;">Dear ${esc(order.customer.fullName)},</p>
+      <p style="margin:0 0 16px;">Your order has been marked as delivered. We hope you enjoy your pieces.</p>`
+    const body = `<p style="margin:0;">Order <strong>${esc(order.id)}</strong></p>
+      <p style="margin:16px 0 0;font-size:14px;color:${C.muted};">Thank you for shopping with us. We would be glad to see you again on the store.</p>`
+    return {
+      to: order.customer.email,
+      subject,
+      html: wrapEmail('Delivered', lead, body).trim(),
+      text: `Dear ${order.customer.fullName},
 
-Your order ${order.id} has been delivered. We hope you enjoy your purchase!
+Your order ${order.id} has been marked as delivered. We hope you enjoy your pieces.
 
-Thank you for shopping with MysticalPIECES — we would love to see you again soon.
+Thank you for shopping with MysticalPIECES.
 
-— MysticalPIECES
-`
-    return { to: order.customer.email, subject, html: html.trim(), text: text.trim() }
+${SHOP_EMAIL}`.trim(),
+    }
   }
 
-  // Helper function to send emails via API
   static async sendEmail(config: EmailConfig): Promise<boolean> {
     try {
-      // Send email via API route
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config)
+        body: JSON.stringify(config),
       })
-      
       if (!response.ok) {
         const error = await response.json()
         console.error('Failed to send email:', error)
         return false
       }
-      
       const result = await response.json()
-      console.log('Email sent successfully:', {
-        to: config.to,
-        subject: config.subject
-      })
-      
+      console.log('Email sent successfully:', { to: config.to, subject: config.subject })
       return result.success
     } catch (error) {
       console.error('Error sending email:', error)
-      // Fallback: log email details for manual sending
       console.log('Email details (manual send):', {
         to: config.to,
         subject: config.subject,
-        textPreview: config.text.substring(0, 100) + '...'
+        textPreview: config.text.substring(0, 100) + '...',
       })
       return false
     }
   }
 }
-

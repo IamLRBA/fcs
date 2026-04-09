@@ -43,29 +43,39 @@ export default function CEOProfile() {
   const skills = [
     {
       category: '⾕ ᗩᖇᑕᕼITEᑕTᑌᖇE',
-      description: 'Composes living structures in ArchiCAD and Lumion that focus on merging sustainability and beauty with poised modern forms washed in earth tones.',
-      details: 'Entered architecture school in 2021 and kept learning through night-long tutorials and experiments, crafting “out of this world” concepts that still lean into their landscapes.'
+      description:
+        'He works mainly in ArchiCAD and Lumion, and what you notice in his schemes is that he never treats a building as a box on a plot. He likes ideas that feel grounded-warm, earthy palettes, clean modern lines—and he still wants the place to sit naturally in its setting.',
+      details:
+        'He started architecture school in 2021 and never really switched off after class. Nights went to tutorials, small experiments, and sketches that looked a bit wild on paper but always came back to something you could imagine walking through. He is still learning in public, in the best sense.',
     },
     {
       category: 'ᗰᑌֆIᑕ ᗩᑎᗪ ᑭOETᖇY 𝄞',
-      description: 'Shapes harmonies with an acapella-trained voice and pens verses where each lyric loops back to purpose, rap cadence, and story.',
-      details: 'Since 2015 the pen has been guided by J. Cole, Kendrick, Eminem, and UK minds like Santan Dave, Aitch, and Skepta—melding melodic rap and emo trap textures into layered narratives.'
+      description:
+        'He is rained in an acapella group so, he cares about tones and songs the way some people care about colour (he does to but anyway...). His writing is mostly rap and spoken-word shaped: story first, then rhythm, then the line that stays with you after the track ends.',
+      details:
+        'He has been writing seriously since around 2015. You will hear the influence of artists he grew up on; think Cole, Kendrick, Eminem and a lot of UK voices too, Dave, Aitch, Skepta. He is not copying any of them; he is building his own lane from what they taught him about honesty and craft.',
     },
     {
       category: '☯ ᗩᖇT ᗩᑎᗪ ᗪEᔕIGᑎ',
-      description: 'A Fine-Art foundation nurtured since childhood now flows through digital canvases, sculpture, bespoke furniture, and décor concepts.',
-      details: 'Trains an instinctive spatial awareness and a “Jerry-rig” discipline—seeing new angles, improvising with whatever is at hand, and bending materials into poetic form.'
+      description:
+        'Art was never a side hobby for him, it was there from childhood. Now it shows up everywhere: on a screen, in clay or wood, in a piece of furniture he sketched because nothing in a shop felt quite right.',
+      details:
+        'He has a knack for seeing space before it exists, and he is not precious about materials. If something needs to be fixed or mocked up with what is in the room, he will do it. That mix of instinct and “Jerry-Rig” mentality shows up in almost everything he makes.',
     },
     {
       category: 'ᔕOᖴTᗯᗩᖇE ᗪEᐯEᒪOᑭᗰEᑎT ⚛',
-      description: 'Since September, 2024, code became another atelier. Self-taught in HTML, CSS, JavaScript, Java, React, and allied frameworks.',
-      details: 'Focus stays on expressive front-end work, thoughtful UI/UX, and select back-end explorations, building personal products that feel crafted, not just coded.'
+      description:
+        'Coding entered his life properly in September 2024. He picked up HTML, CSS, JavaScript, Java, React, and the usual surrounding tools the way he picks up anything else by building, breaking, and trying again.',
+      details:
+        'He leans toward front end and the parts of a product people actually touch: layout, motion, clarity. He will dip into back end when a feature needs it, but the goal is always something that feels finished, not something that only looks fine in a screenshot. He is not just a designer, he is a developer.',
     },
     {
       category: '✃ ᖴᗩᔕᕼIOᑎ',
-      description: 'Treats dressing as a gallery—curating silhouettes by mood, obsessing over proportion, and finishing every look with deliberate accessories.',
-      details: 'Moves fluidly from gentle classics to retro vintage, modern tailoring, sports, and streetwear, often editing or inventing garments to match the moment.'
-    }
+      description:
+        'For him, getting dressed is closer to hanging a show than to following rules. He thinks in silhouette and balance, and he will add or remove an accessory until the whole look says what he meant it to say. He is not just a fashion designer, he is a fashion artist.',
+      details:
+        'His wardrobe moves around a lot - quiet classics one day, vintage or street the next, because his mood moves too. He alters pieces or puts something together himself when nothing off the rack quite matches the day. It is personal curation, not performance.',
+    },
   ]
 
 
