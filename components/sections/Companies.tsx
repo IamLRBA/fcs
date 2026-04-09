@@ -15,6 +15,7 @@ const companies = [
 
 export default function Companies() {
   const [isHovered, setIsHovered] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const cardWidth = 100
   const gap = 40
   const cardDistance = cardWidth + gap
@@ -25,6 +26,17 @@ export default function Companies() {
   const [isResetting, setIsResetting] = useState(false)
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'))
+    }
+    checkDarkMode()
+    const observer = new MutationObserver(checkDarkMode)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     // Pause if hovered
@@ -94,7 +106,15 @@ export default function Companies() {
 
   return (
     <div className="mt-16">
-      <div className="relative border-l-[4px] border-r-[4px] border-solid border-l-[rgba(139,122,90,0.3)] border-r-[rgba(139,122,90,0.3)] dark:border-l-[rgba(111,78,55,0.4)] dark:border-r-[rgba(111,78,55,0.4)]">
+      <div
+        className="relative"
+        style={{
+          borderLeft: '4px solid',
+          borderRight: '4px solid',
+          borderLeftColor: isDarkMode ? 'rgba(111, 78, 55, 0.4)' : 'rgba(139, 122, 90, 0.3)',
+          borderRightColor: isDarkMode ? 'rgba(111, 78, 55, 0.4)' : 'rgba(139, 122, 90, 0.3)',
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

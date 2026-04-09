@@ -44,14 +44,14 @@ export default function CEOProfile() {
     {
       category: '⾕ ᗩᖇᑕᕼITEᑕTᑌᖇE',
       description:
-        'He works mainly in ArchiCAD and Lumion, and what you notice in his schemes is that he never treats a building as a box on a plot. He likes ideas that feel grounded-warm, earthy palettes, clean modern lines—and he still wants the place to sit naturally in its setting.',
+        'He works mainly in ArchiCAD and Lumion, and what you notice in his schemes is that he never treats a building as a box on a plot. He likes ideas that feel grounded-warm, earthy palettes, clean modern lines and he still wants the place to sit naturally in its setting.',
       details:
         'He started architecture school in 2021 and never really switched off after class. Nights went to tutorials, small experiments, and sketches that looked a bit wild on paper but always came back to something you could imagine walking through. He is still learning in public, in the best sense.',
     },
     {
       category: 'ᗰᑌֆIᑕ ᗩᑎᗪ ᑭOETᖇY 𝄞',
       description:
-        'He is rained in an acapella group so, he cares about tones and songs the way some people care about colour (he does to but anyway...). His writing is mostly rap and spoken-word shaped: story first, then rhythm, then the line that stays with you after the track ends.',
+        'He is rained in an acapella group so, he cares about tones and songs the way some people care about colour (he does too but anyway...). His writing is mostly rap and spoken-word shaped: story first, then rhythm, then the line that stays with you after the track ends.',
       details:
         'He has been writing seriously since around 2015. You will hear the influence of artists he grew up on; think Cole, Kendrick, Eminem and a lot of UK voices too, Dave, Aitch, Skepta. He is not copying any of them; he is building his own lane from what they taught him about honesty and craft.',
     },
