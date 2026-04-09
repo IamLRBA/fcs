@@ -481,6 +481,20 @@
 }
 
 @layer components {
+  /**
+   * Vertical rails beside horizontal scrollers. Real CSS (not Tailwind arbitrary rgba)
+   * so colours always apply. Strong contrast vs company marquee borders.
+   */
+  .slider-sync-edge-rail {
+    width: 5px;
+    min-width: 5px;
+    background-color: rgba(90, 62, 45, 0.88);
+  }
+
+  .dark .slider-sync-edge-rail {
+    background-color: rgba(220, 200, 172, 0.96);
+  }
+
   /* Button Styles - Mystical Future Gradient */
   .btn {
     --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.95), rgba(111, 78, 55, 0.95), rgba(90, 62, 45, 0));

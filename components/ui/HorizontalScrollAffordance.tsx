@@ -23,10 +23,7 @@ type HorizontalScrollAffordanceProps = {
   keyboardFocusable?: boolean
   /** Edge gradient fades (default true). Set false when using border treatments instead. */
   showEdgeFades?: boolean
-  /**
-   * Vertical edge lines (Companies slider style). Opacity follows the same rules as nav arrows:
-   * left line when can scroll left, right line when can scroll right.
-   */
+  /** Vertical edge lines (same colour system as company marquee rails; always visible when enabled). */
   syncScrollEdgeLines?: boolean
   /** Use scrollbar-hide instead of a visible horizontal scrollbar */
   hideScrollbar?: boolean
@@ -106,18 +103,18 @@ export default function HorizontalScrollAffordance({
     }
   }
 
-  const edgeLineSurface =
+  const railColorClass =
     (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) || SLIDER_SYNC_EDGE_LINE_CLASS
 
   const scrollerClassName = `focus-ring-none overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none ${hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]'} ${scrollClassName}`
 
-  /** w-1 line (4px) + gap before arrow when vertical edge lines are shown */
+  /** Rails are 5px wide (see globals.css); arrows sit just outside them */
   const arrowLeftClass = syncScrollEdgeLines
-    ? 'focus-ring-none absolute left-3 top-1/2 z-[2] -translate-y-1/2 sm:left-3.5'
+    ? 'focus-ring-none absolute left-4 top-1/2 z-[6] -translate-y-1/2 sm:left-5'
     : 'focus-ring-none absolute left-0.5 top-1/2 z-[2] -translate-y-1/2 sm:left-1'
 
   const arrowRightClass = syncScrollEdgeLines
-    ? 'focus-ring-none absolute right-3 top-1/2 z-[2] -translate-y-1/2 sm:right-3.5'
+    ? 'focus-ring-none absolute right-4 top-1/2 z-[6] -translate-y-1/2 sm:right-5'
     : 'focus-ring-none absolute right-0.5 top-1/2 z-[2] -translate-y-1/2 sm:right-1'
 
   return (
@@ -138,32 +135,32 @@ export default function HorizontalScrollAffordance({
           {children}
         </div>
 
-        {syncScrollEdgeLines && (
-          <>
-            <div
-              aria-hidden
-              className={`pointer-events-none absolute inset-y-0 left-0 z-[1] w-1 ${edgeLineSurface} transition-opacity duration-200 ${canLeft ? 'opacity-100' : 'opacity-0'}`}
-            />
-            <div
-              aria-hidden
-              className={`pointer-events-none absolute inset-y-0 right-0 z-[1] w-1 ${edgeLineSurface} transition-opacity duration-200 ${canRight ? 'opacity-100' : 'opacity-0'}`}
-            />
-          </>
-        )}
-
         {showEdgeFades && (
           <>
             <div
               aria-hidden
-              className={`pointer-events-none absolute inset-y-2 left-0 z-[1] w-8 sm:w-12 rounded-l-lg bg-gradient-to-r from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
+              className={`pointer-events-none absolute inset-y-2 left-0 z-[2] w-8 sm:w-12 rounded-l-lg bg-gradient-to-r from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
                 canLeft ? 'opacity-100' : 'opacity-0'
               }`}
             />
             <div
               aria-hidden
-              className={`pointer-events-none absolute inset-y-2 right-0 z-[1] w-8 sm:w-12 rounded-r-lg bg-gradient-to-l from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
+              className={`pointer-events-none absolute inset-y-2 right-0 z-[2] w-8 sm:w-12 rounded-r-lg bg-gradient-to-l from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
                 canRight ? 'opacity-100' : 'opacity-0'
               }`}
+            />
+          </>
+        )}
+
+        {syncScrollEdgeLines && (
+          <>
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute inset-y-0 left-0 z-[5] ${railColorClass}`}
+            />
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute inset-y-0 right-0 z-[5] ${railColorClass}`}
             />
           </>
         )}
