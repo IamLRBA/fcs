@@ -224,7 +224,7 @@ function ProductSectionCards({
   const label = section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const innerClass = `flex min-h-[1px] flex-row items-stretch gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
     rowMode === 'center'
-      ? 'w-full min-w-0 justify-center'
+      ? 'max-md:w-full max-md:min-w-0 max-md:justify-center md:w-max md:max-w-full md:shrink-0 md:justify-start md:mx-auto'
       : 'w-max min-w-full justify-start'
   }`
 

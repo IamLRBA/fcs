@@ -23,14 +23,11 @@ type HorizontalScrollAffordanceProps = {
   keyboardFocusable?: boolean
   /** Edge gradient fades (default true). Set false when using border treatments instead. */
   showEdgeFades?: boolean
-  /** Vertical edge lines (same colour system as company marquee rails; always visible when enabled). */
+  /** Inset vertical rails on the scrollport (always visible; see `.slider-sync-edge-inset-rails`). */
   syncScrollEdgeLines?: boolean
   /** Use scrollbar-hide instead of a visible horizontal scrollbar */
   hideScrollbar?: boolean
-  /**
-   * Tailwind classes for the vertical rails when syncScrollEdgeLines is on.
-   * Defaults to the Featured Collections panel gradient when omitted.
-   */
+  /** Optional extra classes on the scrollport (default: inset rail box-shadow from globals.css). */
   syncScrollEdgeLineClassName?: string
 }
 
@@ -103,18 +100,25 @@ export default function HorizontalScrollAffordance({
     }
   }
 
-  const railColorClass =
+  /** Inset rails are painted on the scroller; optional extra classes from callers */
+  const railInsetClass =
     (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) || SLIDER_SYNC_EDGE_LINE_CLASS
 
-  const scrollerClassName = `focus-ring-none overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none ${hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]'} ${scrollClassName}`
+  const scrollerClassName = [
+    'focus-ring-none overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none',
+    hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]',
+    scrollClassName,
+    syncScrollEdgeLines ? railInsetClass : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
 
-  /** Rails are 5px wide (see globals.css); arrows sit just outside them */
   const arrowLeftClass = syncScrollEdgeLines
-    ? 'focus-ring-none absolute left-4 top-1/2 z-[6] -translate-y-1/2 sm:left-5'
+    ? 'focus-ring-none absolute left-2 top-1/2 z-[6] -translate-y-1/2 sm:left-3'
     : 'focus-ring-none absolute left-0.5 top-1/2 z-[2] -translate-y-1/2 sm:left-1'
 
   const arrowRightClass = syncScrollEdgeLines
-    ? 'focus-ring-none absolute right-4 top-1/2 z-[6] -translate-y-1/2 sm:right-5'
+    ? 'focus-ring-none absolute right-2 top-1/2 z-[6] -translate-y-1/2 sm:right-3'
     : 'focus-ring-none absolute right-0.5 top-1/2 z-[2] -translate-y-1/2 sm:right-1'
 
   return (
@@ -148,19 +152,6 @@ export default function HorizontalScrollAffordance({
               className={`pointer-events-none absolute inset-y-2 right-0 z-[2] w-8 sm:w-12 rounded-r-lg bg-gradient-to-l from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
                 canRight ? 'opacity-100' : 'opacity-0'
               }`}
-            />
-          </>
-        )}
-
-        {syncScrollEdgeLines && (
-          <>
-            <div
-              aria-hidden
-              className={`pointer-events-none absolute inset-y-0 left-0 z-[5] ${railColorClass}`}
-            />
-            <div
-              aria-hidden
-              className={`pointer-events-none absolute inset-y-0 right-0 z-[5] ${railColorClass}`}
             />
           </>
         )}
