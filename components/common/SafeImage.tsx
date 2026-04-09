@@ -13,6 +13,8 @@ type SafeImageProps = {
   height?: number
   priority?: boolean
   loading?: 'lazy' | 'eager'
+  /** Skip optimizer (helps some JPEGs / local assets that fail decode in next/image) */
+  unoptimized?: boolean
   onError?: () => void
 }
 
@@ -31,6 +33,7 @@ export default function SafeImage({
   height,
   priority = false,
   loading = 'lazy',
+  unoptimized = false,
   onError,
 }: SafeImageProps) {
   const resolved = src && src.length > 0 ? src : PLACEHOLDER
@@ -61,6 +64,7 @@ export default function SafeImage({
         sizes={sizes}
         priority={priority}
         loading={priority ? undefined : loading}
+        unoptimized={unoptimized}
         onError={onError}
       />
     )
@@ -77,6 +81,7 @@ export default function SafeImage({
         sizes={sizes}
         priority={priority}
         loading={priority ? undefined : loading}
+        unoptimized={unoptimized}
         onError={onError}
       />
     )

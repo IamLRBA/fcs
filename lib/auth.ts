@@ -20,6 +20,8 @@ export interface Review {
   createdAt: string
   productId?: string
   productName?: string
+  /** Present on reviews stored on the user and in global testimonials */
+  userId?: string
 }
 
 export interface Admin {
@@ -154,11 +156,13 @@ export class AuthManager {
       if (updates.profileImage !== undefined) {
         const allReviews = this.getAllReviews()
         const updatedReviews = allReviews.map((review: any) => {
-          // Check if review belongs to this user (by matching author name)
-          if (review.author === updatedUser.fullName) {
+          const sameUser =
+            (review.userId && review.userId === userId) || review.author === updatedUser.fullName
+          if (sameUser) {
             return {
               ...review,
-              image: updatedUser.profileImage || '/assets/images/testimonials/default.jpg'
+              image: updatedUser.profileImage || '/assets/images/testimonials/default.jpg',
+              userId: review.userId ?? userId,
             }
           }
           return review
@@ -197,7 +201,8 @@ export class AuthManager {
       rating,
       createdAt: new Date().toISOString(),
       productId,
-      productName
+      productName,
+      userId: user.id,
     }
 
     // Add to user's reviews (DB-backed users may not exist in local USERS_KEY — still sync session + testimonials)
@@ -213,13 +218,47 @@ export class AuthManager {
     allReviews.push({
       ...review,
       author: user.fullName,
-      image: user.profileImage || '/assets/images/testimonials/default.jpg'
+      image: user.profileImage || '/assets/images/testimonials/default.jpg',
+      userId: user.id,
     })
     localStorage.setItem(this.REVIEWS_KEY, JSON.stringify(allReviews))
 
     window.dispatchEvent(new CustomEvent('reviewsUpdated'))
 
     return { success: true, review }
+  }
+
+  static updateReview(reviewId: string, text: string, rating: number): { success: boolean; error?: string } {
+    const user = this.getCurrentUser()
+    if (!user) return { success: false, error: 'Not signed in' }
+
+    const userReviews = user.reviews || []
+    const ix = userReviews.findIndex((r) => r.id === reviewId)
+    if (ix === -1) return { success: false, error: 'Review not found' }
+
+    const updatedReview = { ...userReviews[ix], text, rating }
+    const merged = [...userReviews.slice(0, ix), updatedReview, ...userReviews.slice(ix + 1)]
+    const persisted = this.updateUser(user.id, { reviews: merged })
+    if (!persisted) {
+      this.setCurrentUser({ ...user, reviews: merged })
+    }
+
+    const allReviews = this.getAllReviews()
+    const j = allReviews.findIndex((r: any) => r.id === reviewId)
+    if (j !== -1) {
+      allReviews[j] = {
+        ...allReviews[j],
+        text,
+        rating,
+        author: user.fullName,
+        image: user.profileImage || allReviews[j].image || '/assets/images/testimonials/default.jpg',
+        userId: user.id,
+      }
+      localStorage.setItem(this.REVIEWS_KEY, JSON.stringify(allReviews))
+    }
+
+    window.dispatchEvent(new CustomEvent('reviewsUpdated'))
+    return { success: true }
   }
 
   static getAllReviews(): any[] {

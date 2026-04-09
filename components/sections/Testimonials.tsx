@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
@@ -19,6 +20,7 @@ interface Testimonial {
   rating: number
   /** Site visitor reviews — shown in B&W like a print testimonial */
   fromUserReview?: boolean
+  userId?: string
 }
 
 const defaultTestimonials: Testimonial[] = [
@@ -47,6 +49,19 @@ export default function Testimonials() {
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const dragStartPositionRef = useRef<number>(0)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [currentUserFullName, setCurrentUserFullName] = useState<string | null>(null)
+
+  useEffect(() => {
+    const sync = () => {
+      const u = AuthManager.getCurrentUser()
+      setCurrentUserId(u?.id ?? null)
+      setCurrentUserFullName(u?.fullName ?? null)
+    }
+    sync()
+    window.addEventListener('authStateChanged', sync)
+    return () => window.removeEventListener('authStateChanged', sync)
+  }, [])
 
   // Set responsive card width - larger on mobile and desktop
   useEffect(() => {
@@ -85,8 +100,9 @@ export default function Testimonials() {
       // Ensure reviews have the latest profile images from users
       const users = AuthManager.getUsersList()
       const reviewsWithUpdatedImages = userReviews.map((review: any) => {
-        // Find the user who wrote this review
-        const reviewUser = users.find((u: any) => u.fullName === review.author)
+        const reviewUser = users.find(
+          (u: any) => (review.userId && u.id === review.userId) || u.fullName === review.author
+        )
         if (reviewUser && reviewUser.profileImage) {
           return {
             ...review,
@@ -105,6 +121,7 @@ export default function Testimonials() {
         image: review.image || '/assets/images/testimonials/default.jpg',
         rating: review.rating || 5,
         fromUserReview: true,
+        userId: review.userId,
       }))
       
       setTestimonialsData([...defaultTestimonials, ...reviewsAsTestimonials])
@@ -407,6 +424,22 @@ export default function Testimonials() {
                     <p className="author-role text-primary-600 dark:text-primary-300 text-sm">{selectedTestimonial.company}</p>
                   </div>
                 </div>
+                {selectedTestimonial.fromUserReview &&
+                  currentUserId &&
+                  (selectedTestimonial.userId === currentUserId ||
+                    (!selectedTestimonial.userId &&
+                      currentUserFullName &&
+                      selectedTestimonial.author === currentUserFullName)) && (
+                    <div className="mt-5 flex justify-center border-t border-neutral-200/80 dark:border-neutral-700/80 pt-4">
+                      <Link
+                        href={`/account?tab=reviews&editReview=${encodeURIComponent(String(selectedTestimonial.id))}`}
+                        onClick={() => setSelectedTestimonial(null)}
+                        className="text-sm font-medium text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 underline underline-offset-2 transition-colors"
+                      >
+                        Edit your review
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </motion.div>
               </div>
