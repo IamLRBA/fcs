@@ -171,31 +171,59 @@ function ProductSectionCards({
   openProductModal: (p: Product) => void
 }) {
   const innerRef = useRef<HTMLDivElement>(null)
-  const [centerRow, setCenterRow] = useState(true)
+  /** 'center' = few cards fit in row (center them); 'scroll' = horizontal strip */
+  const [rowMode, setRowMode] = useState<'center' | 'scroll'>('center')
 
   useLayoutEffect(() => {
     const inner = innerRef.current
     if (!inner) return
     const scrollport = inner.parentElement
     if (!scrollport) return
-    const measure = () => {
-      const overflow = inner.scrollWidth > scrollport.clientWidth + 2
-      setCenterRow(!overflow)
+
+    const parseGapPx = (el: HTMLElement) => {
+      const g = getComputedStyle(el).gap || getComputedStyle(el).columnGap
+      const n = parseFloat(g)
+      return Number.isFinite(n) ? n : 16
     }
+
+    const measure = () => {
+      const mdUp = typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+
+      if (mdUp) {
+        const gap = parseGapPx(inner)
+        const kids = Array.from(inner.children) as HTMLElement[]
+        let contentW = 0
+        kids.forEach((k, i) => {
+          contentW += k.offsetWidth
+          if (i > 0) contentW += gap
+        })
+        const overflow = contentW > scrollport.clientWidth + 2
+        setRowMode(overflow ? 'scroll' : 'center')
+      } else {
+        const overflow = inner.scrollWidth > scrollport.clientWidth + 2
+        setRowMode(overflow ? 'scroll' : 'center')
+      }
+    }
+
     measure()
     const ro = new ResizeObserver(() => requestAnimationFrame(measure))
     ro.observe(inner)
     ro.observe(scrollport)
     scrollport.addEventListener('scroll', measure, { passive: true })
+    window.addEventListener('resize', measure)
+    const mql = window.matchMedia('(min-width: 768px)')
+    mql.addEventListener('change', measure)
     return () => {
       ro.disconnect()
       scrollport.removeEventListener('scroll', measure)
+      window.removeEventListener('resize', measure)
+      mql.removeEventListener('change', measure)
     }
   }, [visibleProducts])
 
   const label = section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const innerClass = `flex min-h-[1px] flex-row items-stretch gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
-    centerRow ? 'w-full min-w-0 justify-center' : 'w-max min-w-full justify-start'
+    rowMode === 'center' ? 'w-full min-w-0 justify-center' : 'w-max min-w-full justify-start'
   }`
 
   return (
@@ -275,6 +303,46 @@ export default function ProductCategoryPage() {
       setSelectedSection(keys[0])
     }
   }, [category, categoryData])
+
+  /** Deep-link from home/shop (#subcategory) — scroll after sections exist (client nav may not trigger native hash scroll). */
+  useEffect(() => {
+    if (loading || !categoryData) return
+    const keys = Object.keys(categoryData.subcategories)
+    const hash = typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : ''
+    if (!hash || !keys.includes(hash)) return
+
+    let cancelled = false
+    const run = () => {
+      if (cancelled) return
+      const el = document.getElementById(hash)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    const raf1 = requestAnimationFrame(() => {
+      requestAnimationFrame(run)
+    })
+    const t = window.setTimeout(run, 400)
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(raf1)
+      window.clearTimeout(t)
+    }
+  }, [loading, categoryData])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !categoryData) return
+    const keys = Object.keys(categoryData.subcategories)
+    const onHash = () => {
+      const hash = window.location.hash.replace(/^#/, '')
+      if (hash && keys.includes(hash)) {
+        setSelectedSection(hash)
+        requestAnimationFrame(() => {
+          document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        })
+      }
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [categoryData])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -650,7 +718,7 @@ export default function ProductCategoryPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="mb-32"
+            className="mb-32 scroll-mt-24 md:scroll-mt-28"
           >
             {/* Subcategory Image */}
             <motion.div
