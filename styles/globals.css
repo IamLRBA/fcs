@@ -482,20 +482,18 @@
 
 @layer components {
   /**
-   * Vertical rails on horizontal scrollers — drawn with inset box-shadow on the
-   * scrollport so nothing can stack on top and hide them (same hues as company
-   * marquee borders, strengthened). Company slider section is unchanged.
+   * Vertical rails on horizontal scrollers — 4px side borders (company-marquee style,
+   * strengthened). Do not rely on box-shadow alone: `.focus-ring-none` elsewhere uses
+   * box-shadow:none !important and was wiping inset shadows on the scrollport.
    */
   .slider-sync-edge-inset-rails {
-    box-shadow:
-      inset 4px 0 0 0 rgba(111, 78, 55, 0.78),
-      inset -4px 0 0 0 rgba(111, 78, 55, 0.78);
+    border-left: 4px solid rgba(111, 78, 55, 0.88);
+    border-right: 4px solid rgba(111, 78, 55, 0.88);
   }
 
   .dark .slider-sync-edge-inset-rails {
-    box-shadow:
-      inset 4px 0 0 0 rgba(210, 188, 158, 0.92),
-      inset -4px 0 0 0 rgba(210, 188, 158, 0.92);
+    border-left-color: rgba(210, 188, 158, 0.95);
+    border-right-color: rgba(210, 188, 158, 0.95);
   }
 
   /* Button Styles - Mystical Future Gradient */

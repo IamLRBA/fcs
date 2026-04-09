@@ -104,8 +104,10 @@ export default function HorizontalScrollAffordance({
   const railInsetClass =
     (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) || SLIDER_SYNC_EDGE_LINE_CLASS
 
+  /* Do not use focus-ring-none here: global CSS sets box-shadow:none !important on it and kills inset rails/borders. */
   const scrollerClassName = [
-    'focus-ring-none overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none',
+    'overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none',
+    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400',
     hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]',
     scrollClassName,
     syncScrollEdgeLines ? railInsetClass : '',
