@@ -177,7 +177,13 @@ function ProductSectionCards({
   useLayoutEffect(() => {
     const inner = innerRef.current
     if (!inner) return
-    const scrollport = inner.parentElement
+    /** Skip display:contents wrappers so we measure the real overflow-x container */
+    let scrollport: HTMLElement | null = inner.parentElement
+    while (scrollport) {
+      const ox = getComputedStyle(scrollport).overflowX
+      if (ox === 'auto' || ox === 'scroll') break
+      scrollport = scrollport.parentElement
+    }
     if (!scrollport) return
 
     const parseGapPx = (el: HTMLElement) => {
@@ -224,14 +230,14 @@ function ProductSectionCards({
   const label = section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const innerClass = `flex min-h-[1px] flex-row items-stretch gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
     rowMode === 'center'
-      ? 'max-md:w-full max-md:min-w-0 max-md:justify-center md:w-max md:shrink-0 md:justify-start'
+      ? 'w-full min-w-0 justify-center md:w-max md:shrink-0 md:justify-start'
       : 'w-max min-w-full justify-start'
   }`
 
-  /** Desktop: margin auto inside overflow-x often fails; flex wrapper centers the row. */
+  /** Desktop only: flex wrapper centers the short row; mobile uses contents (no layout change vs direct child). */
   const centerWrapClass =
     rowMode === 'center'
-      ? 'max-md:contents md:flex md:w-full md:min-w-0 md:justify-center'
+      ? 'contents md:flex md:w-full md:min-w-0 md:justify-center'
       : 'contents'
 
   return (
@@ -240,6 +246,7 @@ function ProductSectionCards({
       syncScrollEdgeLines
       syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
       hideScrollbar
+      keyboardFocusable={false}
       className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-0 sm:mb-10 sm:px-0 md:mb-12"
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel={`${label} products`}

@@ -106,7 +106,11 @@ export default function HorizontalScrollAffordance({
   /* Do not use focus-ring-none on the scroller: it forces box-shadow: none !important. */
   const scrollerClassName = [
     'overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none',
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400',
+    ...(keyboardFocusable
+      ? [
+          'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400',
+        ]
+      : ['focus:outline-none focus-visible:outline-none']),
     hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]',
     scrollClassName,
   ]
