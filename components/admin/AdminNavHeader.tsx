@@ -1,8 +1,9 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Package, Users, LogOut, ArrowLeft, ClipboardList } from 'lucide-react'
+import { LayoutDashboard, Package, Users, LogOut, ClipboardList } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import { motion } from 'framer-motion'
 
@@ -21,6 +22,17 @@ const navItems = [
 export default function AdminNavHeader({ title, subtitle }: AdminNavHeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const [showBackButton, setShowBackButton] = useState(true)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      setShowBackButton(scrollTop < 100)
+    }
+    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const handleLogout = () => {
     AuthManager.adminLogout()
@@ -29,14 +41,22 @@ export default function AdminNavHeader({ title, subtitle }: AdminNavHeaderProps)
 
   return (
     <div className="mb-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <motion.div
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120, y: showBackButton ? 0 : -20 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
+        style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
+      >
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-primary-700 dark:text-primary-300 hover:text-primary-900 dark:hover:text-primary-100"
+          className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back Home</span>
         </Link>
+      </motion.div>
+
+      <div className="flex flex-wrap items-center justify-end gap-3 mb-4">
         <button
           type="button"
           onClick={handleLogout}

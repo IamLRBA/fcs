@@ -9,6 +9,7 @@ import {
   type KeyboardEvent,
 } from 'react'
 import Button from '@/components/ui/Button'
+import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 
 type HorizontalScrollAffordanceProps = {
   children: ReactNode
@@ -106,8 +107,7 @@ export default function HorizontalScrollAffordance({
   }
 
   const edgeLineSurface =
-    (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) ||
-    'bg-gradient-to-b from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700'
+    (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) || SLIDER_SYNC_EDGE_LINE_CLASS
 
   const scrollerClassName = `focus-ring-none overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none ${hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]'} ${scrollClassName}`
 

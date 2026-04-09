@@ -27,6 +27,7 @@ export default function AccountPage() {
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
   const [showBackButton, setShowBackButton] = useState(true)
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null)
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
   const router = useRouter()
   const profileFileInputRef = useRef<HTMLInputElement>(null)
 
@@ -60,6 +61,24 @@ export default function AccountPage() {
     window.addEventListener('authStateChanged', handleAuthChange)
     return () => window.removeEventListener('authStateChanged', handleAuthChange)
   }, [router])
+
+  useEffect(() => {
+    if (!user || typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('tab') === 'reviews') {
+      setActiveTab('reviews')
+    }
+    const edit = params.get('editReview')
+    if (edit && user.reviews?.some((r) => r.id === edit)) {
+      setActiveTab('reviews')
+      setEditingReviewId(edit)
+      const r = user.reviews.find((x) => x.id === edit)
+      if (r) {
+        setReviewText(r.text)
+        setReviewRating(r.rating)
+      }
+    }
+  }, [user])
 
   // Show/hide back button based on scroll position
   useEffect(() => {
@@ -130,9 +149,41 @@ export default function AccountPage() {
     }
   }
 
+  const clearReviewEditor = () => {
+    setEditingReviewId(null)
+    setReviewText('')
+    setReviewRating(5)
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', '/account')
+    }
+  }
+
+  const startEditReview = (review: Review) => {
+    setActiveTab('reviews')
+    setEditingReviewId(review.id)
+    setReviewText(review.text)
+    setReviewRating(review.rating)
+    requestAnimationFrame(() => {
+      document.getElementById('account-review-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
+
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!reviewText.trim() || !user) return
+
+    if (editingReviewId) {
+      const res = AuthManager.updateReview(editingReviewId, reviewText.trim(), reviewRating)
+      if (res.success) {
+        clearReviewEditor()
+        const updatedUser = AuthManager.getCurrentUser()
+        if (updatedUser) setUser(updatedUser)
+        alert('Your review was updated.')
+      } else {
+        alert(res.error || 'Could not update your review.')
+      }
+      return
+    }
 
     const result = AuthManager.addReview(reviewText, reviewRating)
     if (result.success) {
@@ -382,8 +433,11 @@ export default function AccountPage() {
             {activeTab === 'reviews' && (
               <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 text-center">Write a Review</h2>
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 text-center">
+                    {editingReviewId ? 'Edit your review' : 'Write a Review'}
+                  </h2>
                   <form
+                    id="account-review-form"
                     onSubmit={handleReviewSubmit}
                     className="rounded-xl border border-neutral-300/80 dark:border-neutral-600 bg-white/80 dark:bg-neutral-900/40 p-4 sm:p-6 text-center sm:text-left"
                   >
@@ -421,19 +475,33 @@ export default function AccountPage() {
                           required
                         />
                       </div>
-                      <Button type="submit" variant="default" size="md" className="w-full sm:w-auto">
-                        Submit Review
-                      </Button>
+                      <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                        {editingReviewId ? (
+                          <Button type="button" variant="default" size="md" onClick={clearReviewEditor} className="w-full sm:w-auto order-2 sm:order-1">
+                            Cancel edit
+                          </Button>
+                        ) : (
+                          <span className="hidden sm:block sm:order-1" aria-hidden />
+                        )}
+                        <Button type="submit" variant="default" size="md" className="w-full sm:w-auto order-1 sm:order-2 sm:ml-auto">
+                          {editingReviewId ? 'Save changes' : 'Submit Review'}
+                        </Button>
+                      </div>
                   </form>
                 </div>
 
                 <div>
                   <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 text-center">Your Reviews</h2>
-                  <div className="rounded-xl border border-neutral-300/80 dark:border-neutral-600 bg-white/80 dark:bg-neutral-900/40 p-4 sm:p-6 text-center sm:text-left">
+                  <div className="text-center sm:text-left">
                       {user.reviews && user.reviews.length > 0 ? (
                         <div className="space-y-3 sm:space-y-4 flex flex-col items-center sm:items-stretch">
                           {user.reviews.map((review) => (
-                            <div key={review.id} className="bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 sm:p-6 w-full max-w-2xl sm:max-w-none mx-auto sm:mx-0">
+                            <button
+                              key={review.id}
+                              type="button"
+                              onClick={() => startEditReview(review)}
+                              className="focus-ring-none w-full text-left bg-transparent border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 sm:p-6 max-w-2xl sm:max-w-none mx-auto sm:mx-0 transition-colors hover:border-primary-400/60 dark:hover:border-primary-500/50 cursor-pointer"
+                            >
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center space-x-2">
                                   {[...Array(5)].map((_, i) => (
@@ -455,7 +523,8 @@ export default function AccountPage() {
                               {review.productName && (
                                 <p className="text-sm text-primary-600 mt-2">Product: {review.productName}</p>
                               )}
-                            </div>
+                              <p className="text-xs text-primary-600 dark:text-primary-400 mt-3">Tap to edit</p>
+                            </button>
                           ))}
                         </div>
                       ) : (

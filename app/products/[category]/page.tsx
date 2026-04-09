@@ -13,6 +13,7 @@ import SafeImage from '@/components/common/SafeImage'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
+import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 
 interface Product {
   id: string
@@ -56,6 +57,7 @@ function SubcategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
       alt={alt}
       width={192}
       height={192}
+      unoptimized
       className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
       sizes="(max-width: 640px) 80px, 96px"
       loading="lazy"
@@ -200,7 +202,7 @@ function ProductSectionCards({
     <HorizontalScrollAffordance
       showEdgeFades={false}
       syncScrollEdgeLines
-      syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+      syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
       hideScrollbar
       className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-0 sm:mb-10 sm:px-0 md:mb-12"
       scrollClassName="pt-6 pb-8"
@@ -474,7 +476,22 @@ export default function ProductCategoryPage() {
 
   const getSubcategoryImageCandidates = (categorySlug: string, sectionSlug: string): string[] => {
     if (categorySlug === 'pants-and-shorts' && sectionSlug === 'gentle') {
-      return ['/assets/images/products-sections/fashion/pants-and-shorts/thumb1.jpg']
+      const base = '/assets/images/products-sections/fashion/pants-and-shorts/thumb1'
+      const gentlePaths = [
+        `${base}.jpg`,
+        `${base}.JPG`,
+        `${base}.jpeg`,
+        `${base}.png`,
+        `${base}.webp`,
+        ...getThumbPathVariants('pants-and-shorts', 1),
+        ...getThumbPathVariants('bottoms', 1),
+        ...getThumbPathVariants('pants', 1),
+      ]
+      const unique: string[] = []
+      for (const p of gentlePaths) {
+        if (!unique.includes(p)) unique.push(p)
+      }
+      return unique
     }
     if (categorySlug === 'accessories' && sectionSlug === 'rings-necklaces') {
       return ['/assets/images/products-sections/fashion/accessories/thumb1.jpg']
@@ -850,7 +867,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
               <HorizontalScrollAffordance
                 showEdgeFades={false}
                 syncScrollEdgeLines
-                syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
                 hideScrollbar
                 className="mx-auto w-full max-w-[28rem] pt-2"
                 scrollClassName="py-3"

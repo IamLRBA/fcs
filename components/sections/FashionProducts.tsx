@@ -40,6 +40,7 @@ function FashionCategoryThumb({ paths, alt }: { paths: string[]; alt: string }) 
       src={src}
       alt={alt}
       fill
+      unoptimized
       className="object-cover transition-transform duration-300 group-hover:scale-110"
       sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 192px"
       loading="eager"
@@ -177,8 +178,25 @@ export default function FashionProducts() {
 
   const toggle = (id: number) => setExpandedId(expandedId === id ? null : id)
   const getThumbnailCandidates = (slug: string, thumbIndex: number) => {
+    const unique = (paths: string[]) => {
+      const u: string[] = []
+      for (const p of paths) {
+        if (!u.includes(p)) u.push(p)
+      }
+      return u
+    }
     if (slug === 'pants-and-shorts' && thumbIndex === 1) {
-      return ['/assets/images/products-sections/fashion/pants-and-shorts/thumb1.jpg']
+      const base = '/assets/images/products-sections/fashion/pants-and-shorts/thumb1'
+      return unique([
+        `${base}.jpg`,
+        `${base}.JPG`,
+        `${base}.jpeg`,
+        `${base}.png`,
+        `${base}.webp`,
+        ...getThumbPathVariants('pants-and-shorts', 1),
+        ...getThumbPathVariants('bottoms', 1),
+        ...getThumbPathVariants('pants', 1),
+      ])
     }
     if (slug === 'accessories' && thumbIndex === 1) {
       return ['/assets/images/products-sections/fashion/accessories/thumb1.jpg']

@@ -29,6 +29,7 @@ import EducationalJourney from '@/components/sections/EducationalJourney'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
+import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 
 export default function CEOProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -455,7 +456,7 @@ export default function CEOProfile() {
               <HorizontalScrollAffordance
                 showEdgeFades={false}
                 syncScrollEdgeLines
-                syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
                 hideScrollbar
                 className="mx-auto mt-6 w-full max-w-[26rem] px-1 sm:max-w-[30rem]"
                 scrollClassName="py-3"

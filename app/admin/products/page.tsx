@@ -11,6 +11,7 @@ import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import AdminNavHeader from '@/components/admin/AdminNavHeader'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import SafeImage from '@/components/common/SafeImage'
+import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 
 interface Product {
   id: string
@@ -593,7 +594,7 @@ export default function AdminProductsPage() {
                         className="mx-auto w-full max-w-[22rem] pt-2"
                         scrollClassName="py-3"
                         scrollAriaLabel="Admin product image thumbnails"
-                        syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                        syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
                       >
                         <div className="flex min-h-[1px] min-w-full w-max flex-row items-center justify-center gap-2 px-1 md:gap-3">
                           {detailsProduct.images.map((img, index) => {
@@ -734,7 +735,7 @@ export default function AdminProductsPage() {
                           <HorizontalScrollAffordance
                             showEdgeFades={false}
                             syncScrollEdgeLines
-                            syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                            syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
                             hideScrollbar
                             className="pt-2"
                             scrollClassName="py-3"
@@ -1102,7 +1103,7 @@ export default function AdminProductsPage() {
                           <HorizontalScrollAffordance
                             showEdgeFades={false}
                             syncScrollEdgeLines
-                            syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-800/38 to-primary-600/26 dark:from-neutral-600 dark:to-neutral-500"
+                            syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
                             hideScrollbar
                             className="pt-2"
                             scrollClassName="py-3"

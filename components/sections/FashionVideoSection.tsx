@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Play, Pause, Volume2, VolumeX, Maximize, Settings, SkipBack, SkipForward } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
+import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 
 const fashionVideos = [
   {
@@ -486,7 +487,7 @@ export default function FashionVideoSection() {
               className="w-full"
               scrollClassName="py-3"
               scrollAriaLabel="Video gallery thumbnails"
-              syncScrollEdgeLineClassName="bg-gradient-to-b from-primary-700/45 to-primary-500/28 dark:from-neutral-500 dark:to-neutral-400"
+              syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
             >
               <div className="flex min-h-[1px] min-w-full w-max flex-row justify-center gap-3 px-2 sm:gap-4 sm:px-4">
               {fashionVideos.map((video) => (

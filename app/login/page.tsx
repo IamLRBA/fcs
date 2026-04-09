@@ -148,7 +148,7 @@ export default function LoginPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-unified flex items-center justify-center px-4 pt-32 pb-16">
+    <div className="min-h-screen bg-unified flex items-center justify-center px-4 py-20">
       {/* Fixed Back Button */}
       <motion.div
         animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120, y: showBackButton ? 0 : -20 }}
@@ -161,7 +161,7 @@ export default function LoginPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="max-w-md w-full mt-12 pt-16">
+      <div className="max-w-md w-full mt-10 sm:mt-16 pt-16">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -169,7 +169,7 @@ export default function LoginPage() {
           className="hero-glass-frame relative backdrop-blur-lg rounded-2xl"
         >
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-          <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-8 border border-neutral-200 dark:border-neutral-700 login-form">
+          <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-6 sm:p-8 border border-neutral-200 dark:border-neutral-700 login-form">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">
               {isLogin ? 'Welcome Back' : 'Create Account'}
