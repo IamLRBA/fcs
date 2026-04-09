@@ -307,7 +307,7 @@ export default function ShopPage() {
             className="text-8xl sm:text-6xl md:text-8xl font-bold mb-6"
           >
             <span className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-              <HiOutlineShoppingBag className="w-64 h-64 sm:w-64 sm:h-64 md:w-40 md:h-40 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
+              <HiOutlineShoppingBag className="w-64 h-64 sm:w-64 sm:h-64 md:w-80 md:h-80 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
               <span className="text-gradient">ᔕᕼOᑭ</span>
             </span>
           </motion.h1>
@@ -353,9 +353,9 @@ export default function ShopPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
               viewport={{ once: true }}
-              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
+              className="flex w-full max-w-3xl flex-col items-center gap-8 md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:items-center md:gap-x-12 md:gap-y-0"
             >
-              <div className="flex flex-col items-center md:block">
+              <div className="flex flex-col items-center md:justify-self-center">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">01</div>
                 <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
@@ -384,9 +384,9 @@ export default function ShopPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
-              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
+              className="flex w-full max-w-3xl flex-col items-center gap-8 md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:items-center md:gap-x-12 md:gap-y-0"
             >
-              <div className="flex flex-col items-center md:block">
+              <div className="flex flex-col items-center md:justify-self-center">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">02</div>
                 <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
@@ -415,9 +415,9 @@ export default function ShopPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               viewport={{ once: true }}
-              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
+              className="flex w-full max-w-3xl flex-col items-center gap-8 md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:items-center md:gap-x-12 md:gap-y-0"
             >
-              <div className="flex flex-col items-center md:block">
+              <div className="flex flex-col items-center md:justify-self-center">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">03</div>
                 <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />

@@ -145,13 +145,13 @@ export default function CartPage() {
                     <div key={`${item.id}-${index}`}>
                       <div className="flex flex-col gap-4 p-6 sm:flex-row">
                         {/* Product Image */}
-                        <div className="relative h-32 w-full flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 dark:bg-primary-900/20 sm:w-32">
+                        <div className="relative mx-auto h-28 w-28 shrink-0 overflow-hidden rounded-lg bg-neutral-100 dark:bg-primary-900/20 sm:mx-0 sm:h-32 sm:w-32">
                           <SafeImage
                             src={item.image}
                             alt={item.name}
                             fill
                             className="object-cover"
-                            sizes="128px"
+                            sizes="(max-width: 639px) 112px, 128px"
                             loading="lazy"
                           />
                         </div>
