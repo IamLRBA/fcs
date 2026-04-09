@@ -482,18 +482,17 @@
 
 @layer components {
   /**
-   * Vertical rails on horizontal scrollers — 4px side borders (company-marquee style,
-   * strengthened). Do not rely on box-shadow alone: `.focus-ring-none` elsewhere uses
-   * box-shadow:none !important and was wiping inset shadows on the scrollport.
+   * Vertical rails beside horizontal scrollers — same rgba as company marquee borders
+   * (Companies.tsx). Straight bars (not the scrollport border-radius).
    */
-  .slider-sync-edge-inset-rails {
-    border-left: 4px solid rgba(111, 78, 55, 0.88);
-    border-right: 4px solid rgba(111, 78, 55, 0.88);
+  .slider-sync-edge-rail-bar {
+    width: 4px;
+    min-width: 4px;
+    background-color: rgba(139, 122, 90, 0.3);
   }
 
-  .dark .slider-sync-edge-inset-rails {
-    border-left-color: rgba(210, 188, 158, 0.95);
-    border-right-color: rgba(210, 188, 158, 0.95);
+  .dark .slider-sync-edge-rail-bar {
+    background-color: rgba(111, 78, 55, 0.4);
   }
 
   /* Button Styles - Mystical Future Gradient */
