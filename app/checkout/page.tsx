@@ -125,30 +125,22 @@ export default function CheckoutPage() {
       })
     }
     
-    // Send notifications (async, don't wait for completion)
-    try {
-      // Send emails
-      await Promise.all([
-        EmailTemplates.sendEmail(EmailTemplates.buyerConfirmation(order)),
-        EmailTemplates.sendEmail(EmailTemplates.sellerNotification(order))
-      ])
-      
-      // Send WhatsApp messages
-      // Business WhatsApp notification (always send)
-      await WhatsAppNotifications.sendWhatsApp(
-        WhatsAppNotifications.businessNotification(order)
-      )
-      
-      // Customer WhatsApp notification (if phone is on WhatsApp)
-      const isOnWhatsApp = await WhatsAppNotifications.isPhoneOnWhatsApp(order.customer.phone)
-      if (isOnWhatsApp) {
-        await WhatsAppNotifications.sendWhatsApp(
-          WhatsAppNotifications.customerConfirmation(order)
-        )
+    // When the order is saved via API, the server sends shop + customer email and WhatsApp immediately.
+    // Local-only orders (API unavailable) still notify from the client here.
+    if (!apiRes.ok) {
+      try {
+        await Promise.all([
+          EmailTemplates.sendEmail(EmailTemplates.buyerConfirmation(order)),
+          EmailTemplates.sendEmail(EmailTemplates.sellerNotification(order)),
+        ])
+        await WhatsAppNotifications.sendWhatsApp(WhatsAppNotifications.businessNotification(order))
+        const isOnWhatsApp = await WhatsAppNotifications.isPhoneOnWhatsApp(order.customer.phone)
+        if (isOnWhatsApp) {
+          await WhatsAppNotifications.sendWhatsApp(WhatsAppNotifications.customerConfirmation(order))
+        }
+      } catch (error) {
+        console.error('Error sending notifications:', error)
       }
-    } catch (error) {
-      console.error('Error sending notifications:', error)
-      // Don't block order confirmation if notifications fail
     }
     
     // Clear cart

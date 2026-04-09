@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { prismaOrderToClientOrder } from '@/lib/orders/prisma-order-map'
+import { notifyNewOrderPlaced } from '@/lib/orders/notify-new-order'
 
 export async function GET() {
   try {
@@ -93,6 +94,7 @@ export async function POST(request: Request) {
     })
 
     const order = prismaOrderToClientOrder(created)
+    void notifyNewOrderPlaced(order)
     const res = NextResponse.json(order, { status: 201 })
     res.headers.set('Cache-Control', 'no-store')
     return res
