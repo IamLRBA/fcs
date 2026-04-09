@@ -482,17 +482,20 @@
 
 @layer components {
   /**
-   * Vertical rails beside horizontal scrollers. Real CSS (not Tailwind arbitrary rgba)
-   * so colours always apply. Strong contrast vs company marquee borders.
+   * Vertical rails on horizontal scrollers — drawn with inset box-shadow on the
+   * scrollport so nothing can stack on top and hide them (same hues as company
+   * marquee borders, strengthened). Company slider section is unchanged.
    */
-  .slider-sync-edge-rail {
-    width: 5px;
-    min-width: 5px;
-    background-color: rgba(90, 62, 45, 0.88);
+  .slider-sync-edge-inset-rails {
+    box-shadow:
+      inset 4px 0 0 0 rgba(111, 78, 55, 0.78),
+      inset -4px 0 0 0 rgba(111, 78, 55, 0.78);
   }
 
-  .dark .slider-sync-edge-rail {
-    background-color: rgba(220, 200, 172, 0.96);
+  .dark .slider-sync-edge-inset-rails {
+    box-shadow:
+      inset 4px 0 0 0 rgba(210, 188, 158, 0.92),
+      inset -4px 0 0 0 rgba(210, 188, 158, 0.92);
   }
 
   /* Button Styles - Mystical Future Gradient */
