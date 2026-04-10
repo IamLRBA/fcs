@@ -99,6 +99,8 @@ export default function AccountPage() {
     return <SkeletonAccountPage />
   }
 
+  const userReviews = user.reviews ?? []
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -304,7 +306,7 @@ export default function AccountPage() {
                     </div>
                     <div className="group p-4 sm:p-5 rounded-xl border border-neutral-300/80 dark:border-neutral-600 bg-white/80 dark:bg-neutral-900/40 text-center sm:text-left">
                       <Star className="w-6 h-6 sm:w-7 sm:h-7 mb-2 sm:mb-3 mx-auto sm:mx-0 text-accent-600 dark:text-accent-400 transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-300" />
-                      <p className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.reviews?.length || 0}</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100">{userReviews.length}</p>
                       <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Reviews Written</p>
                     </div>
                     <div className="group p-4 sm:p-5 rounded-xl border border-neutral-300/80 dark:border-neutral-600 bg-white/80 dark:bg-neutral-900/40 text-center sm:text-left">
@@ -501,11 +503,11 @@ export default function AccountPage() {
                 <div>
                   <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 text-center">Your Reviews</h2>
                   <div className="text-center sm:text-left">
-                      {user.reviews && user.reviews.length > 0 ? (
+                      {userReviews.length > 0 ? (
                         <div className="flex flex-col items-center sm:items-stretch">
-                          {user.reviews.map((review, index) => (
+                          {userReviews.map((review, index) => (
                             <Fragment key={review.id}>
-                              {user.reviews.length > 1 && index > 0 ? (
+                              {userReviews.length > 1 && index > 0 ? (
                                 <div
                                   className="h-px w-full max-w-2xl shrink-0 bg-[linear-gradient(90deg,transparent_0%,rgba(38,36,36,0.3)_50%,transparent_100%)] dark:bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.3)_50%,transparent_100%)] my-4 sm:my-5 sm:max-w-none"
                                   role="presentation"
