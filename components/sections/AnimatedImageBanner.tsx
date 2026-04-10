@@ -45,7 +45,7 @@ export default function AnimatedImageBanner() {
               style={{
                 transform: `perspective(1000px) rotateY(${mousePosition.x}deg) rotateX(${mousePosition.y}deg)`
               }}
-              className="absolute inset-6 z-10 bg-transparent border border-transparent rounded-2xl overflow-hidden shadow-2xl"
+              className="absolute inset-6 z-10 bg-transparent border border-transparent rounded-2xl overflow-hidden shadow-none"
             >
             {/* Gradient overlay */}
             <motion.div
@@ -61,7 +61,7 @@ export default function AnimatedImageBanner() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="absolute inset-0 z-10 pointer-events-none"
+              className="absolute inset-0 z-10 pointer-events-none opacity-0"
             />
 
             {/* Image wrapper now fills container edge-to-edge */}
@@ -80,7 +80,7 @@ export default function AnimatedImageBanner() {
               <img
                 src="/assets/images/sections/home/hero-banner.jpg"
                 alt="Creative Banner"
-                className="absolute inset-0 rounded-2xl block"
+                className="absolute inset-0 rounded-2xl block shadow-2xl"
                 style={{
                   width: '100%',
                   height: '100%',

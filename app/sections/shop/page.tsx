@@ -81,7 +81,7 @@ const SHOP_PROCEDURES = [
     alt: 'Procedure step 1: open a product from its image',
     title: 'Click product image to visit product page',
     frameInner:
-      'bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-500/30 dark:border-primary-500/40',
+      'bg-transparent rounded-xl sm:rounded-2xl border border-transparent',
   },
   {
     num: '02',
@@ -89,7 +89,7 @@ const SHOP_PROCEDURES = [
     alt: 'Procedure step 2: jump to a category',
     title: 'Click/Select product category to visit directly',
     frameInner:
-      'bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-400/30 dark:border-primary-500/40',
+      'bg-transparent rounded-xl sm:rounded-2xl border border-transparent',
   },
   {
     num: '03',
@@ -97,7 +97,7 @@ const SHOP_PROCEDURES = [
     alt: 'Procedure step 3: add items to cart',
     title: 'Visit and add selected products to cart',
     frameInner:
-      'bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-200/30 dark:border-primary-500/40',
+      'bg-transparent rounded-xl sm:rounded-2xl border border-transparent',
   },
 ] as const
 
@@ -424,11 +424,7 @@ export default function ShopPage() {
                     ? 'text-lg opacity-70 sm:text-xl md:text-2xl lg:text-3xl'
                     : 'text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'
 
-                const padInner = isActive
-                  ? 'p-0.25 sm:p-0.5 md:p-0.5 lg:p-0.75'
-                  : isDimmed
-                    ? 'p-[1px] sm:p-0.25 md:p-0.5 lg:p-0.75'
-                    : 'p-0.25 sm:p-0.5 md:p-0.5 lg:p-0.75'
+                const padInner = 'p-0'
 
                 /* Square frames — wider on small screens so images read clearly; lg+ keeps left/center/right alignment */
                 const frameClass = isActive
@@ -477,7 +473,7 @@ export default function ShopPage() {
                             alt={proc.alt}
                             width={160}
                             height={160}
-                            className="size-full min-h-0 min-w-0 rounded-md object-cover sm:rounded-lg"
+                            className="size-full min-h-0 min-w-0 rounded-xl object-cover sm:rounded-2xl"
                             sizes="(max-width:640px) 120px, (max-width:768px) 128px, (max-width:1024px) 160px, 192px"
                             loading="lazy"
                           />
