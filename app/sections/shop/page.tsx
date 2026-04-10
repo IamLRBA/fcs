@@ -74,6 +74,33 @@ const moodNavItems = Object.keys(moodboardData).map((mood) => ({
   label: mood.charAt(0).toUpperCase() + mood.slice(1),
 }))
 
+const SHOP_PROCEDURES = [
+  {
+    num: '01',
+    src: '/assets/images/sections/fashion/shop-1.jpg',
+    alt: 'Click product image to visit product page',
+    title: 'Click product image to visit product page',
+    frameInner:
+      'bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-500/30 dark:border-primary-500/40',
+  },
+  {
+    num: '02',
+    src: '/assets/images/sections/fashion/shop-2.jpg',
+    alt: 'Click/Select product category to visit directly',
+    title: 'Click/Select product category to visit directly',
+    frameInner:
+      'bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-400/30 dark:border-primary-500/40',
+  },
+  {
+    num: '03',
+    src: '/assets/images/sections/fashion/shop-3.jpg',
+    alt: 'Visit and add selected products to cart',
+    title: 'Visit and add selected products to cart',
+    frameInner:
+      'bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-200/30 dark:border-primary-500/40',
+  },
+] as const
+
 export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -279,7 +306,7 @@ export default function ShopPage() {
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-unified relative overflow-hidden">
+    <div ref={containerRef} className="min-h-screen bg-unified relative overflow-x-clip">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -295,20 +322,23 @@ export default function ShopPage() {
       </motion.div>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center relative pt-20">
+      <section className="relative flex min-h-screen items-center justify-center overflow-visible pt-20">
         <motion.div
           style={{ y, opacity }}
-          className="text-center z-20 px-4"
+          className="z-20 overflow-visible px-4 text-center lg:px-8"
         >
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-8xl sm:text-6xl md:text-8xl font-bold mb-6"
+            className="text-8xl sm:text-6xl md:text-8xl font-bold mb-6 overflow-visible"
           >
-            <span className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-              <HiOutlineShoppingBag className="w-64 h-64 sm:w-64 sm:h-64 md:w-80 md:h-80 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
-              <span className="text-gradient">ᔕᕼOᑭ</span>
+            <span className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 lg:flex-nowrap lg:gap-20 xl:gap-28">
+              <HiOutlineShoppingBag
+                className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80 lg:origin-center lg:scale-[2]"
+                aria-hidden="true"
+              />
+              <span className="text-gradient shrink-0 lg:origin-center lg:scale-[3] lg:leading-none">ᔕᕼOᑭ</span>
             </span>
           </motion.h1>
           <motion.p
@@ -345,105 +375,109 @@ export default function ShopPage() {
           <p className="mx-auto mb-12 max-w-3xl text-center text-base md:text-lg text-neutral-700 dark:text-primary-300">
             Get familiar with our process, then proceed to check out products.
           </p>
-          
-          <div className="space-y-16 flex flex-col items-center">
-            {/* Philosophy Item 1 */}
+
+          <div className="mx-auto max-w-5xl space-y-10 sm:space-y-12 md:space-y-14">
+            {/* Row 1: procedure 1 (left) + procedure 2 (right), same line on all breakpoints */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-8 md:gap-12 lg:gap-16">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75, delay: 0.05 }}
+                viewport={{ once: true }}
+                className="flex min-w-0 flex-col items-start text-left"
+              >
+                <div className="text-3xl font-bold text-primary-500 dark:text-primary-600 sm:text-4xl md:text-5xl lg:text-6xl">
+                  {SHOP_PROCEDURES[0].num}
+                </div>
+                <div className="hero-glass-frame relative mt-2 w-full max-w-[9rem] backdrop-blur-md sm:mt-3 sm:max-w-[11rem] md:max-w-[13rem]">
+                  <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+                  <div
+                    className={`overflow-hidden shadow-lg sm:shadow-2xl ${SHOP_PROCEDURES[0].frameInner} p-3 sm:p-4 md:p-6 lg:p-8`}
+                  >
+                    <SafeImage
+                      src={SHOP_PROCEDURES[0].src}
+                      alt={SHOP_PROCEDURES[0].alt}
+                      width={96}
+                      height={96}
+                      className="h-14 w-14 rounded-md object-cover sm:h-16 sm:w-16 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl"
+                      sizes="(max-width:640px) 56px, (max-width:768px) 64px, (max-width:1024px) 80px, 96px"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <h3 className="mt-2 max-w-[11rem] text-xs font-semibold leading-snug text-neutral-850 dark:text-primary-50 sm:mt-3 sm:max-w-[13rem] sm:text-sm md:max-w-[15rem] md:text-base lg:max-w-xs lg:text-lg">
+                  {SHOP_PROCEDURES[0].title}
+                </h3>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75, delay: 0.12 }}
+                viewport={{ once: true }}
+                className="flex min-w-0 flex-col items-end text-right"
+              >
+                <div className="text-3xl font-bold text-primary-500 dark:text-primary-600 sm:text-4xl md:text-5xl lg:text-6xl">
+                  {SHOP_PROCEDURES[1].num}
+                </div>
+                <div className="hero-glass-frame relative mt-2 ml-auto w-full max-w-[9rem] backdrop-blur-md sm:mt-3 sm:max-w-[11rem] md:max-w-[13rem]">
+                  <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+                  <div
+                    className={`overflow-hidden shadow-lg sm:shadow-2xl ${SHOP_PROCEDURES[1].frameInner} p-3 sm:p-4 md:p-6 lg:p-8`}
+                  >
+                    <SafeImage
+                      src={SHOP_PROCEDURES[1].src}
+                      alt={SHOP_PROCEDURES[1].alt}
+                      width={96}
+                      height={96}
+                      className="ml-auto h-14 w-14 rounded-md object-cover sm:h-16 sm:w-16 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl"
+                      sizes="(max-width:640px) 56px, (max-width:768px) 64px, (max-width:1024px) 80px, 96px"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <h3 className="mt-2 max-w-[11rem] text-xs font-semibold leading-snug text-neutral-850 dark:text-primary-50 sm:mt-3 sm:max-w-[13rem] sm:text-sm md:max-w-[15rem] md:text-base lg:max-w-xs lg:text-lg">
+                  {SHOP_PROCEDURES[1].title}
+                </h3>
+              </motion.div>
+            </div>
+
+            {/* Row 2: procedure 3 centered */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
+              transition={{ duration: 0.75, delay: 0.18 }}
               viewport={{ once: true }}
-              className="flex w-full max-w-3xl flex-col items-center gap-8 md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:items-center md:gap-x-12 md:gap-y-0"
+              className="mx-auto flex w-full max-w-md flex-col items-center text-center sm:max-w-lg md:max-w-xl"
             >
-              <div className="flex flex-col items-center md:justify-self-center">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">01</div>
-                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
-                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
+              <div className="text-3xl font-bold text-primary-500 dark:text-primary-600 sm:text-4xl md:text-5xl lg:text-6xl">
+                {SHOP_PROCEDURES[2].num}
+              </div>
+              <div className="hero-glass-frame relative mt-2 w-full max-w-[9rem] backdrop-blur-md sm:mt-3 sm:max-w-[11rem] md:max-w-[13rem]">
+                <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+                <div
+                  className={`overflow-hidden shadow-lg sm:shadow-2xl ${SHOP_PROCEDURES[2].frameInner} p-3 sm:p-4 md:p-6 lg:p-8`}
+                >
                   <SafeImage
-                    src="/assets/images/sections/fashion/shop-1.jpg"
-                    alt="Click product image to visit product page"
+                    src={SHOP_PROCEDURES[2].src}
+                    alt={SHOP_PROCEDURES[2].alt}
                     width={96}
                     height={96}
-                    className="w-24 h-24 object-cover rounded-xl"
-                    sizes="96px"
+                    className="mx-auto h-14 w-14 rounded-md object-cover sm:h-16 sm:w-16 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl"
+                    sizes="(max-width:640px) 56px, (max-width:768px) 64px, (max-width:1024px) 80px, 96px"
                     loading="lazy"
                   />
                 </div>
-                </div>
               </div>
-              <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">01</div>
-                <h3 className="text-base md:text-lg font-semibold leading-snug max-w-sm mb-2 text-neutral-850 dark:text-primary-50">Click product image to visit product page</h3>
-              </div>
-            </motion.div>
-            
-            {/* Philosophy Item 2 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="flex w-full max-w-3xl flex-col items-center gap-8 md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:items-center md:gap-x-12 md:gap-y-0"
-            >
-              <div className="flex flex-col items-center md:justify-self-center">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">02</div>
-                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
-                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-400/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
-                  <SafeImage
-                    src="/assets/images/sections/fashion/shop-2.jpg"
-                    alt="Click/Select product category to visit directly"
-                    width={96}
-                    height={96}
-                    className="w-24 h-24 object-cover rounded-xl"
-                    sizes="96px"
-                    loading="lazy"
-                  />
-                </div>
-                </div>
-              </div>
-              <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">02</div>
-                <h3 className="text-base md:text-lg font-semibold leading-snug max-w-sm mb-2 text-neutral-850 dark:text-primary-50">Click/Select product category to visit directly</h3>
-              </div>
-            </motion.div>
-            
-            {/* Philosophy Item 3 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="flex w-full max-w-3xl flex-col items-center gap-8 md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:items-center md:gap-x-12 md:gap-y-0"
-            >
-              <div className="flex flex-col items-center md:justify-self-center">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">03</div>
-                <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
-                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-200/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8">
-                  <SafeImage
-                    src="/assets/images/sections/fashion/shop-3.jpg"
-                    alt="Visit and add selected products to cart"
-                    width={96}
-                    height={96}
-                    className="w-24 h-24 object-cover rounded-xl"
-                    sizes="96px"
-                    loading="lazy"
-                  />
-                </div>
-                </div>
-              </div>
-              <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">03</div>
-                <h3 className="text-base md:text-lg font-semibold leading-snug max-w-sm mb-2 text-neutral-850 dark:text-primary-50">Visit and add selected products to cart</h3>
-              </div>
+              <h3 className="mt-2 max-w-sm text-xs font-semibold leading-snug text-neutral-850 dark:text-primary-50 sm:mt-3 sm:max-w-md sm:text-sm md:max-w-lg md:text-base lg:text-lg">
+                {SHOP_PROCEDURES[2].title}
+              </h3>
             </motion.div>
           </div>
         </motion.div>
       </section>
 
-      {/* ⏣ Our PRODUCTS */}
+      {/* ⏣ Our Catalogue */}
       <FashionProducts />
 
       {/* Moodboard Section */}

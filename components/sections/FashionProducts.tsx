@@ -1,6 +1,6 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Plus, Minus, Quote } from 'lucide-react'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
@@ -166,14 +166,26 @@ const shopNavItemsRow2 = products.slice(3, 6).map((p) => ({ id: p.slug, label: p
 const row1Slugs = new Set(shopNavItemsRow1.map((i) => i.id))
 const row2Slugs = new Set(shopNavItemsRow2.map((i) => i.id))
 
+const CATALOGUE_SECTION_ID = 'our-catalogue'
+
 export default function FashionProducts() {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [hoveredThumbnail, setHoveredThumbnail] = useState<{serviceId: number, thumbIndex: number} | null>(null)
   const [shopActiveSlug, setShopActiveSlug] = useState<string>(products[0].slug)
 
+  /** Old bookmarks / links using #our-products still land on this section. */
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (window.location.hash !== '#our-products') return
+    const el = document.getElementById(CATALOGUE_SECTION_ID)
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const path = `${window.location.pathname}${window.location.search}#${CATALOGUE_SECTION_ID}`
+    window.history.replaceState(null, '', path)
+  }, [])
+
   const scrollToShopCategory = useCallback((slug: string) => {
     setShopActiveSlug(slug)
-    document.getElementById(`our-products-${slug}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.getElementById(`${CATALOGUE_SECTION_ID}-${slug}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [])
 
   const toggle = (id: number) => setExpandedId(expandedId === id ? null : id)
@@ -211,11 +223,11 @@ export default function FashionProducts() {
   }
   
   return (
-    <section id="our-products" className="py-20 px-4">
+    <section id={CATALOGUE_SECTION_ID} className="py-20 px-4">
       <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true }} className="max-w-7xl mx-auto">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-8 sm:mb-10">
           <span className="text-primary-500 dark:text-primary-100">⏣ Our</span>{' '}
-          <span className="text-neutral-700 dark:text-primary-300"> Products</span>
+          <span className="text-neutral-700 dark:text-primary-300"> Catalogue</span>
         </h2>
         <div className="mb-12 sm:mb-16 w-full max-w-5xl mx-auto px-2 sm:px-4">
           {/* Two compact pill rows on small screens; one bar from md up */}
@@ -254,7 +266,7 @@ export default function FashionProducts() {
             return (
               <motion.div
                 key={s.id}
-                id={`our-products-${s.slug}`}
+                id={`${CATALOGUE_SECTION_ID}-${s.slug}`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: i * 0.1 }}

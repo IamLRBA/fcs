@@ -620,7 +620,7 @@ export default function ProductCategoryPage() {
         className="fixed top-20 left-4 sm:left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop#our-products" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/sections/shop#our-catalogue" className="focus-ring-none inline-flex items-center gap-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="btn-unified-circle flex-shrink-0">⟸</span>
           <span className="text-sm font-medium">Back to Shop</span>
         </Link>
@@ -756,7 +756,7 @@ export default function ProductCategoryPage() {
                 </p>
                 <div className="hero-cta-buttons flex justify-center mt-6">
                   <Button
-                    href="/sections/shop#our-products"
+                    href="/sections/shop#our-catalogue"
                     variant="default"
                     size="md"
                     className="inline-flex items-center justify-center"

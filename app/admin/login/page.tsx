@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-unified flex items-center justify-center px-4 py-20">
+    <div className="min-h-screen bg-unified flex justify-center px-4 pb-20 pt-28 sm:pt-32 md:pt-36">
       {/* Fixed Back Button */}
       <motion.div
         animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -120, y: showBackButton ? 0 : -20 }}
@@ -60,7 +60,7 @@ export default function AdminLoginPage() {
           <span className="text-sm font-medium">Back</span>
         </Link>
       </motion.div>
-      <div className="max-w-md w-full mt-10 sm:mt-16 pt-16">
+      <div className="w-full max-w-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
