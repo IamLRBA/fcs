@@ -103,14 +103,14 @@ export default function HorizontalScrollAffordance({
   const railBarClass =
     (syncScrollEdgeLineClassName && syncScrollEdgeLineClassName.trim()) || SLIDER_SYNC_EDGE_LINE_CLASS
 
-  /* Do not use focus-ring-none on the scroller: it forces box-shadow: none !important. */
+  /* When keyboardFocusable, avoid focus-ring-none (it uses shadow !important). When false, need it so globals *:focus / .dark *:focus do not draw a ring on the region. */
   const scrollerClassName = [
     'overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain rounded-lg outline-none',
     ...(keyboardFocusable
       ? [
           'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400',
         ]
-      : ['focus:outline-none focus-visible:outline-none']),
+      : ['focus-ring-none']),
     hideScrollbar ? 'scrollbar-hide' : '[scrollbar-width:thin]',
     scrollClassName,
   ]
