@@ -130,7 +130,7 @@ export default function CEOTopGoatLists() {
           </p>
         </motion.div>
 
-        <ul className="grid list-none grid-cols-1 gap-4 p-0 m-0 md:gap-5 lg:grid-cols-2 lg:gap-6 lg:justify-items-stretch">
+        <ul className="grid list-none grid-cols-1 gap-4 p-0 m-0 md:gap-5 lg:grid-cols-2 lg:items-start lg:gap-6 lg:justify-items-stretch">
           {GOAT_LISTS.map((list, index) => {
             const isOpen = openId === index
             return (
@@ -146,14 +146,14 @@ export default function CEOTopGoatLists() {
                     : ''
                 }`}
               >
-                <div className="hero-glass-frame h-full rounded-2xl backdrop-blur-lg">
+                <div className="hero-glass-frame rounded-2xl backdrop-blur-lg">
                   <div
                     className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]"
                     aria-hidden
                   />
                   <button
                     type="button"
-                    onClick={() => setOpenId(isOpen ? null : index)}
+                    onClick={() => setOpenId((prev) => (prev === index ? null : index))}
                     className="focus-ring-none relative z-10 flex w-full items-start gap-4 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-800/15 to-primary-600/10 px-5 py-4 text-left transition-shadow duration-300 hover:border-primary-500/35 hover:shadow-lg dark:border-primary-500/35 dark:from-primary-900/30 dark:to-primary-800/15 dark:hover:border-primary-400/40 md:px-6 md:py-5"
                     aria-expanded={isOpen}
                   >
