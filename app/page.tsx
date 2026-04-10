@@ -133,8 +133,10 @@ export default function Home() {
                       <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4 xl:gap-7 2xl:gap-9">
                         <LogoMark animated size={250} className="md:scale-[0.8] md:-mb-16 xl:-mb-20 2xl:-mb-24" />
                         <div className="flex flex-col items-center gap-2 xl:gap-4 w-full">
-                          <h1 className="text-3xl sm:text-4xl md:text-7xl font-light leading-tight mb-1 xl:mb-3">
+                          <h1 className="relative text-3xl sm:text-4xl md:text-7xl font-light leading-tight mb-1 xl:mb-3">
+                            <span className="relative z-10">
                             <MysticalPiecesWord mysticalClassName="text-primary-800 dark:text-primary-100" piecesClassName="text-accent-600 dark:text-accent-400" />
+                            </span>
                           </h1>
                           <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full xl:my-1" />
                           <p className="text-lg xl:text-xl text-primary-600 dark:text-primary-300 max-w-2xl xl:mt-1">
