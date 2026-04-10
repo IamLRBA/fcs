@@ -55,11 +55,10 @@ function SubcategoryThumb({ paths, alt }: { paths: string[]; alt: string }) {
     <SafeImage
       src={src}
       alt={alt}
-      width={192}
-      height={192}
+      fill
       unoptimized
-      className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
-      sizes="(max-width: 640px) 80px, 96px"
+      className="w-full h-full object-cover rounded-2xl"
+      sizes="(max-width: 640px) 160px, 192px"
       loading="lazy"
       onError={() => setIdx((i) => (i < paths.length - 1 ? i + 1 : i))}
     />
@@ -639,13 +638,13 @@ export default function ProductCategoryPage() {
             {/* Main Product Image */}
             <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 sm:p-8">
+              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shrink-0 mx-auto">
                   <SafeImage
                     src={getMainProductImage(category)}
                     alt={`${categoryData.title} - Main Product Image`}
                     fill
-                    className="object-cover"
+                    className="w-full h-full object-cover rounded-2xl"
                     sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
                     priority
                   />
@@ -728,19 +727,21 @@ export default function ProductCategoryPage() {
             >
             <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 sm:p-8">
-                <SubcategoryThumb
-                  paths={(() => {
-                    const primary = getSubcategoryImage(category, section)
-                    const extra = getSubcategoryImageCandidates(category, section).filter((p) => p !== primary)
-                    const unique: string[] = []
-                    for (const p of [primary, ...extra, '/assets/images/placeholder.jpg']) {
-                      if (!unique.includes(p)) unique.push(p)
-                    }
-                    return unique
-                  })()}
-                  alt={`${section} - ${categoryData.title}`}
-                />
+              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shrink-0 mx-auto">
+                  <SubcategoryThumb
+                    paths={(() => {
+                      const primary = getSubcategoryImage(category, section)
+                      const extra = getSubcategoryImageCandidates(category, section).filter((p) => p !== primary)
+                      const unique: string[] = []
+                      for (const p of [primary, ...extra, '/assets/images/placeholder.jpg']) {
+                        if (!unique.includes(p)) unique.push(p)
+                      }
+                      return unique
+                    })()}
+                    alt={`${section} - ${categoryData.title}`}
+                  />
+                </div>
               </div>
             </div>
             </motion.div>

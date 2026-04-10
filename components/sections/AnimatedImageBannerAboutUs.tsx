@@ -43,7 +43,7 @@ export default function AnimatedImageBannerAboutUs() {
           style={{
             transform: `perspective(1000px) rotateY(${mousePosition.x}deg) rotateX(${mousePosition.y}deg)`
           }}
-          className="absolute inset-6 z-10 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl"
+          className="absolute inset-6 z-10 bg-transparent border border-transparent rounded-2xl overflow-hidden shadow-2xl"
         >
         {/* Gradient overlay */}
         <motion.div
@@ -62,7 +62,7 @@ export default function AnimatedImageBannerAboutUs() {
           className="absolute inset-0 z-10 pointer-events-none"
         />
 
-        {/* Image wrapper - fills brown with equal inset (0.5rem) so equal gap to glass on all sides */}
+        {/* Image wrapper now fills container edge-to-edge */}
         <motion.div
           animate={{
             scale: [0.95, 1, 0.95],
@@ -73,12 +73,12 @@ export default function AnimatedImageBannerAboutUs() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute inset-2 min-w-0 min-h-0 overflow-hidden rounded-lg"
+          className="absolute inset-0 min-w-0 min-h-0 overflow-hidden rounded-2xl"
         >
           <img
             src="/assets/images/sections/about-us/hero-banner.jpg"
             alt="About Us Banner"
-            className="absolute inset-0 rounded-xl block"
+            className="absolute inset-0 rounded-2xl block"
             style={{
               width: '100%',
               height: '100%',
