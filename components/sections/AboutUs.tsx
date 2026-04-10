@@ -44,6 +44,21 @@ const teamMembers: Array<{
   social: { kind: TeamSocialKind; href: string; label: string }[]
 }> = [
   {
+    id: 3,
+    name: 'ᗪIᑎGᗯᗩ',
+    position: 'Co/Founder & Curator',
+    description:
+      'The heart of the brand: Dingwa is a law degree student and a passionate fashion curator with an eye for unique finds and sustainable style. He has a specialty in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.',
+    image: '/assets/images/team/dingwa.jpg',
+    hoverImage: '/assets/images/team/dingwa-hover.jpg',
+    social: [
+      { kind: 'x', href: 'https://x.com/mulindwayusfu?s=21', label: "Dingwa's X" },
+      { kind: 'tiktok', href: 'https://www.tiktok.com/@dingwa0?_r=1&_t=ZS-95LcTo6uMfg', label: "Dingwa's TikTok" },
+      { kind: 'email', href: 'mailto:Mulindway3@gmail.com', label: "Dingwa's email" },
+      { kind: 'whatsapp', href: 'https://wa.me/256757087093', label: "Dingwa's WhatsApp" },
+    ],
+  },
+  {
     id: 1,
     name: 'ᒍOᔕᕼᑌᗩ',
     position: 'Creative Director',
@@ -73,21 +88,6 @@ const teamMembers: Array<{
       { kind: 'whatsapp', href: 'https://wa.me/256750571027', label: "Noah's WhatsApp" },
       { kind: 'email', href: 'mailto:ndacyayinoah@gmail.com', label: "Noah's email" },
       { kind: 'github', href: 'https://github.com/Ndacyayisenga-droid', label: "Noah's GitHub" },
-    ],
-  },
-  {
-    id: 3,
-    name: 'ᗪIᑎGᗯᗩ',
-    position: 'Fashion Curator',
-    description:
-      'The heart of the brand, Dingwa is a passionate fashion curator with an eye for unique finds and sustainable style. Dingwa specializes in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.',
-    image: '/assets/images/team/dingwa.jpg',
-    hoverImage: '/assets/images/team/dingwa-hover.jpg',
-    social: [
-      { kind: 'x', href: 'https://x.com/mulindwayusfu?s=21', label: "Dingwa's X" },
-      { kind: 'tiktok', href: 'https://www.tiktok.com/@dingwa0?_r=1&_t=ZS-95LcTo6uMfg', label: "Dingwa's TikTok" },
-      { kind: 'email', href: 'mailto:Mulindway3@gmail.com', label: "Dingwa's email" },
-      { kind: 'whatsapp', href: 'https://wa.me/256757087093', label: "Dingwa's WhatsApp" },
     ],
   },
 ]
@@ -169,20 +169,21 @@ export default function AboutUs() {
           </div>
         </motion.div>
 
-        {/* CEO Section */}
+        {/* Meet the team — CEO + team (single section title) */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-center mb-20"
+          className="mb-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8">ᗰEET Oᑌᖇ ᑕEO</h3>
-          
-          <div className="max-w-2xl mx-auto">
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8 text-center">
+            ᗰEET THE TEᗩᗩ
+          </h3>
+
+          <div className="text-center max-w-2xl mx-auto">
             <div className="relative group hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center w-full">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              {/* CEO Card - inner like hero animated image */}
               <div className="relative z-10 w-full bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <Image
@@ -202,10 +203,10 @@ export default function AboutUs() {
                     className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                   />
                 </div>
-                
+
                 <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-2">ᒪᖇᗷᗩ</h4>
                 <p className="text-lg text-primary-700 dark:text-primary-300 mb-6">CEO & Founder</p>
-                
+
                 <Button
                   href="/ceo-profile"
                   variant="default"
@@ -217,17 +218,14 @@ export default function AboutUs() {
               </div>
             </div>
           </div>
-        </motion.div>
 
-        {/* Team Members */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ TEᗩᗰ</h3>
-          
+          {/* Faded-end divider (same idea as footer-divider) */}
+          <div
+            className="mx-auto mt-12 mb-12 md:mt-14 md:mb-14 h-px w-full max-w-3xl bg-[linear-gradient(90deg,transparent_0%,rgba(38,36,36,0.3)_50%,transparent_100%)] dark:bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.3)_50%,transparent_100%)]"
+            role="presentation"
+            aria-hidden
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
               <motion.div

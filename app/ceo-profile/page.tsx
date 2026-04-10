@@ -26,6 +26,7 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 import EducationalJourney from '@/components/sections/EducationalJourney'
+import CEOTopGoatLists from '@/components/sections/CEOTopGoatLists'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
@@ -398,6 +399,8 @@ export default function CEOProfile() {
 
       {/* Educational Journey Section */}
       <EducationalJourney />
+
+      <CEOTopGoatLists />
 
       {/* Gallery Section — tighter gap below Educational Journey */}
       <section className="pt-10 md:pt-14 pb-36 px-4 mt-6 md:mt-8">
