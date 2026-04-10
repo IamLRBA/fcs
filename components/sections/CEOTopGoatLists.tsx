@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, ChevronDown } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 
 const GOAT_LISTS: { title: string; items: string[] }[] = [
   {
@@ -102,16 +102,8 @@ export default function CEOTopGoatLists() {
   const [openId, setOpenId] = useState<number | null>(null)
 
   return (
-    <section className="py-16 md:py-24 px-4 bg-unified relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
-        aria-hidden
-        style={{
-          backgroundImage: `radial-gradient(circle at 20% 30%, var(--color-accent-500) 0%, transparent 45%),
-            radial-gradient(circle at 80% 70%, var(--color-primary-500) 0%, transparent 40%)`,
-        }}
-      />
-      <div className="max-w-4xl mx-auto relative z-10">
+    <section className="py-16 md:py-24 px-4 relative">
+      <div className="max-w-4xl lg:max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -134,11 +126,11 @@ export default function CEOTopGoatLists() {
             <span className="text-accent-600 dark:text-accent-400">G.O.A.T ᒪISTᔕ</span>
           </h2>
           <p className="mt-4 text-primary-600 dark:text-primary-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-            Curated line-ups — tap a card to explore. Same energy as a trophy shelf, less noise than a wall of text.
+            Curated line-ups: tap a card to explore what I like.
           </p>
         </motion.div>
 
-        <ul className="space-y-4 md:space-y-5 list-none p-0 m-0">
+        <ul className="grid list-none grid-cols-1 gap-4 p-0 m-0 md:gap-5 lg:grid-cols-2 lg:gap-6 lg:justify-items-stretch">
           {GOAT_LISTS.map((list, index) => {
             const isOpen = openId === index
             return (
@@ -148,9 +140,13 @@ export default function CEOTopGoatLists() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.45, delay: index * 0.05 }}
-                className="relative"
+                className={`relative min-w-0 ${
+                  index === GOAT_LISTS.length - 1 && GOAT_LISTS.length % 2 === 1
+                    ? 'lg:col-span-2 lg:max-w-xl lg:justify-self-center'
+                    : ''
+                }`}
               >
-                <div className="hero-glass-frame rounded-2xl backdrop-blur-lg">
+                <div className="hero-glass-frame h-full rounded-2xl backdrop-blur-lg">
                   <div
                     className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]"
                     aria-hidden
@@ -158,36 +154,34 @@ export default function CEOTopGoatLists() {
                   <button
                     type="button"
                     onClick={() => setOpenId(isOpen ? null : index)}
-                    className="focus-ring-none relative z-10 w-full text-left rounded-2xl border border-primary-500/20 dark:border-primary-500/35 bg-gradient-to-br from-primary-800/15 to-primary-600/10 dark:from-primary-900/30 dark:to-primary-800/15 px-5 py-4 md:px-6 md:py-5 transition-shadow duration-300 hover:shadow-lg hover:border-primary-500/35 dark:hover:border-primary-400/40"
+                    className="focus-ring-none relative z-10 flex w-full items-start gap-4 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-800/15 to-primary-600/10 px-5 py-4 text-left transition-shadow duration-300 hover:border-primary-500/35 hover:shadow-lg dark:border-primary-500/35 dark:from-primary-900/30 dark:to-primary-800/15 dark:hover:border-primary-400/40 md:px-6 md:py-5"
                     aria-expanded={isOpen}
                   >
-                    <div className="flex items-start gap-4">
-                      <span
-                        className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-sm font-bold text-accent-700 dark:bg-accent-400/20 dark:text-accent-300 tabular-nums"
-                        aria-hidden
-                      >
-                        {index + 1}
+                    <span
+                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-sm font-bold text-accent-700 tabular-nums dark:bg-accent-400/20 dark:text-accent-300"
+                      aria-hidden
+                    >
+                      {index + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <span className="mb-0.5 block text-[10px] font-semibold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+                        GOAT
                       </span>
-                      <div className="min-w-0 flex-1">
-                        <span className="block text-[10px] font-semibold uppercase tracking-widest text-primary-500 dark:text-primary-400 mb-0.5">
-                          GOAT
-                        </span>
-                        <span className="text-lg md:text-xl font-bold text-primary-800 dark:text-primary-100 pr-2">
-                          {list.title}
-                        </span>
-                        <span className="mt-1 block text-xs text-primary-600 dark:text-primary-400">
-                          {list.items.length} picks
-                        </span>
-                      </div>
-                      <motion.span
-                        animate={{ rotate: isOpen ? 180 : 0 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-                        className="shrink-0 text-primary-600 dark:text-primary-400 mt-1"
-                        aria-hidden
-                      >
-                        <ChevronDown className="h-6 w-6" />
-                      </motion.span>
+                      <span className="block pr-2 text-lg font-bold text-primary-800 dark:text-primary-100 md:text-xl">
+                        {list.title}
+                      </span>
+                      <span className="mt-1 block text-xs text-primary-600 dark:text-primary-400">
+                        {list.items.length} picks
+                      </span>
                     </div>
+                    <motion.span
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="btn-unified-circle btn-unified-circle-sm mt-0.5 inline-flex shrink-0 items-center justify-center text-primary-600 dark:text-primary-400"
+                      aria-hidden
+                    >
+                      ⇓
+                    </motion.span>
                   </button>
 
                   <AnimatePresence initial={false}>
@@ -196,22 +190,22 @@ export default function CEOTopGoatLists() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+                        transition={{ duration: 0.2 }}
                         className="relative z-10 overflow-hidden rounded-b-2xl"
                       >
-                        <div className="border-t border-primary-500/15 dark:border-primary-500/25 px-5 pb-5 pt-4 md:px-6 md:pb-6">
+                        <div className="border-t border-primary-500/15 px-5 pb-5 pt-4 dark:border-primary-500/25 md:px-6 md:pb-6">
                           <motion.div
                             variants={container}
                             initial="hidden"
                             animate="show"
-                            className="flex flex-wrap gap-2 md:gap-2.5"
+                            className="flex flex-wrap justify-center gap-2 md:gap-2.5"
                           >
                             {list.items.map((item) => (
                               <motion.span
                                 key={item}
                                 variants={chip}
                                 transition={{ type: 'spring', stiffness: 380, damping: 22 }}
-                                className="inline-block rounded-full border border-primary-400/25 dark:border-primary-500/35 bg-primary-100/60 dark:bg-neutral-800/70 px-3 py-1.5 text-xs md:text-sm font-medium text-primary-800 dark:text-primary-100 shadow-sm"
+                                className="inline-block rounded-full border border-primary-400/25 bg-primary-100/60 px-3 py-1.5 text-center text-xs font-medium text-primary-800 shadow-sm dark:border-primary-500/35 dark:bg-neutral-800/70 dark:text-primary-100 md:text-sm"
                               >
                                 {item}
                               </motion.span>
