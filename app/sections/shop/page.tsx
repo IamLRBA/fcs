@@ -78,7 +78,7 @@ const SHOP_PROCEDURES = [
   {
     num: '01',
     src: '/assets/images/sections/fashion/shop-1.jpg',
-    alt: 'Click product image to visit product page',
+    alt: 'Procedure step 1: open a product from its image',
     title: 'Click product image to visit product page',
     frameInner:
       'bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-500/30 dark:border-primary-500/40',
@@ -86,7 +86,7 @@ const SHOP_PROCEDURES = [
   {
     num: '02',
     src: '/assets/images/sections/fashion/shop-2.jpg',
-    alt: 'Click/Select product category to visit directly',
+    alt: 'Procedure step 2: jump to a category',
     title: 'Click/Select product category to visit directly',
     frameInner:
       'bg-gradient-to-br from-primary-600/30 to-primary-400/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-400/30 dark:border-primary-500/40',
@@ -94,7 +94,7 @@ const SHOP_PROCEDURES = [
   {
     num: '03',
     src: '/assets/images/sections/fashion/shop-3.jpg',
-    alt: 'Visit and add selected products to cart',
+    alt: 'Procedure step 3: add items to cart',
     title: 'Visit and add selected products to cart',
     frameInner:
       'bg-gradient-to-br from-primary-400/30 to-primary-200/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl sm:rounded-2xl border border-primary-200/30 dark:border-primary-500/40',
@@ -127,6 +127,12 @@ export default function ShopPage() {
   const [imageUpdateQueue, setImageUpdateQueue] = useState<number[]>([])
   const [isUpdatingImages, setIsUpdatingImages] = useState(false)
   const [showBackButton, setShowBackButton] = useState(true)
+  /** Shopping procedure: which step is expanded (detail visible); null = compact overview */
+  const [activeProcedure, setActiveProcedure] = useState<number | null>(null)
+
+  const toggleProcedure = (index: number) => {
+    setActiveProcedure((prev) => (prev === index ? null : index))
+  }
 
   const looks = [
     {
@@ -331,21 +337,21 @@ export default function ShopPage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-8xl sm:text-6xl md:text-8xl font-bold mb-6 overflow-visible"
+            className="text-8xl sm:text-6xl md:text-8xl font-bold mb-8 overflow-visible pb-2 sm:pb-3 lg:pb-4"
           >
-            <span className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 lg:flex-nowrap lg:gap-20 xl:gap-28">
+            <span className="flex max-w-full flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-14 xl:gap-20">
               <HiOutlineShoppingBag
-                className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80 lg:origin-center lg:scale-[2]"
+                className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80"
                 aria-hidden="true"
               />
-              <span className="text-gradient shrink-0 lg:origin-center lg:scale-[3] lg:leading-none">ᔕᕼOᑭ</span>
+              <span className="text-gradient shrink-0 lg:origin-center lg:scale-[2] lg:leading-none">ᔕᕼOᑭ</span>
             </span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="text-base sm:text-xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed px-4"
+            className="text-base sm:text-xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed px-4 mt-2 sm:mt-3"
           >
             "Build a wardrobe that Is authentically yours"
           </motion.p>
@@ -372,107 +378,124 @@ export default function ShopPage() {
             <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Procedure</span>
           </h2>
-          <p className="mx-auto mb-12 max-w-3xl text-center text-base md:text-lg text-neutral-700 dark:text-primary-300">
-            Get familiar with our process, then proceed to check out products.
+          <p className="mx-auto mb-10 max-w-3xl text-center text-base md:text-lg text-neutral-700 dark:text-primary-300 leading-relaxed">
+            Get familiar with our process, then proceed to check out products.{' '}
+            <span className="mt-1 block font-medium text-primary-600 dark:text-primary-200">
+              Click on a number or image to discover each step.
+            </span>
           </p>
 
-          <div className="mx-auto max-w-5xl space-y-10 sm:space-y-12 md:space-y-14">
-            {/* Row 1: procedure 1 (left) + procedure 2 (right), same line on all breakpoints */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-8 md:gap-12 lg:gap-16">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, delay: 0.05 }}
-                viewport={{ once: true }}
-                className="flex min-w-0 flex-col items-start text-left"
-              >
-                <div className="text-3xl font-bold text-primary-500 dark:text-primary-600 sm:text-4xl md:text-5xl lg:text-6xl">
-                  {SHOP_PROCEDURES[0].num}
-                </div>
-                <div className="hero-glass-frame relative mt-2 w-full max-w-[9rem] backdrop-blur-md sm:mt-3 sm:max-w-[11rem] md:max-w-[13rem]">
-                  <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                  <div
-                    className={`overflow-hidden shadow-lg sm:shadow-2xl ${SHOP_PROCEDURES[0].frameInner} p-3 sm:p-4 md:p-6 lg:p-8`}
-                  >
-                    <SafeImage
-                      src={SHOP_PROCEDURES[0].src}
-                      alt={SHOP_PROCEDURES[0].alt}
-                      width={96}
-                      height={96}
-                      className="h-14 w-14 rounded-md object-cover sm:h-16 sm:w-16 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl"
-                      sizes="(max-width:640px) 56px, (max-width:768px) 64px, (max-width:1024px) 80px, 96px"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <h3 className="mt-2 max-w-[11rem] text-xs font-semibold leading-snug text-neutral-850 dark:text-primary-50 sm:mt-3 sm:max-w-[13rem] sm:text-sm md:max-w-[15rem] md:text-base lg:max-w-xs lg:text-lg">
-                  {SHOP_PROCEDURES[0].title}
-                </h3>
-              </motion.div>
+          <div className="mx-auto max-w-6xl px-1 sm:px-2">
+            <div className="grid min-h-0 grid-cols-3 gap-2 sm:gap-5 md:gap-10 lg:gap-14 xl:gap-16">
+              {SHOP_PROCEDURES.map((proc, index) => {
+                const isActive = activeProcedure === index
+                const isDimmed = activeProcedure !== null && !isActive
+                const colClass =
+                  index === 0
+                    ? 'items-start text-left'
+                    : index === 1
+                      ? 'items-center text-center'
+                      : 'items-end text-right'
+                const frameAlign = index === 0 ? 'self-start' : index === 1 ? 'self-center' : 'self-end'
 
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, delay: 0.12 }}
-                viewport={{ once: true }}
-                className="flex min-w-0 flex-col items-end text-right"
-              >
-                <div className="text-3xl font-bold text-primary-500 dark:text-primary-600 sm:text-4xl md:text-5xl lg:text-6xl">
-                  {SHOP_PROCEDURES[1].num}
-                </div>
-                <div className="hero-glass-frame relative mt-2 ml-auto w-full max-w-[9rem] backdrop-blur-md sm:mt-3 sm:max-w-[11rem] md:max-w-[13rem]">
-                  <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                  <div
-                    className={`overflow-hidden shadow-lg sm:shadow-2xl ${SHOP_PROCEDURES[1].frameInner} p-3 sm:p-4 md:p-6 lg:p-8`}
+                const numClass = isActive
+                  ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl'
+                  : isDimmed
+                    ? 'text-lg opacity-70 sm:text-xl md:text-2xl lg:text-3xl'
+                    : 'text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'
+
+                const padClass = isActive
+                  ? 'p-2 sm:p-3 md:p-5 lg:p-7'
+                  : isDimmed
+                    ? 'p-1.5 sm:p-2 md:p-3 lg:p-4'
+                    : 'p-2 sm:p-2.5 md:p-4 lg:p-5'
+
+                const imgClass = isActive
+                  ? 'h-10 w-10 rounded-md object-cover sm:h-14 sm:w-14 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl'
+                  : isDimmed
+                    ? 'h-7 w-7 rounded object-cover sm:h-9 sm:w-9 sm:rounded-md md:h-11 md:w-11 lg:h-12 lg:w-12 lg:rounded-lg'
+                    : 'h-8 w-8 rounded object-cover sm:h-11 sm:w-11 sm:rounded-md md:h-14 md:w-14 lg:h-16 lg:w-16 lg:rounded-lg'
+
+                const frameMax = isActive
+                  ? 'max-w-[5.5rem] sm:max-w-[8.5rem] md:max-w-[11rem] lg:max-w-[13rem] xl:max-w-[15rem]'
+                  : isDimmed
+                    ? 'max-w-[3.25rem] sm:max-w-[4.5rem] md:max-w-[6rem] lg:max-w-[7rem] xl:max-w-[8rem]'
+                    : 'max-w-[4rem] sm:max-w-[6rem] md:max-w-[8rem] lg:max-w-[10rem] xl:max-w-[11rem]'
+
+                return (
+                  <motion.div
+                    key={proc.num}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.06 }}
+                    viewport={{ once: true }}
+                    className={`flex min-w-0 flex-col ${colClass}`}
                   >
-                    <SafeImage
-                      src={SHOP_PROCEDURES[1].src}
-                      alt={SHOP_PROCEDURES[1].alt}
-                      width={96}
-                      height={96}
-                      className="ml-auto h-14 w-14 rounded-md object-cover sm:h-16 sm:w-16 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl"
-                      sizes="(max-width:640px) 56px, (max-width:768px) 64px, (max-width:1024px) 80px, 96px"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <h3 className="mt-2 max-w-[11rem] text-xs font-semibold leading-snug text-neutral-850 dark:text-primary-50 sm:mt-3 sm:max-w-[13rem] sm:text-sm md:max-w-[15rem] md:text-base lg:max-w-xs lg:text-lg">
-                  {SHOP_PROCEDURES[1].title}
-                </h3>
-              </motion.div>
+                    <motion.div
+                      layout
+                      transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                      animate={{
+                        scale: isActive ? 1.05 : isDimmed ? 0.9 : 1,
+                      }}
+                      className={`flex w-full flex-col ${colClass}`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => toggleProcedure(index)}
+                        className={`font-bold text-primary-500 transition-opacity hover:opacity-90 dark:text-primary-400 ${numClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-900 rounded-sm ${index === 1 ? 'mx-auto' : ''} ${index === 2 ? 'ml-auto' : ''}`}
+                        aria-expanded={isActive}
+                        aria-controls={`procedure-detail-${index}`}
+                        id={`procedure-num-${index}`}
+                        aria-label={`Procedure ${proc.num}: show step details`}
+                      >
+                        {proc.num}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleProcedure(index)}
+                        className={`hero-glass-frame relative mt-1.5 w-full backdrop-blur-md sm:mt-2 ${frameMax} ${frameAlign} cursor-pointer rounded-xl transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-900`}
+                        aria-expanded={isActive}
+                        aria-controls={`procedure-detail-${index}`}
+                        aria-label={`Procedure ${proc.num}: show step details`}
+                      >
+                        <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+                        <div
+                          className={`flex items-center justify-center overflow-hidden shadow-md sm:shadow-lg ${proc.frameInner} ${padClass}`}
+                        >
+                          <SafeImage
+                            src={proc.src}
+                            alt={proc.alt}
+                            width={112}
+                            height={112}
+                            className={imgClass}
+                            sizes="(max-width:640px) 36px, (max-width:768px) 48px, (max-width:1024px) 64px, 112px"
+                            loading="lazy"
+                          />
+                        </div>
+                      </button>
+                    </motion.div>
+
+                    <div className={`mt-2 min-h-0 w-full sm:mt-3 ${index === 1 ? 'mx-auto max-w-[95%]' : index === 2 ? 'ml-auto max-w-[95%]' : 'max-w-[95%]'}`}>
+                      <AnimatePresence initial={false}>
+                        {isActive ? (
+                          <motion.h3
+                            id={`procedure-detail-${index}`}
+                            role="region"
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                            className={`text-[0.65rem] font-semibold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs md:text-sm lg:text-base ${index === 1 ? 'text-center' : ''}`}
+                          >
+                            {proc.title}
+                          </motion.h3>
+                        ) : null}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                )
+              })}
             </div>
-
-            {/* Row 2: procedure 3 centered */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.18 }}
-              viewport={{ once: true }}
-              className="mx-auto flex w-full max-w-md flex-col items-center text-center sm:max-w-lg md:max-w-xl"
-            >
-              <div className="text-3xl font-bold text-primary-500 dark:text-primary-600 sm:text-4xl md:text-5xl lg:text-6xl">
-                {SHOP_PROCEDURES[2].num}
-              </div>
-              <div className="hero-glass-frame relative mt-2 w-full max-w-[9rem] backdrop-blur-md sm:mt-3 sm:max-w-[11rem] md:max-w-[13rem]">
-                <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                <div
-                  className={`overflow-hidden shadow-lg sm:shadow-2xl ${SHOP_PROCEDURES[2].frameInner} p-3 sm:p-4 md:p-6 lg:p-8`}
-                >
-                  <SafeImage
-                    src={SHOP_PROCEDURES[2].src}
-                    alt={SHOP_PROCEDURES[2].alt}
-                    width={96}
-                    height={96}
-                    className="mx-auto h-14 w-14 rounded-md object-cover sm:h-16 sm:w-16 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl"
-                    sizes="(max-width:640px) 56px, (max-width:768px) 64px, (max-width:1024px) 80px, 96px"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-              <h3 className="mt-2 max-w-sm text-xs font-semibold leading-snug text-neutral-850 dark:text-primary-50 sm:mt-3 sm:max-w-md sm:text-sm md:max-w-lg md:text-base lg:text-lg">
-                {SHOP_PROCEDURES[2].title}
-              </h3>
-            </motion.div>
           </div>
         </motion.div>
       </section>
