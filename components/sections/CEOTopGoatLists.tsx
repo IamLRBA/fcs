@@ -1,20 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
 
-const GOAT_LISTS: { title: string; items: string[] }[] = [
+const GOAT_LISTS: { title: string; image: string; items: string[] }[] = [
   {
     title: 'Marvel Characters Line-Up',
+    image: '/assets/images/sections/ceo/goat-lists/marvel-characters.jpg',
     items: ['Iron Man', 'Thor', 'Spiderman', 'Black Panther', 'Hulk', 'Wolverine'],
   },
   {
     title: 'Marvel Powershouse Line-Up',
+    image: '/assets/images/sections/ceo/goat-lists/marvel-powerhouse.jpg',
     items: ['Doctor Strange (Living Universe)', 'Scarlet Witch', 'Loki (god of stories)'],
   },
   {
     title: 'Ben 10 Aliens Line-Up',
+    image: '/assets/images/sections/ceo/goat-lists/ben10-aliens.jpg',
     items: [
       'Ultimate Echo Echo',
       'FeedBack',
@@ -32,14 +35,17 @@ const GOAT_LISTS: { title: string; items: string[] }[] = [
   },
   {
     title: 'Ben 10 Powerhouse Aliens',
+    image: '/assets/images/sections/ceo/goat-lists/ben10-powerhouse.jpg',
     items: ['Alien x', 'Atomix', 'ClockWork', 'Gravattack'],
   },
   {
     title: 'Transformers Line-Up',
+    image: '/assets/images/sections/ceo/goat-lists/transformers.jpg',
     items: ['BumbleBee', 'Mirage', 'IronHide', 'CrossHairs', 'HotRod', 'SideSwipe'],
   },
   {
     title: 'Anime Shows',
+    image: '/assets/images/sections/ceo/goat-lists/anime.jpg',
     items: [
       'Jujutsu Kaisen',
       'Demon Slayer',
@@ -48,10 +54,12 @@ const GOAT_LISTS: { title: string; items: string[] }[] = [
       'Solo Levelling',
       'Gachiakuta',
       'Chainsawman',
+      'Kengan Ashura',
     ],
   },
   {
     title: 'TV Shows',
+    image: '/assets/images/sections/ceo/goat-lists/tv-shows.jpg',
     items: [
       'Game of Thrones',
       'Prison Break',
@@ -66,10 +74,12 @@ const GOAT_LISTS: { title: string; items: string[] }[] = [
   },
   {
     title: 'Essentials',
+    image: '/assets/images/sections/ceo/goat-lists/essentials.jpg',
     items: ['Foods', 'Electronics', 'Toiletries', 'Outfits', 'Backpack'],
   },
   {
     title: 'Sneakers',
+    image: '/assets/images/sections/ceo/goat-lists/sneakers.jpg',
     items: [
       'J1s "Chicago OG"',
       'AF1s "Allwhite"',
@@ -81,7 +91,8 @@ const GOAT_LISTS: { title: string; items: string[] }[] = [
   },
   {
     title: 'Rappers',
-    items: ['J.Cole', 'Eminem', 'Kendrick Lamar'],
+    image: '/assets/images/sections/ceo/goat-lists/rappers.jpg',
+    items: ['J.Cole', 'Eminem', 'Kendrick Lamar', 'Ye'],
   },
 ]
 
@@ -100,6 +111,27 @@ const chip = {
 
 export default function CEOTopGoatLists() {
   const [openId, setOpenId] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (openId === null) return
+
+    const closeOnOutsideClick = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement | null
+      if (!target) return
+      const clickedInsideCard = Boolean(target.closest('[data-goat-card="true"]'))
+      if (!clickedInsideCard) {
+        setOpenId(null)
+      }
+    }
+
+    document.addEventListener('mousedown', closeOnOutsideClick)
+    document.addEventListener('touchstart', closeOnOutsideClick, { passive: true })
+
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick)
+      document.removeEventListener('touchstart', closeOnOutsideClick)
+    }
+  }, [openId])
 
   return (
     <section className="py-16 md:py-24 px-4 relative">
@@ -136,6 +168,7 @@ export default function CEOTopGoatLists() {
             return (
               <motion.li
                 key={list.title}
+                data-goat-card="true"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
@@ -154,30 +187,42 @@ export default function CEOTopGoatLists() {
                   <button
                     type="button"
                     onClick={() => setOpenId((prev) => (prev === index ? null : index))}
-                    className="focus-ring-none relative z-10 flex w-full items-start gap-4 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-800/15 to-primary-600/10 px-5 py-4 text-left transition-shadow duration-300 hover:border-primary-500/35 hover:shadow-lg dark:border-primary-500/35 dark:from-primary-900/30 dark:to-primary-800/15 dark:hover:border-primary-400/40 md:px-6 md:py-5"
+                    className="focus-ring-none relative z-10 flex w-full items-center gap-3 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-800/15 to-primary-600/10 px-4 py-4 text-left transition-shadow duration-300 hover:border-primary-500/35 hover:shadow-lg dark:border-primary-500/35 dark:from-primary-900/30 dark:to-primary-800/15 dark:hover:border-primary-400/40 md:gap-4 md:px-6 md:py-5"
                     aria-expanded={isOpen}
                   >
                     <span
-                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-sm font-bold text-accent-700 tabular-nums dark:bg-accent-400/20 dark:text-accent-300"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-500/15 text-sm font-bold text-accent-700 tabular-nums dark:bg-accent-400/20 dark:text-accent-300"
                       aria-hidden
                     >
                       {index + 1}
                     </span>
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 flex-1 pr-1">
                       <span className="mb-0.5 block text-[10px] font-semibold uppercase tracking-widest text-primary-500 dark:text-primary-400">
                         GOAT
                       </span>
-                      <span className="block pr-2 text-lg font-bold text-primary-800 dark:text-primary-100 md:text-xl">
+                      <span className="block max-w-full break-words text-lg font-bold text-primary-800 dark:text-primary-100 md:text-xl">
                         {list.title}
                       </span>
                       <span className="mt-1 block text-xs text-primary-600 dark:text-primary-400">
                         {list.items.length} picks
                       </span>
                     </div>
+                    <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-primary-500/25 bg-primary-900/20 shadow-sm md:h-14 md:w-14">
+                      <img
+                        src={list.image}
+                        alt={`${list.title} visual`}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.src = '/assets/images/placeholder.jpg'
+                        }}
+                      />
+                    </span>
                     <motion.span
                       animate={{ rotate: isOpen ? 180 : 0 }}
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      className="btn-unified-circle btn-unified-circle-sm mt-0.5 inline-flex shrink-0 items-center justify-center text-primary-600 dark:text-primary-400"
+                      className="btn-unified-circle btn-unified-circle-sm inline-flex shrink-0 self-center items-center justify-center text-primary-600 dark:text-primary-400"
                       aria-hidden
                     >
                       ⇓

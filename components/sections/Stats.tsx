@@ -176,8 +176,8 @@ export default function Stats() {
         <motion.div style={{ y: titleY, scale: titleScale }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
           <div className="hero-glass-frame relative inline-flex flex-shrink-0 backdrop-blur-lg mx-auto mb-6">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-            <motion.div initial={{ scale: 0, rotate: -180 }} whileInView={{ scale: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }} className="w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8 flex items-center justify-center">
-              <img src="/assets/images/sections/stats/impact-icon.jpg" alt="Impact Icon" className="w-24 h-24 object-cover rounded-xl" />
+            <motion.div initial={{ scale: 0, rotate: -180 }} whileInView={{ scale: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }} className="w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
+              <img src="/assets/images/sections/stats/impact-icon.jpg" alt="Impact Icon" className="w-full h-full object-cover rounded-2xl" />
             </motion.div>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">Oᑌᖇ <span className="text-accent-600 dark:text-accent-300">IᗰᑭᗩᑕT</span> Iᑎ ᑎᑌᗰᗷEᖇᔕ</h2>

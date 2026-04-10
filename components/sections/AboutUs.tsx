@@ -370,13 +370,13 @@ export default function AboutUs() {
               >
                 <div className={`flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl inline-flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 ${index % 2 === 0 ? 'ml-0 mr-auto' : 'mr-0 ml-auto'}`}>
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                  <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8 flex items-center justify-center">
+                  <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
                     <Image 
                       src={value.image} 
                       alt={`${value.title} value icon`}
-                      width={96}
-                      height={96}
-                      className="w-24 h-24 object-cover rounded-xl"
+                      width={160}
+                      height={160}
+                      className="w-full h-full object-cover rounded-2xl"
                       loading="lazy"
                     />
                   </div>
@@ -442,13 +442,13 @@ export default function AboutUs() {
                   {/* Image Container - same spacing as Stats impact icon */}
                   <div className="flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center">
                     <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                    <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl p-8 flex items-center justify-center">
+                    <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
                       <Image 
                         src={mission.image} 
                         alt={`${mission.title} mission icon`}
-                        width={96}
-                        height={96}
-                        className="w-24 h-24 object-cover rounded-xl"
+                        width={160}
+                        height={160}
+                        className="w-full h-full object-cover rounded-2xl"
                         loading="lazy"
                       />
                     </div>

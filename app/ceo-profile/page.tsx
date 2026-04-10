@@ -273,40 +273,40 @@ export default function CEOProfile() {
                                        {/* Image Container */}
                     <div className={`hero-glass-frame relative flex-shrink-0 rounded-2xl overflow-hidden backdrop-blur-lg ${index % 2 === 0 ? 'self-start' : 'self-end'}`}>
                       <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
-                      <div className="relative bg-gradient-to-br from-primary-800/25 to-primary-600/25 dark:from-primary-800/35 dark:to-primary-600/35 rounded-2xl border border-primary-500/25 dark:border-primary-500/40 overflow-hidden shadow-2xl p-6 md:p-8">
+                      <div className="relative bg-gradient-to-br from-primary-800/25 to-primary-600/25 dark:from-primary-800/35 dark:to-primary-600/35 rounded-2xl border border-primary-500/25 dark:border-primary-500/40 overflow-hidden shadow-2xl w-36 h-36 md:w-40 md:h-40">
                       {skill.category === '⾕ ᗩᖇᑕᕼITEᑕTᑌᖇE' && (
                         <img 
                           src="/assets/images/sections/ceo/architecture.jpg" 
                           alt="Architecture" 
-                          className="w-24 h-24 object-cover rounded-xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
                         />
                       )}
                       {skill.category === 'ᗰᑌֆIᑕ ᗩᑎᗪ ᑭOETᖇY 𝄞' && (
                         <img 
                           src="/assets/images/sections/ceo/music.jpg" 
                           alt="Music and Poetry" 
-                          className="w-24 h-24 object-cover rounded-xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
                         />
                       )}
                       {skill.category === '☯ ᗩᖇT ᗩᑎᗪ ᗪEᔕIGᑎ' && (
                         <img 
                           src="/assets/images/sections/ceo/art.jpg" 
                           alt="Art and Design" 
-                          className="w-24 h-24 object-cover rounded-xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
                         />
                       )}
                       {skill.category === 'ᔕOᖴTᗯᗩᖇE ᗪEᐯEᒪOᑭᗰEᑎT ⚛' && (
                         <img 
                           src="/assets/images/sections/ceo/coding.jpg" 
                           alt="Software Development" 
-                          className="w-24 h-24 object-cover rounded-xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
                         />
                       )}
                       {skill.category === '✃ ᖴᗩᔕᕼIOᑎ' && (
                         <img 
                           src="/assets/images/sections/ceo/fashion.jpg" 
                           alt="Fashion" 
-                          className="w-24 h-24 object-cover rounded-xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
                         />
                       )}
                       </div>
