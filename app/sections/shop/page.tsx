@@ -414,14 +414,9 @@ export default function ShopPage() {
                   index === 0
                     ? 'items-start text-left'
                     : index === 1
-                      ? 'items-end text-right'
-                      : 'items-center text-center'
-                const frameAlign =
-                  index === 0
-                    ? 'self-start'
-                    : index === 1
-                      ? 'self-end'
-                      : 'self-center'
+                      ? 'items-center text-center'
+                      : 'items-end text-right'
+                const frameAlign = index === 0 ? 'self-start' : index === 1 ? 'self-center' : 'self-end'
 
                 const numClass = isActive
                   ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl'
@@ -430,17 +425,17 @@ export default function ShopPage() {
                     : 'text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'
 
                 const padInner = isActive
-                  ? 'p-1 sm:p-1.25 md:p-1.5 lg:p-2'
+                  ? 'p-0.5 sm:p-0.75 md:p-1 lg:p-1.25'
                   : isDimmed
-                    ? 'p-0.75 sm:p-1 md:p-1.25 lg:p-1.5'
-                    : 'p-1 sm:p-1.25 md:p-1.5 lg:p-2'
+                    ? 'p-0.35 sm:p-0.5 md:p-0.75 lg:p-1'
+                    : 'p-0.5 sm:p-0.75 md:p-1 lg:p-1.25'
 
                 /* Square frames — wider on small screens so images read clearly; lg+ keeps left/center/right alignment */
                 const frameClass = isActive
-                  ? 'aspect-square w-[min(31vw,7.85rem)] sm:w-[6.85rem] md:w-[8.15rem] lg:w-[9.6rem] xl:w-[10.9rem]'
+                  ? 'aspect-square w-[min(31vw,7.85rem)] sm:w-[6.85rem] md:w-[8.15rem] lg:w-[10.35rem] xl:w-[11.75rem]'
                   : isDimmed
-                    ? 'aspect-square w-[min(25vw,6.1rem)] sm:w-[4.85rem] md:w-[5.85rem] lg:w-[5.95rem] xl:w-[6.65rem]'
-                    : 'aspect-square w-[min(29vw,7.2rem)] sm:w-[6.25rem] md:w-[7.2rem] lg:w-[7.9rem] xl:w-[8.9rem]'
+                    ? 'aspect-square w-[min(25vw,6.1rem)] sm:w-[4.85rem] md:w-[5.85rem] lg:w-[6.6rem] xl:w-[7.35rem]'
+                    : 'aspect-square w-[min(29vw,7.2rem)] sm:w-[6.25rem] md:w-[7.2rem] lg:w-[8.7rem] xl:w-[9.9rem]'
 
                 return (
                   <motion.div
@@ -461,7 +456,7 @@ export default function ShopPage() {
                     >
                       <span
                         id={`procedure-num-${index}`}
-                        className={`font-bold text-primary-500 dark:text-primary-400 ${numClass} select-none ${index === 1 ? 'ml-auto' : ''} ${index === 2 ? 'mx-auto' : ''}`}
+                        className={`font-bold text-primary-500 dark:text-primary-400 ${numClass} select-none ${index === 1 ? 'mx-auto' : ''} ${index === 2 ? 'ml-auto' : ''}`}
                       >
                         {proc.num}
                       </span>
