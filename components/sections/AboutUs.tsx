@@ -63,7 +63,7 @@ const teamMembers: Array<{
     name: 'ᒍOᔕᕼᑌᗩ',
     position: 'Creative Director',
     description:
-      'A visionary creative director with over 8 years of experience in fashion curation and style direction. Joshua leads our artistic vision and ensures every piece meets the highest style standards.',
+      'A visionary creative director with over 8 years of experience in style direction and marketing. Joshua leads our artistic vision and ensures every piece meets the highest style standards.',
     image: '/assets/images/team/joshua-nsereko.jpg',
     hoverImage: '/assets/images/team/joshua-nsereko-hover.jpg',
     social: [
@@ -178,7 +178,7 @@ export default function AboutUs() {
           className="mb-20"
         >
           <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8 text-center">
-            ᗰEET THE TEᗩᗩ
+            ᗰEET THE TEᗩᗰ
           </h3>
 
           <div className="text-center max-w-2xl mx-auto">
