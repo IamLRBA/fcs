@@ -186,29 +186,10 @@ function ProductSectionCards({
     }
     if (!scrollport) return
 
-    const parseGapPx = (el: HTMLElement) => {
-      const g = getComputedStyle(el).gap || getComputedStyle(el).columnGap
-      const n = parseFloat(g)
-      return Number.isFinite(n) ? n : 16
-    }
-
     const measure = () => {
-      const mdUp = typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
-
-      if (mdUp) {
-        const gap = parseGapPx(inner)
-        const kids = Array.from(inner.children) as HTMLElement[]
-        let contentW = 0
-        kids.forEach((k, i) => {
-          contentW += k.offsetWidth
-          if (i > 0) contentW += gap
-        })
-        const overflow = contentW > scrollport.clientWidth + 2
-        setRowMode(overflow ? 'scroll' : 'center')
-      } else {
-        const overflow = inner.scrollWidth > scrollport.clientWidth + 2
-        setRowMode(overflow ? 'scroll' : 'center')
-      }
+      /** Same as mobile: real scroll width (incl. padding) vs viewport — manual child sum missed padding and misclassified desktop rows. */
+      const overflow = inner.scrollWidth > scrollport.clientWidth + 2
+      setRowMode(overflow ? 'scroll' : 'center')
     }
 
     measure()
