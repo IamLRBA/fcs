@@ -356,17 +356,15 @@ export default function ShopPage() {
             transition={{ duration: 1 }}
             className="text-8xl sm:text-6xl md:text-8xl font-bold mb-8 overflow-visible pb-2 sm:pb-3 lg:pb-4"
           >
-            {/* flex-1 spacers: equal viewport margin left of icon & right of wordmark (lg+); uniform scale on large screens */}
+            {/* flex-1 spacers: equal space from screen edges to the icon/wordmark group; icon + ᔕᕼOᑭ sizes unchanged on large screens */}
             <span className="flex w-full max-w-full items-center">
               <span className="min-w-0 flex-1 shrink" aria-hidden />
-              <span className="inline-flex max-w-full shrink-0 flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12 2xl:gap-14 origin-center lg:scale-[1.78] xl:scale-[1.92] 2xl:scale-[2.06]">
+              <span className="inline-flex max-w-full shrink-0 flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-20 xl:gap-28">
                 <HiOutlineShoppingBag
-                  className="h-52 w-52 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-56 sm:w-56 md:h-64 md:w-64 lg:h-[4.1rem] lg:w-[4.1rem] xl:h-[4.35rem] xl:w-[4.35rem] 2xl:h-[4.6rem] 2xl:w-[4.6rem]"
+                  className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80"
                   aria-hidden="true"
                 />
-                <span className="text-gradient shrink-0 text-6xl leading-none sm:text-7xl md:text-8xl lg:text-5xl xl:text-6xl 2xl:text-7xl">
-                  ᔕᕼOᑭ
-                </span>
+                <span className="text-gradient shrink-0 lg:origin-center lg:scale-[2] lg:leading-none">ᔕᕼOᑭ</span>
               </span>
               <span className="min-w-0 flex-1 shrink" aria-hidden />
             </span>
@@ -398,27 +396,32 @@ export default function ShopPage() {
           viewport={{ once: true }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
+          <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl mb-10 text-center sm:mb-12 md:mb-14">
             <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Procedure</span>
           </h2>
           <div ref={procedureInteractRef} className="mx-auto max-w-6xl">
             <p className="mx-auto mb-10 max-w-3xl px-2 text-center text-base md:text-lg font-medium text-primary-600 dark:text-primary-200 leading-relaxed">
-              Click on a number or image to discover each step.
+              Click on an image to discover each step.
             </p>
 
             <div className="px-1 sm:px-2">
-            <div className="grid min-h-0 grid-cols-3 gap-2 sm:gap-5 md:gap-10 lg:gap-14 xl:gap-16">
+            <div className="grid min-h-0 grid-cols-3 max-lg:justify-items-center gap-3 sm:gap-5 md:gap-10 lg:gap-14 xl:gap-16">
               {SHOP_PROCEDURES.map((proc, index) => {
                 const isActive = activeProcedure === index
                 const isDimmed = activeProcedure !== null && !isActive
                 const colClass =
                   index === 0
-                    ? 'items-start text-left'
+                    ? 'max-lg:items-center max-lg:text-center lg:items-start lg:text-left'
                     : index === 1
                       ? 'items-center text-center'
-                      : 'items-end text-right'
-                const frameAlign = index === 0 ? 'self-start' : index === 1 ? 'self-center' : 'self-end'
+                      : 'max-lg:items-center max-lg:text-center lg:items-end lg:text-right'
+                const frameAlign =
+                  index === 0
+                    ? 'max-lg:self-center lg:self-start'
+                    : index === 1
+                      ? 'self-center'
+                      : 'max-lg:self-center lg:self-end'
 
                 const numClass = isActive
                   ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl'
@@ -432,12 +435,12 @@ export default function ShopPage() {
                     ? 'p-1 sm:p-1.5 md:p-2'
                     : 'p-1.5 sm:p-2 md:p-2.5 lg:p-3'
 
-                /* Square frames at all breakpoints — width drives height via aspect-square */
+                /* Square frames — wider on small screens so images read clearly; lg+ keeps left/center/right alignment */
                 const frameClass = isActive
-                  ? 'w-[4rem] sm:w-[5.75rem] md:w-[7.25rem] lg:w-[8.75rem] xl:w-[10rem] aspect-square'
+                  ? 'aspect-square w-[min(30vw,7.25rem)] sm:w-[6.25rem] md:w-[7.25rem] lg:w-[8.75rem] xl:w-[10rem]'
                   : isDimmed
-                    ? 'w-[2.7rem] sm:w-[3.35rem] md:w-[4.1rem] lg:w-[5.25rem] xl:w-[6rem] aspect-square'
-                    : 'w-[3.35rem] sm:w-[4.5rem] md:w-[5.85rem] lg:w-[7.1rem] xl:w-[8.1rem] aspect-square'
+                    ? 'aspect-square w-[min(24vw,5.75rem)] sm:w-[4.5rem] md:w-[5.25rem] lg:w-[5.25rem] xl:w-[6rem]'
+                    : 'aspect-square w-[min(28vw,6.75rem)] sm:w-[5.75rem] md:w-[6.5rem] lg:w-[7.1rem] xl:w-[8.1rem]'
 
                 return (
                   <motion.div
@@ -446,7 +449,7 @@ export default function ShopPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.06 }}
                     viewport={{ once: true }}
-                    className={`flex min-w-0 flex-col ${colClass}`}
+                    className={`flex min-w-0 w-full max-w-full flex-col lg:max-w-none ${colClass}`}
                   >
                     <motion.div
                       layout
@@ -454,26 +457,21 @@ export default function ShopPage() {
                       animate={{
                         scale: isActive ? 1.05 : isDimmed ? 0.9 : 1,
                       }}
-                      className={`flex w-full flex-col ${colClass}`}
+                      className={`flex w-full max-w-full flex-col lg:max-w-none ${colClass}`}
                     >
-                      <button
-                        type="button"
-                        onClick={() => toggleProcedure(index)}
-                        className={`font-bold text-primary-500 transition-opacity hover:opacity-90 dark:text-primary-400 ${numClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-900 rounded-sm ${index === 1 ? 'mx-auto' : ''} ${index === 2 ? 'ml-auto' : ''}`}
-                        aria-expanded={isActive}
-                        aria-controls={`procedure-detail-${index}`}
+                      <span
                         id={`procedure-num-${index}`}
-                        aria-label={`Procedure ${proc.num}: show step details`}
+                        className={`font-bold text-primary-500 dark:text-primary-400 ${numClass} select-none ${index === 1 ? 'mx-auto' : ''} ${index === 2 ? 'max-lg:mx-auto lg:ml-auto' : ''} ${index === 0 ? 'max-lg:mx-auto' : ''}`}
                       >
                         {proc.num}
-                      </button>
+                      </span>
                       <button
                         type="button"
                         onClick={() => toggleProcedure(index)}
                         className={`hero-glass-frame relative mt-1.5 shrink-0 overflow-hidden rounded-xl backdrop-blur-md sm:mt-2 ${frameClass} ${frameAlign} cursor-pointer shadow-md transition-shadow hover:shadow-md focus-ring-none focus:outline-none sm:shadow-lg`}
                         aria-expanded={isActive}
                         aria-controls={`procedure-detail-${index}`}
-                        aria-label={`Procedure ${proc.num}: show step details`}
+                        aria-label={`Step ${proc.num}: tap to show or hide instructions`}
                       >
                         <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 z-[1]" aria-hidden />
                         <div
@@ -485,7 +483,7 @@ export default function ShopPage() {
                             width={160}
                             height={160}
                             className="size-full min-h-0 min-w-0 rounded-md object-cover sm:rounded-lg"
-                            sizes="(max-width:640px) 64px, (max-width:768px) 96px, (max-width:1024px) 128px, 160px"
+                            sizes="(max-width:640px) 120px, (max-width:768px) 128px, (max-width:1024px) 160px, 192px"
                             loading="lazy"
                           />
                         </div>
