@@ -425,10 +425,10 @@ export default function ShopPage() {
                     : 'text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'
 
                 const padInner = isActive
-                  ? 'p-0.5 sm:p-0.75 md:p-1 lg:p-1.25'
+                  ? 'p-0.25 sm:p-0.5 md:p-0.5 lg:p-0.75'
                   : isDimmed
-                    ? 'p-0.35 sm:p-0.5 md:p-0.75 lg:p-1'
-                    : 'p-0.5 sm:p-0.75 md:p-1 lg:p-1.25'
+                    ? 'p-[1px] sm:p-0.25 md:p-0.5 lg:p-0.75'
+                    : 'p-0.25 sm:p-0.5 md:p-0.5 lg:p-0.75'
 
                 /* Square frames — wider on small screens so images read clearly; lg+ keeps left/center/right alignment */
                 const frameClass = isActive
