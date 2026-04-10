@@ -228,7 +228,7 @@ function ProductSectionCards({
       syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
       hideScrollbar
       keyboardFocusable={false}
-      className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-0 sm:mb-10 sm:px-0 md:mb-12"
+      className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-auto sm:mb-10 sm:px-0 md:mb-12"
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel={`${label} products`}
     >
