@@ -45,7 +45,6 @@ export default function Home() {
   })
 
   const heroScale = useTransform(heroScrollY, [0, 1], [1, 0.8])
-  const heroOpacity = useTransform(heroScrollY, [0, 0.5], [1, 0])
   const heroY = useTransform(heroScrollY, [0, 1], [0, -100])
 
   /** Scroll-linked hero motion reads as background “zoom” on phones; keep desktop only. */
@@ -121,8 +120,8 @@ export default function Home() {
                     className="container-custom"
                     style={
                       heroScrollMotionEnabled
-                        ? { scale: heroScale, opacity: heroOpacity, y: heroY }
-                        : { scale: 1, opacity: 1, y: 0 }
+                        ? { scale: heroScale, y: heroY }
+                        : { scale: 1, y: 0 }
                     }
                   >
                     <motion.div

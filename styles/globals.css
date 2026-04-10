@@ -601,7 +601,7 @@
     color: var(--color-text-inverse);
   }
   .dark .portal-explore-btn {
-    color: var(--color-border-accent);
+    color: var(--color-text-primary);
   }
   /* Glass shine animation (left to right, then gone) on hover */
   .btn-unified::before,
@@ -720,6 +720,10 @@
   .dark .btn-unified-filled {
     background: var(--color-button-hover-fill);
   }
+  .dark .btn-unified-filled:hover,
+  .dark .btn-unified-filled:focus-visible {
+    color: var(--color-text-primary);
+  }
   /* Dark mode: button border = settings dropdown container (neutral-700, 1px) */
   .dark .btn-unified,
   .dark .btn-unified-filled,
@@ -727,10 +731,15 @@
     border-width: 1px;
     border-color: var(--color-neutral-700);
   }
+  /* Dark mode: glass/outline unified buttons — near-white label (matches Shop “Select Categories”, Account CTAs, etc.) */
+  .dark .btn-unified,
+  .dark .btn-unified-circle {
+    color: var(--color-text-primary);
+  }
   /* Hero, cart, checkout, order confirmation: dark mode same as light – outline vs filled, swap on hover */
   .dark .hero-cta-buttons .btn-unified {
     background: var(--color-button-glass);
-    color: var(--color-border-accent);
+    color: var(--color-text-primary);
     border-color: var(--color-neutral-700);
   }
   .dark .hero-cta-buttons .btn-unified-filled:hover,
@@ -750,7 +759,7 @@
   .dark .hero-cta-buttons .btn-unified-filled:hover,
   .dark .hero-cta-buttons .btn-unified-filled:focus-visible {
     background: var(--color-button-glass);
-    color: var(--color-border-accent);
+    color: var(--color-text-primary);
     border-color: var(--color-neutral-700);
   }
 
@@ -758,7 +767,7 @@
   .dark .about-ceo-cta.btn-unified,
   .dark a.about-ceo-cta.btn-unified {
     background: var(--color-button-glass);
-    color: var(--color-border-accent);
+    color: var(--color-text-primary);
     border-color: var(--color-neutral-700);
   }
   .dark .about-ceo-cta.btn-unified:hover,
@@ -779,7 +788,7 @@
   .dark .account-prompt-buttons .btn-unified-filled:hover,
   .dark .account-prompt-buttons .btn-unified-filled:focus-visible {
     background: var(--color-button-glass);
-    color: var(--color-border-accent);
+    color: var(--color-text-primary);
     border-color: var(--color-neutral-700);
   }
 

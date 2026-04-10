@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Fragment } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -11,6 +11,7 @@ import type { User as UserType, Review } from '@/lib/auth'
 import { AnimatePresence } from 'framer-motion'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import FeedbackDialog from '@/components/ui/FeedbackDialog'
 import { SkeletonAccountPage } from '@/components/ui/Skeleton'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import OrderItemsDetail from '@/components/orders/OrderItemsDetail'
@@ -28,6 +29,7 @@ export default function AccountPage() {
   const [showBackButton, setShowBackButton] = useState(true)
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null)
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
+  const [feedback, setFeedback] = useState<{ message: string; variant: 'success' | 'error' } | null>(null)
   const router = useRouter()
   const profileFileInputRef = useRef<HTMLInputElement>(null)
 
@@ -101,12 +103,12 @@ export default function AccountPage() {
     const file = e.target.files?.[0]
     if (file) {
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file')
+        setFeedback({ message: 'Please select an image file', variant: 'error' })
         return
       }
-      
+
       if (file.size > 5 * 1024 * 1024) {
-        alert('Image size must be less than 5MB')
+        setFeedback({ message: 'Image size must be less than 5MB', variant: 'error' })
         return
       }
       
@@ -134,7 +136,7 @@ export default function AccountPage() {
         body: JSON.stringify({ profileImageUrl: profileImage || null }),
       })
       if (!res.ok) {
-        alert('Failed to update profile picture')
+        setFeedback({ message: 'Failed to update profile picture', variant: 'error' })
         return
       }
       const updated = await res.json()
@@ -143,9 +145,9 @@ export default function AccountPage() {
       AuthManager.setSessionUser(mergedUser)
       setShowEditProfile(false)
       setProfileImageFile(null)
-      alert('Profile picture updated successfully!')
+      setFeedback({ message: 'Profile picture updated successfully!', variant: 'success' })
     } catch {
-      alert('Failed to update profile picture')
+      setFeedback({ message: 'Failed to update profile picture', variant: 'error' })
     }
   }
 
@@ -178,9 +180,9 @@ export default function AccountPage() {
         clearReviewEditor()
         const updatedUser = AuthManager.getCurrentUser()
         if (updatedUser) setUser(updatedUser)
-        alert('Your review was updated.')
+        setFeedback({ message: 'Your review was updated.', variant: 'success' })
       } else {
-        alert(res.error || 'Could not update your review.')
+        setFeedback({ message: res.error || 'Could not update your review.', variant: 'error' })
       }
       return
     }
@@ -191,9 +193,15 @@ export default function AccountPage() {
       setReviewRating(5)
       const updatedUser = AuthManager.getCurrentUser()
       if (updatedUser) setUser(updatedUser)
-      alert('Thank you for your review! It will appear on the homepage testimonials.')
+      setFeedback({
+        message: 'Thank you for your review! It will appear on the homepage testimonials.',
+        variant: 'success',
+      })
     } else {
-      alert(result.error || 'Could not submit your review. Please try again.')
+      setFeedback({
+        message: result.error || 'Could not submit your review. Please try again.',
+        variant: 'error',
+      })
     }
   }
 
@@ -494,14 +502,21 @@ export default function AccountPage() {
                   <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 text-center">Your Reviews</h2>
                   <div className="text-center sm:text-left">
                       {user.reviews && user.reviews.length > 0 ? (
-                        <div className="space-y-3 sm:space-y-4 flex flex-col items-center sm:items-stretch">
-                          {user.reviews.map((review) => (
-                            <button
-                              key={review.id}
-                              type="button"
-                              onClick={() => startEditReview(review)}
-                              className="focus-ring-none w-full text-left bg-transparent border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 sm:p-6 max-w-2xl sm:max-w-none mx-auto sm:mx-0 transition-colors hover:border-primary-400/60 dark:hover:border-primary-500/50 cursor-pointer"
-                            >
+                        <div className="flex flex-col items-center sm:items-stretch">
+                          {user.reviews.map((review, index) => (
+                            <Fragment key={review.id}>
+                              {user.reviews.length > 1 && index > 0 ? (
+                                <div
+                                  className="h-px w-full max-w-2xl shrink-0 bg-[linear-gradient(90deg,transparent_0%,rgba(38,36,36,0.3)_50%,transparent_100%)] dark:bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.3)_50%,transparent_100%)] my-4 sm:my-5 sm:max-w-none"
+                                  role="presentation"
+                                  aria-hidden
+                                />
+                              ) : null}
+                              <button
+                                type="button"
+                                onClick={() => startEditReview(review)}
+                                className="focus-ring-none w-full text-left bg-transparent border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 sm:p-6 max-w-2xl sm:max-w-none mx-auto sm:mx-0 transition-colors hover:border-primary-400/60 dark:hover:border-primary-500/50 cursor-pointer"
+                              >
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center space-x-2">
                                   {[...Array(5)].map((_, i) => (
@@ -524,7 +539,8 @@ export default function AccountPage() {
                                 <p className="text-sm text-primary-600 mt-2">Product: {review.productName}</p>
                               )}
                               <p className="text-xs text-primary-600 dark:text-primary-400 mt-3">Tap to edit</p>
-                            </button>
+                              </button>
+                            </Fragment>
                           ))}
                         </div>
                       ) : (
@@ -605,6 +621,13 @@ export default function AccountPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <FeedbackDialog
+          open={feedback !== null}
+          message={feedback?.message ?? ''}
+          variant={feedback?.variant ?? 'success'}
+          onClose={() => setFeedback(null)}
+        />
       </div>
     </div>
   )
