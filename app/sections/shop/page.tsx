@@ -129,10 +129,27 @@ export default function ShopPage() {
   const [showBackButton, setShowBackButton] = useState(true)
   /** Shopping procedure: which step is expanded (detail visible); null = compact overview */
   const [activeProcedure, setActiveProcedure] = useState<number | null>(null)
+  const procedureInteractRef = useRef<HTMLDivElement>(null)
 
   const toggleProcedure = (index: number) => {
     setActiveProcedure((prev) => (prev === index ? null : index))
   }
+
+  useEffect(() => {
+    if (activeProcedure === null) return
+    const closeIfOutside = (e: MouseEvent | TouchEvent) => {
+      const el = procedureInteractRef.current
+      if (el && !el.contains(e.target as Node)) {
+        setActiveProcedure(null)
+      }
+    }
+    document.addEventListener('mousedown', closeIfOutside)
+    document.addEventListener('touchstart', closeIfOutside, { passive: true })
+    return () => {
+      document.removeEventListener('mousedown', closeIfOutside)
+      document.removeEventListener('touchstart', closeIfOutside)
+    }
+  }, [activeProcedure])
 
   const looks = [
     {
@@ -339,12 +356,19 @@ export default function ShopPage() {
             transition={{ duration: 1 }}
             className="text-8xl sm:text-6xl md:text-8xl font-bold mb-8 overflow-visible pb-2 sm:pb-3 lg:pb-4"
           >
-            <span className="flex max-w-full flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-14 xl:gap-20">
-              <HiOutlineShoppingBag
-                className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80"
-                aria-hidden="true"
-              />
-              <span className="text-gradient shrink-0 lg:origin-center lg:scale-[2] lg:leading-none">ᔕᕼOᑭ</span>
+            {/* flex-1 spacers: equal viewport margin left of icon & right of wordmark (lg+); uniform scale on large screens */}
+            <span className="flex w-full max-w-full items-center">
+              <span className="min-w-0 flex-1 shrink" aria-hidden />
+              <span className="inline-flex max-w-full shrink-0 flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12 2xl:gap-14 origin-center lg:scale-[1.78] xl:scale-[1.92] 2xl:scale-[2.06]">
+                <HiOutlineShoppingBag
+                  className="h-52 w-52 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-56 sm:w-56 md:h-64 md:w-64 lg:h-[4.1rem] lg:w-[4.1rem] xl:h-[4.35rem] xl:w-[4.35rem] 2xl:h-[4.6rem] 2xl:w-[4.6rem]"
+                  aria-hidden="true"
+                />
+                <span className="text-gradient shrink-0 text-6xl leading-none sm:text-7xl md:text-8xl lg:text-5xl xl:text-6xl 2xl:text-7xl">
+                  ᔕᕼOᑭ
+                </span>
+              </span>
+              <span className="min-w-0 flex-1 shrink" aria-hidden />
             </span>
           </motion.h1>
           <motion.p
@@ -378,14 +402,12 @@ export default function ShopPage() {
             <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Procedure</span>
           </h2>
-          <p className="mx-auto mb-10 max-w-3xl text-center text-base md:text-lg text-neutral-700 dark:text-primary-300 leading-relaxed">
-            Get familiar with our process, then proceed to check out products.{' '}
-            <span className="mt-1 block font-medium text-primary-600 dark:text-primary-200">
+          <div ref={procedureInteractRef} className="mx-auto max-w-6xl">
+            <p className="mx-auto mb-10 max-w-3xl px-2 text-center text-base md:text-lg font-medium text-primary-600 dark:text-primary-200 leading-relaxed">
               Click on a number or image to discover each step.
-            </span>
-          </p>
+            </p>
 
-          <div className="mx-auto max-w-6xl px-1 sm:px-2">
+            <div className="px-1 sm:px-2">
             <div className="grid min-h-0 grid-cols-3 gap-2 sm:gap-5 md:gap-10 lg:gap-14 xl:gap-16">
               {SHOP_PROCEDURES.map((proc, index) => {
                 const isActive = activeProcedure === index
@@ -404,23 +426,18 @@ export default function ShopPage() {
                     ? 'text-lg opacity-70 sm:text-xl md:text-2xl lg:text-3xl'
                     : 'text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'
 
-                const padClass = isActive
-                  ? 'p-2 sm:p-3 md:p-5 lg:p-7'
+                const padInner = isActive
+                  ? 'p-1.5 sm:p-2 md:p-2.5 lg:p-3'
                   : isDimmed
-                    ? 'p-1.5 sm:p-2 md:p-3 lg:p-4'
-                    : 'p-2 sm:p-2.5 md:p-4 lg:p-5'
+                    ? 'p-1 sm:p-1.5 md:p-2'
+                    : 'p-1.5 sm:p-2 md:p-2.5 lg:p-3'
 
-                const imgClass = isActive
-                  ? 'h-10 w-10 rounded-md object-cover sm:h-14 sm:w-14 sm:rounded-lg md:h-20 md:w-20 lg:h-24 lg:w-24 lg:rounded-xl'
+                /* Square frames at all breakpoints — width drives height via aspect-square */
+                const frameClass = isActive
+                  ? 'w-[4rem] sm:w-[5.75rem] md:w-[7.25rem] lg:w-[8.75rem] xl:w-[10rem] aspect-square'
                   : isDimmed
-                    ? 'h-7 w-7 rounded object-cover sm:h-9 sm:w-9 sm:rounded-md md:h-11 md:w-11 lg:h-12 lg:w-12 lg:rounded-lg'
-                    : 'h-8 w-8 rounded object-cover sm:h-11 sm:w-11 sm:rounded-md md:h-14 md:w-14 lg:h-16 lg:w-16 lg:rounded-lg'
-
-                const frameMax = isActive
-                  ? 'max-w-[5.5rem] sm:max-w-[8.5rem] md:max-w-[11rem] lg:max-w-[13rem] xl:max-w-[15rem]'
-                  : isDimmed
-                    ? 'max-w-[3.25rem] sm:max-w-[4.5rem] md:max-w-[6rem] lg:max-w-[7rem] xl:max-w-[8rem]'
-                    : 'max-w-[4rem] sm:max-w-[6rem] md:max-w-[8rem] lg:max-w-[10rem] xl:max-w-[11rem]'
+                    ? 'w-[2.7rem] sm:w-[3.35rem] md:w-[4.1rem] lg:w-[5.25rem] xl:w-[6rem] aspect-square'
+                    : 'w-[3.35rem] sm:w-[4.5rem] md:w-[5.85rem] lg:w-[7.1rem] xl:w-[8.1rem] aspect-square'
 
                 return (
                   <motion.div
@@ -453,22 +470,22 @@ export default function ShopPage() {
                       <button
                         type="button"
                         onClick={() => toggleProcedure(index)}
-                        className={`hero-glass-frame relative mt-1.5 w-full backdrop-blur-md sm:mt-2 ${frameMax} ${frameAlign} cursor-pointer rounded-xl transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-900`}
+                        className={`hero-glass-frame relative mt-1.5 shrink-0 overflow-hidden rounded-xl backdrop-blur-md sm:mt-2 ${frameClass} ${frameAlign} cursor-pointer shadow-md transition-shadow hover:shadow-md focus-ring-none focus:outline-none sm:shadow-lg`}
                         aria-expanded={isActive}
                         aria-controls={`procedure-detail-${index}`}
                         aria-label={`Procedure ${proc.num}: show step details`}
                       >
-                        <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+                        <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 z-[1]" aria-hidden />
                         <div
-                          className={`flex items-center justify-center overflow-hidden shadow-md sm:shadow-lg ${proc.frameInner} ${padClass}`}
+                          className={`relative z-[2] flex size-full items-center justify-center overflow-hidden ${proc.frameInner} ${padInner}`}
                         >
                           <SafeImage
                             src={proc.src}
                             alt={proc.alt}
-                            width={112}
-                            height={112}
-                            className={imgClass}
-                            sizes="(max-width:640px) 36px, (max-width:768px) 48px, (max-width:1024px) 64px, 112px"
+                            width={160}
+                            height={160}
+                            className="size-full min-h-0 min-w-0 rounded-md object-cover sm:rounded-lg"
+                            sizes="(max-width:640px) 64px, (max-width:768px) 96px, (max-width:1024px) 128px, 160px"
                             loading="lazy"
                           />
                         </div>
@@ -495,6 +512,7 @@ export default function ShopPage() {
                   </motion.div>
                 )
               })}
+            </div>
             </div>
           </div>
         </motion.div>
