@@ -126,7 +126,7 @@ export default function CEOTopGoatLists() {
             <span className="text-accent-600 dark:text-accent-400">G.O.A.T ᒪISTᔕ</span>
           </h2>
           <p className="mt-4 text-primary-600 dark:text-primary-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-            Curated line-ups: tap a card to explore what I like.
+            Curated line-ups: tap a card to explore what he likes.
           </p>
         </motion.div>
 

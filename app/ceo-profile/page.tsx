@@ -52,9 +52,9 @@ export default function CEOProfile() {
     {
       category: 'ᗰᑌֆIᑕ ᗩᑎᗪ ᑭOETᖇY 𝄞',
       description:
-        'He is rained in an acapella group so, he cares about tones and songs the way some people care about colour (he does too but anyway...). His writing is mostly rap and spoken-word shaped: story first, then rhythm, then the line that stays with you after the track ends.',
+        'He is trained in an acapella group so you know he cares about tones and songs the way some people care about colour (he does too but anyway!). His writing is mostly rap and spoken-word inspired: story first, then rhythm, then the line that stays with you after the track or poem ends.',
       details:
-        'He has been writing seriously since around 2015. You will hear the influence of artists he grew up on; think Cole, Kendrick, Eminem and a lot of UK voices too, Dave, Aitch, Skepta. He is not copying any of them; he is building his own lane from what they taught him about honesty and craft.',
+        'He has been writing seriously since around 2015. You will hear the influence of artists he grew up on; think of J.Cole, Kendrick, Eminem and a lot of UK voices too, Dave, Aitch, Skepta. He is not copying any of them; he is building his own lane from what they taught him about honesty and craft.',
     },
     {
       category: '☯ ᗩᖇT ᗩᑎᗪ ᗪEᔕIGᑎ',
