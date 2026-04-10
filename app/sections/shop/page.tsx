@@ -359,7 +359,7 @@ export default function ShopPage() {
             {/* flex-1 spacers: equal space from screen edges to the icon/wordmark group; icon + ᔕᕼOᑭ sizes unchanged on large screens */}
             <span className="flex w-full max-w-full items-center">
               <span className="min-w-0 flex-1 shrink" aria-hidden />
-              <span className="inline-flex max-w-full shrink-0 flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-20 xl:gap-28">
+              <span className="inline-flex max-w-full shrink-0 -translate-x-2 flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:-translate-x-8 lg:gap-20 xl:-translate-x-10 xl:gap-28">
                 <HiOutlineShoppingBag
                   className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80"
                   aria-hidden="true"
@@ -396,7 +396,7 @@ export default function ShopPage() {
           viewport={{ once: true }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl mb-10 text-center sm:mb-12 md:mb-14">
+          <h2 className="text-[2.35rem] font-bold sm:text-[2.6rem] md:text-[2.95rem] mb-10 text-center sm:mb-12 md:mb-14">
             <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Procedure</span>
           </h2>
@@ -412,16 +412,16 @@ export default function ShopPage() {
                 const isDimmed = activeProcedure !== null && !isActive
                 const colClass =
                   index === 0
-                    ? 'max-lg:items-center max-lg:text-center lg:items-start lg:text-left'
+                    ? 'items-start text-left'
                     : index === 1
-                      ? 'items-center text-center'
-                      : 'max-lg:items-center max-lg:text-center lg:items-end lg:text-right'
+                      ? 'items-end text-right'
+                      : 'items-center text-center'
                 const frameAlign =
                   index === 0
-                    ? 'max-lg:self-center lg:self-start'
+                    ? 'self-start'
                     : index === 1
-                      ? 'self-center'
-                      : 'max-lg:self-center lg:self-end'
+                      ? 'self-end'
+                      : 'self-center'
 
                 const numClass = isActive
                   ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl'
@@ -430,17 +430,17 @@ export default function ShopPage() {
                     : 'text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'
 
                 const padInner = isActive
-                  ? 'p-1.5 sm:p-2 md:p-2.5 lg:p-3'
+                  ? 'p-1 sm:p-1.25 md:p-1.5 lg:p-2'
                   : isDimmed
-                    ? 'p-1 sm:p-1.5 md:p-2'
-                    : 'p-1.5 sm:p-2 md:p-2.5 lg:p-3'
+                    ? 'p-0.75 sm:p-1 md:p-1.25 lg:p-1.5'
+                    : 'p-1 sm:p-1.25 md:p-1.5 lg:p-2'
 
                 /* Square frames — wider on small screens so images read clearly; lg+ keeps left/center/right alignment */
                 const frameClass = isActive
-                  ? 'aspect-square w-[min(30vw,7.25rem)] sm:w-[6.25rem] md:w-[7.25rem] lg:w-[8.75rem] xl:w-[10rem]'
+                  ? 'aspect-square w-[min(31vw,7.85rem)] sm:w-[6.85rem] md:w-[8.15rem] lg:w-[9.6rem] xl:w-[10.9rem]'
                   : isDimmed
-                    ? 'aspect-square w-[min(24vw,5.75rem)] sm:w-[4.5rem] md:w-[5.25rem] lg:w-[5.25rem] xl:w-[6rem]'
-                    : 'aspect-square w-[min(28vw,6.75rem)] sm:w-[5.75rem] md:w-[6.5rem] lg:w-[7.1rem] xl:w-[8.1rem]'
+                    ? 'aspect-square w-[min(25vw,6.1rem)] sm:w-[4.85rem] md:w-[5.85rem] lg:w-[5.95rem] xl:w-[6.65rem]'
+                    : 'aspect-square w-[min(29vw,7.2rem)] sm:w-[6.25rem] md:w-[7.2rem] lg:w-[7.9rem] xl:w-[8.9rem]'
 
                 return (
                   <motion.div
@@ -461,7 +461,7 @@ export default function ShopPage() {
                     >
                       <span
                         id={`procedure-num-${index}`}
-                        className={`font-bold text-primary-500 dark:text-primary-400 ${numClass} select-none ${index === 1 ? 'mx-auto' : ''} ${index === 2 ? 'max-lg:mx-auto lg:ml-auto' : ''} ${index === 0 ? 'max-lg:mx-auto' : ''}`}
+                        className={`font-bold text-primary-500 dark:text-primary-400 ${numClass} select-none ${index === 1 ? 'ml-auto' : ''} ${index === 2 ? 'mx-auto' : ''}`}
                       >
                         {proc.num}
                       </span>
