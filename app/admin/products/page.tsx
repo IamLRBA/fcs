@@ -125,6 +125,7 @@ export default function AdminProductsPage() {
   const [addSubmitting, setAddSubmitting] = useState(false)
   const [updateSubmitting, setUpdateSubmitting] = useState(false)
   const [addImageRequiredOpen, setAddImageRequiredOpen] = useState(false)
+  const [detailsLoadingId, setDetailsLoadingId] = useState<string | null>(null)
   const [tablePage, setTablePage] = useState(1)
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -171,13 +172,27 @@ export default function AdminProductsPage() {
 
   const loadProducts = async () => {
     try {
-      const res = await fetch('/api/products?includeInactive=1', { cache: 'no-store' })
+      const res = await fetch('/api/products?includeInactive=1&firstImageOnly=1', { cache: 'no-store' })
       if (!res.ok) throw new Error('Failed to load products')
       const data: Product[] = await res.json()
       setProducts(data)
     } catch (error) {
       console.error('Error loading products:', error)
       setProducts([])
+    }
+  }
+
+  const openProductDetails = async (product: Product) => {
+    setDetailsLoadingId(product.id)
+    try {
+      const res = await fetch(`/api/products/${encodeURIComponent(product.id)}`, { cache: 'no-store' })
+      if (!res.ok) throw new Error('Failed to load product')
+      const full: Product = await res.json()
+      setDetailsProduct(full)
+    } catch {
+      alert('Could not load product details. Please try again.')
+    } finally {
+      setDetailsLoadingId(null)
     }
   }
 
@@ -510,11 +525,16 @@ export default function AdminProductsPage() {
                           <td className="py-2 px-2">
                             <button
                               type="button"
-                              onClick={() => setDetailsProduct(product)}
-                              className="focus-ring-none p-1.5 rounded-lg text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
+                              disabled={detailsLoadingId !== null}
+                              onClick={() => void openProductDetails(product)}
+                              className="focus-ring-none p-1.5 rounded-lg text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors disabled:opacity-40 disabled:pointer-events-none"
                               title="Details"
                             >
-                              <Eye className="w-[18px] h-[18px]" />
+                              {detailsLoadingId === product.id ? (
+                                <Loader2 className="w-[18px] h-[18px] animate-spin" aria-hidden />
+                              ) : (
+                                <Eye className="w-[18px] h-[18px]" />
+                              )}
                             </button>
                           </td>
                         </tr>

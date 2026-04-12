@@ -96,6 +96,9 @@ async function handleProductsGet(request: Request) {
   const grouped = searchParams.get('grouped') === '1'
   const featured = searchParams.get('featured') === '1'
   const lite = searchParams.get('lite') === '1'
+  /** Admin table: one image per row to avoid loading huge base64 blobs for every gallery image. */
+  const firstImageOnly =
+    searchParams.get('firstImageOnly') === '1' && includeInactive && !grouped && !featured && !lite
 
   const privateNoStore = includeInactive
 
@@ -153,6 +156,7 @@ async function handleProductsGet(request: Request) {
     include: {
       images: {
         orderBy: { sortOrder: 'asc' },
+        ...(firstImageOnly ? { take: 1 } : {}),
       },
     },
     orderBy,
