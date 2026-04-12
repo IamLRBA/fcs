@@ -1613,6 +1613,15 @@
   background-color: rgba(25, 25, 25, 0.48);
 }
 
+/* Core rules: layout main + nested inner <main> both matched .dark main; remove scrim so only cards float on bg */
+.dark main:has(.core-rules-page-root) {
+  background-color: transparent;
+}
+
+.dark .core-rules-page-root {
+  background: transparent !important;
+}
+
 .dark .section {
   background-color: transparent;
 }

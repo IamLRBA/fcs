@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
@@ -155,15 +156,23 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="relative z-10 inline-flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm"
+                className="relative z-10"
               >
-                <span className="text-primary-800 dark:text-primary-100 font-semibold">Our Core:</span>
-                <span
-                  className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
-                  style={{ fontFamily: 'Mrs Saint Delafield' }}
-                >
-                  Hidden treasures reveal a timeless style
-                </span>
+                <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 400, damping: 22 }} className="inline-block">
+                  <Link
+                    href="/core-rules"
+                    className="group relative inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3.5 sm:py-3 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm transition-[box-shadow,background-color] duration-300 hover:border-primary-500/50 dark:hover:border-primary-400/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-100 dark:focus-visible:ring-offset-neutral-900"
+                  >
+                    <span className="text-primary-800 dark:text-primary-100 font-semibold">Our Core:</span>
+                    <span
+                      className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-2xl leading-snug text-center sm:text-left group-hover:text-accent-700 dark:group-hover:text-accent-300 transition-colors"
+                      style={{ fontFamily: 'Mrs Saint Delafield' }}
+                    >
+                      Check our core rules
+                    </span>
+                    <span className="sr-only"> — opens the La Sape style rules page</span>
+                  </Link>
+                </motion.div>
               </motion.div>
             </div>
           </div>
