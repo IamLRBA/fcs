@@ -8,6 +8,7 @@ import { HiSearch, HiX } from 'react-icons/hi'
 import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import FeedbackDialog from '@/components/ui/FeedbackDialog'
 import AdminNavHeader from '@/components/admin/AdminNavHeader'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import SafeImage from '@/components/common/SafeImage'
@@ -52,7 +53,7 @@ const formatSubcategoryLabel = (slug: string) =>
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
-const conditions = ['Like New', 'Good', 'Fair', 'Worn']
+const conditions = ['Perfect', 'New', 'Like New', 'Good']
 const PAGE_SIZE = 10
 
 type RemovalReasonKey = 'PRODUCT_BOUGHT' | 'MISTAKENLY_POSTED' | 'DISCONTINUED'
@@ -121,6 +122,9 @@ export default function AdminProductsPage() {
   const [addRemovingIndex, setAddRemovingIndex] = useState<number | null>(null)
   /** Brief spinner on thumbnail remove (edit modal strip). */
   const [editThumbRemovingIndex, setEditThumbRemovingIndex] = useState<number | null>(null)
+  const [addSubmitting, setAddSubmitting] = useState(false)
+  const [updateSubmitting, setUpdateSubmitting] = useState(false)
+  const [addImageRequiredOpen, setAddImageRequiredOpen] = useState(false)
   const [tablePage, setTablePage] = useState(1)
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -133,7 +137,7 @@ export default function AdminProductsPage() {
     colors: [] as string[],
     images: [] as string[],
     description: '',
-    condition: 'Like New',
+    condition: 'Perfect',
     sku: '',
     stock_qty: ''
   })
@@ -305,12 +309,14 @@ export default function AdminProductsPage() {
   }
 
   const handleUpdate = (updated: Product) => {
+    if (updateSubmitting) return
     const sale = updated.price_ugx
     const orig = updated.original_price
     const payload: Product = {
       ...updated,
       original_price: orig != null && Number(orig) > sale ? orig : undefined,
     }
+    setUpdateSubmitting(true)
     fetch(`/api/products/${payload.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -326,6 +332,7 @@ export default function AdminProductsPage() {
         setEditingProduct(null)
       })
       .catch(() => alert('Failed to update product'))
+      .finally(() => setUpdateSubmitting(false))
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setImages: React.Dispatch<React.SetStateAction<string[]>>) => {
@@ -340,8 +347,9 @@ export default function AdminProductsPage() {
 
   const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault()
+    if (addSubmitting) return
     if (productImages.length === 0) {
-      alert('Add at least one image')
+      setAddImageRequiredOpen(true)
       return
     }
     const sale = parseInt(newProduct.price_ugx, 10)
@@ -366,6 +374,7 @@ export default function AdminProductsPage() {
       stock_qty: parseInt(newProduct.stock_qty) || 1,
       isActive: true
     }
+    setAddSubmitting(true)
     fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -375,10 +384,11 @@ export default function AdminProductsPage() {
         if (!res.ok) throw new Error('Failed to add product')
         setShowAddModal(false)
         setProductImages([])
-        setNewProduct({ name: '', brand: '', category: 'shirts', section: 'gentle', price_ugx: '', original_price: '', sizes: [], colors: [], images: [], description: '', condition: 'Like New', sku: '', stock_qty: '' })
+        setNewProduct({ name: '', brand: '', category: 'shirts', section: 'gentle', price_ugx: '', original_price: '', sizes: [], colors: [], images: [], description: '', condition: 'Perfect', sku: '', stock_qty: '' })
         return loadProducts()
       })
       .catch(() => alert('Failed to add product'))
+      .finally(() => setAddSubmitting(false))
   }
 
   return (
@@ -647,7 +657,21 @@ export default function AdminProductsPage() {
                     type="button"
                     variant="default"
                     size="icon"
-                    onClick={() => setEditingProduct({ ...detailsProduct })}
+                    onClick={() => {
+                      const p = detailsProduct
+                      const sectionOpts = subcategoriesMap[p.category] ?? []
+                      const section = sectionOpts.includes(p.section) ? p.section : sectionOpts[0] ?? p.section
+                      setEditingProduct({
+                        ...p,
+                        section,
+                        condition: conditions.includes(p.condition) ? p.condition : conditions[0],
+                        sizes: p.sizes ?? [],
+                        colors: p.colors ?? [],
+                        brand: p.brand ?? '',
+                        description: p.description ?? '',
+                        sku: p.sku ?? '',
+                      })
+                    }}
                     className="focus-ring-none h-10 w-10"
                     aria-label="Edit product"
                   >
@@ -678,21 +702,36 @@ export default function AdminProductsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-3 backdrop-blur-sm dark:bg-black/80 sm:p-4"
-            onClick={() => setEditingProduct(null)}
+            onClick={() => {
+              if (!updateSubmitting) setEditingProduct(null)
+            }}
           >
             <div
               className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <ModalCloseButton onClose={() => setEditingProduct(null)} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close" />
+              <ModalCloseButton
+                onClose={() => {
+                  if (!updateSubmitting) setEditingProduct(null)
+                }}
+                className="absolute top-2 right-2 z-40 flex-shrink-0"
+                aria-label="Close"
+              />
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 className="relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
               >
-                <form onSubmit={(e) => { e.preventDefault(); handleUpdate(editingProduct) }} className="flex flex-col min-h-0 flex-1 overflow-hidden">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    if (updateSubmitting) return
+                    handleUpdate(editingProduct)
+                  }}
+                  className="flex flex-col min-h-0 flex-1 overflow-hidden"
+                >
                   <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
                     <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Edit product</h2>
                     <div>
@@ -849,16 +888,65 @@ export default function AdminProductsPage() {
                         </>
                       )}
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={editingProduct.name}
-                        onChange={(e) => setEditingProduct(prev => prev ? { ...prev, name: e.target.value } : null)}
-                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
-                      />
-                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Name *</label>
+                        <input
+                          type="text"
+                          required
+                          value={editingProduct.name}
+                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, name: e.target.value } : null)}
+                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Brand *</label>
+                        <input
+                          type="text"
+                          required
+                          value={editingProduct.brand ?? ''}
+                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, brand: e.target.value } : null)}
+                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Category *</label>
+                        <select
+                          required
+                          value={editingProduct.category}
+                          onChange={(e) => {
+                            const cat = e.target.value
+                            setEditingProduct((prev) => {
+                              if (!prev) return null
+                              const opts = subcategoriesMap[cat] ?? []
+                              const nextSection = opts.includes(prev.section) ? prev.section : opts[0] ?? prev.section
+                              return { ...prev, category: cat, section: nextSection }
+                            })
+                          }}
+                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        >
+                          {categories.map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Subcategory *</label>
+                        <select
+                          required
+                          value={editingProduct.section}
+                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, section: e.target.value } : null)}
+                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        >
+                          {(subcategoriesMap[editingProduct.category] ?? []).map((s) => (
+                            <option key={s} value={s}>
+                              {formatSubcategoryLabel(s)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Price (UGX) *</label>
                       <div className="flex items-center gap-2">
@@ -946,6 +1034,86 @@ export default function AdminProductsPage() {
                         <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, stock_qty: (prev.stock_qty || 0) + 1 } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
                       </div>
                     </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Condition *</label>
+                        <select
+                          value={conditions.includes(editingProduct.condition) ? editingProduct.condition : conditions[0]}
+                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, condition: e.target.value } : null)}
+                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        >
+                          {conditions.map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Description *</label>
+                      <textarea
+                        required
+                        rows={3}
+                        value={editingProduct.description ?? ''}
+                        onChange={(e) => setEditingProduct(prev => prev ? { ...prev, description: e.target.value } : null)}
+                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Sizes (comma-separated)</label>
+                      <input
+                        value={(editingProduct.sizes ?? []).join(', ')}
+                        onChange={(e) =>
+                          setEditingProduct((prev) =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  sizes: e.target.value
+                                    .split(',')
+                                    .map((s) => s.trim())
+                                    .filter(Boolean),
+                                }
+                              : null
+                          )
+                        }
+                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        placeholder="S, M, L"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Colors (comma-separated)</label>
+                      <input
+                        value={(editingProduct.colors ?? []).join(', ')}
+                        onChange={(e) =>
+                          setEditingProduct((prev) =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  colors: e.target.value
+                                    .split(',')
+                                    .map((c) => c.trim())
+                                    .filter(Boolean),
+                                }
+                              : null
+                          )
+                        }
+                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        placeholder="Red, Blue"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">SKU</label>
+                      <p className="mb-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
+                        Stock keeping unit (inventory id). Leave blank to clear; otherwise keep or edit.
+                      </p>
+                      <input
+                        type="text"
+                        value={editingProduct.sku ?? ''}
+                        onChange={(e) => setEditingProduct(prev => prev ? { ...prev, sku: e.target.value } : null)}
+                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        placeholder="e.g. SHI-GEN-482"
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Visible in shop</label>
                       <label className="flex items-center gap-2 cursor-pointer">
@@ -960,7 +1128,21 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex justify-center flex-shrink-0">
-                    <Button type="submit" variant="default">Save changes</Button>
+                    <Button
+                      type="submit"
+                      variant="default"
+                      disabled={updateSubmitting}
+                      className={`inline-flex min-w-[10.5rem] items-center justify-center gap-2 ${updateSubmitting ? 'opacity-80 cursor-wait' : ''}`}
+                    >
+                      {updateSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                          <span>Saving…</span>
+                        </>
+                      ) : (
+                        <span>Save changes</span>
+                      )}
+                    </Button>
                   </div>
                 </form>
               </motion.div>
@@ -977,14 +1159,22 @@ export default function AdminProductsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-3 backdrop-blur-sm dark:bg-black/80 sm:p-4"
-            onClick={() => setShowAddModal(false)}
+            onClick={() => {
+              if (!addSubmitting) setShowAddModal(false)
+            }}
           >
             <div
               className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <ModalCloseButton onClose={() => setShowAddModal(false)} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close" />
+              <ModalCloseButton
+                onClose={() => {
+                  if (!addSubmitting) setShowAddModal(false)
+                }}
+                className="absolute top-2 right-2 z-40 flex-shrink-0"
+                aria-label="Close"
+              />
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -1228,7 +1418,21 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex justify-center flex-shrink-0">
-                    <Button type="submit" variant="default">Add product</Button>
+                    <Button
+                      type="submit"
+                      variant="default"
+                      disabled={addSubmitting}
+                      className={`inline-flex min-w-[10.5rem] items-center justify-center gap-2 ${addSubmitting ? 'opacity-80 cursor-wait' : ''}`}
+                    >
+                      {addSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                          <span>Adding…</span>
+                        </>
+                      ) : (
+                        <span>Add product</span>
+                      )}
+                    </Button>
                   </div>
                 </form>
               </motion.div>
@@ -1339,6 +1543,14 @@ export default function AdminProductsPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <FeedbackDialog
+        open={addImageRequiredOpen}
+        message="Add at least one image before you can save this product."
+        variant="error"
+        onClose={() => setAddImageRequiredOpen(false)}
+        zClassName="z-[1160]"
+      />
     </div>
   )
 }
