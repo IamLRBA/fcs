@@ -6,7 +6,9 @@ import { Mail, Phone, MapPin, Copy, Check } from 'lucide-react'
 import { IconBrandWhatsapp } from '@tabler/icons-react'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
-import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
+import { SHOP_EMAIL, SHOP_WHATSAPP_E164 } from '@/lib/constants/brand-contact'
+
+const SHOP_WHATSAPP_WA_ME = SHOP_WHATSAPP_E164.replace('+', '')
 
 const CALL_NUMBERS = [
   { label: '+256 774 948 086', tel: '+256774948086' },
@@ -50,7 +52,7 @@ export default function Contact() {
       subtitle: '+256 774 948 086',
       icon: IconBrandWhatsapp,
       buttonText: 'Text Us',
-      onClick: () => window.open('https://wa.me/256774948086', '_blank'),
+      onClick: () => window.open(`https://wa.me/${SHOP_WHATSAPP_WA_ME}`, '_blank'),
     },
     {
       title: 'ᒪOᑕᗩTIOᑎ',
@@ -77,7 +79,7 @@ export default function Contact() {
         window.open(mailtoLink, '_blank')
       } else {
         const whatsappMessage = `*New Contact Form Submission*\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Email:* ${formData.email}\n*Subject:* ${formData.subject}\n\n*Message:*\n${formData.message}`
-        const whatsappLink = `https://wa.me/256774948086?text=${encodeURIComponent(whatsappMessage)}`
+        const whatsappLink = `https://wa.me/${SHOP_WHATSAPP_WA_ME}?text=${encodeURIComponent(whatsappMessage)}`
         window.open(whatsappLink, '_blank')
       }
       setFormData({ firstName: '', lastName: '', email: '', subject: '', message: '' })
