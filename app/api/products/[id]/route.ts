@@ -22,6 +22,20 @@ function toCatalogProduct(product: any) {
   }
 }
 
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: { images: { orderBy: { sortOrder: 'asc' } } },
+  })
+  if (!product) {
+    return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+  }
+  const res = NextResponse.json(toCatalogProduct(product))
+  res.headers.set('Cache-Control', 'private, no-store, must-revalidate')
+  return res
+}
+
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const body = await request.json()
