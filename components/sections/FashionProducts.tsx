@@ -278,7 +278,7 @@ export default function FashionProducts() {
                     <div className="text-6xl font-bold text-neutral-700 dark:text-primary-400">{s.number}</div>
                     <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300">{s.title}</h3>
                   </Link>
-                  <Link href={`/products/${s.slug}`} className={`focus-ring-none block w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[352px] md:h-[352px] aspect-square flex-shrink-0 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:scale-[1.02] transition-all duration-300`}>
+                  <Link href={`/products/${s.slug}`} className={`focus-ring-none block w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[300px] md:h-[300px] lg:w-[352px] lg:h-[352px] aspect-square flex-shrink-0 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:scale-[1.02] transition-all duration-300`}>
                     <div className="hero-glass-frame relative w-full h-full backdrop-blur-md">
                       <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
                     <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl w-full h-full flex items-center justify-center">
@@ -321,12 +321,12 @@ export default function FashionProducts() {
                                 onMouseEnter={() => setHoveredThumbnail({ serviceId: s.id, thumbIndex })}
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
-                                <div className="relative bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 aspect-square border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-transparent hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-0 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
+                                <div className="relative bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-36 md:w-36 lg:h-48 lg:w-48 aspect-square border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-transparent hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-0 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
                                   <FashionCategoryThumb
                                     paths={thumbPaths}
                                     alt={`${subcategory.name} - ${s.title}`}
                                   />
-                                  <div className="absolute inset-x-0 bottom-0 md:hidden flex items-center justify-center overflow-hidden rounded-tl-lg rounded-tr-lg rounded-bl-none rounded-br-none border-x border-b border-primary-500/20 dark:border-transparent bg-white/50 px-3 pt-2 pb-1.5 text-center backdrop-blur-sm dark:bg-neutral-950/75 translate-y-[1px]">
+                                  <div className="absolute inset-x-0 bottom-0 lg:hidden flex items-center justify-center overflow-hidden rounded-tl-lg rounded-tr-lg rounded-bl-none rounded-br-none border-x border-b border-primary-500/20 dark:border-transparent bg-white/50 px-3 pt-2 pb-1.5 text-center backdrop-blur-sm dark:bg-neutral-950/75 translate-y-[1px]">
                                     <span className="text-xs font-medium text-primary-800 dark:text-neutral-100">
                                       {subcategory.name}
                                     </span>
@@ -341,7 +341,7 @@ export default function FashionProducts() {
                                       animate={{ opacity: 1 }}
                                       exit={{ opacity: 0 }}
                                       transition={{ duration: 0.2 }}
-                                      className="absolute inset-0 hidden md:flex bg-black/60 flex-col items-center justify-center space-y-3 rounded-lg"
+                                      className="absolute inset-0 hidden lg:flex bg-black/60 flex-col items-center justify-center space-y-3 rounded-lg"
                                     >
                                       <motion.span
                                         initial={{ y: 10, opacity: 0 }}

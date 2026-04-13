@@ -243,7 +243,7 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 * index }}
-                className="group"
+                className={`group ${index === 2 ? 'md:col-span-2 md:mx-auto md:w-full md:max-w-md lg:col-span-1 lg:max-w-none' : ''}`}
                 onMouseEnter={() => setHoveredMember(member.id)}
                 onMouseLeave={() => setHoveredMember(null)}
               >

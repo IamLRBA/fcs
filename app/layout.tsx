@@ -74,7 +74,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" href="/assets/images/branding/logo-dark.png" />
+        <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="/assets/images/branding/logo-dark.png" />
+        <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)" href="/assets/images/branding/logo-light.png" />
         <link rel="shortcut icon" href="/assets/images/branding/logo-dark.png" />
         <link rel="apple-touch-icon" href="/assets/images/branding/logo-dark.png" />
         <link rel="manifest" href="/manifest.json" />
