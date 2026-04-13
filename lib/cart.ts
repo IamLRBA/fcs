@@ -36,8 +36,13 @@ export class CartManager {
   
   static getCart(): CartItem[] {
     if (typeof window === 'undefined') return []
-    const cartData = localStorage.getItem(this.CART_KEY)
-    return cartData ? JSON.parse(cartData) : []
+    try {
+      const cartData = localStorage.getItem(this.CART_KEY)
+      return cartData ? JSON.parse(cartData) : []
+    } catch (error) {
+      console.error('Failed to read cart from storage:', error)
+      return []
+    }
   }
   
   private static dispatchCartUpdate(): void {
@@ -47,24 +52,29 @@ export class CartManager {
   }
 
   static addToCart(item: CartItem): boolean {
-    const cart = this.getCart()
-    // Check if product already exists in cart (by productId only, since each product is unique)
-    const existingIndex = cart.findIndex(
-      cartItem => cartItem.productId === item.productId
-    )
-    
-    if (existingIndex >= 0) {
-      // Product already in cart - return false to indicate it wasn't added
+    try {
+      const cart = this.getCart()
+      // Check if product already exists in cart (by productId only, since each product is unique)
+      const existingIndex = cart.findIndex(
+        cartItem => cartItem.productId === item.productId
+      )
+      
+      if (existingIndex >= 0) {
+        // Product already in cart - return false to indicate it wasn't added
+        return false
+      }
+      
+      // Set quantity to 1 (each product is a single piece)
+      const newItem = { ...item, quantity: 1 }
+      cart.push(newItem)
+      
+      localStorage.setItem(this.CART_KEY, JSON.stringify(cart))
+      this.dispatchCartUpdate()
+      return true
+    } catch (error) {
+      console.error('Failed to add to cart:', error)
       return false
     }
-    
-    // Set quantity to 1 (each product is a single piece)
-    const newItem = { ...item, quantity: 1 }
-    cart.push(newItem)
-    
-    localStorage.setItem(this.CART_KEY, JSON.stringify(cart))
-    this.dispatchCartUpdate()
-    return true
   }
 
   /**

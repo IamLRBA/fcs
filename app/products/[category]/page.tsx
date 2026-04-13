@@ -837,10 +837,18 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       sku: product.sku
     }
     
-    const success = CartManager.addToCart(cartItem)
+    let success = false
+    try {
+      success = CartManager.addToCart(cartItem)
+    } catch (error) {
+      console.error('Failed to add product to cart:', error)
+      setIsAddingToCart(false)
+      alert('Could not add this item right now. Please try again.')
+      return
+    }
     
     if (!success) {
-      alert('This product is already in your cart. Each product is a single unique piece.')
+      alert('This item is already in your cart, or storage is full.')
       setIsAddingToCart(false)
       setAddedToCart(true) // Show as already added
       return
