@@ -154,7 +154,7 @@ export default function FeaturedCollections() {
             scrollClassName="pt-6 pb-8"
             scrollAriaLabel="Featured collections"
           >
-            <div className="flex w-max flex-row gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5">
+            <div className="mx-auto flex w-max min-w-full flex-row justify-center gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5">
             {featuredProducts.map((item, index) => {
               const { product, categorySlug } = item
               const isAdding = addingToCart === product.id

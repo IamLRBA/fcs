@@ -125,6 +125,11 @@ export default function AdminProductsPage() {
   const [addSubmitting, setAddSubmitting] = useState(false)
   const [updateSubmitting, setUpdateSubmitting] = useState(false)
   const [addImageRequiredOpen, setAddImageRequiredOpen] = useState(false)
+  const [feedback, setFeedback] = useState<{ open: boolean; message: string; variant: 'success' | 'error' }>({
+    open: false,
+    message: '',
+    variant: 'error',
+  })
   const [detailsLoadingId, setDetailsLoadingId] = useState<string | null>(null)
   const [tablePage, setTablePage] = useState(1)
   const [newProduct, setNewProduct] = useState({
@@ -151,6 +156,9 @@ export default function AdminProductsPage() {
   const draggingNewImageIndexRef = useRef<number | null>(null)
 
   const REMOVE_IMAGE_SPIN_MS = 320
+  const showErrorFeedback = (message: string) => {
+    setFeedback({ open: true, message, variant: 'error' })
+  }
 
   useEffect(() => {
     if (!AuthManager.isAdmin()) {
@@ -190,7 +198,7 @@ export default function AdminProductsPage() {
       const full: Product = await res.json()
       setDetailsProduct(full)
     } catch {
-      alert('Could not load product details. Please try again.')
+      showErrorFeedback('Could not load product details. Please try again.')
     } finally {
       setDetailsLoadingId(null)
     }
@@ -300,7 +308,7 @@ export default function AdminProductsPage() {
         setEditingProduct(null)
         setUndoDeletedProduct(deletedSnapshot)
       })
-      .catch(() => alert('Failed to remove product'))
+      .catch(() => showErrorFeedback('Failed to remove product. Please try again.'))
       .finally(() => setDeleteBusy(false))
   }
 
@@ -317,7 +325,7 @@ export default function AdminProductsPage() {
       await loadProducts()
       setUndoDeletedProduct(null)
     } catch {
-      alert('Failed to undo deletion')
+      showErrorFeedback('Failed to undo deletion. Please try again.')
     } finally {
       setUndoBusy(false)
     }
@@ -346,7 +354,7 @@ export default function AdminProductsPage() {
         setDetailsProduct(saved)
         setEditingProduct(null)
       })
-      .catch(() => alert('Failed to update product'))
+      .catch(() => showErrorFeedback('Failed to update product. Please try again.'))
       .finally(() => setUpdateSubmitting(false))
   }
 
@@ -402,7 +410,7 @@ export default function AdminProductsPage() {
         setNewProduct({ name: '', brand: '', category: 'shirts', section: 'gentle', price_ugx: '', original_price: '', sizes: [], colors: [], images: [], description: '', condition: 'Perfect', sku: '', stock_qty: '' })
         return loadProducts()
       })
-      .catch(() => alert('Failed to add product'))
+      .catch(() => showErrorFeedback('Failed to add product. Please try again.'))
       .finally(() => setAddSubmitting(false))
   }
 
@@ -1541,16 +1549,16 @@ export default function AdminProductsPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            className="fixed bottom-5 right-5 z-[1200] w-[min(92vw,24rem)]"
+            className="fixed bottom-5 right-5 z-[1200] w-[min(90vw,18rem)]"
           >
             <div className="hero-glass-frame relative overflow-hidden rounded-xl backdrop-blur-lg">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <ModalCloseButton
-                onClose={() => setUndoDeletedProduct(null)}
-                className="absolute top-2 right-2 z-40 flex-shrink-0"
-                aria-label="Dismiss undo"
-              />
-              <div className="relative z-10 rounded-bl-xl rounded-tl-xl border border-neutral-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="relative z-10 rounded-bl-xl rounded-tl-xl border border-neutral-200 bg-white px-3 py-2.5 dark:border-neutral-700 dark:bg-neutral-800">
+                <ModalCloseButton
+                  onClose={() => setUndoDeletedProduct(null)}
+                  className="absolute -right-4 -top-4 z-40 flex-shrink-0"
+                  aria-label="Dismiss undo"
+                />
                 <p className="pr-8 text-sm text-neutral-800 dark:text-primary-200">Product deleted.</p>
                 <div className="mt-2">
                   <Button type="button" variant="default" size="sm" disabled={undoBusy} onClick={() => void undoDeleteProduct()}>
@@ -1566,9 +1574,16 @@ export default function AdminProductsPage() {
 
       <FeedbackDialog
         open={addImageRequiredOpen}
-        message="Add at least one image before you can save this product."
+        message="Add at least one image."
         variant="error"
         onClose={() => setAddImageRequiredOpen(false)}
+        zClassName="z-[1160]"
+      />
+      <FeedbackDialog
+        open={feedback.open}
+        message={feedback.message}
+        variant={feedback.variant}
+        onClose={() => setFeedback((prev) => ({ ...prev, open: false }))}
         zClassName="z-[1160]"
       />
     </div>
