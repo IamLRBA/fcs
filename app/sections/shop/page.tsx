@@ -356,17 +356,15 @@ export default function ShopPage() {
             transition={{ duration: 1 }}
             className="text-8xl sm:text-6xl md:text-8xl font-bold mb-8 overflow-visible pb-2 sm:pb-3 lg:pb-4"
           >
-            {/* flex-1 spacers: equal space from screen edges to the icon/wordmark group; icon + ᔕᕼOᑭ sizes unchanged on large screens */}
-            <span className="flex w-full max-w-full items-center">
-              <span className="min-w-0 flex-1 shrink" aria-hidden />
-              <span className="inline-flex max-w-full shrink-0 -translate-x-2 flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:-translate-x-8 lg:gap-20 xl:-translate-x-10 xl:gap-28">
+            {/* Tablet follows mobile stacking (icon above text); desktop keeps side-by-side composition. */}
+            <span className="flex w-full max-w-full items-center justify-center">
+              <span className="inline-flex max-w-full shrink-0 flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:-translate-x-8 lg:flex-row lg:items-center lg:gap-20 xl:-translate-x-10 xl:gap-28">
                 <HiOutlineShoppingBag
                   className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80"
                   aria-hidden="true"
                 />
                 <span className="text-gradient shrink-0 lg:origin-center lg:scale-[2] lg:leading-none">ᔕᕼOᑭ</span>
               </span>
-              <span className="min-w-0 flex-1 shrink" aria-hidden />
             </span>
           </motion.h1>
           <motion.p
@@ -428,10 +426,10 @@ export default function ShopPage() {
 
                 /* Square frames — wider on small screens so images read clearly; lg+ keeps left/center/right alignment */
                 const frameClass = isActive
-                  ? 'aspect-square w-[min(31vw,7.85rem)] sm:w-[6.85rem] md:w-[8.15rem] lg:w-[10.35rem] xl:w-[11.75rem]'
+                  ? 'aspect-square w-[min(31vw,7.85rem)] sm:w-[6.85rem] md:w-[10.15rem] lg:w-[10.35rem] xl:w-[11.75rem]'
                   : isDimmed
-                    ? 'aspect-square w-[min(25vw,6.1rem)] sm:w-[4.85rem] md:w-[5.85rem] lg:w-[6.6rem] xl:w-[7.35rem]'
-                    : 'aspect-square w-[min(29vw,7.2rem)] sm:w-[6.25rem] md:w-[7.2rem] lg:w-[8.7rem] xl:w-[9.9rem]'
+                    ? 'aspect-square w-[min(25vw,6.1rem)] sm:w-[4.85rem] md:w-[7.15rem] lg:w-[6.6rem] xl:w-[7.35rem]'
+                    : 'aspect-square w-[min(29vw,7.2rem)] sm:w-[6.25rem] md:w-[9rem] lg:w-[8.7rem] xl:w-[9.9rem]'
 
                 return (
                   <motion.div
@@ -474,7 +472,7 @@ export default function ShopPage() {
                             width={160}
                             height={160}
                             className="size-full min-h-0 min-w-0 rounded-xl object-cover sm:rounded-2xl"
-                            sizes="(max-width:640px) 120px, (max-width:768px) 128px, (max-width:1024px) 160px, 192px"
+                            sizes="(max-width:640px) 120px, (max-width:768px) 128px, (max-width:1024px) 196px, 192px"
                             loading="lazy"
                           />
                         </div>

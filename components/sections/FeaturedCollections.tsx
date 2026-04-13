@@ -34,11 +34,13 @@ interface FeaturedProduct {
 
 export default function FeaturedCollections() {
   const [featuredProducts, setFeaturedProducts] = useState<FeaturedProduct[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [addingToCart, setAddingToCart] = useState<string | null>(null)
   const [addedToCart, setAddedToCart] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const loadFeaturedProducts = async () => {
+      setIsLoading(true)
       try {
         const res = await fetch('/api/products?featured=1')
         if (!res.ok) {
@@ -50,6 +52,8 @@ export default function FeaturedCollections() {
       } catch (error) {
         console.error('Error loading featured products:', error)
         setFeaturedProducts([])
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -153,7 +157,9 @@ export default function FeaturedCollections() {
           </p>
         </motion.div>
 
-        {featuredProducts.length > 0 ? (
+        {isLoading ? (
+          <SkeletonFeaturedCollections />
+        ) : featuredProducts.length > 0 ? (
           <HorizontalScrollAffordance
             showEdgeFades={false}
             syncScrollEdgeLines
@@ -350,7 +356,9 @@ export default function FeaturedCollections() {
             </div>
           </HorizontalScrollAffordance>
         ) : (
-          <SkeletonFeaturedCollections />
+          <div className="mt-10 mb-14 max-w-6xl mx-auto text-center sm:mb-16">
+            <p className="text-base text-primary-700 dark:text-primary-300">No featured collections right now.</p>
+          </div>
         )}
       </div>
     </section>
