@@ -108,7 +108,7 @@ async function handleProductsGet(request: Request) {
     ...(includeInactive ? {} : { isActive: true }),
   }
 
-  const orderBy = [{ category: 'asc' as const }, { section: 'asc' as const }, { createdAt: 'desc' as const }]
+  const orderBy = [{ category: 'asc' as const }, { updatedAt: 'desc' as const }]
 
   if (lite && !grouped && !featured) {
     const rows = await prisma.product.findMany({

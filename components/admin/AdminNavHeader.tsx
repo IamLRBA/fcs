@@ -23,6 +23,7 @@ export default function AdminNavHeader({ title, subtitle }: AdminNavHeaderProps)
   const pathname = usePathname()
   const router = useRouter()
   const [showBackButton, setShowBackButton] = useState(true)
+  const [pendingCount, setPendingCount] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +34,28 @@ export default function AdminNavHeader({ title, subtitle }: AdminNavHeaderProps)
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    let mounted = true
+    const loadPendingOrders = async () => {
+      try {
+        const res = await fetch('/api/orders', { cache: 'no-store' })
+        if (!res.ok) return
+        const data = (await res.json()) as Array<{ status: string }>
+        if (!mounted) return
+        setPendingCount(data.filter((o) => o.status === 'pending').length)
+      } catch {
+        if (mounted) setPendingCount(0)
+      }
+    }
+
+    void loadPendingOrders()
+    const id = window.setInterval(loadPendingOrders, 30000)
+    return () => {
+      mounted = false
+      window.clearInterval(id)
+    }
+  }, [pathname])
 
   const handleLogout = () => {
     AuthManager.adminLogout()
@@ -104,6 +127,15 @@ export default function AdminNavHeader({ title, subtitle }: AdminNavHeaderProps)
               >
                 <Icon className="w-4 h-4 relative z-10" />
                 <span className="relative z-10">{label}</span>
+                {href === '/admin/orders' && pendingCount > 0 ? (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="relative z-10 ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-600 px-1 text-[10px] text-white dark:bg-primary-500"
+                  >
+                    {pendingCount > 99 ? '99+' : pendingCount}
+                  </motion.span>
+                ) : null}
               </Link>
             )
           })}
