@@ -13,6 +13,7 @@ import AdminNavHeader from '@/components/admin/AdminNavHeader'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import SafeImage from '@/components/common/SafeImage'
 import { Skeleton } from '@/components/ui/Skeleton'
+import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 
 interface Product {
@@ -65,6 +66,8 @@ const ADMIN_FILTER_CATEGORIES = [
   { value: 'footwear', label: 'Footwear' },
   { value: 'accessories', label: 'Accessories' },
 ] as const
+const ADMIN_FILTER_TOP = ADMIN_FILTER_CATEGORIES.slice(0, 3)
+const ADMIN_FILTER_BOTTOM = ADMIN_FILTER_CATEGORIES.slice(3)
 
 type RemovalReasonKey = 'PRODUCT_BOUGHT' | 'MISTAKENLY_POSTED' | 'DISCONTINUED'
 
@@ -501,25 +504,30 @@ export default function AdminProductsPage() {
               </Button>
             </div>
 
-            <div className="mb-6 max-w-xl mx-auto">
-              <div className="grid grid-cols-3 gap-2">
-                {ADMIN_FILTER_CATEGORIES.map((opt) => {
-                  const active = selectedCategoryFilter === opt.value
-                  return (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => setSelectedCategoryFilter(opt.value)}
-                      className={`focus-ring-none rounded-full border px-2 py-2 text-xs font-semibold transition-colors sm:text-sm ${
-                        active
-                          ? 'border-primary-600 bg-primary-600 text-white dark:border-primary-400 dark:bg-primary-500'
-                          : 'border-primary-300/60 bg-primary-50/80 text-primary-800 hover:bg-primary-100 dark:border-primary-500/40 dark:bg-neutral-800/80 dark:text-primary-200 dark:hover:bg-neutral-700'
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  )
-                })}
+            <div className="mb-6 mx-auto flex w-full max-w-2xl flex-col items-center gap-2 px-1">
+              <div className="w-full max-w-lg">
+                <SegmentedPillNav
+                  items={ADMIN_FILTER_TOP}
+                  value={
+                    ADMIN_FILTER_TOP.some((x) => x.value === selectedCategoryFilter)
+                      ? selectedCategoryFilter
+                      : null
+                  }
+                  onSelect={(id) => setSelectedCategoryFilter(id as (typeof ADMIN_FILTER_CATEGORIES)[number]['value'])}
+                  className="!max-w-none"
+                />
+              </div>
+              <div className="w-full max-w-xl">
+                <SegmentedPillNav
+                  items={ADMIN_FILTER_BOTTOM}
+                  value={
+                    ADMIN_FILTER_BOTTOM.some((x) => x.value === selectedCategoryFilter)
+                      ? selectedCategoryFilter
+                      : null
+                  }
+                  onSelect={(id) => setSelectedCategoryFilter(id as (typeof ADMIN_FILTER_CATEGORIES)[number]['value'])}
+                  className="!max-w-none"
+                />
               </div>
             </div>
 

@@ -154,7 +154,7 @@ export default function Home() {
                                 className="text-sm sm:text-lg px-5 sm:px-8 md:px-10 py-2.5 sm:py-4 md:py-4"
                                 onClick={() => scrollToSection('portals-section')}
                               >
-                                ᗪIᐯE Iᑎ ᑎOᗯ
+                                EᑎTEᖇ ᔕᕼOᑭ
                               </Button>
                             </div>
                           </div>
@@ -247,10 +247,10 @@ export default function Home() {
                     className="section-title"
                   >
                     <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
-                    EᑎTEᖇ <span className="text-accent-600 dark:text-accent-400">the Portal</span>
+                    EᑎTEᖇ <span className="text-accent-600 dark:text-accent-400">the ᔕᕼOᑭ</span>
                     </h2>
                     <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
-                      Discover future-ready thrift pieces, each piece waiting to reveal its story
+                      Click the image below to EᑎTEᖇ into our ᔕᕼOᑭ
                     </p>
                   </motion.div>
 

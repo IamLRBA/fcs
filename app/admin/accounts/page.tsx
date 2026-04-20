@@ -8,6 +8,7 @@ import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import AdminNavHeader from '@/components/admin/AdminNavHeader'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 type UserRow = {
   id: string
@@ -25,6 +26,7 @@ const PAGE_SIZE = 10
 export default function AdminAccountsPage() {
   const router = useRouter()
   const [list, setList] = useState<UserRow[]>([])
+  const [loading, setLoading] = useState(true)
   const [resetUserId, setResetUserId] = useState<string | null>(null)
   const [newPassword, setNewPassword] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -40,10 +42,15 @@ export default function AdminAccountsPage() {
   }, [router])
 
   const load = async () => {
-    const res = await fetch('/api/users', { cache: 'no-store' })
-    if (!res.ok) return
-    const users = (await res.json()) as UserRow[]
-    setList(users)
+    setLoading(true)
+    try {
+      const res = await fetch('/api/users', { cache: 'no-store' })
+      if (!res.ok) return
+      const users = (await res.json()) as UserRow[]
+      setList(users)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const setActive = async (userId: string, active: boolean) => {
@@ -184,7 +191,14 @@ export default function AdminAccountsPage() {
             </div>
 
             <div className="rounded-bl-lg rounded-br-lg border border-neutral-300/80 dark:border-neutral-700 bg-white dark:bg-neutral-800 overflow-hidden">
-                {filteredList.length === 0 ? (
+                {loading ? (
+                  <div className="space-y-2 px-3 py-3">
+                    <Skeleton className="h-10 w-full rounded-lg" />
+                    {Array.from({ length: 6 }).map((_, idx) => (
+                      <Skeleton key={`accounts-skeleton-${idx}`} className="h-14 w-full rounded-lg" />
+                    ))}
+                  </div>
+                ) : filteredList.length === 0 ? (
                   <div className="overflow-x-auto">
                     <p className="text-center text-neutral-600 dark:text-neutral-400 py-12 px-2">No accounts yet.</p>
                   </div>
