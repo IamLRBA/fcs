@@ -58,13 +58,13 @@ const formatSubcategoryLabel = (slug: string) =>
 const conditions = ['Perfect', 'New', 'Like New', 'Good']
 const PAGE_SIZE = 10
 const ADMIN_FILTER_CATEGORIES = [
-  { value: 'all', label: 'All' },
-  { value: 'shirts', label: 'Shirts' },
-  { value: 'tees', label: 'Tees' },
-  { value: 'coats', label: 'Outerwear' },
-  { value: 'pants-and-shorts', label: 'Bottoms' },
-  { value: 'footwear', label: 'Footwear' },
-  { value: 'accessories', label: 'Accessories' },
+  { id: 'all', label: 'All' },
+  { id: 'shirts', label: 'Shirts' },
+  { id: 'tees', label: 'Tees' },
+  { id: 'coats', label: 'Outerwear' },
+  { id: 'pants-and-shorts', label: 'Bottoms' },
+  { id: 'footwear', label: 'Footwear' },
+  { id: 'accessories', label: 'Accessories' },
 ] as const
 const ADMIN_FILTER_TOP = ADMIN_FILTER_CATEGORIES.slice(0, 3)
 const ADMIN_FILTER_BOTTOM = ADMIN_FILTER_CATEGORIES.slice(3)
@@ -121,7 +121,7 @@ export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [productsLoading, setProductsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<(typeof ADMIN_FILTER_CATEGORIES)[number]['value']>('all')
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<(typeof ADMIN_FILTER_CATEGORIES)[number]['id']>('all')
   const [detailsProduct, setDetailsProduct] = useState<Product | null>(null)
   const [detailsImageIndex, setDetailsImageIndex] = useState(0)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
@@ -509,11 +509,11 @@ export default function AdminProductsPage() {
                 <SegmentedPillNav
                   items={ADMIN_FILTER_TOP}
                   value={
-                    ADMIN_FILTER_TOP.some((x) => x.value === selectedCategoryFilter)
+                    ADMIN_FILTER_TOP.some((x) => x.id === selectedCategoryFilter)
                       ? selectedCategoryFilter
                       : null
                   }
-                  onSelect={(id) => setSelectedCategoryFilter(id as (typeof ADMIN_FILTER_CATEGORIES)[number]['value'])}
+                  onSelect={(id) => setSelectedCategoryFilter(id as (typeof ADMIN_FILTER_CATEGORIES)[number]['id'])}
                   className="!max-w-none"
                 />
               </div>
@@ -521,11 +521,11 @@ export default function AdminProductsPage() {
                 <SegmentedPillNav
                   items={ADMIN_FILTER_BOTTOM}
                   value={
-                    ADMIN_FILTER_BOTTOM.some((x) => x.value === selectedCategoryFilter)
+                    ADMIN_FILTER_BOTTOM.some((x) => x.id === selectedCategoryFilter)
                       ? selectedCategoryFilter
                       : null
                   }
-                  onSelect={(id) => setSelectedCategoryFilter(id as (typeof ADMIN_FILTER_CATEGORIES)[number]['value'])}
+                  onSelect={(id) => setSelectedCategoryFilter(id as (typeof ADMIN_FILTER_CATEGORIES)[number]['id'])}
                   className="!max-w-none"
                 />
               </div>
