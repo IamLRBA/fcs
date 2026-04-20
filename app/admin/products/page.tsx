@@ -12,6 +12,7 @@ import FeedbackDialog from '@/components/ui/FeedbackDialog'
 import AdminNavHeader from '@/components/admin/AdminNavHeader'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import SafeImage from '@/components/common/SafeImage'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 
 interface Product {
@@ -55,6 +56,15 @@ const formatSubcategoryLabel = (slug: string) =>
     .join(' ')
 const conditions = ['Perfect', 'New', 'Like New', 'Good']
 const PAGE_SIZE = 10
+const ADMIN_FILTER_CATEGORIES = [
+  { value: 'all', label: 'All' },
+  { value: 'shirts', label: 'Shirts' },
+  { value: 'tees', label: 'Tees' },
+  { value: 'coats', label: 'Outerwear' },
+  { value: 'pants-and-shorts', label: 'Bottoms' },
+  { value: 'footwear', label: 'Footwear' },
+  { value: 'accessories', label: 'Accessories' },
+] as const
 
 type RemovalReasonKey = 'PRODUCT_BOUGHT' | 'MISTAKENLY_POSTED' | 'DISCONTINUED'
 
@@ -106,7 +116,9 @@ function AdminShopCardDiscountPreview({ saleUgx, originalUgx }: { saleUgx: numbe
 export default function AdminProductsPage() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
+  const [productsLoading, setProductsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<(typeof ADMIN_FILTER_CATEGORIES)[number]['value']>('all')
   const [detailsProduct, setDetailsProduct] = useState<Product | null>(null)
   const [detailsImageIndex, setDetailsImageIndex] = useState(0)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
@@ -179,6 +191,7 @@ export default function AdminProductsPage() {
   }, [])
 
   const loadProducts = async () => {
+    setProductsLoading(true)
     try {
       const res = await fetch('/api/products?includeInactive=1&firstImageOnly=1', { cache: 'no-store' })
       if (!res.ok) throw new Error('Failed to load products')
@@ -187,6 +200,8 @@ export default function AdminProductsPage() {
     } catch (error) {
       console.error('Error loading products:', error)
       setProducts([])
+    } finally {
+      setProductsLoading(false)
     }
   }
 
@@ -205,12 +220,16 @@ export default function AdminProductsPage() {
   }
 
   const query = searchQuery.toLowerCase().trim()
+  const categoryFiltered =
+    selectedCategoryFilter === 'all'
+      ? products
+      : products.filter((p) => p.category === selectedCategoryFilter)
   const filtered = query
-    ? products.filter(p => {
+    ? categoryFiltered.filter(p => {
         const text = [p.name, p.brand, p.category, p.section, p.sku].join(' ').toLowerCase()
         return text.includes(query)
       })
-    : products
+    : categoryFiltered
   const filteredProducts = [...filtered].sort((a, b) => (a.name || '').localeCompare(b.name || ''))
 
   const totalTablePages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE))
@@ -219,7 +238,10 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     setTablePage(1)
-  }, [searchQuery])
+  }, [searchQuery, selectedCategoryFilter])
+
+  const selectThemeClass =
+    'input-overlay w-full rounded-lg border border-primary-300/60 bg-primary-50/80 px-3 py-2 text-primary-900 dark:border-primary-500/40 dark:bg-neutral-800/80 dark:text-primary-100'
 
   useEffect(() => {
     if (tablePage > totalTablePages) setTablePage(totalTablePages)
@@ -479,11 +501,42 @@ export default function AdminProductsPage() {
               </Button>
             </div>
 
+            <div className="mb-6 max-w-xl mx-auto">
+              <div className="grid grid-cols-3 gap-2">
+                {ADMIN_FILTER_CATEGORIES.map((opt) => {
+                  const active = selectedCategoryFilter === opt.value
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setSelectedCategoryFilter(opt.value)}
+                      className={`focus-ring-none rounded-full border px-2 py-2 text-xs font-semibold transition-colors sm:text-sm ${
+                        active
+                          ? 'border-primary-600 bg-primary-600 text-white dark:border-primary-400 dark:bg-primary-500'
+                          : 'border-primary-300/60 bg-primary-50/80 text-primary-800 hover:bg-primary-100 dark:border-primary-500/40 dark:bg-neutral-800/80 dark:text-primary-200 dark:hover:bg-neutral-700'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
             {/* Table */}
             <div className="rounded-bl-lg rounded-br-lg border border-neutral-300/80 dark:border-neutral-700 bg-white dark:bg-neutral-800 overflow-hidden">
-                {filteredProducts.length === 0 ? (
+                {productsLoading ? (
+                  <div className="space-y-2 px-3 py-3">
+                    <Skeleton className="h-10 w-full rounded-lg" />
+                    {Array.from({ length: 6 }).map((_, idx) => (
+                      <Skeleton key={`products-skeleton-${idx}`} className="h-14 w-full rounded-lg" />
+                    ))}
+                  </div>
+                ) : filteredProducts.length === 0 ? (
                   <div className="overflow-x-auto">
-                    <p className="text-center text-neutral-600 dark:text-neutral-400 py-12 px-2">No products match your search.</p>
+                    <p className="text-center text-neutral-600 dark:text-neutral-400 py-12 px-2">
+                      {query ? 'No products match your search.' : 'No products available yet.'}
+                    </p>
                   </div>
                 ) : (
                   <>
@@ -924,7 +977,7 @@ export default function AdminProductsPage() {
                           required
                           value={editingProduct.name}
                           onChange={(e) => setEditingProduct(prev => prev ? { ...prev, name: e.target.value } : null)}
-                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                          className={selectThemeClass}
                         />
                       </div>
                       <div>
@@ -934,7 +987,7 @@ export default function AdminProductsPage() {
                           required
                           value={editingProduct.brand ?? ''}
                           onChange={(e) => setEditingProduct(prev => prev ? { ...prev, brand: e.target.value } : null)}
-                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                          className={selectThemeClass}
                         />
                       </div>
                       <div>
@@ -951,7 +1004,7 @@ export default function AdminProductsPage() {
                               return { ...prev, category: cat, section: nextSection }
                             })
                           }}
-                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                          className={selectThemeClass}
                         >
                           {categories.map((c) => (
                             <option key={c} value={c}>
@@ -966,7 +1019,7 @@ export default function AdminProductsPage() {
                           required
                           value={editingProduct.section}
                           onChange={(e) => setEditingProduct(prev => prev ? { ...prev, section: e.target.value } : null)}
-                          className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
+                          className={selectThemeClass}
                         >
                           {(subcategoriesMap[editingProduct.category] ?? []).map((s) => (
                             <option key={s} value={s}>
@@ -1223,13 +1276,13 @@ export default function AdminProductsPage() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Category *</label>
-                        <select required value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value, section: subcategoriesMap[e.target.value]?.[0] || '' })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
+                        <select required value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value, section: subcategoriesMap[e.target.value]?.[0] || '' })} className={selectThemeClass}>
                           {categories.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Subcategory *</label>
-                        <select required value={newProduct.section} onChange={(e) => setNewProduct({ ...newProduct, section: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
+                        <select required value={newProduct.section} onChange={(e) => setNewProduct({ ...newProduct, section: e.target.value })} className={selectThemeClass}>
                           {subcategoriesMap[newProduct.category]?.map(s => <option key={s} value={s}>{formatSubcategoryLabel(s)}</option>)}
                         </select>
                       </div>
@@ -1295,7 +1348,7 @@ export default function AdminProductsPage() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Condition *</label>
-                        <select value={newProduct.condition} onChange={(e) => setNewProduct({ ...newProduct, condition: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white">
+                        <select value={newProduct.condition} onChange={(e) => setNewProduct({ ...newProduct, condition: e.target.value })} className={selectThemeClass}>
                           {conditions.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                       </div>
@@ -1510,7 +1563,7 @@ export default function AdminProductsPage() {
                   <select
                     value={deleteReason}
                     onChange={(e) => setDeleteReason(e.target.value as RemovalReasonKey)}
-                    className="input-overlay w-full rounded-lg px-3 py-2 dark:bg-neutral-700 dark:text-white"
+                    className={selectThemeClass}
                     disabled={deleteBusy}
                   >
                     {DELETE_REASON_OPTIONS.map((opt) => (
@@ -1572,13 +1625,37 @@ export default function AdminProductsPage() {
         )}
       </AnimatePresence>
 
-      <FeedbackDialog
-        open={addImageRequiredOpen}
-        message="Add at least one image."
-        variant="error"
-        onClose={() => setAddImageRequiredOpen(false)}
-        zClassName="z-[1160]"
-      />
+      <AnimatePresence>
+        {addImageRequiredOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1160] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm dark:bg-black/85"
+            onClick={() => setAddImageRequiredOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              className="hero-glass-frame relative w-full max-w-xs overflow-hidden rounded-2xl backdrop-blur-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
+              <div className="relative z-10 overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+                <ModalCloseButton
+                  onClose={() => setAddImageRequiredOpen(false)}
+                  className="absolute -right-4 -top-4 z-40 flex-shrink-0"
+                  aria-label="Close"
+                />
+                <div className="px-5 pb-5 pt-8 text-center">
+                  <p className="text-sm font-semibold text-red-600 dark:text-red-400">Add at least one image.</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
       <FeedbackDialog
         open={feedback.open}
         message={feedback.message}

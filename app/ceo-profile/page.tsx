@@ -686,7 +686,7 @@ export default function CEOProfile() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[1300] flex items-center justify-center p-4"
             onClick={closeImageModal}
           >
             <motion.div
@@ -697,7 +697,7 @@ export default function CEOProfile() {
               className="relative flex h-full w-full max-h-full flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <ModalCloseButton onClose={closeImageModal} className="absolute right-4 top-24 sm:right-6 sm:top-6 z-20 shrink-0" aria-label="Close photo" />
+              <ModalCloseButton onClose={closeImageModal} className="absolute right-4 top-4 sm:right-6 sm:top-6 z-20 shrink-0" aria-label="Close photo" />
               <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto p-8">
                 <img
                   src={galleryImages[selectedImage]}

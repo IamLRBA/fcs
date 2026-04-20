@@ -253,27 +253,26 @@ export default function SettingsDropdown({ variant = 'desktop', onOpenChange, on
 
               {/* Account Section */}
               <div className="p-2">
-                {isAuthenticated ? (
+                {isAuthenticated || isAdminSession ? (
                   <>
                     <button
                       type="button"
-                      onClick={() => navigateAuth('/account')}
+                      onClick={() => navigateAuth(isAdminSession ? '/admin/dashboard' : '/account')}
                       className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors"
                     >
                       <User className="w-5 h-5" />
-                      <span className="font-medium">Account</span>
+                      <span className="font-medium">Accounts</span>
                     </button>
                     <div className="divider-faded mx-0" />
-                    <button type="button" onClick={handleLogout} className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                    <button
+                      type="button"
+                      onClick={isAdminSession ? handleAdminLogout : handleLogout}
+                      className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    >
                       <LogOut className="w-5 h-5" />
                       <span className="font-medium">Log Out</span>
                     </button>
                   </>
-                ) : isAdminSession ? (
-                  <button type="button" onClick={handleAdminLogout} className="w-full flex items-center space-x-3 p-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                    <LogOut className="w-5 h-5" />
-                    <span className="font-medium">Log Out</span>
-                  </button>
                 ) : (
                   <button type="button" onClick={() => navigateAuth('/login')} className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors">
                     <User className="w-5 h-5" />
