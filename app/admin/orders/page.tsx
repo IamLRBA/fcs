@@ -11,7 +11,7 @@ import OrderItemsDetail from '@/components/orders/OrderItemsDetail'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
-import { SkeletonAdminDashboard } from '@/components/ui/Skeleton'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 type WorkflowTab = 'pending' | 'in_progress' | 'ready'
 
@@ -161,8 +161,8 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-h-screen pb-20">
-      {!isAdmin || loading ? (
-        <SkeletonAdminDashboard />
+      {!isAdmin ? (
+        <div className="min-h-screen" />
       ) : (
         <div className="mt-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <AdminNavHeader title="Orders" subtitle="Track and update customer orders" />
@@ -186,7 +186,21 @@ export default function AdminOrdersPage() {
                 />
               </div>
 
-              {filtered.length === 0 ? (
+              {loading ? (
+                <div className="space-y-3 py-2">
+                  {Array.from({ length: 3 }).map((_, idx) => (
+                    <div
+                      key={`orders-skeleton-${idx}`}
+                      className="mx-auto w-full max-w-md rounded-xl border border-neutral-300/80 bg-white/80 p-4 dark:border-neutral-600 dark:bg-neutral-900/50"
+                    >
+                      <Skeleton className="mb-3 h-4 w-20 rounded" />
+                      <Skeleton className="mb-2 h-5 w-44 rounded" />
+                      <Skeleton className="mb-4 h-3 w-36 rounded" />
+                      <Skeleton className="h-9 w-full rounded-lg" />
+                    </div>
+                  ))}
+                </div>
+              ) : filtered.length === 0 ? (
                 <p className="text-center text-neutral-600 dark:text-neutral-400 py-12">
                   No orders in this stage.
                 </p>
