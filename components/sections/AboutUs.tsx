@@ -190,10 +190,10 @@ export default function AboutUs() {
             ᗰEET THE TEᗩᗰ
           </h3>
 
-          <div className="text-center max-w-2xl mx-auto">
+          <div className="text-center max-w-md mx-auto">
             <div className="relative group hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center w-full">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 w-full bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
+              <div className="relative z-10 w-full bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <Image
                     src="/assets/images/team/lrba.jpg"
@@ -213,8 +213,8 @@ export default function AboutUs() {
                   />
                 </div>
 
-                <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-2">ᒪᖇᗷᗩ</h4>
-                <p className="text-lg text-primary-700 dark:text-primary-300 mb-6">CEO & Founder</p>
+                <h4 className="text-xl font-bold text-primary-800 dark:text-primary-100 mb-2">ᒪᖇᗷᗩ</h4>
+                <p className="text-primary-700 dark:text-primary-300 font-medium mb-6">CEO & Founder</p>
 
                 <Button
                   href="/ceo-profile"
