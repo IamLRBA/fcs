@@ -415,41 +415,6 @@ export default function Navbar() {
 
                 <div className="divider-faded my-4" />
 
-                {/* Shop Link */}
-                <div className="space-y-1">
-                  {navigation.filter(item => item.name === 'Shop').map((item) => {
-                    const active = isActive(item.href)
-                    const Icon = active ? item.solidIcon : item.outlineIcon
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        onClick={closeMenu}
-                        className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 relative overflow-hidden ${
-                          active
-                            ? 'bg-gradient-to-r from-primary-100 to-primary-50 dark:from-primary-900/50 dark:to-primary-800/30 text-primary-700 dark:text-primary-300 shadow-sm'
-                            : 'text-neutral-700 dark:text-neutral-300 hover:bg-gradient-to-r hover:from-neutral-100 hover:to-neutral-50 dark:hover:from-neutral-700 dark:hover:to-neutral-700/50'
-                        }`}
-                      >
-                        <div className={`p-2 rounded-lg transition-all duration-200 bg-transparent ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300'}`}>
-                          <Icon className="w-4 h-4 transition-colors" />
-                        </div>
-                        <span className={`font-light flex-1 ${active ? 'text-primary-800 dark:text-primary-200' : ''}`}>{item.name}</span>
-                        {active && (
-                          <motion.div
-                            layoutId="mobileActiveIndicator"
-                            className="absolute right-4 w-2 h-2 bg-primary-600 rounded-full"
-                            initial={false}
-                            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                          />
-                        )}
-                      </Link>
-                    )
-                  })}
-                </div>
-
-                <div className="divider-faded my-4" />
-
                 {/* Mobile Search – centered, icon left, X inside input */}
                 <div className="relative flex justify-center px-4" ref={searchRef}>
                   <form
