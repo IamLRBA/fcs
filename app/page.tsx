@@ -204,46 +204,14 @@ export default function Home() {
               {/* Featured Collections Section */}
               <FeaturedCollections />
 
-              {/* Portals Section */}
-              <section ref={portalsRef} id="portals-section" className="section relative">
+              {/* Portals Section — title sits directly under Featured Collections */}
+              <section ref={portalsRef} id="portals-section" className="relative overflow-hidden px-4 pt-4 pb-16 sm:pt-6 md:pt-8 md:pb-20">
                 <div className="container-custom relative z-10">
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="text-center mb-8"
-                  >
-                    <div className="hero-glass-frame relative inline-block backdrop-blur-lg mb-6 rounded-full">
-                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="inline-flex items-center space-x-3 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm"
-                      >
-                        <motion.span
-                          animate={{ rotate: [0, 10, -10, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          ✧
-                        </motion.span>
-                        <span className="font-medium">Step into the portal to explore future-forward thrift finds</span>
-                        <motion.span
-                          animate={{ y: [0, 5, 0] }}
-                          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                          ⇓
-                        </motion.span>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
                     className="section-title"
                   >
                     <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
