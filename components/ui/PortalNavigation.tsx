@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { HiMiniShoppingBag } from 'react-icons/hi2'
 import Button from '@/components/ui/Button'
@@ -149,56 +150,58 @@ export default function PortalNavigation() {
         ))}
       </motion.div>
 
-      {/* Portal Transition Overlay */}
-      <AnimatePresence>
-        {isTransitioning && transitioningPortal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center"
-            style={{
-              background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,0.8) 100%)`
-            }}
-          >
-            <motion.div
-              initial={{ scale: 0.1, opacity: 0 }}
-              animate={{
-                scale: [0.1, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 3.8, 4, 4.2, 4.4, 4.6, 4.8, 5],
-                opacity: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 0.6, 0.4, 0.2, 0]
-              }}
-              transition={{
-                duration: 3,
-                times: [0, 0.04, 0.08, 0.12, 0.16, 0.2, 0.24, 0.28, 0.32, 0.36, 0.4, 0.44, 0.48, 0.52, 0.56, 0.6, 0.64, 0.68, 0.72, 0.76, 0.8, 0.84, 0.88, 0.92, 0.96, 1],
-                ease: "easeInOut"
-              }}
-              className="relative w-64 h-64 rounded-full overflow-hidden"
-            >
-              {/* Spinning Background */}
-              <div
-                className="absolute inset-0 animate-spin-slow"
+      {/* Full-screen transition: portaled to body so it is not clipped by scroll-scale transform / overflow on ancestors. */}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {isTransitioning && transitioningPortal && (
+              <motion.div
+                key="portal-transition"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[2000] flex items-center justify-center"
                 style={{
-                  backgroundImage: `url(${transitioningPortal.image.replace('.jpg', '-hover.jpg')})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  filter: 'blur(1px)'
+                  background: `radial-gradient(circle, transparent 0%, rgba(0,0,0,0.8) 100%)`
                 }}
-              />
-
-              {/* Portal Content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10">
-                <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-lg shadow-2xl">
-                  {transitioningPortal.title}
-                </h3>
-                <h3 className="text-lg font-bold text-white/90 mb-4 leading-tight drop-shadow-lg shadow-2xl">
-                  {transitioningPortal.subtitle}
-                </h3>
-              </div>
-            </motion.div>
-          </motion.div>
+              >
+                <motion.div
+                  initial={{ scale: 0.1, opacity: 0 }}
+                  animate={{
+                    scale: [0.1, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 3.8, 4, 4.2, 4.4, 4.6, 4.8, 5],
+                    opacity: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.8, 0.6, 0.4, 0.2, 0]
+                  }}
+                  transition={{
+                    duration: 3,
+                    times: [0, 0.04, 0.08, 0.12, 0.16, 0.2, 0.24, 0.28, 0.32, 0.36, 0.4, 0.44, 0.48, 0.52, 0.56, 0.6, 0.64, 0.68, 0.72, 0.76, 0.8, 0.84, 0.88, 0.92, 0.96, 1],
+                    ease: "easeInOut"
+                  }}
+                  className="relative w-64 h-64 rounded-full overflow-hidden"
+                >
+                  <div
+                    className="absolute inset-0 animate-spin-slow"
+                    style={{
+                      backgroundImage: `url(${transitioningPortal.image.replace('.jpg', '-hover.jpg')})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                      filter: 'blur(1px)'
+                    }}
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10">
+                    <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-lg shadow-2xl">
+                      {transitioningPortal.title}
+                    </h3>
+                    <h3 className="text-lg font-bold text-white/90 mb-4 leading-tight drop-shadow-lg shadow-2xl">
+                      {transitioningPortal.subtitle}
+                    </h3>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   )
 }
