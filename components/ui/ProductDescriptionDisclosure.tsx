@@ -28,10 +28,13 @@ export default function ProductDescriptionDisclosure({
   }, [productKey])
 
   return (
-    <div className={`border border-neutral-200/90 dark:border-neutral-600/50 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${bodyClassName}`}>
-      <div className="flex min-h-[2.5rem] items-center justify-between gap-3 px-3 py-2 sm:px-4 sm:py-2.5">
+    <div
+      className={`w-full text-left border border-neutral-200/90 dark:border-neutral-600/50 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${bodyClassName}`}
+    >
+      {/* pl-0 pr-0: align with unboxed headings/body in the same modal column */}
+      <div className="flex w-full min-h-[2.5rem] items-center justify-start gap-1.5 py-2.5 pl-0 pr-0 sm:py-2.5">
         <span
-          className={`text-sm font-semibold text-neutral-900 dark:text-primary-100 ${labelClassName}`}
+          className={`text-left text-sm font-semibold text-primary-800 dark:text-primary-100 sm:text-sm ${labelClassName}`}
         >
           Product Description
         </span>
@@ -40,19 +43,21 @@ export default function ProductDescriptionDisclosure({
           variant="default"
           size="icon"
           onClick={() => setOpen((o) => !o)}
-          className="focus-ring-none h-10 w-10 shrink-0"
+          className="focus-ring-none h-9 w-9 shrink-0 p-0"
           aria-expanded={open}
           aria-label={open ? 'Hide product description' : 'Show product description'}
         >
-          {open ? <Minus className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+          {open ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
         </Button>
       </div>
       {open && (
-        <div className="border-t border-neutral-200/90 dark:border-neutral-600/50 px-3 pb-3 pt-2.5 sm:px-4 sm:pb-4">
+        <div className="border-t border-neutral-200/90 dark:border-neutral-600/50 pl-0 pr-0 pt-3 pb-3 sm:pb-3.5">
           {hasContent ? (
-            <p className="text-sm leading-relaxed text-neutral-700 dark:text-primary-300">{trimmed}</p>
+            <p className="w-full break-words text-left text-sm leading-relaxed text-neutral-700 text-pretty dark:text-primary-300 sm:text-sm">
+              {trimmed}
+            </p>
           ) : (
-            <p className="text-sm italic leading-relaxed text-neutral-500 dark:text-neutral-400">
+            <p className="w-full break-words text-left text-sm italic leading-relaxed text-neutral-500 text-pretty dark:text-neutral-400 sm:text-sm">
               No description provided.
             </p>
           )}
