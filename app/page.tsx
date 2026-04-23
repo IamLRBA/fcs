@@ -204,7 +204,7 @@ export default function Home() {
               {/* Featured + shop entry: one visual section (tight internal gap) */}
               <FeaturedCollections />
 
-              <section ref={portalsRef} id="portals-section" className="relative overflow-hidden px-4 pb-16 pt-0 md:pb-20">
+              <section ref={portalsRef} id="portals-section" className="relative overflow-visible px-4 pb-16 pt-0 md:pb-20">
                 <div className="container-custom relative z-10">
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
