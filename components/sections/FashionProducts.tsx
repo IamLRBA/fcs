@@ -154,7 +154,7 @@ const products: Product[] = [
       { name: 'More', slug: 'decor' }
     ],
     quote: {
-      text: 'Accessories are like vitamins to fashion – they enhance the outfit.',
+      text: 'Accessories are like vitamins to fashion, they enhance the outfit.',
       author: 'Anna Dello Russo'
     }
   }

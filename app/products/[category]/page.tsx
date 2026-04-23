@@ -602,7 +602,7 @@ export default function ProductCategoryPage() {
         author: 'Virgil Abloh'
       },
       'accessories': {
-        text: 'Accessories are like vitamins to fashion – they enhance the outfit.',
+        text: 'Accessories are like vitamins to fashion, they enhance the outfit.',
         author: 'Anna Dello Russo'
       }
     }
