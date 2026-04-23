@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
   description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
   keywords: 'futuristic thrift fashion, modern vintage clothing, conscious style, sustainable fashion, intuitive wardrobe, future-forward thrift, curated fashion pieces',
-  authors: [{ name: 'LRBA', url: 'https://mysticalpieces.com' }],
+  authors: [{ name: 'LRBA', url: 'https://www.mysticalpieces.com' }],
   creator: 'MysticalPIECES',
   publisher: 'MysticalPIECES',
   formatDetection: {
@@ -24,21 +24,21 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://mysticalpieces.com'),
+  metadataBase: new URL('https://www.mysticalpieces.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
     description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
-    url: 'https://mysticalpieces.com',
+    url: 'https://www.mysticalpieces.com',
     siteName: 'MysticalPIECES',
     images: [
       {
-        url: '/assets/images/og-image.jpg',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'MysticalPIECES',
+        alt: 'MysticalPIECES social card',
       },
     ],
     locale: 'en_US',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
     description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
-    images: ['/assets/images/og-image.jpg'],
+    images: ['/twitter-image'],
   },
   robots: {
     index: true,
@@ -74,6 +74,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <meta property="og:image" content="https://www.mysticalpieces.com/opengraph-image" />
+        <meta name="twitter:image" content="https://www.mysticalpieces.com/twitter-image" />
         <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="/assets/images/branding/logo-dark.png" />
         <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)" href="/assets/images/branding/logo-light.png" />
         <link rel="shortcut icon" href="/assets/images/branding/logo-dark.png" />
