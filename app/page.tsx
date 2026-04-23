@@ -201,11 +201,10 @@ export default function Home() {
               {/* Animated Image Banner */}
               <AnimatedImageBanner />
 
-              {/* Featured Collections Section */}
+              {/* Featured + shop entry: one visual section (tight internal gap) */}
               <FeaturedCollections />
 
-              {/* Portals Section — title sits directly under Featured Collections */}
-              <section ref={portalsRef} id="portals-section" className="relative overflow-hidden px-4 pt-4 pb-16 sm:pt-6 md:pt-8 md:pb-20">
+              <section ref={portalsRef} id="portals-section" className="relative overflow-hidden px-4 pb-16 pt-0 md:pb-20">
                 <div className="container-custom relative z-10">
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
