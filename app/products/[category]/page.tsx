@@ -8,6 +8,7 @@ import { ShoppingCart, X, Maximize2, Minimize, Quote, CircleSlash } from 'lucide
 import { CartManager, type CartItem } from '@/lib/cart'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import ProductDescriptionDisclosure from '@/components/ui/ProductDescriptionDisclosure'
 import { AuthManager } from '@/lib/auth'
 import SafeImage from '@/components/common/SafeImage'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
@@ -1000,7 +1001,11 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 </div>
               </div>
 
-              <p className="text-neutral-700 dark:text-primary-300 leading-relaxed">{product.description}</p>
+              <ProductDescriptionDisclosure
+                key={product.id}
+                productKey={product.id}
+                description={product.description ?? ''}
+              />
 
               {/* Size Display */}
               {(productSize || productColor) && (

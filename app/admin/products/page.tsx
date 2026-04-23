@@ -8,6 +8,7 @@ import { HiSearch, HiX } from 'react-icons/hi'
 import { AuthManager } from '@/lib/auth'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import ProductDescriptionDisclosure from '@/components/ui/ProductDescriptionDisclosure'
 import FeedbackDialog from '@/components/ui/FeedbackDialog'
 import AdminNavHeader from '@/components/admin/AdminNavHeader'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
@@ -735,9 +736,13 @@ export default function AdminProductsPage() {
                     <p className="text-lg font-semibold text-primary-600 dark:text-primary-300 mb-2">UGX {detailsProduct.price_ugx?.toLocaleString?.()}</p>
                     <p className="text-sm text-neutral-700 dark:text-neutral-300">Stock: {detailsProduct.stock_qty} • Condition: {detailsProduct.condition}</p>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2">Status: {detailsProduct.isActive !== false ? 'Active' : 'Inactive'}</p>
-                    {detailsProduct.description && (
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-3 leading-relaxed">{detailsProduct.description}</p>
-                    )}
+                    <div className="mt-3">
+                      <ProductDescriptionDisclosure
+                        key={detailsProduct.id}
+                        productKey={detailsProduct.id}
+                        description={detailsProduct.description ?? ''}
+                      />
+                    </div>
                   </div>
                 </div>
                 </div>
