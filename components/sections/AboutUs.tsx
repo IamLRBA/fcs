@@ -190,7 +190,7 @@ export default function AboutUs() {
             ᗰEET THE TEᗩᗰ
           </h3>
 
-          <div className="text-center max-w-md mx-auto">
+          <div className="text-center w-full max-w-sm mx-auto">
             <div className="relative group hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center w-full">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
               <div className="relative z-10 w-full bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
