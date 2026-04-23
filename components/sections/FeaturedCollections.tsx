@@ -119,7 +119,7 @@ export default function FeaturedCollections() {
   }
 
   return (
-    <section className="py-20 px-4 relative overflow-hidden">
+    <section className="relative overflow-hidden px-4 pt-20 pb-0 sm:pb-0">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -164,7 +164,7 @@ export default function FeaturedCollections() {
             showEdgeFades={false}
             syncScrollEdgeLines
             hideScrollbar
-            className="mt-10 mb-14 max-w-6xl mx-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:mb-16"
+            className="mt-10 mb-6 max-w-6xl mx-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:mb-7"
             scrollClassName="pt-6 pb-8"
             scrollAriaLabel="Featured collections"
           >
@@ -356,7 +356,7 @@ export default function FeaturedCollections() {
             </div>
           </HorizontalScrollAffordance>
         ) : (
-          <div className="mt-10 mb-14 max-w-6xl mx-auto text-center sm:mb-16">
+          <div className="mt-10 mb-6 max-w-6xl mx-auto text-center sm:mb-7">
             <p className="text-base text-primary-700 dark:text-primary-300">No featured collections right now.</p>
           </div>
         )}
