@@ -99,6 +99,10 @@ async function handleProductsGet(request: Request) {
   /** Admin table: one image per row to avoid loading huge base64 blobs for every gallery image. */
   const firstImageOnly =
     searchParams.get('firstImageOnly') === '1' && includeInactive && !grouped && !featured && !lite
+  /** Storefront grouped/featured lists only need a cover image; full gallery loads on demand (e.g. quick view). */
+  const storefrontCatalogOneImage =
+    !includeInactive && !lite && (grouped || featured)
+  const takeOneProductImage = firstImageOnly || storefrontCatalogOneImage
 
   const privateNoStore = includeInactive
 
@@ -156,7 +160,7 @@ async function handleProductsGet(request: Request) {
     include: {
       images: {
         orderBy: { sortOrder: 'asc' },
-        ...(firstImageOnly ? { take: 1 } : {}),
+        ...(takeOneProductImage ? { take: 1 } : {}),
       },
     },
     orderBy,
