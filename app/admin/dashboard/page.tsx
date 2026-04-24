@@ -95,7 +95,7 @@ export default function AdminDashboard() {
   const loadData = async () => {
     try {
       const [productsRes, usersRes, ordersRes, removalsRes] = await Promise.all([
-        fetch('/api/products?includeInactive=1', { cache: 'no-store' }),
+        fetch('/api/products?includeInactive=1&firstImageOnly=1', { cache: 'no-store' }),
         fetch('/api/users', { cache: 'no-store' }),
         fetch('/api/orders', { cache: 'no-store' }),
         fetch('/api/product-removals/summary', { cache: 'no-store' }),

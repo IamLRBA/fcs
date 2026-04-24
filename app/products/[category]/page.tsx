@@ -257,6 +257,7 @@ export default function ProductCategoryPage() {
   const [catalog, setCatalog] = useState<any>({ products: {} })
   const [loading, setLoading] = useState(true)
   const [showBackButton, setShowBackButton] = useState(true)
+  const quickViewFetchGen = useRef(0)
 
   useEffect(() => {
     let active = true
@@ -352,8 +353,21 @@ export default function ProductCategoryPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const openProductModal = useCallback((product: Product) => {
-    setSelectedProduct(product)
+  const openProductModal = useCallback(async (product: Product) => {
+    const gen = ++quickViewFetchGen.current
+    try {
+      const res = await fetch(`/api/products/${encodeURIComponent(product.id)}`, { cache: 'no-store' })
+      if (gen !== quickViewFetchGen.current) return
+      if (res.ok) {
+        const full = (await res.json()) as Product
+        setSelectedProduct(full)
+      } else {
+        setSelectedProduct(product)
+      }
+    } catch {
+      if (gen !== quickViewFetchGen.current) return
+      setSelectedProduct(product)
+    }
     AuthManager.addViewedItem(product.id)
   }, [])
 

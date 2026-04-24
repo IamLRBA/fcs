@@ -118,6 +118,8 @@ model Product {
   @@index([section])
   @@index([isActive])
   @@index([category, section])
+  /** Speeds storefront catalog: filter by category + active, order by updatedAt */
+  @@index([category, isActive, updatedAt(sort: Desc)])
   @@index([createdAt])
   @@map("products")
 }
