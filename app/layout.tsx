@@ -35,10 +35,10 @@ export const metadata: Metadata = {
     siteName: 'MysticalPIECES',
     images: [
       {
-        url: '/opengraph-image',
+        url: '/social-brand.jpg',
         width: 1200,
         height: 630,
-        alt: 'MysticalPIECES social card',
+        alt: 'MysticalPIECES social brand image',
       },
     ],
     locale: 'en_US',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'MysticalPIECES - Future-Facing Thrift Store & Boutique',
     description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
-    images: ['/twitter-image'],
+    images: ['/social-brand.jpg'],
   },
   robots: {
     index: true,
@@ -74,8 +74,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <meta property="og:image" content="https://www.mysticalpieces.com/opengraph-image" />
-        <meta name="twitter:image" content="https://www.mysticalpieces.com/twitter-image" />
+        <meta property="og:image" content="https://www.mysticalpieces.com/social-brand.jpg" />
+        <meta name="twitter:image" content="https://www.mysticalpieces.com/social-brand.jpg" />
         <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="/assets/images/branding/logo-dark.png" />
         <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)" href="/assets/images/branding/logo-light.png" />
         <link rel="shortcut icon" href="/assets/images/branding/logo-dark.png" />
