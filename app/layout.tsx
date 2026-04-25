@@ -75,7 +75,13 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <meta property="og:image" content="https://www.mysticalpieces.com/social-brand.jpg" />
+        <meta property="og:image:secure_url" content="https://www.mysticalpieces.com/social-brand.jpg" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="MysticalPIECES social brand image" />
         <meta name="twitter:image" content="https://www.mysticalpieces.com/social-brand.jpg" />
+        <meta name="twitter:image:alt" content="MysticalPIECES social brand image" />
         <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="/assets/images/branding/logo-dark.png" />
         <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)" href="/assets/images/branding/logo-light.png" />
         <link rel="shortcut icon" href="/assets/images/branding/logo-dark.png" />
