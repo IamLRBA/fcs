@@ -13,6 +13,32 @@ import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import { Skeleton } from '@/components/ui/Skeleton'
 
+type OrderDeleteReasonKey = 'PRODUCT_BOUGHT' | 'MISTAKENLY_POSTED' | 'DISCONTINUED'
+
+const DELETE_REASON_OPTIONS: { key: OrderDeleteReasonKey; label: string; description: string }[] = [
+  {
+    key: 'PRODUCT_BOUGHT',
+    label: 'Sold / purchased',
+    description: 'The piece was bought; remove it from the catalog.',
+  },
+  {
+    key: 'MISTAKENLY_POSTED',
+    label: 'Mistakenly posted',
+    description: 'Listed by mistake or with incorrect details.',
+  },
+  {
+    key: 'DISCONTINUED',
+    label: 'Discontinued',
+    description: 'No longer offered or replaced in the collection.',
+  },
+]
+
+const ICON_BTN_RED =
+  'w-10 h-10 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300'
+
+const selectThemeClass =
+  'input-overlay w-full rounded-lg border border-primary-300/60 bg-primary-50/80 px-3 py-2 text-primary-900 dark:border-primary-500/40 dark:bg-neutral-800/80 dark:text-primary-100'
+
 type WorkflowTab = 'pending' | 'in_progress' | 'ready'
 
 const TABS: { id: WorkflowTab; label: string }[] = [
@@ -51,6 +77,7 @@ export default function AdminOrdersPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [cancelConfirmOrderId, setCancelConfirmOrderId] = useState<string | null>(null)
+  const [cancelOrderReason, setCancelOrderReason] = useState<OrderDeleteReasonKey>('MISTAKENLY_POSTED')
   const [undoOrderId, setUndoOrderId] = useState<string | null>(null)
   const [ordersListPage, setOrdersListPage] = useState(1)
 
@@ -119,14 +146,17 @@ export default function AdminOrdersPage() {
 
   const runAction = async (
     orderId: string,
-    action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order' | 'undo_cancel'
+    action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order' | 'undo_cancel',
+    opts?: { reason?: OrderDeleteReasonKey }
   ) => {
     setBusyId(orderId)
     try {
+      const payload: { action: typeof action; reason?: string } = { action }
+      if (opts?.reason) payload.reason = opts.reason
       const res = await fetch(`/api/orders/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify(payload),
       })
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
@@ -144,11 +174,23 @@ export default function AdminOrdersPage() {
     setCancelConfirmOrderId(orderId)
   }
 
+  const cancelDialogOrder = useMemo(
+    () => (cancelConfirmOrderId ? orders.find((o) => o.id === cancelConfirmOrderId) : null),
+    [orders, cancelConfirmOrderId]
+  )
+
+  useEffect(() => {
+    if (cancelConfirmOrderId) {
+      setCancelOrderReason('MISTAKENLY_POSTED')
+    }
+  }, [cancelConfirmOrderId])
+
   const confirmCancelOrder = async () => {
     if (!cancelConfirmOrderId) return
     const targetId = cancelConfirmOrderId
     setCancelConfirmOrderId(null)
-    await runAction(targetId, 'cancel_order')
+    const reason = cancelOrderReason
+    await runAction(targetId, 'cancel_order', { reason })
     setUndoOrderId(targetId)
   }
 
@@ -263,22 +305,20 @@ export default function AdminOrdersPage() {
 
                           {!expanded && act ? (
                             <div className="px-4 sm:px-5 pb-4 pt-0 flex flex-col sm:flex-row justify-center items-center gap-3">
-                              {tab === 'pending' ? (
-                                <Button
-                                  variant="default"
-                                  size="icon"
-                                  type="button"
-                                  disabled={busy}
-                                  className="w-10 h-10 shrink-0 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    openCancelOrderDialog(order.id)
-                                  }}
-                                  aria-label="Cancel order"
-                                >
-                                  {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-5 h-5" />}
-                                </Button>
-                              ) : null}
+                              <Button
+                                variant="default"
+                                size="icon"
+                                type="button"
+                                disabled={busy}
+                                className={`h-10 shrink-0 focus-ring-none disabled:opacity-50 ${ICON_BTN_RED}`}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  openCancelOrderDialog(order.id)
+                                }}
+                                aria-label="Delete order"
+                              >
+                                {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-5 h-5" />}
+                              </Button>
                               <Button
                                 variant="default"
                                 size="sm"
@@ -332,19 +372,17 @@ export default function AdminOrdersPage() {
 
                               {act ? (
                                 <div className="mt-auto pt-8 flex flex-col sm:flex-row justify-center items-center gap-4 border-0">
-                                  {tab === 'pending' ? (
-                                    <Button
-                                      variant="default"
-                                      size="icon"
-                                      type="button"
-                                      disabled={busy}
-                                      className="w-10 h-10 shrink-0 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300 disabled:opacity-50"
-                                      onClick={() => openCancelOrderDialog(order.id)}
-                                      aria-label="Cancel order"
-                                    >
-                                      {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-5 h-5" />}
-                                    </Button>
-                                  ) : null}
+                                  <Button
+                                    variant="default"
+                                    size="icon"
+                                    type="button"
+                                    disabled={busy}
+                                    className={`h-10 shrink-0 focus-ring-none disabled:opacity-50 ${ICON_BTN_RED}`}
+                                    onClick={() => openCancelOrderDialog(order.id)}
+                                    aria-label="Delete order"
+                                  >
+                                    {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-5 h-5" />}
+                                  </Button>
                                   <Button
                                     variant="default"
                                     size="sm"
@@ -414,26 +452,48 @@ export default function AdminOrdersPage() {
               initial={{ scale: 0.96, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.96, opacity: 0 }}
-              className="hero-glass-frame relative w-full max-w-sm overflow-hidden rounded-2xl backdrop-blur-lg"
+              className="hero-glass-frame relative w-full max-w-md overflow-hidden rounded-2xl backdrop-blur-lg"
               onClick={(e: MouseEvent) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
               <ModalCloseButton onClose={() => setCancelConfirmOrderId(null)} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close" />
-              <div className="relative z-10 rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white p-6 pt-10 dark:border-neutral-700 dark:bg-neutral-800 sm:pt-8">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-primary-100">Cancel order?</h3>
-                <p className="mt-2 text-sm text-neutral-700 dark:text-primary-300">
-                  Are you sure you want to cancel this order?
-                </p>
-                <div className="mt-5 flex justify-center">
-                  <Button
-                    type="button"
-                    variant="filled"
-                    size="sm"
-                    className="!border-red-500 !bg-red-500 hover:!bg-red-600 hover:!text-white"
-                    onClick={() => void confirmCancelOrder()}
-                  >
-                    Cancel order
-                  </Button>
+              <div className="relative z-10 flex max-h-[min(90vh,34rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+                <div className="modal-scroll min-h-0 flex-1 overflow-y-auto p-6 pt-12 sm:p-8 sm:pt-14">
+                  <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Delete order?</h2>
+                  <p className="mt-2 text-neutral-700 dark:text-primary-300">
+                    <span className="font-semibold text-neutral-900 dark:text-primary-50">
+                      &ldquo;{cancelDialogOrder?.customer.fullName ?? 'this order'}&rdquo;
+                    </span>
+                  </p>
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-primary-400">Reason for removal</p>
+                  <div className="mt-3">
+                    <select
+                      value={cancelOrderReason}
+                      onChange={(e) => setCancelOrderReason(e.target.value as OrderDeleteReasonKey)}
+                      className={selectThemeClass}
+                    >
+                      {DELETE_REASON_OPTIONS.map((opt) => (
+                        <option key={opt.key} value={opt.key}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="mt-2 text-xs text-neutral-600 dark:text-primary-400">
+                      {DELETE_REASON_OPTIONS.find((opt) => opt.key === cancelOrderReason)?.description}
+                    </p>
+                  </div>
+                  <div className="mt-6 flex justify-center">
+                    <Button
+                      type="button"
+                      variant="default"
+                      size="icon"
+                      className={`focus-ring-none h-10 w-10 ${ICON_BTN_RED}`}
+                      onClick={() => void confirmCancelOrder()}
+                      aria-label="Delete order"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </motion.div>
