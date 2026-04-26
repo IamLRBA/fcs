@@ -6,9 +6,8 @@ import Link from 'next/link'
 import { ShoppingCart } from 'lucide-react'
 import { CartManager, OrderManager, calculateDeliveryFee, isKampalaAddress, type CartItem, type Order } from '@/lib/cart'
 import Button from '@/components/ui/Button'
-import { EmailTemplates } from '@/lib/emails/templates'
-import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import { AuthManager } from '@/lib/auth'
+import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import SafeImage from '@/components/common/SafeImage'
 
 export default function CheckoutPage() {
@@ -24,6 +23,7 @@ export default function CheckoutPage() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
     setCart(CartManager.getCart())
@@ -69,12 +69,13 @@ export default function CheckoutPage() {
     }
     
     setIsSubmitting(true)
-    
+    setSubmitError(null)
+
     // Calculate totals
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     const deliveryFee = calculateDeliveryFee(formData.deliveryOption, formData.city)
     const total = subtotal + deliveryFee
-    
+
     const orderPayload = {
       userId: AuthManager.getCurrentUser()?.id ?? null,
       customer: {
@@ -103,51 +104,41 @@ export default function CheckoutPage() {
       notes: formData.notes || undefined
     }
 
-    let order: Order
-    const apiRes = await fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderPayload)
-    })
-    if (apiRes.ok) {
-      order = await apiRes.json()
-      OrderManager.addOrder(order)
-    } else {
-      order = OrderManager.createOrder({
-        customer: orderPayload.customer,
-        items: cart,
-        subtotal,
-        deliveryFee,
-        total,
-        deliveryOption: formData.deliveryOption,
-        notes: formData.notes || undefined,
-        status: 'pending'
+    try {
+      const apiRes = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload)
       })
-    }
-    
-    // When the order is saved via API, the server sends shop + customer email and WhatsApp immediately.
-    // Local-only orders (API unavailable) still notify from the client here.
-    if (!apiRes.ok) {
-      try {
-        await Promise.all([
-          EmailTemplates.sendEmail(EmailTemplates.buyerConfirmation(order)),
-          EmailTemplates.sendEmail(EmailTemplates.sellerNotification(order)),
-        ])
-        await WhatsAppNotifications.sendWhatsApp(WhatsAppNotifications.businessNotification(order))
-        const isOnWhatsApp = await WhatsAppNotifications.isPhoneOnWhatsApp(order.customer.phone)
-        if (isOnWhatsApp) {
-          await WhatsAppNotifications.sendWhatsApp(WhatsAppNotifications.customerConfirmation(order))
+
+      if (!apiRes.ok) {
+        let message = `We could not place your order (error ${apiRes.status}). Please try again.`
+        try {
+          const errBody = (await apiRes.json()) as { error?: string }
+          if (errBody?.error && typeof errBody.error === 'string') {
+            message = errBody.error
+          }
+        } catch {
+          /* ignore non-JSON error bodies */
         }
-      } catch (error) {
-        console.error('Error sending notifications:', error)
+        setSubmitError(message)
+        return
       }
+
+      const order = (await apiRes.json()) as Order
+      OrderManager.addOrder(order)
+      CartManager.clearCart()
+      window.location.href = `/order-confirmation?orderId=${encodeURIComponent(order.id)}`
+    } catch (e) {
+      console.error('[checkout] order submit failed:', e)
+      setSubmitError(
+        'We could not reach the server to place your order. Check your connection and try again. If it keeps happening, contact us at ' +
+          SHOP_EMAIL +
+          '.'
+      )
+    } finally {
+      setIsSubmitting(false)
     }
-    
-    // Clear cart
-    CartManager.clearCart()
-    
-    // Redirect to confirmation page
-    window.location.href = `/order-confirmation?orderId=${order.id}`
   }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
@@ -193,6 +184,23 @@ export default function CheckoutPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-primary-50 mb-2">Checkout</h1>
           <p className="text-neutral-600 dark:text-primary-300">Complete your order with secure checkout</p>
         </motion.div>
+
+        {submitError && (
+          <div
+            role="alert"
+            className="mb-6 rounded-xl border border-red-400/60 bg-red-500/10 px-4 py-3 text-sm text-red-800 dark:border-red-500/50 dark:bg-red-950/40 dark:text-red-100"
+          >
+            <p className="font-medium">Order not placed</p>
+            <p className="mt-1">{submitError}</p>
+            <p className="mt-2 text-neutral-700 dark:text-primary-200">
+              Your cart is unchanged. You can try again below or email{' '}
+              <a href={`mailto:${SHOP_EMAIL}`} className="underline underline-offset-2">
+                {SHOP_EMAIL}
+              </a>
+              .
+            </p>
+          </div>
+        )}
 
         <div className="grid md:grid-cols-3 gap-4 md:gap-8 max-w-full md:max-w-6xl mx-auto">
           {/* Order Summary */}
