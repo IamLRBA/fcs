@@ -146,10 +146,13 @@ model ProductImage {
 // ---------------------------------------------------------------------------
 
 model Order {
-  id               String         @id @default(cuid())
-  userId           String?        @map("user_id")
-  status           OrderStatus    @default(pending)
-  deliveryOption   DeliveryOption @map("delivery_option")
+  id                 String         @id @default(cuid())
+  userId             String?        @map("user_id")
+  status             OrderStatus    @default(pending)
+  /// When status is cancelled, the pipeline stage before delete (for undo)
+  statusBeforeCancel OrderStatus?  @map("status_before_cancel")
+  cancellationReason RemovalReason? @map("cancellation_reason")
+  deliveryOption     DeliveryOption @map("delivery_option")
   subtotalUgx     Int            @map("subtotal_ugx")
   deliveryFeeUgx   Int            @map("delivery_fee_ugx")
   totalUgx         Int            @map("total_ugx")

@@ -6,10 +6,19 @@ import {
   notifyOrderProcessing,
   notifyOrderReady,
 } from '@/lib/orders/notify-customer-order'
-import type { OrderStatus } from '@prisma/client'
+import type { OrderStatus, RemovalReason } from '@prisma/client'
+
+const CANCELLABLE: OrderStatus[] = ['pending', 'confirmed', 'dispatched']
+const VALID_CANCEL_REASONS: RemovalReason[] = [
+  'PRODUCT_BOUGHT',
+  'MISTAKENLY_POSTED',
+  'DISCONTINUED',
+]
 
 type PatchBody = {
   action: 'start_progress' | 'mark_ready' | 'delivered' | 'cancel_order' | 'undo_cancel'
+  /** Required when action is cancel_order; same enum as product removal reasons. */
+  reason?: RemovalReason | string
 }
 
 const STEPS: Record<
@@ -36,15 +45,24 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
     }
 
     if (action === 'cancel_order') {
-      if (existing.status !== 'pending') {
+      if (!CANCELLABLE.includes(existing.status)) {
         return NextResponse.json(
-          { error: 'Only pending orders can be cancelled' },
+          { error: 'Only orders not yet delivered can be deleted' },
           { status: 409 }
         )
       }
+      const r = body?.reason
+      if (!r || !VALID_CANCEL_REASONS.includes(r as RemovalReason)) {
+        return NextResponse.json({ error: 'A valid reason is required' }, { status: 400 })
+      }
+      const reason = r as RemovalReason
       const updated = await prisma.order.update({
         where: { id },
-        data: { status: 'cancelled' },
+        data: {
+          status: 'cancelled',
+          statusBeforeCancel: existing.status,
+          cancellationReason: reason,
+        },
         include: { items: { orderBy: { createdAt: 'asc' } } },
       })
       const order = prismaOrderToClientOrder(updated)
@@ -60,9 +78,14 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
           { status: 409 }
         )
       }
+      const back = existing.statusBeforeCancel ?? 'pending'
       const updated = await prisma.order.update({
         where: { id },
-        data: { status: 'pending' },
+        data: {
+          status: back,
+          statusBeforeCancel: null,
+          cancellationReason: null,
+        },
         include: { items: { orderBy: { createdAt: 'asc' } } },
       })
       const order = prismaOrderToClientOrder(updated)
