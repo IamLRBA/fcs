@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { 
   Users, 
@@ -12,9 +12,12 @@ import {
 } from 'lucide-react'
 import Companies from './Companies'
 
+/** Shown as this value + sum of quantities on delivered orders (see `/api/stats/public`). */
+const ITEMS_SOLD_DISPLAY_BASE = 500
+
 const statsData = [
   { icon: Users, number: 500, suffix: '+', label: 'Happy Customers', description: 'Satisfied fashion enthusiasts' },
-  { icon: Award, number: 500, suffix: '+', label: 'Items Sold', description: 'Unique thrifted & new pieces' },
+  { icon: Award, number: ITEMS_SOLD_DISPLAY_BASE, suffix: '+', label: 'Items Sold', description: 'Unique thrifted & new pieces' },
   { icon: Clock, number: 3, suffix: '+', label: 'Years Curating', description: 'Fashion expertise & style' },
   { icon: Star, number: 98, suffix: '%', label: 'Client Satisfaction', description: 'Exceeding expectations' },
 ]
@@ -170,6 +173,29 @@ export default function Stats() {
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -50])
   const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 1])
 
+  const [deliveredLineItemsQty, setDeliveredLineItemsQty] = useState<number | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    void fetch('/api/stats/public')
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('stats'))))
+      .then((d: { deliveredLineItemsQty?: number }) => {
+        if (!cancelled) setDeliveredLineItemsQty(Number(d.deliveredLineItemsQty) || 0)
+      })
+      .catch(() => {
+        if (!cancelled) setDeliveredLineItemsQty(0)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const statsWithLiveSold = useMemo(() => {
+    const extra = deliveredLineItemsQty ?? 0
+    const soldTotal = ITEMS_SOLD_DISPLAY_BASE + extra
+    return statsData.map((s, i) => (i === 1 ? { ...s, number: soldTotal } : s))
+  }, [deliveredLineItemsQty])
+
   return (
     <section ref={containerRef} className="section relative overflow-hidden">
       <div className="container-custom relative z-10">
@@ -184,8 +210,8 @@ export default function Stats() {
           <p className="text-xl text-primary-600 dark:text-primary-300 max-w-3xl mx-auto leading-relaxed">Discover the impressive statistics that showcase our commitment to excellence, innovation, and client satisfaction across all our creative endeavors.</p>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {statsData.map((stat, index) => (
-            <StatCard key={index} stat={stat} index={index} />
+          {statsWithLiveSold.map((stat, index) => (
+            <StatCard key={stat.label} stat={stat} index={index} />
           ))}
         </div>
         <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 1.2, type: "spring", stiffness: 100 }} className="text-center mt-16">
