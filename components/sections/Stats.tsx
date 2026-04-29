@@ -14,7 +14,7 @@ import Companies from './Companies'
 
 const statsData = [
   { icon: Users, number: 500, suffix: '+', label: 'Happy Customers', description: 'Satisfied fashion enthusiasts' },
-  { icon: Award, number: 1200, suffix: '+', label: 'Items Sold', description: 'Unique thrifted & new pieces' },
+  { icon: Award, number: 500, suffix: '+', label: 'Items Sold', description: 'Unique thrifted & new pieces' },
   { icon: Clock, number: 3, suffix: '+', label: 'Years Curating', description: 'Fashion expertise & style' },
   { icon: Star, number: 98, suffix: '%', label: 'Client Satisfaction', description: 'Exceeding expectations' },
 ]
