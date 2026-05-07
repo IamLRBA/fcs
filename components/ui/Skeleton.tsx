@@ -135,7 +135,7 @@ export function SkeletonFeaturedCollections() {
             >
               <div className="hero-glass-frame relative w-full backdrop-blur-md">
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                <div className="flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 bg-primary-800/30 p-1.5 sm:gap-1.5 sm:p-2">
+                <div className="flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 bg-primary-800/20 p-1.5 sm:gap-1.5 sm:p-2 dark:bg-primary-800/30">
                   <Skeleton className="aspect-square w-full rounded-lg" />
                   <div className="space-y-1 px-0.5 pb-0.5 sm:px-1">
                     <Skeleton className="mx-auto h-3 w-4/5 rounded sm:h-3.5" />
