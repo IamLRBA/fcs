@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart, Sparkles, CircleSlash } from 'lucide-react'
+import SafeImage from '@/components/common/SafeImage'
 import Button from '@/components/ui/Button'
 import { SkeletonFeaturedCollections } from '@/components/ui/Skeleton'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
@@ -173,182 +174,123 @@ export default function FeaturedCollections() {
               const { product, categorySlug } = item
               const isAdding = addingToCart === product.id
               const isInCart = addedToCart.has(product.id) || CartManager.isProductInCart(product.id)
-              const hasDiscount = product.original_price && product.original_price > product.price_ugx
+              const hasDiscount = Boolean(product.original_price && product.original_price > product.price_ugx)
 
               return (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, y: 50, scale: 0.8 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ 
-                    duration: 0.5, 
-                    delay: index * 0.1,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                  whileHover={{ 
-                    y: -4,
-                    scale: 1.02,
-                    transition: { duration: 0.3 }
-                  }}
-                  className="group relative flex h-full flex-shrink-0 flex-col w-[min(180px,calc(100vw-2.25rem))] sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group relative flex h-full w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 flex-col sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
                 >
-                  {/* Outer glass frame (same style as hero image containers) */}
-                  <div className="hero-glass-frame relative w-full h-full flex flex-col flex-1 min-h-0 backdrop-blur-lg group-hover:shadow-xl transition-shadow duration-300">
-                    <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                    <motion.div
-                      className="relative z-10 flex-1 min-h-0 flex flex-col bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-md shadow-md transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40"
-                  >
-
-                    <Link href={`/products/${categorySlug}`} className="focus-ring-none block w-full">
-                      <div className="relative flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200">
-                        <motion.img
-                          src={product.images[0] || '/assets/images/placeholder.jpg'}
-                          alt={product.name}
-                          className="max-h-full max-w-full object-contain"
-                          whileHover={{ scale: 1.06 }}
-                          transition={{ duration: 0.4 }}
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.src = '/assets/images/placeholder.jpg'
-                          }}
-                        />
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
-                          initial={{ opacity: 0 }}
-                          whileHover={{ opacity: 1 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                        {hasDiscount && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
-                            className="absolute bottom-1.5 right-1.5 z-30 px-1 py-0.5 bg-accent-500 text-white text-[9px] font-bold leading-none rounded-full shadow-lg sm:bottom-2 sm:right-2 sm:px-1.5 sm:text-[10px]"
-                          >
-                            {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
-                          </motion.div>
-                        )}
-                        {isInCart && (
-                          <div
-                            className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black/55"
-                            aria-hidden
-                          >
-                            <CircleSlash className="h-9 w-9 text-white drop-shadow-lg sm:h-11 sm:w-11" strokeWidth={2} />
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-
-                    <div className="flex flex-1 flex-col px-1 pt-0.5 pb-1 relative z-10 sm:px-1.5 sm:pt-1 sm:pb-1.5">
-                      <Link href={`/products/${categorySlug}`} className="focus-ring-none">
-                        <motion.div
-                          whileHover={{ x: 5 }}
-                          transition={{ duration: 0.2 }}
-                          className="mb-0 text-center"
-                        >
-                          <h3 className="text-[11px] sm:text-xs font-bold text-neutral-850 dark:text-primary-50 mb-0 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-100 transition-colors leading-snug">
-                            {product.name}
-                          </h3>
-                        </motion.div>
-                      </Link>
-
-                      <div className="mt-0.5 mb-px sm:mt-1 sm:mb-0.5">
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          whileInView={{ opacity: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: index * 0.1 + 0.6 }}
-                          className="flex items-baseline justify-center space-x-1 flex-wrap"
-                        >
-                          <span className="text-xs font-bold text-neutral-800 dark:text-white dark:drop-shadow-sm group-hover:text-neutral-900 dark:group-hover:text-accent-50 transition-colors sm:text-[13px]">
-                            UGX {product.price_ugx.toLocaleString()}
-                          </span>
+                  <div className="hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl">
+                    <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+                    <div className="flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 bg-primary-800/30 p-1.5 sm:gap-1.5 sm:p-2">
+                      <Link href={`/products/${categorySlug}`} className="focus-ring-none block w-full shrink-0">
+                        <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-900/20">
+                          <SafeImage
+                            src={product.images[0]}
+                            alt={product.name}
+                            fill
+                            className="object-contain transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 640px) 180px, 220px"
+                            loading="lazy"
+                          />
                           {hasDiscount && (
-                            <span className="text-xs text-neutral-600 dark:text-primary-400 line-through group-hover:text-neutral-700 dark:group-hover:text-primary-300 transition-colors">
-                              UGX {product.original_price!.toLocaleString()}
-                            </span>
+                            <div className="absolute left-1.5 top-1.5 z-30 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-white sm:text-xs">
+                              {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
+                            </div>
                           )}
-                        </motion.div>
-                      </div>
-
-                      <motion.div
-                        whileHover={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 1.02 } : undefined}
-                        whileTap={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 0.98 } : undefined}
-                        className={`mb-1 sm:mb-1.5 ${
-                          product.stock_qty === 0
-                            ? 'opacity-50 cursor-not-allowed pointer-events-none'
-                            : isInCart
-                              ? 'opacity-50 cursor-pointer'
-                              : ''
-                        }`}
-                      >
-                        <div className={`relative w-full ${isInCart ? 'group/cartadd' : ''}`}>
-                          <Button
-                            variant="default"
-                            size="sm"
-                            onClick={() => handleAddToCart(product)}
-                            disabled={isAdding || isInCart || product.stock_qty === 0}
-                            className={`w-full justify-center gap-1 py-0.5 text-[10px] font-semibold sm:gap-1.5 sm:py-1 sm:text-[11px]${isInCart ? ' disabled:cursor-pointer' : ''}`}
-                            aria-label={
-                              isAdding
-                                ? 'Adding to cart'
-                                : isInCart
-                                  ? 'Already in cart'
-                                  : product.stock_qty === 0
-                                    ? 'Out of stock'
-                                    : 'Add to cart'
-                            }
-                          >
-                            <motion.div
-                              animate={isAdding ? { rotate: 360 } : {}}
-                              transition={{ duration: 0.5, repeat: isAdding ? Infinity : 0 }}
-                            >
-                              <ShoppingCart className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                            </motion.div>
-                            <span>
-                              {isAdding
-                                ? '…'
-                                : isInCart
-                                  ? 'Added'
-                                  : product.stock_qty === 0
-                                    ? 'Out'
-                                    : 'Add'}
-                            </span>
-                          </Button>
                           {isInCart && (
                             <div
-                              className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-200 group-hover/cartadd:opacity-100 dark:bg-black/50"
+                              className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black/55"
                               aria-hidden
                             >
-                              <CircleSlash className="h-5 w-5 text-white drop-shadow-md sm:h-6 sm:w-6" strokeWidth={2} />
+                              <CircleSlash className="h-9 w-9 text-white drop-shadow-lg sm:h-11 sm:w-11" strokeWidth={2} />
                             </div>
                           )}
                         </div>
-                      </motion.div>
+                      </Link>
 
-                      <motion.div className="flex justify-center">
-                        <Button
-                          href={`/products/${categorySlug}`}
-                          variant="default"
-                          size="sm"
-                          className="group/view-collection mt-0.5 gap-0.5 px-2 py-0.5 text-[10px] font-semibold sm:mt-1 sm:gap-1 sm:px-2.5 sm:py-1 sm:text-[11px]"
-                          aria-label={`View ${item.categoryName} collection`}
-                        >
-                          <span>View</span>
-                          <motion.span
-                            animate={{ x: [0, 3, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                            className="group-hover/view-collection:translate-x-1 transition-transform duration-200"
+                      <div className="flex min-h-0 flex-1 flex-col px-0.5 pb-0.5 pt-0 text-center sm:px-1">
+                        <Link href={`/products/${categorySlug}`} className="focus-ring-none">
+                          <h3 className="mb-px line-clamp-2 text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
+                            {product.name}
+                          </h3>
+                        </Link>
+
+                        <div className="mb-1 mt-px flex flex-wrap items-center justify-center gap-x-1 gap-y-0">
+                          <span className="text-[11px] font-bold text-primary-600 dark:text-primary-300 sm:text-xs">
+                            UGX {product.price_ugx.toLocaleString()}
+                          </span>
+                          {product.original_price && (
+                            <span className="text-[10px] leading-none text-neutral-600 line-through dark:text-neutral-400 sm:text-[11px]">
+                              UGX {product.original_price.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="mt-0.5 flex w-full flex-col gap-1">
+                          <div
+                            className={
+                              product.stock_qty === 0
+                                ? 'pointer-events-none opacity-50'
+                                : isInCart
+                                  ? 'opacity-50'
+                                  : ''
+                            }
                           >
-                            ⟹
-                          </motion.span>
-                        </Button>
-                      </motion.div>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              onClick={() => handleAddToCart(product)}
+                              disabled={isAdding || isInCart || product.stock_qty === 0}
+                              className={`w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs${isInCart ? ' disabled:cursor-pointer' : ''}`}
+                              aria-label={
+                                isAdding
+                                  ? 'Adding to cart'
+                                  : isInCart
+                                    ? 'Already in cart'
+                                    : product.stock_qty === 0
+                                      ? 'Out of stock'
+                                      : 'Add to cart'
+                              }
+                            >
+                              <motion.div
+                                animate={isAdding ? { rotate: 360 } : {}}
+                                transition={{ duration: 0.5, repeat: isAdding ? Infinity : 0 }}
+                              >
+                                <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                              </motion.div>
+                              <span>
+                                {isAdding
+                                  ? '…'
+                                  : isInCart
+                                    ? 'Added'
+                                    : product.stock_qty === 0
+                                      ? 'Out'
+                                      : 'Add'}
+                              </span>
+                            </Button>
+                          </div>
+
+                          <Button
+                            href={`/products/${categorySlug}`}
+                            variant="default"
+                            size="sm"
+                            className="w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs"
+                            aria-label={`View ${item.categoryName} collection`}
+                          >
+                            <span>View</span>
+                            <span aria-hidden className="translate-x-0 transition-transform duration-200 group-hover:translate-x-0.5">
+                              ⟹
+                            </span>
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                  </motion.div>
                   </div>
                 </motion.div>
               )

@@ -121,7 +121,7 @@ export function SkeletonFeaturedCollections() {
       showEdgeFades={false}
       syncScrollEdgeLines
       hideScrollbar
-      className="mt-10 mb-14 max-w-6xl mx-auto -mx-4 px-4 sm:mx-auto sm:px-0 sm:mb-16"
+      className="mt-10 mb-6 max-w-6xl mx-auto -mx-4 px-4 sm:mx-auto sm:px-0 sm:mb-7"
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel="Featured collections loading"
       keyboardFocusable={false}
@@ -131,13 +131,19 @@ export function SkeletonFeaturedCollections() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[min(180px,calc(100vw-2.25rem))] sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))] overflow-hidden rounded-md skeleton-panel"
+              className="relative w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
             >
-              <Skeleton className="aspect-square w-full rounded-none rounded-t-md" />
-              <div className="space-y-1 p-1.5 sm:space-y-1.5 sm:p-2">
-                <Skeleton className="h-2 w-12 rounded sm:h-2.5 sm:w-14" />
-                <Skeleton className="h-3 w-full rounded sm:h-3.5" />
-                <Skeleton className="h-6 w-full rounded-md sm:h-7" />
+              <div className="hero-glass-frame relative w-full backdrop-blur-md">
+                <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+                <div className="flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 bg-primary-800/30 p-1.5 sm:gap-1.5 sm:p-2">
+                  <Skeleton className="aspect-square w-full rounded-lg" />
+                  <div className="space-y-1 px-0.5 pb-0.5 sm:px-1">
+                    <Skeleton className="mx-auto h-3 w-4/5 rounded sm:h-3.5" />
+                    <Skeleton className="mx-auto h-2.5 w-1/2 rounded sm:h-3" />
+                    <Skeleton className="h-6 w-full rounded-md sm:h-7" />
+                    <Skeleton className="h-6 w-full rounded-md sm:h-7" />
+                  </div>
+                </div>
               </div>
             </div>
           ))}
