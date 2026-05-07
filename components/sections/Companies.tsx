@@ -111,8 +111,8 @@ export default function Companies() {
         style={{
           borderLeft: '4px solid',
           borderRight: '4px solid',
-          borderLeftColor: isDarkMode ? 'rgba(111, 78, 55, 0.4)' : 'rgba(139, 122, 90, 0.3)',
-          borderRightColor: isDarkMode ? 'rgba(111, 78, 55, 0.4)' : 'rgba(139, 122, 90, 0.3)',
+          borderLeftColor: isDarkMode ? 'rgba(113, 113, 122, 0.45)' : 'rgba(113, 113, 122, 0.3)',
+          borderRightColor: isDarkMode ? 'rgba(113, 113, 122, 0.45)' : 'rgba(113, 113, 122, 0.3)',
         }}
       >
         <motion.div

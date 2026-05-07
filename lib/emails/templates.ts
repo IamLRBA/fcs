@@ -13,14 +13,14 @@ export interface EmailConfig {
   }
 }
 
-/** MysticalPIECES palette — matches site primary / paper tones */
+/** MysticalPIECES palette — matches site zinc / grayscale tokens */
 const C = {
-  primary: '#6F4E37',
-  accent: '#8B7A5A',
-  text: '#2C2825',
-  muted: '#5C534C',
-  border: '#D4C4B0',
-  paper: '#FAF7F3',
+  primary: '#27272a',
+  accent: '#71717a',
+  text: '#18181b',
+  muted: '#52525b',
+  border: '#d4d4d8',
+  paper: '#fafafa',
   white: '#FFFFFF',
 }
 
@@ -86,7 +86,7 @@ function wrapEmail(title: string, lead: string, bodyHtml: string): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="color-scheme" content="light"></head>
-<body style="margin:0;padding:24px 16px;background:#E8E2DA;font-family:Georgia,'Times New Roman',serif;">
+<body style="margin:0;padding:24px 16px;background:#e4e4e7;font-family:Georgia,'Times New Roman',serif;">
   <div style="max-width:560px;margin:0 auto;background:${C.white};border:1px solid ${C.border};">
     <div style="padding:24px 28px 8px;border-bottom:1px solid ${C.border};">
       <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${C.accent};">MysticalPIECES</div>

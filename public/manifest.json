@@ -4,8 +4,8 @@
   "description": "Thrift Store & Boutique",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FEFEFE",
-  "theme_color": "#6F4E37",
+  "background_color": "#FAFAFA",
+  "theme_color": "#27272A",
   "icons": [
     {
       "src": "/favicon.svg",
