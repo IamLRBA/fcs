@@ -298,7 +298,7 @@
   }
 
   .settings-inner-light-depth {
-    background-color: rgb(248 247 246);
+    background-color: rgb(244 244 245);
   }
 
   .dark .settings-inner-light-depth {
@@ -326,7 +326,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(111, 78, 55, 0.3); /* Coffee with transparency */
+    background: rgba(113, 113, 122, 0.35);
     border-radius: var(--radius-full);
     border: 2px solid transparent;
     background-clip: content-box;
@@ -342,7 +342,7 @@
   /* Firefox Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(111, 78, 55, 0.3) transparent;
+    scrollbar-color: rgba(113, 113, 122, 0.35) transparent;
   }
 
   /* Hide scrollbar for specific elements */
@@ -488,18 +488,18 @@
   .slider-sync-edge-rail-bar {
     width: 4px;
     min-width: 4px;
-    background-color: rgba(139, 122, 90, 0.3);
+    background-color: rgba(113, 113, 122, 0.3);
   }
 
   .dark .slider-sync-edge-rail-bar {
-    background-color: rgba(111, 78, 55, 0.4);
+    background-color: rgba(113, 113, 122, 0.45);
   }
 
   /* Button Styles - Mystical Future Gradient */
   .btn {
-    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.95), rgba(111, 78, 55, 0.95), rgba(90, 62, 45, 0));
-    --btn-surface: rgba(111, 78, 55, 0.08);
-    --btn-surface-hover: linear-gradient(135deg, rgba(238, 229, 218, 0.95), rgba(111, 78, 55, 0.9));
+    --btn-border-gradient: linear-gradient(135deg, rgba(244, 244, 245, 0.95), rgba(63, 63, 70, 0.95), rgba(39, 39, 42, 0));
+    --btn-surface: rgba(63, 63, 70, 0.08);
+    --btn-surface-hover: linear-gradient(135deg, rgba(244, 244, 245, 0.95), rgba(63, 63, 70, 0.9));
     --btn-text-color: var(--color-accent-600);
     --btn-text-hover: var(--color-text-inverse);
     @apply relative inline-flex items-center justify-center px-6 py-3 rounded-full tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
@@ -799,9 +799,9 @@
   }
 
   .btn-primary {
-    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
-    --btn-surface: rgba(111, 78, 55, 0.06);
-    --btn-surface-hover: linear-gradient(130deg, rgba(238, 229, 218, 0.98), rgba(111, 78, 55, 0.92));
+    --btn-border-gradient: linear-gradient(130deg, rgba(244, 244, 245, 0.95), rgba(161, 161, 170, 0.95), rgba(63, 63, 70, 0));
+    --btn-surface: rgba(63, 63, 70, 0.06);
+    --btn-surface-hover: linear-gradient(130deg, rgba(244, 244, 245, 0.98), rgba(63, 63, 70, 0.92));
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-text-inverse);
   }
@@ -809,28 +809,28 @@
   .dark .btn-primary {
     --btn-text-color: var(--color-accent-100);
     --btn-surface: rgba(255, 255, 255, 0.04);
-    --btn-surface-hover: linear-gradient(130deg, rgba(238, 229, 218, 0.85), rgba(111, 78, 55, 0.9));
+    --btn-surface-hover: linear-gradient(130deg, rgba(228, 228, 231, 0.85), rgba(63, 63, 70, 0.9));
     --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-secondary {
-    --btn-border-gradient: linear-gradient(135deg, rgba(111, 78, 55, 0.35), rgba(90, 62, 45, 0.65), rgba(238, 229, 218, 0));
-    --btn-surface: linear-gradient(135deg, rgba(111, 78, 55, 0.85), rgba(90, 62, 45, 0.8));
-    --btn-surface-hover: linear-gradient(135deg, rgba(111, 78, 55, 0.92), rgba(90, 62, 45, 0.88));
+    --btn-border-gradient: linear-gradient(135deg, rgba(63, 63, 70, 0.35), rgba(39, 39, 42, 0.65), rgba(244, 244, 245, 0));
+    --btn-surface: linear-gradient(135deg, rgba(63, 63, 70, 0.85), rgba(39, 39, 42, 0.8));
+    --btn-surface-hover: linear-gradient(135deg, rgba(63, 63, 70, 0.92), rgba(39, 39, 42, 0.88));
     --btn-text-color: var(--color-text-inverse);
     --btn-text-hover: var(--color-accent-50);
   }
 
   .dark .btn-secondary {
-    --btn-surface: linear-gradient(135deg, rgba(168, 155, 111, 0.85), rgba(111, 78, 55, 0.85));
-    --btn-surface-hover: linear-gradient(135deg, rgba(238, 229, 218, 0.9), rgba(111, 78, 55, 0.88));
+    --btn-surface: linear-gradient(135deg, rgba(161, 161, 170, 0.85), rgba(63, 63, 70, 0.85));
+    --btn-surface-hover: linear-gradient(135deg, rgba(228, 228, 231, 0.9), rgba(63, 63, 70, 0.88));
     --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-outline {
-    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
+    --btn-border-gradient: linear-gradient(135deg, rgba(244, 244, 245, 0.95), rgba(161, 161, 170, 0.95), rgba(63, 63, 70, 0));
     --btn-surface: transparent;
-    --btn-surface-hover: linear-gradient(135deg, rgba(238, 229, 218, 0.85), rgba(111, 78, 55, 0.8));
+    --btn-surface-hover: linear-gradient(135deg, rgba(244, 244, 245, 0.85), rgba(63, 63, 70, 0.8));
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-text-inverse);
   }
@@ -841,9 +841,9 @@
   }
 
   .btn-outline-reverse {
-    --btn-border-gradient: linear-gradient(315deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
+    --btn-border-gradient: linear-gradient(315deg, rgba(244, 244, 245, 0.95), rgba(161, 161, 170, 0.95), rgba(63, 63, 70, 0));
     --btn-surface: transparent;
-    --btn-surface-hover: linear-gradient(315deg, rgba(238, 229, 218, 0.85), rgba(111, 78, 55, 0.8));
+    --btn-surface-hover: linear-gradient(315deg, rgba(244, 244, 245, 0.85), rgba(63, 63, 70, 0.8));
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-text-inverse);
   }
@@ -854,9 +854,9 @@
   }
 
   .btn-ghost {
-    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.45), rgba(111, 78, 55, 0.5), rgba(90, 62, 45, 0));
+    --btn-border-gradient: linear-gradient(135deg, rgba(244, 244, 245, 0.45), rgba(63, 63, 70, 0.5), rgba(39, 39, 42, 0));
     --btn-surface: transparent;
-    --btn-surface-hover: rgba(111, 78, 55, 0.15);
+    --btn-surface-hover: rgba(63, 63, 70, 0.15);
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-accent-900);
   }
@@ -864,35 +864,35 @@
   .dark .btn-ghost {
     --btn-text-color: var(--color-accent-100);
     --btn-text-hover: var(--color-text-primary);
-    --btn-surface-hover: rgba(238, 229, 218, 0.18);
+    --btn-surface-hover: rgba(212, 212, 216, 0.18);
   }
 
   .btn-danger {
-    --btn-border-gradient: linear-gradient(135deg, rgba(210, 120, 90, 0.95), rgba(139, 60, 37, 0.95), rgba(50, 20, 14, 0));
-    --btn-surface: rgba(139, 60, 37, 0.12);
-    --btn-surface-hover: linear-gradient(135deg, rgba(210, 120, 90, 0.92), rgba(139, 60, 37, 0.88));
-    --btn-text-color: #6f2a16;
+    --btn-border-gradient: linear-gradient(135deg, rgba(161, 161, 170, 0.95), rgba(63, 63, 70, 0.95), rgba(24, 24, 27, 0));
+    --btn-surface: rgba(63, 63, 70, 0.12);
+    --btn-surface-hover: linear-gradient(135deg, rgba(113, 113, 122, 0.92), rgba(39, 39, 42, 0.88));
+    --btn-text-color: #27272a;
     --btn-text-hover: var(--color-text-inverse);
   }
 
   .dark .btn-danger {
-    --btn-text-color: rgba(255, 230, 220, 0.92);
-    --btn-surface: rgba(210, 120, 90, 0.28);
-    --btn-surface-hover: linear-gradient(135deg, rgba(210, 120, 90, 0.92), rgba(139, 60, 37, 0.9));
+    --btn-text-color: rgba(228, 228, 231, 0.92);
+    --btn-surface: rgba(82, 82, 91, 0.28);
+    --btn-surface-hover: linear-gradient(135deg, rgba(161, 161, 170, 0.92), rgba(63, 63, 70, 0.9));
     --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-secondary.btn-hover-primary-outline:hover,
   .btn-secondary.btn-hover-primary-outline:focus-visible {
-    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
-    --btn-surface-hover: rgba(111, 78, 55, 0.06);
+    --btn-border-gradient: linear-gradient(130deg, rgba(244, 244, 245, 0.95), rgba(161, 161, 170, 0.95), rgba(63, 63, 70, 0));
+    --btn-surface-hover: rgba(63, 63, 70, 0.06);
     --btn-text-hover: var(--color-accent-700);
-    --btn-surface: rgba(111, 78, 55, 0.08);
+    --btn-surface: rgba(63, 63, 70, 0.08);
   }
 
   .dark .btn-secondary.btn-hover-primary-outline:hover,
   .dark .btn-secondary.btn-hover-primary-outline:focus-visible {
-    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.9), rgba(168, 155, 111, 0.9), rgba(111, 78, 55, 0));
+    --btn-border-gradient: linear-gradient(130deg, rgba(228, 228, 231, 0.9), rgba(161, 161, 170, 0.9), rgba(63, 63, 70, 0));
     --btn-surface-hover: rgba(255, 255, 255, 0.04);
     --btn-text-hover: var(--color-accent-100);
     --btn-surface: rgba(255, 255, 255, 0.06);
@@ -901,9 +901,9 @@
   /* Go Home hover = Continue Shopping default (primary non-hover look) */
   .btn-secondary.btn-hover-primary-filled:hover,
   .btn-secondary.btn-hover-primary-filled:focus-visible {
-    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
-    --btn-surface: rgba(111, 78, 55, 0.06);
-    --btn-surface-hover: rgba(111, 78, 55, 0.06);
+    --btn-border-gradient: linear-gradient(130deg, rgba(244, 244, 245, 0.95), rgba(161, 161, 170, 0.95), rgba(63, 63, 70, 0));
+    --btn-surface: rgba(63, 63, 70, 0.06);
+    --btn-surface-hover: rgba(63, 63, 70, 0.06);
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-accent-700);
   }
@@ -922,8 +922,8 @@
   .btn-outline.btn-hover-secondary-filled:focus-visible,
   .btn-circle.btn-hover-secondary-filled:hover,
   .btn-circle.btn-hover-secondary-filled:focus-visible {
-    --btn-border-gradient: linear-gradient(135deg, rgba(111, 78, 55, 0.35), rgba(90, 62, 45, 0.65), rgba(238, 229, 218, 0));
-    --btn-surface-hover: linear-gradient(135deg, rgba(111, 78, 55, 0.85), rgba(90, 62, 45, 0.8));
+    --btn-border-gradient: linear-gradient(135deg, rgba(63, 63, 70, 0.35), rgba(39, 39, 42, 0.65), rgba(244, 244, 245, 0));
+    --btn-surface-hover: linear-gradient(135deg, rgba(63, 63, 70, 0.85), rgba(39, 39, 42, 0.8));
     --btn-text-hover: var(--color-text-inverse);
   }
 
@@ -933,8 +933,8 @@
   .dark .btn-outline.btn-hover-secondary-filled:focus-visible,
   .dark .btn-circle.btn-hover-secondary-filled:hover,
   .dark .btn-circle.btn-hover-secondary-filled:focus-visible {
-    --btn-border-gradient: linear-gradient(135deg, rgba(168, 155, 111, 0.4), rgba(111, 78, 55, 0.7), rgba(238, 229, 218, 0));
-    --btn-surface-hover: linear-gradient(135deg, rgba(168, 155, 111, 0.8), rgba(111, 78, 55, 0.78));
+    --btn-border-gradient: linear-gradient(135deg, rgba(161, 161, 170, 0.4), rgba(63, 63, 70, 0.7), rgba(228, 228, 231, 0));
+    --btn-surface-hover: linear-gradient(135deg, rgba(161, 161, 170, 0.8), rgba(63, 63, 70, 0.78));
     --btn-text-hover: var(--color-text-primary);
   }
 
@@ -1031,7 +1031,7 @@
   .divider-faded {
     width: 100%;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(38, 36, 36, 0.3) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(24, 24, 27, 0.3) 50%, transparent 100%);
     margin: 0.25rem 0;
   }
 
@@ -1360,7 +1360,7 @@
 }
 
 .audio-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.3); /* Coffee with transparency */
+  background: rgba(113, 113, 122, 0.35);
   border-radius: var(--radius-full);
   border: 2px solid transparent;
   background-clip: content-box;
@@ -1368,12 +1368,12 @@
 }
 
 .audio-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.5);
+  background: rgba(113, 113, 122, 0.55);
   background-clip: content-box;
 }
 
 .audio-scrollbar:active::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.7);
+  background: rgba(82, 82, 91, 0.7);
   background-clip: content-box;
 }
 
@@ -1383,7 +1383,7 @@
 
 .audio-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(111, 78, 55, 0.3) transparent;
+  scrollbar-color: rgba(113, 113, 122, 0.35) transparent;
 }
 
 /* Horizontal Scrollbar Styles */
@@ -1398,7 +1398,7 @@
 }
 
 .horizontal-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.25); /* Coffee with transparency */
+  background: rgba(113, 113, 122, 0.28);
   border-radius: var(--radius-full);
   border: 1.5px solid transparent;
   background-clip: content-box;
@@ -1406,18 +1406,18 @@
 }
 
 .horizontal-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.45);
+  background: rgba(113, 113, 122, 0.48);
   background-clip: content-box;
 }
 
 .horizontal-scrollbar:active::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.65);
+  background: rgba(82, 82, 91, 0.62);
   background-clip: content-box;
 }
 
 .horizontal-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(111, 78, 55, 0.25) transparent;
+  scrollbar-color: rgba(113, 113, 122, 0.28) transparent;
 }
 
 /* Modal/Overlay Scrollbar Styles */
@@ -1432,7 +1432,7 @@
 }
 
 .modal-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.2); /* Coffee with transparency */
+  background: rgba(113, 113, 122, 0.22);
   border-radius: var(--radius-full);
   border: 2px solid transparent;
   background-clip: content-box;
@@ -1440,12 +1440,12 @@
 }
 
 .modal-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.4);
+  background: rgba(113, 113, 122, 0.42);
   background-clip: content-box;
 }
 
 .modal-scrollbar:active::-webkit-scrollbar-thumb {
-  background: rgba(111, 78, 55, 0.6);
+  background: rgba(82, 82, 91, 0.58);
   background-clip: content-box;
 }
 
@@ -1455,7 +1455,7 @@
 
 .modal-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(111, 78, 55, 0.2) transparent;
+  scrollbar-color: rgba(113, 113, 122, 0.22) transparent;
 }
 
 
@@ -1483,7 +1483,7 @@
   input.input-overlay,
   textarea.input-overlay {
     background-color: rgba(0, 0, 0, 0.06);
-    color: var(--color-neutral-850, #262424);
+    color: var(--color-neutral-850, #1f1f23);
     border: var(--input-border-width) solid var(--color-input-border) !important;
     border-radius: 0.5rem;
   }
@@ -1508,13 +1508,13 @@
   .dark input.input-overlay,
   .dark textarea.input-overlay {
     background-color: rgba(0, 0, 0, 0.4);
-    color: var(--color-primary-100, #EFE9E0);
+    color: var(--color-primary-100, #f4f4f5);
     border-color: var(--color-input-border) !important;
   }
   .dark .input-overlay::placeholder,
   .dark input.input-overlay::placeholder,
   .dark textarea.input-overlay::placeholder {
-    color: rgba(238, 233, 224, 0.6);
+    color: rgba(212, 212, 216, 0.6);
   }
 
 /* Admin products page: remove select dropdown arrows and number spinners */
@@ -1794,14 +1794,13 @@
   @apply border-neutral-700 border-t-primary-500;
 }
 
-/* Skeleton loading – camouflage: blends with bg-unified / hero-glass (no flat gray boxes) */
+/* Skeleton loading — frosted neutral tint so background image still reads through */
 .skeleton {
   position: relative;
   overflow: hidden;
   border-radius: 0.375rem;
-  /* Light: warm coffee tint + frosted glass so background image still reads through */
-  background-color: rgb(111 78 55 / 0.045);
-  border: 1px solid rgb(111 78 55 / 0.04);
+  background-color: rgb(63 63 70 / 0.045);
+  border: 1px solid rgb(63 63 70 / 0.04);
   box-shadow: none;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -1815,7 +1814,7 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Shimmer: subtle warm pulse (light) – not a white band */
+/* Shimmer: subtle gray pulse (light) */
 .skeleton::after {
   content: '';
   position: absolute;
@@ -1825,9 +1824,9 @@
     105deg,
     transparent 0%,
     transparent 40%,
-    rgb(111 78 55 / 0.07) 50%,
-    rgb(194 178 128 / 0.12) 55%,
-    rgb(111 78 55 / 0.07) 60%,
+    rgb(63 63 70 / 0.07) 50%,
+    rgb(161 161 170 / 0.12) 55%,
+    rgb(63 63 70 / 0.07) 60%,
     transparent 75%,
     transparent 100%
   );
@@ -1864,8 +1863,8 @@
 
 /* Optional wrapper: one soft panel instead of many hard-edged boxes (no extra blur – children already frosted) */
 .skeleton-panel {
-  background-color: rgb(111 78 55 / 0.025);
-  border: 1px solid rgb(111 78 55 / 0.04);
+  background-color: rgb(63 63 70 / 0.025);
+  border: 1px solid rgb(63 63 70 / 0.04);
   border-radius: 1rem;
 }
 

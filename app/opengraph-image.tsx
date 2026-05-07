@@ -18,8 +18,8 @@ export default function OpenGraphImage() {
           height: '100%',
           display: 'flex',
           position: 'relative',
-          background: '#f3f0eb',
-          color: '#262424',
+          background: '#f4f4f5',
+          color: '#18181b',
           fontFamily: 'Inter, system-ui, sans-serif',
         }}
       >
@@ -28,7 +28,7 @@ export default function OpenGraphImage() {
             position: 'absolute',
             inset: 0,
             background:
-              'radial-gradient(circle at 20% 18%, rgba(111,78,55,0.16), transparent 45%), radial-gradient(circle at 82% 82%, rgba(151,116,88,0.14), transparent 40%)',
+              'radial-gradient(circle at 20% 18%, rgba(63,63,70,0.12), transparent 45%), radial-gradient(circle at 82% 82%, rgba(113,113,122,0.1), transparent 40%)',
           }}
         />
 
@@ -40,12 +40,12 @@ export default function OpenGraphImage() {
             flexDirection: 'column',
             justifyContent: 'space-between',
             padding: '64px 56px',
-            borderRight: '1px solid rgba(111,78,55,0.25)',
-            background: 'linear-gradient(160deg, #f7f4ef 0%, #ede7df 100%)',
+            borderRight: '1px solid rgba(63,63,70,0.2)',
+            background: 'linear-gradient(160deg, #fafafa 0%, #f4f4f5 100%)',
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ fontSize: 20, letterSpacing: 2, color: '#6f4e37' }}>LIGHT MODE</div>
+            <div style={{ fontSize: 20, letterSpacing: 2, color: '#3f3f46' }}>LIGHT MODE</div>
             <img
               src="https://www.mysticalpieces.com/assets/images/branding/logo-dark.png"
               alt="MysticalPIECES logo dark"
@@ -57,7 +57,7 @@ export default function OpenGraphImage() {
               }}
             />
           </div>
-          <div style={{ fontSize: 30, lineHeight: 1.25, color: '#3a2f28' }}>
+          <div style={{ fontSize: 30, lineHeight: 1.25, color: '#3f3f46' }}>
             Mystical Thrift Fashion & Soulful Style Curators
           </div>
         </div>
@@ -70,12 +70,12 @@ export default function OpenGraphImage() {
             flexDirection: 'column',
             justifyContent: 'space-between',
             padding: '64px 56px',
-            background: 'linear-gradient(160deg, #171a1f 0%, #0f1115 100%)',
-            color: '#f7f6f3',
+            background: 'linear-gradient(160deg, #18181b 0%, #09090b 100%)',
+            color: '#fafafa',
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ fontSize: 20, letterSpacing: 2, color: '#c9b5a3' }}>DARK MODE</div>
+            <div style={{ fontSize: 20, letterSpacing: 2, color: '#a1a1aa' }}>DARK MODE</div>
             <img
               src="https://www.mysticalpieces.com/assets/images/branding/logo-light.png"
               alt="MysticalPIECES logo light"
@@ -87,7 +87,7 @@ export default function OpenGraphImage() {
               }}
             />
           </div>
-          <div style={{ fontSize: 30, lineHeight: 1.25, color: '#dfd4c8' }}>
+          <div style={{ fontSize: 30, lineHeight: 1.25, color: '#d4d4d8' }}>
             Mystical Thrift Fashion & Soulful Style Curators
           </div>
         </div>
@@ -100,9 +100,9 @@ export default function OpenGraphImage() {
             transform: 'translateX(-50%)',
             padding: '8px 16px',
             borderRadius: 9999,
-            border: '1px solid rgba(111,78,55,0.32)',
-            background: 'rgba(255,255,255,0.72)',
-            color: '#6f4e37',
+            border: '1px solid rgba(63,63,70,0.28)',
+            background: 'rgba(255,255,255,0.85)',
+            color: '#3f3f46',
             fontSize: 17,
             letterSpacing: 1,
           }}
@@ -114,4 +114,3 @@ export default function OpenGraphImage() {
     size
   )
 }
-

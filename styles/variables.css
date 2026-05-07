@@ -1,78 +1,75 @@
 :root {
-  /* Color Palette - Coffee & Cream Theme */
-  /* Primary Colors - Coffee to Light Almond gradient */
-  --color-primary-50: #EEE5DA;   /* Light Almond */
-  --color-primary-100: #EFE9E0;  /* Soft Ivory */
-  --color-primary-200: #EAE0C8;  /* Pearl */
-  --color-primary-300: #C2B280;  /* Ecru */
-  --color-primary-400: #A89B6F;  /* Ecru variant */
-  --color-primary-500: #8B7A5A;  /* Coffee variant */
-  --color-primary-600: #6F4E37;  /* Coffee */
-  --color-primary-700: #5A3E2D;  /* Dark Coffee */
-  --color-primary-800: #453025;  /* Darker Coffee */
-  --color-primary-900: #30221C;  /* Darkest Coffee */
-  --color-primary-950: #1B1410;   /* Almost Black Coffee */
+  /* Monochrome palette — shared zinc-style grayscale (primary, neutral, accent use the same ramp) */
+  --color-primary-50: #fafafa;
+  --color-primary-100: #f4f4f5;
+  --color-primary-200: #e4e4e7;
+  --color-primary-300: #d4d4d8;
+  --color-primary-400: #a1a1aa;
+  --color-primary-500: #71717a;
+  --color-primary-600: #52525b;
+  --color-primary-700: #3f3f46;
+  --color-primary-800: #27272a;
+  --color-primary-850: #1f1f23;
+  --color-primary-900: #18181b;
+  --color-primary-950: #09090b;
 
-  /* Neutral Colors - Charcoal to White */
-  --color-neutral-50: #FEFEFE;   /* Pure White */
-  --color-neutral-100: #F8F8F8;   /* Off White */
-  --color-neutral-200: #F0F0F0;   /* Light Gray */
-  --color-neutral-300: #E0E0E0;   /* Light Gray */
-  --color-neutral-400: #C0C0C0;   /* Medium Gray */
-  --color-neutral-500: #808080;   /* Gray */
-  --color-neutral-600: #606060;   /* Dark Gray */
-  --color-neutral-700: #404040;   /* Darker Gray */
-  --color-neutral-800: #252525;   /* Charcoal-2 */
-  --color-neutral-850: #262424;   /* Deep Charcoal */
-  --color-neutral-900: #1B1B1B;   /* Charcoal-3 */
-  --color-neutral-950: #191919;  /* Charcoal-4 */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f4f4f5;
+  --color-neutral-200: #e4e4e7;
+  --color-neutral-300: #d4d4d8;
+  --color-neutral-400: #a1a1aa;
+  --color-neutral-500: #71717a;
+  --color-neutral-600: #52525b;
+  --color-neutral-700: #3f3f46;
+  --color-neutral-800: #27272a;
+  --color-neutral-850: #1f1f23;
+  --color-neutral-900: #18181b;
+  --color-neutral-950: #09090b;
 
-  /* Accent Colors - Coffee variations */
-  --color-accent-50: #F5F0E8;    /* Light Coffee Cream */
-  --color-accent-100: #E8DCC8;   /* Coffee Cream */
-  --color-accent-200: #D4C4A8;   /* Light Coffee */
-  --color-accent-300: #C2B280;   /* Ecru */
-  --color-accent-400: #A89B6F;   /* Ecru variant */
-  --color-accent-500: #8B7A5A;   /* Coffee variant */
-  --color-accent-600: #6F4E37;   /* Coffee */
-  --color-accent-700: #5A3E2D;   /* Dark Coffee */
-  --color-accent-800: #453025;   /* Darker Coffee */
-  --color-accent-900: #30221C;   /* Darkest Coffee */
+  --color-accent-50: #fafafa;
+  --color-accent-100: #f4f4f5;
+  --color-accent-200: #e4e4e7;
+  --color-accent-300: #d4d4d8;
+  --color-accent-400: #a1a1aa;
+  --color-accent-500: #71717a;
+  --color-accent-600: #52525b;
+  --color-accent-700: #3f3f46;
+  --color-accent-800: #27272a;
+  --color-accent-900: #18181b;
 
-  /* Brand accent (glow / FX) – used by animated banners */
-  --color-brand-glow-rgb: 139 69 19;    /* Saddle-brown accent, as RGB triplet */
+  /* Brand accent (glow / FX) – neutral mid-gray RGB triplet */
+  --color-brand-glow-rgb: 82 82 82;
 
   /* Text Colors - Light Mode */
-  --color-text-primary: #262424;     /* Deep Charcoal */
-  --color-text-secondary: #252525;   /* Charcoal-2 */
-  --color-text-tertiary: #404040;    /* Dark Gray */
-  --color-text-inverse: #FEFEFE;     /* Pure White */
-  --color-text-accent: #6F4E37;      /* Coffee */
+  --color-text-primary: #18181b;
+  --color-text-secondary: #27272a;
+  --color-text-tertiary: #52525b;
+  --color-text-inverse: #fafafa;
+  --color-text-accent: #3f3f46;
 
   /* Background Colors - Light Mode */
-  --color-bg-primary: #FEFEFE;       /* Pure White */
-  --color-bg-secondary: #EEE5DA;      /* Light Almond */
-  --color-bg-tertiary: #EAE0C8;      /* Pearl */
-  --color-bg-card: #F8F8F8;          /* Off White */
-  --color-bg-overlay: rgba(38, 36, 36, 0.8); /* Deep Charcoal overlay */
+  --color-bg-primary: #fafafa;
+  --color-bg-secondary: #f4f4f5;
+  --color-bg-tertiary: #e4e4e7;
+  --color-bg-card: #fafafa;
+  --color-bg-overlay: rgba(24, 24, 27, 0.8);
   /* Semi-transparent page overlay so blurred image background shows through */
-  --color-bg-page-overlay: rgba(254, 254, 254, 0.42);
+  --color-bg-page-overlay: rgba(250, 250, 250, 0.42);
 
   /* Border Colors - Light Mode */
-  --color-border-primary: #E0E0E0;   /* Light Gray */
-  --color-border-secondary: #C2B280; /* Ecru */
-  --color-border-accent: #6F4E37;     /* Coffee */
-  --color-hero-frame-border: #c5c5c5; /* Very subtle dark border for hero glass frame (light mode) */
+  --color-border-primary: #e4e4e7;
+  --color-border-secondary: #d4d4d8;
+  --color-border-accent: #3f3f46;
+  --color-hero-frame-border: #d4d4d8;
 
   /* Input fields – border (used by .input-overlay and navbar search) */
   --input-border-width: 1px;
-  /* Prefer hero glass frame border for inputs so they visually match semi-transparent containers */
   --color-input-border: var(--color-hero-frame-border);
 
   /* Reusable button (1px borders, glass/filled variants) */
   --button-border-width: 1px;
   --color-button-glass: rgb(255 255 255 / 0.12);
-  --color-button-hover-fill: rgb(111 78 55 / 0.5);
+  --color-button-hover-fill: rgb(63 63 70 / 0.5);
 
   /* Hero glass frame (home & about hero image containers) */
   --hero-frame-border-width: 1px;
@@ -80,14 +77,14 @@
   --hero-frame-padding: 1.5rem;
   --hero-frame-padding-md: 1.5rem;
   --hero-frame-padding-lg: 1.5rem;
-  --hero-frame-padding-compact: 0.75rem; /* Small cards (e.g. company logo slider) – same gap on all sides */
+  --hero-frame-padding-compact: 0.75rem;
   --hero-frame-bg: rgb(255 255 255 / 0.04);
   --hero-frame-overlay: rgb(255 255 255 / 0.03);
 
   /* Shadow Colors */
-  --color-shadow-light: rgba(38, 36, 36, 0.05);
-  --color-shadow-medium: rgba(38, 36, 36, 0.1);
-  --color-shadow-heavy: rgba(38, 36, 36, 0.2);
+  --color-shadow-light: rgba(24, 24, 27, 0.05);
+  --color-shadow-medium: rgba(24, 24, 27, 0.1);
+  --color-shadow-heavy: rgba(24, 24, 27, 0.2);
 
   /* Typography */
   --font-family-primary: 'MuseoModerno';
@@ -207,37 +204,30 @@
 
 /* Dark Mode Color Variables */
 .dark {
-  /* Text Colors - Dark Mode (Symmetry: Light 900 -> Dark 100) */
-  --color-text-primary: #FEFEFE;       /* Pure White */
-  --color-text-secondary: #F8F8F8;     /* Off White */
-  --color-text-tertiary: #C0C0C0;      /* Medium Gray */
-  --color-text-inverse: #262424;       /* Deep Charcoal */
-  --color-text-accent: #EEE5DA;        /* Light Almond */
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #f4f4f5;
+  --color-text-tertiary: #a1a1aa;
+  --color-text-inverse: #18181b;
+  --color-text-accent: #d4d4d8;
 
-  /* Background Colors - Dark Mode (Symmetry: Light 50 -> Dark 950) */
-  --color-bg-primary: #191919;         /* Charcoal-4 */
-  --color-bg-secondary: #1B1B1B;       /* Charcoal-3 */
-  --color-bg-tertiary: #252525;       /* Charcoal-2 */
-  --color-bg-card: #262424;           /* Deep Charcoal */
-  --color-bg-overlay: rgba(25, 25, 25, 0.9); /* Charcoal-4 overlay */
-  /* No overlay in dark mode – blurred bg image shows fully */
-  --color-bg-page-overlay: rgba(25, 25, 25, 0);
+  --color-bg-primary: #09090b;
+  --color-bg-secondary: #18181b;
+  --color-bg-tertiary: #27272a;
+  --color-bg-card: #1f1f23;
+  --color-bg-overlay: rgba(9, 9, 11, 0.9);
+  --color-bg-page-overlay: rgba(9, 9, 11, 0);
 
-  /* Border Colors - Dark Mode */
-  --color-border-primary: #404040;     /* Darker Gray */
-  --color-border-secondary: #5A3E2D;  /* Dark Coffee */
-  --color-border-accent: #EEE5DA;     /* Light Almond */
-  --color-hero-frame-border: #424242; /* Very subtle light border for hero glass frame (dark mode) */
+  --color-border-primary: #3f3f46;
+  --color-border-secondary: #52525b;
+  --color-border-accent: #d4d4d8;
+  --color-hero-frame-border: #52525b;
 
-  /* Reusable button - Dark Mode (lighter fill for non-hero buttons) */
   --color-button-glass: rgb(255 255 255 / 0.06);
-  --color-button-hover-fill: rgb(238 229 218 / 0.55);
+  --color-button-hover-fill: rgb(212 212 216 / 0.55);
 
-  /* Hero glass frame - Dark Mode */
-  --hero-frame-bg: rgb(25 25 25 / 0.05);
+  --hero-frame-bg: rgb(9 9 11 / 0.05);
   --hero-frame-overlay: rgb(255 255 255 / 0.015);
 
-  /* Shadow Colors - Dark Mode */
   --color-shadow-light: rgba(0, 0, 0, 0.3);
   --color-shadow-medium: rgba(0, 0, 0, 0.5);
   --color-shadow-heavy: rgba(0, 0, 0, 0.7);

@@ -87,7 +87,7 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/assets/images/branding/logo-dark.png" />
         <link rel="apple-touch-icon" href="/assets/images/branding/logo-dark.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#6F4E37" />
+        <meta name="theme-color" content="#27272A" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
         <StructuredData />
       </head>

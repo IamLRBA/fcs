@@ -902,11 +902,11 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           width: 6px;
         }
         .modal-scroll::-webkit-scrollbar-thumb {
-          background: rgba(111, 78, 55, 0.3);
+          background: rgba(113, 113, 122, 0.35);
           border-radius: 9999px;
         }
         .modal-scroll::-webkit-scrollbar-track {
-          background: rgba(111, 78, 55, 0.1);
+          background: rgba(113, 113, 122, 0.12);
           border-radius: 9999px;
         }
         .dark .modal-scroll::-webkit-scrollbar-thumb {
