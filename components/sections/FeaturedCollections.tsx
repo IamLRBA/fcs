@@ -187,9 +187,9 @@ export default function FeaturedCollections() {
                 >
                   <div className="hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl">
                     <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                    <div className="flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 bg-primary-100/75 p-1.5 sm:gap-1.5 sm:p-2 dark:bg-primary-800/30">
+                    <div className="flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 bg-primary-100/55 p-1.5 sm:gap-1.5 sm:p-2 dark:bg-primary-800/30">
                       <Link href={`/products/${categorySlug}`} className="focus-ring-none block w-full shrink-0">
-                        <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-50/90 dark:bg-primary-900/20">
+                        <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-50/65 dark:bg-primary-900/20">
                           <SafeImage
                             src={product.images[0]}
                             alt={product.name}

@@ -100,8 +100,8 @@ const ProductGridCard = memo(function ProductGridCard({
     >
       <div className="hero-glass-frame relative h-full backdrop-blur-md group-hover:shadow-xl transition-shadow duration-300">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="bg-primary-100/75 dark:bg-primary-800/30 rounded-md overflow-hidden border border-primary-500/30 h-full flex flex-col gap-1.5 p-1.5 sm:gap-1.5 sm:p-2">
-          <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-50/90 dark:bg-primary-900/20">
+        <div className="bg-primary-100/55 dark:bg-primary-800/30 rounded-md overflow-hidden border border-primary-500/30 h-full flex flex-col gap-1.5 p-1.5 sm:gap-1.5 sm:p-2">
+          <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-50/65 dark:bg-primary-900/20">
             <SafeImage
               src={product.images[0]}
               alt={product.name}
