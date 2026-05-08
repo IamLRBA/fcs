@@ -524,7 +524,7 @@ export default function ShopPage() {
           
           <div className="hero-glass-frame relative backdrop-blur-lg">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-          <div className="glass-effect p-8 rounded-2xl">
+          <div className="glass-inner-panel border border-primary-500/30 p-8 rounded-2xl dark:border-primary-500/40">
             <div className="text-center mb-6 sm:mb-8">
               <h3 className="text-3xl font-bold mb-4 text-neutral-850 dark:text-primary-50">
                 Visual Inspiration
@@ -575,7 +575,7 @@ export default function ShopPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                     whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="aspect-square bg-gradient-to-br from-primary-700/30 to-accent-700/30 rounded-xl border border-primary-500/30 flex items-center justify-center cursor-pointer group hover:shadow-xl transition-all duration-300 overflow-hidden relative"
+                    className="glass-inner-well aspect-square rounded-xl border border-primary-500/30 flex items-center justify-center cursor-pointer group hover:shadow-xl transition-all duration-300 overflow-hidden relative"
                   >
                     <AnimatePresence mode="sync">
                       <motion.img

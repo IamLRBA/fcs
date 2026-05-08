@@ -211,7 +211,7 @@ export default function AdminOrdersPage() {
 
           <div className="hero-glass-frame relative backdrop-blur-lg w-full rounded-2xl">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-            <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
+            <div className="glass-inner-panel relative z-10 overflow-hidden rounded-2xl border border-neutral-200 p-4 shadow-xl sm:p-6 md:p-8 dark:border-neutral-700">
               <h2 className="text-xl sm:text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6 text-center">
                 Order pipeline
               </h2>
@@ -457,7 +457,7 @@ export default function AdminOrdersPage() {
             >
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
               <ModalCloseButton onClose={() => setCancelConfirmOrderId(null)} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close" />
-              <div className="relative z-10 flex max-h-[min(90vh,34rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="glass-inner-panel relative z-10 flex max-h-[min(90vh,34rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 dark:border-neutral-700">
                 <div className="modal-scroll min-h-0 flex-1 overflow-y-auto p-6 pt-12 sm:p-8 sm:pt-14">
                   <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Delete order?</h2>
                   <p className="mt-2 text-neutral-700 dark:text-primary-300">
@@ -512,7 +512,7 @@ export default function AdminOrdersPage() {
             <div className="hero-glass-frame relative overflow-hidden rounded-xl backdrop-blur-lg">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
               <ModalCloseButton onClose={() => setUndoOrderId(null)} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Dismiss undo" />
-              <div className="relative z-10 rounded-bl-xl rounded-tl-xl border border-neutral-200 bg-white p-3 pt-9 dark:border-neutral-700 dark:bg-neutral-800 sm:pt-8">
+              <div className="glass-inner-panel relative z-10 rounded-bl-xl rounded-tl-xl border border-neutral-200 p-3 pt-9 dark:border-neutral-700 sm:pt-8">
                 <p className="text-sm text-neutral-800 dark:text-primary-200">Order cancelled.</p>
                 <div className="mt-2">
                   <Button type="button" variant="default" size="sm" onClick={() => void undoCancelOrder()}>

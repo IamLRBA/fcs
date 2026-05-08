@@ -161,7 +161,7 @@ export default function AboutUs() {
                 <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 400, damping: 22 }} className="inline-block">
                   <Link
                     href="/core-rules"
-                    className="group relative inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3.5 sm:py-3 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm transition-[box-shadow,background-color] duration-300 hover:border-primary-500/50 dark:hover:border-primary-400/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-100 dark:focus-visible:ring-offset-neutral-900"
+                    className="group relative inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-primary-600 dark:text-primary-300 text-sm md:text-base glass-inner-panel px-6 py-3.5 sm:py-3 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm transition-[box-shadow,background-color] duration-300 hover:border-primary-500/50 dark:hover:border-primary-400/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-100 dark:focus-visible:ring-offset-neutral-900"
                   >
                     <span className="text-primary-800 dark:text-primary-100 font-semibold">Our Core:</span>
                     <span
@@ -193,7 +193,7 @@ export default function AboutUs() {
           <div className="text-center w-full max-w-sm mx-auto">
             <div className="relative group hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center w-full">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 w-full bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
+              <div className="glass-inner-panel relative z-10 w-full backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <Image
                     src="/assets/images/team/lrba.jpg"
@@ -379,7 +379,7 @@ export default function AboutUs() {
               >
                 <div className={`flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl inline-flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 ${index % 2 === 0 ? 'ml-0 mr-auto' : 'mr-0 ml-auto'}`}>
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                  <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
+                  <div className="relative z-10 w-40 h-40 glass-inner-panel overflow-hidden shadow-2xl flex items-center justify-center">
                     <Image 
                       src={value.image} 
                       alt={`${value.title} value icon`}
@@ -451,7 +451,7 @@ export default function AboutUs() {
                   {/* Image Container - same spacing as Stats impact icon */}
                   <div className="flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center">
                     <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                    <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
+                    <div className="relative z-10 w-40 h-40 glass-inner-panel overflow-hidden shadow-2xl flex items-center justify-center">
                       <Image 
                         src={mission.image} 
                         alt={`${mission.title} mission icon`}

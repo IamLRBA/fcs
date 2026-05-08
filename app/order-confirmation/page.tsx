@@ -166,7 +166,7 @@ export default function OrderConfirmationPage() {
           <motion.div
             ref={setReceiptNode}
             data-receipt
-            className="bg-white dark:bg-neutral-800 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 receipt-container border border-neutral-200 dark:border-neutral-700"
+            className="glass-inner-panel rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 receipt-container border border-neutral-200 dark:border-neutral-700"
             style={{
               fontFamily: 'system-ui, -apple-system, sans-serif'
             }}
@@ -246,7 +246,7 @@ export default function OrderConfirmationPage() {
                 <div key={index}>
                   <div className="flex items-start justify-between pb-4">
                     <div className="flex items-start space-x-3 flex-1">
-                      <div className="relative w-20 h-20 bg-gray-100 dark:bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 border border-gray-200 dark:border-neutral-600">
+                      <div className="glass-inner-well relative h-20 w-20 shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-neutral-600">
                         <SafeImage
                           src={item.image}
                           alt={item.name}

@@ -213,7 +213,7 @@ export default function CheckoutPage() {
             >
               <div className="hero-glass-frame relative backdrop-blur-lg">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 md:p-8 shadow-xl dark:shadow-xl">
+              <div className="glass-inner-panel rounded-xl border border-neutral-200 p-4 shadow-xl dark:border-primary-500/30 sm:p-6 md:p-8 dark:shadow-xl">
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Order Details</h2>
               
               {cart.length === 0 ? (
@@ -236,7 +236,7 @@ export default function CheckoutPage() {
                   {cart.map((item, index) => (
                     <div key={index}>
                       <div className="flex items-start space-x-3 sm:space-x-4 pb-4">
-                        <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
+                        <div className="glass-inner-well relative h-16 w-16 shrink-0 overflow-hidden rounded-lg sm:h-20 sm:w-20">
                           <SafeImage
                             src={item.image}
                             alt={item.name}
@@ -280,7 +280,7 @@ export default function CheckoutPage() {
             >
               <div className="hero-glass-frame relative backdrop-blur-lg">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-8 shadow-xl dark:shadow-xl">
+              <div className="glass-inner-panel rounded-xl border border-neutral-200 p-8 shadow-xl dark:border-primary-500/30 dark:shadow-xl">
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Customer Information</h2>
               
               <div className="space-y-6">
@@ -365,7 +365,7 @@ export default function CheckoutPage() {
                     Delivery Option
                   </label>
                   <div className="space-y-3">
-                    <label className="flex items-center space-x-3 p-4 bg-neutral-100 dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg cursor-pointer hover:bg-neutral-200 dark:hover:bg-primary-800/50 transition-colors">
+                    <label className="glass-inner-well flex cursor-pointer items-center space-x-3 rounded-lg border border-neutral-300 p-4 transition-colors hover:brightness-[0.98] dark:border-primary-500/30 dark:hover:brightness-110">
                       <input
                         type="radio"
                         name="delivery"
@@ -380,7 +380,7 @@ export default function CheckoutPage() {
                       </div>
                     </label>
                     
-                    <label className="flex items-center space-x-3 p-4 bg-neutral-100 dark:bg-primary-800/30 border border-neutral-300 dark:border-primary-500/30 rounded-lg cursor-pointer hover:bg-neutral-200 dark:hover:bg-primary-800/50 transition-colors">
+                    <label className="glass-inner-well flex cursor-pointer items-center space-x-3 rounded-lg border border-neutral-300 p-4 transition-colors hover:brightness-[0.98] dark:border-primary-500/30 dark:hover:brightness-110">
                       <input
                         type="radio"
                         name="delivery"
@@ -426,7 +426,7 @@ export default function CheckoutPage() {
             >
               <div className="hero-glass-frame relative backdrop-blur-lg">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 shadow-xl dark:shadow-xl">
+              <div className="glass-inner-panel rounded-xl border border-neutral-200 p-4 shadow-xl dark:border-primary-500/30 sm:p-6 dark:shadow-xl">
               <h2 className="text-xl font-bold text-neutral-900 dark:text-primary-50 mb-4">Order Summary</h2>
               
               <div className="space-y-4 pb-4 border-b border-neutral-200 dark:border-primary-600/50">

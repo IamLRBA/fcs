@@ -273,7 +273,7 @@ export default function CEOProfile() {
                                        {/* Image Container */}
                     <div className={`hero-glass-frame relative flex-shrink-0 rounded-2xl overflow-hidden backdrop-blur-lg ${index % 2 === 0 ? 'self-start' : 'self-end'}`}>
                       <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl" aria-hidden />
-                      <div className="relative bg-gradient-to-br from-primary-800/25 to-primary-600/25 dark:from-primary-800/35 dark:to-primary-600/35 rounded-2xl border border-primary-500/25 dark:border-primary-500/40 overflow-hidden shadow-2xl w-36 h-36 md:w-40 md:h-40">
+                      <div className="relative glass-inner-well rounded-2xl border border-primary-500/25 dark:border-primary-500/40 overflow-hidden shadow-2xl w-36 h-36 md:w-40 md:h-40">
                       {skill.category === '⾕ ᗩᖇᑕᕼITEᑕTᑌᖇE' && (
                         <img 
                           src="/assets/images/sections/ceo/architecture.jpg" 
@@ -562,7 +562,7 @@ export default function CEOProfile() {
             >
               <div className="hero-glass-frame relative h-full backdrop-blur-lg">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                <div className="text-center p-6 rounded-xl glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <Mail className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">{CEO_EMAIL}</p>
@@ -582,7 +582,7 @@ export default function CEOProfile() {
             >
               <div className="hero-glass-frame relative h-full backdrop-blur-lg">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                <div className="text-center p-6 rounded-xl glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <Phone className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Click to Call</p>
@@ -602,7 +602,7 @@ export default function CEOProfile() {
             >
               <div className="hero-glass-frame relative h-full backdrop-blur-lg">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                <div className="text-center p-6 rounded-xl glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <IconBrandWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256 755 915 549</p>
@@ -622,7 +622,7 @@ export default function CEOProfile() {
             >
               <div className="hero-glass-frame relative h-full backdrop-blur-lg">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                <div className="text-center p-6 rounded-xl glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <MapPin className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
@@ -657,7 +657,7 @@ export default function CEOProfile() {
               className="hero-glass-frame relative w-full max-w-[min(100%,340px)] backdrop-blur-lg"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="relative rounded-bl-xl rounded-tl-xl rounded-br-none rounded-tr-none border border-primary-500/30 bg-gradient-to-br from-primary-50/95 to-primary-100/90 p-4 shadow-2xl dark:border-primary-600/40 dark:from-neutral-900/95 dark:to-neutral-800/95">
+              <div className="glass-inner-panel relative rounded-bl-xl rounded-tl-xl rounded-br-none rounded-tr-none border border-primary-500/30 p-4 shadow-2xl dark:border-primary-600/40">
                 <ModalCloseButton onClose={() => setPhoneDialogOpen(false)} className="focus-ring-none absolute -right-4 -top-4 z-10" aria-label="Close call dialog" />
                 <h4 id="ceo-phone-dialog-title" className="mb-3 text-center text-sm font-semibold text-primary-900 dark:text-primary-100">
                   Call Me

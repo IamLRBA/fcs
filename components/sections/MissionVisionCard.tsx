@@ -27,7 +27,7 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
     >
       <div className="flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl inline-flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-        <div className="relative z-10 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
+        <div className="relative z-10 w-40 h-40 glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
           <img 
             src={item.image} 
             alt={item.title} 

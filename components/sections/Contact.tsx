@@ -156,7 +156,7 @@ export default function Contact() {
               <motion.div key={info.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 * index }} className="group">
                 <div className="hero-glass-frame relative h-full backdrop-blur-lg">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
+                <div className="text-center p-6 rounded-xl glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm h-full">
                   <Icon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">{info.title}</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">{info.subtitle}</p>
@@ -173,7 +173,7 @@ export default function Contact() {
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.4 }} className="max-w-4xl mx-auto">
           <div className="hero-glass-frame relative backdrop-blur-lg">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-          <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl p-8 shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
+          <div className="glass-inner-panel rounded-2xl p-8 shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
             <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8 text-center">ᔕEᑎᗪ ᑌᔕ ᗩ ᗰEᔕᔕᗩGE</h3>
             <form onSubmit={handleSubmit} className="send-us-message-form space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

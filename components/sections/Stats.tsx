@@ -109,7 +109,7 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
     >
       <div className="hero-glass-frame relative backdrop-blur-lg h-full">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-      <div className="relative bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl dark:hover:shadow-lg transition-all duration-500 transform hover:-translate-y-1 border border-primary-500/30 dark:border-primary-500/40 h-full">
+      <div className="relative glass-inner-panel backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl dark:hover:shadow-lg transition-all duration-500 transform hover:-translate-y-1 border border-primary-500/30 dark:border-primary-500/40 h-full">
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={isInView ? { scale: 1, rotate: 0 } : {}}
@@ -202,7 +202,7 @@ export default function Stats() {
         <motion.div style={{ y: titleY, scale: titleScale }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
           <div className="hero-glass-frame relative inline-flex flex-shrink-0 backdrop-blur-lg mx-auto mb-6">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-            <motion.div initial={{ scale: 0, rotate: -180 }} whileInView={{ scale: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }} className="w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
+            <motion.div initial={{ scale: 0, rotate: -180 }} whileInView={{ scale: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }} className="w-40 h-40 glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
               <img src="/assets/images/sections/stats/impact-icon.jpg" alt="Impact Icon" className="w-full h-full object-cover rounded-2xl" />
             </motion.div>
           </div>
@@ -217,7 +217,7 @@ export default function Stats() {
         <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 1.2, type: "spring", stiffness: 100 }} className="text-center mt-16">
           <div className="hero-glass-frame relative inline-block backdrop-blur-lg rounded-full">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
-            <div className="inline-flex items-center space-x-4 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40">
+            <div className="inline-flex items-center space-x-4 glass-inner-panel backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40">
               <Heart className="w-6 h-6 text-primary-600 dark:text-primary-300 animate-pulse" />
               <span className="text-primary-600 dark:text-primary-300 font-semibold">Trusted by creative professionals nationwide</span>
               <Globe className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" strokeWidth={1.75} />

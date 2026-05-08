@@ -206,13 +206,13 @@ export default function KeyboardShortcuts() {
             >
               {/* Semi-transparent outer container (like product modal) - main content sits inside */}
               <div
-                className="hero-glass-frame relative w-full max-w-2xl max-h-[80vh] flex flex-col backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 rounded-2xl shadow-2xl overflow-hidden border border-neutral-200/80 dark:border-neutral-600"
+                className="hero-glass-frame relative w-full max-w-2xl max-h-[80vh] flex flex-col backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-neutral-200/80 dark:border-neutral-600"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
                 {/* Main container: header + close stay fixed; body scrolls */}
-                <div className="relative z-10 flex max-h-[80vh] flex-1 min-h-0 flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
-                  <div className="hero-glass-frame hero-glass-frame-compact relative flex shrink-0 items-center justify-between rounded-t-2xl border-b border-neutral-200 bg-neutral-100/90 px-6 py-4 backdrop-blur-sm dark:border-neutral-700 dark:bg-neutral-800/95">
+                <div className="glass-inner-panel relative z-10 flex max-h-[80vh] min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-700">
+                  <div className="hero-glass-frame hero-glass-frame-compact relative flex shrink-0 items-center justify-between rounded-t-2xl border-b border-neutral-200 px-6 py-4 backdrop-blur-sm dark:border-neutral-700 glass-inner-panel">
                     <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-t-2xl opacity-50" aria-hidden />
                     <div className="relative z-10 flex items-center space-x-3">
                       <Keyboard className="h-6 w-6 text-primary-600 dark:text-primary-400" />
@@ -225,7 +225,7 @@ export default function KeyboardShortcuts() {
                       {shortcuts.map((shortcut) => (
                         <div
                           key={shortcut.key}
-                          className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm bg-neutral-200/70 dark:bg-neutral-900/80 rounded-xl p-4 border border-neutral-300/80 dark:border-neutral-700"
+                          className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-sm rounded-xl p-4 border border-neutral-300/80 dark:border-neutral-700 glass-inner-well"
                         >
                           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-xl opacity-60" aria-hidden />
                           <div className="relative z-10 flex items-center justify-between">
@@ -245,7 +245,7 @@ export default function KeyboardShortcuts() {
                       ))}
                     </div>
                     {/* Footer section - semi-transparent, slightly darker shade in light mode */}
-                    <div className="hero-glass-frame hero-glass-frame-compact relative mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-700 backdrop-blur-sm bg-neutral-100/80 dark:bg-neutral-800/80 rounded-xl px-6 pb-6">
+                    <div className="hero-glass-frame hero-glass-frame-compact relative mt-6 rounded-xl border-t border-neutral-200 px-6 pb-6 pt-6 backdrop-blur-sm dark:border-neutral-700 glass-inner-panel">
                       <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-xl opacity-50" aria-hidden />
                       <p className="relative z-10 text-sm text-neutral-600 dark:text-neutral-400 text-center">
                         Press <kbd className="px-2 py-1 bg-neutral-200/90 dark:bg-neutral-700 rounded text-xs">Esc</kbd> to close

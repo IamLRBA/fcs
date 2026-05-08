@@ -194,7 +194,7 @@ export default function AdminDashboard() {
           {/* Main container - semi-transparent like account page */}
           <div className="hero-glass-frame relative backdrop-blur-lg w-full rounded-2xl">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-            <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
+            <div className="glass-inner-panel relative z-10 overflow-hidden rounded-2xl border border-neutral-200 p-4 shadow-xl sm:p-6 md:p-8 dark:border-neutral-700">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-800 dark:text-primary-100 mb-6 sm:mb-8 text-center">Admin Dashboard</h1>
 
               <div className="mb-6 sm:mb-8">

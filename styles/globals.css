@@ -495,6 +495,15 @@
     background-color: rgba(113, 113, 122, 0.45);
   }
 
+  /** Inner surfaces inside hero-glass-frame — same light/dark as product & Featured cards */
+  .glass-inner-panel {
+    @apply bg-primary-100/55 dark:bg-primary-800/30;
+  }
+
+  .glass-inner-well {
+    @apply bg-primary-50/65 dark:bg-primary-900/20;
+  }
+
   /* Button Styles - Mystical Future Gradient */
   .btn {
     --btn-border-gradient: linear-gradient(135deg, rgba(244, 244, 245, 0.95), rgba(63, 63, 70, 0.95), rgba(39, 39, 42, 0));

@@ -93,10 +93,10 @@ export default function AccountPromptPopup() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Outer glass + inner card with straight top-right / bottom-right (matches quick-view / remove-product modals) */}
-            <div className="hero-glass-frame relative overflow-hidden rounded-2xl backdrop-blur-lg bg-white/25 shadow-2xl dark:border-neutral-600 dark:bg-neutral-900/20">
+            <div className="hero-glass-frame relative overflow-hidden rounded-2xl backdrop-blur-lg shadow-2xl dark:border-neutral-600">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
               <ModalCloseButton onClose={handleDismiss} className="absolute top-2 right-2 z-40 flex-shrink-0" aria-label="Close" />
-              <div className="relative z-10 flex max-h-[min(85vh,32rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="glass-inner-panel relative z-10 flex max-h-[min(85vh,32rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 dark:border-neutral-700">
                 <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-10 sm:pt-8 sm:pb-6">
             <div className="flex items-start space-x-4">
               <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-800">

@@ -100,8 +100,8 @@ const ProductGridCard = memo(function ProductGridCard({
     >
       <div className="hero-glass-frame relative h-full backdrop-blur-md group-hover:shadow-xl transition-shadow duration-300">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="bg-primary-100/55 dark:bg-primary-800/30 rounded-md overflow-hidden border border-primary-500/30 h-full flex flex-col gap-1.5 p-1.5 sm:gap-1.5 sm:p-2">
-          <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg bg-primary-50/65 dark:bg-primary-900/20">
+        <div className="glass-inner-panel rounded-md overflow-hidden border border-primary-500/30 h-full flex flex-col gap-1.5 p-1.5 sm:gap-1.5 sm:p-2">
+          <div className="glass-inner-well relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg">
             <SafeImage
               src={product.images[0]}
               alt={product.name}
@@ -394,7 +394,7 @@ export default function ProductCategoryPage() {
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-6">
               <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="rounded-2xl border border-primary-500/30 dark:border-primary-500/40 p-6 sm:p-8">
+                <div className="glass-inner-panel rounded-2xl border border-primary-500/30 p-6 sm:p-8 dark:border-primary-500/40">
                   <div className="skeleton w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl" />
                 </div>
               </div>
@@ -653,7 +653,7 @@ export default function ProductCategoryPage() {
             {/* Main Product Image */}
             <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
+              <div className="glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shrink-0 mx-auto">
                   <SafeImage
                     src={getMainProductImage(category)}
@@ -742,7 +742,7 @@ export default function ProductCategoryPage() {
             >
             <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
+              <div className="glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shrink-0 mx-auto">
                   <SubcategoryThumb
                     paths={(() => {
@@ -766,7 +766,7 @@ export default function ProductCategoryPage() {
             </h2>
             
             {visibleProducts.length === 0 ? (
-              <div className="mx-auto max-w-xl rounded-2xl border border-primary-500/20 dark:border-primary-400/30 bg-primary-800/20 dark:bg-neutral-900/40 p-6 sm:p-8 text-center">
+              <div className="glass-inner-panel mx-auto max-w-xl rounded-2xl border border-primary-500/20 p-6 text-center dark:border-primary-400/30 sm:p-8">
                 <p className="text-xl sm:text-2xl font-semibold text-primary-800 dark:text-primary-100">
                   Products Not Available
                 </p>
@@ -917,7 +917,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         }
       `}</style>
       <div
-        className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-md bg-white/30 dark:bg-neutral-900/25 dark:border-neutral-600"
+        className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-md dark:border-neutral-600"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
@@ -926,13 +926,13 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="relative flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
+        className="glass-inner-panel relative flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 shadow-2xl dark:border-neutral-700 sm:max-h-[80vh] md:max-h-[85vh]"
       >
         <div className="modal-scroll min-h-0 flex-1 overflow-y-auto pt-10 sm:pt-8 md:pt-6 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
         <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-10">
           {/* Image Gallery */}
           <div className="flex-shrink-0 flex flex-col space-y-4">
-            <div className="relative mx-auto w-full max-w-[28rem] aspect-square bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group flex items-center justify-center">
+            <div className="glass-inner-well relative mx-auto flex aspect-square w-full max-w-[28rem] items-center justify-center overflow-hidden rounded-lg group">
               <SafeImage
                 src={product.images[currentImageIndex]}
                 alt={product.name}
@@ -973,13 +973,13 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setCurrentImageIndex(index)}
                       aria-current={isActive ? 'true' : undefined}
-                      className={`focus-ring-none relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border bg-neutral-100 transition-all duration-200 sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                      className={`focus-ring-none glass-inner-well relative aspect-square w-14 flex-shrink-0 overflow-hidden rounded-xl border transition-all duration-200 sm:w-16 md:w-[4.75rem] ${
                         isActive
                           ? 'z-[1] border-2 border-primary-600 shadow-md dark:border-primary-400'
                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                       }`}
                     >
-                      <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
+                      <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
                         <SafeImage
                           src={img}
                           alt={`${product.name} ${index + 1}`}

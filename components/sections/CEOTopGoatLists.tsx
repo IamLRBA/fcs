@@ -179,7 +179,7 @@ export default function CEOTopGoatLists() {
                     : ''
                 }`}
               >
-                <div className="hero-glass-frame rounded-2xl backdrop-blur-lg">
+                <div className="hero-glass-frame relative rounded-2xl backdrop-blur-lg">
                   <div
                     className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]"
                     aria-hidden
@@ -187,7 +187,7 @@ export default function CEOTopGoatLists() {
                   <button
                     type="button"
                     onClick={() => setOpenId((prev) => (prev === index ? null : index))}
-                    className="focus-ring-none relative z-10 flex w-full items-center gap-3 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-800/15 to-primary-600/10 px-4 py-4 text-left transition-shadow duration-300 hover:border-primary-500/35 hover:shadow-lg dark:border-primary-500/35 dark:from-primary-900/30 dark:to-primary-800/15 dark:hover:border-primary-400/40 md:gap-4 md:px-6 md:py-5"
+                    className="focus-ring-none glass-inner-panel relative z-10 flex w-full items-center gap-3 rounded-2xl border border-primary-500/20 px-4 py-4 text-left transition-shadow duration-300 hover:border-primary-500/35 hover:shadow-lg dark:border-primary-500/35 dark:hover:border-primary-400/40 md:gap-4 md:px-6 md:py-5"
                     aria-expanded={isOpen}
                   >
                     <span

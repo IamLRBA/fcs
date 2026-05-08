@@ -41,7 +41,7 @@ export default function FeedbackDialog({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-            <div className="relative z-10 flex flex-col overflow-hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+            <div className="relative z-10 flex flex-col overflow-hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 glass-inner-panel dark:border-neutral-700">
               <ModalCloseButton
                 onClose={onClose}
                 className="absolute top-2 right-2 z-40 flex-shrink-0"
