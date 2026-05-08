@@ -497,11 +497,11 @@
 
   /** Inner surfaces inside hero-glass-frame — same light/dark as product & Featured cards */
   .glass-inner-panel {
-    @apply bg-primary-100/55 dark:bg-primary-800/30;
+    @apply bg-primary-100/55 dark:bg-primary-800/[0.42];
   }
 
   .glass-inner-well {
-    @apply bg-primary-50/65 dark:bg-primary-900/20;
+    @apply bg-primary-50/65 dark:bg-primary-900/[0.34];
   }
 
   /* Button Styles - Mystical Future Gradient */

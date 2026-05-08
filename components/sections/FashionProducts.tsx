@@ -298,8 +298,7 @@ export default function FashionProducts() {
                 </div>
                 <AnimatePresence>
                   {expandedId === s.id && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
-                      <div className="dark" role="presentation">
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="mt-4 overflow-hidden">
                       <div className="glass-inner-panel rounded-xl border border-primary-500/20 p-3 sm:p-6 dark:border-primary-400/30">
                         {/* Thumbnail Images */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4 justify-items-center">
@@ -321,7 +320,7 @@ export default function FashionProducts() {
                                 onMouseEnter={() => setHoveredThumbnail({ serviceId: s.id, thumbIndex })}
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
-                                <div className="relative bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-36 md:w-36 lg:h-48 lg:w-48 aspect-square border border-primary-500/20 overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:border-primary-500/50 dark:hover:border-transparent hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:ring-0 hover:bg-primary-800/10 dark:hover:bg-primary-950/30">
+                                <div className="glass-inner-well group relative aspect-square h-32 w-32 overflow-hidden rounded-lg border border-primary-500/20 shadow-lg transition-all duration-300 hover:border-primary-500/50 hover:bg-primary-800/10 hover:shadow-xl hover:ring-2 hover:ring-primary-500/20 dark:hover:border-transparent dark:hover:bg-primary-950/30 dark:hover:ring-0 sm:h-40 sm:w-40 md:h-36 md:w-36 lg:h-48 lg:w-48">
                                   <FashionCategoryThumb
                                     paths={thumbPaths}
                                     alt={`${subcategory.name} - ${s.title}`}
@@ -366,23 +365,16 @@ export default function FashionProducts() {
                             )
                           })}
                         </div>
+                        <blockquote className="mx-auto mt-4 max-w-full border-t border-primary-500/20 pt-4 text-center dark:border-primary-400/30 sm:max-w-md sm:pb-2 sm:pt-6 md:max-w-lg md:pb-6">
+                          <Quote className="mx-auto mb-2 h-6 w-6 text-primary-700 dark:text-primary-400/50 sm:mb-4 sm:h-8 sm:w-8" />
+                          <p className="mb-2 text-sm italic text-primary-700 dark:text-primary-400 sm:mb-3 sm:text-lg md:text-xl">
+                            {s.quote.text}
+                          </p>
+                          <span className="inline-block text-xs font-medium text-primary-700 dark:text-primary-300 sm:text-sm">
+                            — {s.quote.author}
+                          </span>
+                        </blockquote>
                       </div>
-                      </div>
-                        
-                        {/* Quote Section - outside dark wrapper so light mode uses text-neutral-500 */}
-                        <div className="glass-inner-panel mt-2 rounded-b-xl border-x border-b border-t border-primary-500/20 px-3 pb-2 pt-2 dark:border-primary-400/30 sm:px-6 sm:pb-6 sm:pt-4">
-                          <blockquote className="text-center max-w-full sm:max-w-md md:max-w-lg mx-auto">
-                            <Quote className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 sm:mb-4 text-primary-700 dark:text-primary-400/50" />
-                            <p className="text-primary-700 dark:text-primary-400 italic text-sm sm:text-lg md:text-xl mb-2 sm:mb-3">
-                              {s.quote.text}
-                            </p>
-                            <span 
-                              className="text-primary-700 dark:text-primary-300 text-xs sm:text-sm font-medium inline-block"
-                            >
-                              — {s.quote.author}
-                            </span>
-                          </blockquote>
-                        </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
