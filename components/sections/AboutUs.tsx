@@ -379,7 +379,7 @@ export default function AboutUs() {
               >
                 <div className={`flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl inline-flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 ${index % 2 === 0 ? 'ml-0 mr-auto' : 'mr-0 ml-auto'}`}>
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                  <div className="relative z-10 w-40 h-40 glass-inner-panel overflow-hidden shadow-2xl flex items-center justify-center">
+                  <div className="relative z-10 flex h-40 w-40 items-center justify-center overflow-hidden rounded-2xl border border-primary-500/30 shadow-2xl glass-inner-panel dark:border-primary-500/40">
                     <Image 
                       src={value.image} 
                       alt={`${value.title} value icon`}
@@ -451,7 +451,7 @@ export default function AboutUs() {
                   {/* Image Container - same spacing as Stats impact icon */}
                   <div className="flex-shrink-0 relative hero-glass-frame backdrop-blur-lg rounded-2xl flex items-center justify-center">
                     <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                    <div className="relative z-10 w-40 h-40 glass-inner-panel overflow-hidden shadow-2xl flex items-center justify-center">
+                    <div className="relative z-10 flex h-40 w-40 items-center justify-center overflow-hidden rounded-2xl border border-primary-500/30 shadow-2xl glass-inner-panel dark:border-primary-500/40">
                       <Image 
                         src={mission.image} 
                         alt={`${mission.title} mission icon`}
