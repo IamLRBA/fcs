@@ -150,7 +150,7 @@ export default function Companies() {
               >
                 <div className="hero-glass-frame hero-glass-frame-compact relative w-full h-full flex items-center justify-center backdrop-blur-lg">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="company-content bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm w-full h-full flex items-center justify-center min-w-0 min-h-0 overflow-hidden">
+                <div className="company-content glass-inner-panel rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm w-full h-full flex items-center justify-center min-w-0 min-h-0 overflow-hidden">
                   <motion.img
                     src={company.image}
                     alt={company.name}

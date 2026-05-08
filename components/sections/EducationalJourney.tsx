@@ -112,7 +112,7 @@ function TimelineCard({
       <div className="hero-glass-frame relative rounded-2xl backdrop-blur-xl">
         <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-2xl opacity-90" aria-hidden />
         <div className="relative rounded-2xl p-1">
-          <div className="rounded-xl border border-primary-200/50 dark:border-primary-600/40 bg-gradient-to-br from-primary-50/90 to-primary-100/50 dark:from-neutral-900/80 dark:to-neutral-800/60 p-4 sm:p-5 shadow-lg transition-shadow duration-300 group-hover:shadow-xl group-hover:border-accent-500/30">
+          <div className="glass-inner-panel rounded-xl border border-primary-200/50 p-4 shadow-lg transition-shadow duration-300 group-hover:border-accent-500/30 group-hover:shadow-xl dark:border-primary-600/40 sm:p-5">
             <div className={`flex items-start gap-4 ${align === 'right' ? 'flex-row-reverse' : ''}`}>
               <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500/20 to-primary-600/20 dark:from-accent-400/15 dark:to-primary-500/10 flex items-center justify-center border border-accent-500/25 dark:border-accent-400/20">
                 <span className="text-xl font-bold text-accent-600 dark:text-accent-400">{index + 1}</span>

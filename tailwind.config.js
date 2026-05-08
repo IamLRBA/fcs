@@ -7,6 +7,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './sections/**/*.{js,ts,jsx,tsx,mdx}',
     './lib/**/*.{js,ts,jsx,tsx,mdx}',
+    './styles/**/*.css',
   ],
   corePlugins: {
     preflight: false,

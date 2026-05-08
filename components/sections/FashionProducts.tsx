@@ -281,7 +281,7 @@ export default function FashionProducts() {
                   <Link href={`/products/${s.slug}`} className={`focus-ring-none block w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[300px] md:h-[300px] lg:w-[352px] lg:h-[352px] aspect-square flex-shrink-0 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:scale-[1.02] transition-all duration-300`}>
                     <div className="hero-glass-frame relative w-full h-full backdrop-blur-md">
                       <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                    <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl w-full h-full flex items-center justify-center">
+                    <div className="glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl w-full h-full flex items-center justify-center">
                       <img src={s.image} alt={s.title} className="w-full h-full object-cover rounded-2xl group-hover:scale-110 transition-transform duration-300" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = 'none'; const f = (t.parentElement?.nextElementSibling as HTMLElement); if (f) f.style.display = 'flex' }} />
                     </div>
                     </div>
@@ -300,7 +300,7 @@ export default function FashionProducts() {
                   {expandedId === s.id && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
                       <div className="dark" role="presentation">
-                      <div className="bg-primary-800/30 dark:bg-primary-900/40 rounded-xl p-3 sm:p-6 border border-primary-500/20 dark:border-primary-400/30">
+                      <div className="glass-inner-panel rounded-xl border border-primary-500/20 p-3 sm:p-6 dark:border-primary-400/30">
                         {/* Thumbnail Images */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4 justify-items-center">
                           {[1, 2, 3, 4].map((thumbIndex) => {
@@ -370,7 +370,7 @@ export default function FashionProducts() {
                       </div>
                         
                         {/* Quote Section - outside dark wrapper so light mode uses text-neutral-500 */}
-                        <div className="mt-2 pt-2 pb-2 px-3 sm:pt-4 sm:px-6 sm:pb-6 border-t border-primary-500/20 bg-primary-800/30 dark:bg-primary-900/40 rounded-b-xl border-x border-b border-primary-500/20 dark:border-primary-400/30">
+                        <div className="glass-inner-panel mt-2 rounded-b-xl border-x border-b border-t border-primary-500/20 px-3 pb-2 pt-2 dark:border-primary-400/30 sm:px-6 sm:pb-6 sm:pt-4">
                           <blockquote className="text-center max-w-full sm:max-w-md md:max-w-lg mx-auto">
                             <Quote className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 sm:mb-4 text-primary-700 dark:text-primary-400/50" />
                             <p className="text-primary-700 dark:text-primary-400 italic text-sm sm:text-lg md:text-xl mb-2 sm:mb-3">

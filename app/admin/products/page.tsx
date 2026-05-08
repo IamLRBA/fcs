@@ -98,7 +98,7 @@ function AdminShopCardDiscountPreview({ saleUgx, originalUgx }: { saleUgx: numbe
   if (!Number.isFinite(saleUgx) || !Number.isFinite(originalUgx) || originalUgx <= saleUgx) return null
   const pct = Math.round(((originalUgx - saleUgx) / originalUgx) * 100)
   return (
-    <div className="mt-2 rounded-md border border-primary-500/30 bg-primary-800/30 p-2 dark:border-primary-500/40">
+    <div className="glass-inner-panel mt-2 rounded-md border border-primary-500/30 p-2 dark:border-primary-500/40">
       <p className="mb-1.5 text-[11px] font-medium text-primary-800 dark:text-primary-200">Shop card preview</p>
       <div className="relative mx-auto aspect-square w-full max-w-[7.5rem] overflow-hidden rounded-lg bg-primary-900/20">
         <div className="absolute left-1.5 top-1.5 z-30 rounded-full bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold text-white sm:text-xs">
@@ -449,7 +449,7 @@ export default function AdminProductsPage() {
         />
         <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl overflow-hidden">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-          <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
+          <div className="glass-inner-panel relative z-10 rounded-2xl border border-neutral-200 p-4 sm:p-6 md:p-8 dark:border-neutral-700">
             <h1 className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-100 mb-6 text-center">
               Products
             </h1>
@@ -533,7 +533,7 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Table */}
-            <div className="rounded-bl-lg rounded-br-lg border border-neutral-300/80 dark:border-neutral-700 bg-white dark:bg-neutral-800 overflow-hidden">
+            <div className="glass-inner-panel rounded-bl-lg rounded-br-lg border border-neutral-300/80 overflow-hidden dark:border-neutral-700">
                 {productsLoading ? (
                   <div className="space-y-2 px-3 py-3">
                     <Skeleton className="h-10 w-full rounded-lg" />
@@ -661,7 +661,7 @@ export default function AdminProductsPage() {
             onClick={() => setDetailsProduct(null)}
           >
             <div
-              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
+              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl overflow-hidden rounded-2xl backdrop-blur-lg dark:border-neutral-600"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
@@ -670,13 +670,13 @@ export default function AdminProductsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
+                className="glass-inner-panel relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 shadow-2xl dark:border-neutral-700 sm:max-h-[80vh] md:max-h-[85vh]"
               >
                 <div className="modal-scroll flex flex-1 min-h-0 flex-col overflow-y-auto gap-5 pt-10 pb-4 px-4 sm:pt-8 sm:px-6 md:px-8 sm:gap-6">
                 <div className="flex flex-col sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-5 sm:gap-6">
                   <div className="flex-shrink-0">
-                    <div className="relative mx-auto w-full max-w-[22rem] aspect-square overflow-hidden rounded-lg bg-neutral-100 dark:bg-primary-900/20">
-                      <span className="absolute inset-2 overflow-hidden rounded-md bg-neutral-50 dark:bg-neutral-900/50">
+                    <div className="glass-inner-well relative mx-auto aspect-square w-full max-w-[22rem] overflow-hidden rounded-lg">
+                      <span className="absolute inset-2 overflow-hidden rounded-md">
                         <SafeImage
                           src={detailsProduct.images?.[detailsImageIndex] || detailsProduct.images?.[0] || '/assets/images/placeholder.jpg'}
                           alt={detailsProduct.name}
@@ -706,13 +706,13 @@ export default function AdminProductsPage() {
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={() => setDetailsImageIndex(index)}
                                 aria-current={isActive ? 'true' : undefined}
-                                className={`focus-ring-none relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border bg-neutral-100 transition-all duration-200 sm:max-w-none sm:w-16 md:w-[4.75rem] dark:bg-neutral-800/40 ${
+                                className={`focus-ring-none glass-inner-well relative aspect-square w-[calc((100vw-5rem)/4)] max-w-[5.25rem] flex-shrink-0 overflow-hidden rounded-xl border transition-all duration-200 sm:max-w-none sm:w-16 md:w-[4.75rem] ${
                                   isActive
                                     ? 'z-[1] border-2 border-primary-600 shadow-md dark:border-primary-400'
                                     : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                 }`}
                               >
-                                <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
+                                <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
                                   <SafeImage
                                     src={img}
                                     alt={`${detailsProduct.name} ${index + 1}`}
@@ -801,7 +801,7 @@ export default function AdminProductsPage() {
             }}
           >
             <div
-              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
+              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl overflow-hidden rounded-2xl backdrop-blur-lg dark:border-neutral-600"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
@@ -816,7 +816,7 @@ export default function AdminProductsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
+                className="glass-inner-panel relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 shadow-2xl dark:border-neutral-700 sm:max-h-[80vh] md:max-h-[85vh]"
               >
                 <form
                   onSubmit={(e) => {
@@ -947,7 +947,7 @@ export default function AdminProductsPage() {
                                           : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                       }`}
                                     >
-                                      <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
+                                      <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
                                         <SafeImage
                                           src={img}
                                           alt={`Edit image ${index + 1}`}
@@ -1258,7 +1258,7 @@ export default function AdminProductsPage() {
             }}
           >
             <div
-              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600 rounded-2xl overflow-hidden"
+              className="hero-glass-frame relative w-full max-w-md sm:max-w-3xl md:max-w-5xl overflow-hidden rounded-2xl backdrop-blur-lg dark:border-neutral-600"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
@@ -1273,7 +1273,7 @@ export default function AdminProductsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800 sm:max-h-[80vh] md:max-h-[85vh]"
+                className="glass-inner-panel relative z-10 flex w-full max-h-[70vh] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 shadow-2xl dark:border-neutral-700 sm:max-h-[80vh] md:max-h-[85vh]"
               >
                 <form onSubmit={handleAddProduct} className="flex flex-col min-h-0 flex-1 overflow-hidden">
                   <div className="pt-10 sm:pt-8 px-4 sm:px-6 md:px-8 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0">
@@ -1463,7 +1463,7 @@ export default function AdminProductsPage() {
                                         : 'border-neutral-300/90 hover:border-primary-400/70 dark:border-neutral-600 dark:hover:border-primary-500/60'
                                     }`}
                                   >
-                                    <span className="absolute inset-0 overflow-hidden rounded-[inherit] bg-neutral-50 dark:bg-neutral-900/50">
+                                    <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
                                       <SafeImage
                                         src={img}
                                         alt={`New product image ${index + 1}`}
@@ -1561,7 +1561,7 @@ export default function AdminProductsPage() {
                 className="absolute top-2 right-2 z-40 flex-shrink-0"
                 aria-label="Close"
               />
-              <div className="relative z-10 flex max-h-[min(90vh,34rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="glass-inner-panel relative z-10 flex max-h-[min(90vh,34rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 dark:border-neutral-700">
                 <div className="modal-scroll min-h-0 flex-1 overflow-y-auto p-6 pt-12 sm:p-8 sm:pt-14">
                 <h2 className="text-xl font-bold text-primary-800 dark:text-primary-100">Remove product?</h2>
                 <p className="mt-2 text-neutral-700 dark:text-primary-300">
@@ -1619,7 +1619,7 @@ export default function AdminProductsPage() {
           >
             <div className="hero-glass-frame relative overflow-hidden rounded-xl backdrop-blur-lg">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 rounded-bl-xl rounded-tl-xl border border-neutral-200 bg-white px-3 py-2.5 dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="glass-inner-panel relative z-10 rounded-bl-xl rounded-tl-xl border border-neutral-200 px-3 py-2.5 dark:border-neutral-700">
                 <ModalCloseButton
                   onClose={() => setUndoDeletedProduct(null)}
                   className="absolute -right-4 -top-4 z-40 flex-shrink-0"
@@ -1655,7 +1655,7 @@ export default function AdminProductsPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <div className="relative z-10 overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="glass-inner-panel relative z-10 overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 dark:border-neutral-700">
                 <ModalCloseButton
                   onClose={() => setAddImageRequiredOpen(false)}
                   className="absolute -right-4 -top-4 z-40 flex-shrink-0"

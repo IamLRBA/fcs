@@ -324,7 +324,7 @@ export default function Testimonials() {
                 >
                 <div className="hero-glass-frame relative h-full flex flex-col backdrop-blur-lg">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="testimonial-content bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl p-4 sm:p-3 lg:p-5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
+                <div className="testimonial-content glass-inner-panel rounded-2xl p-4 sm:p-3 lg:p-5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
                   <div className="flex justify-center mb-2 sm:mb-1.5 lg:mb-2">
                     <div className="w-8 h-8 sm:w-6 sm:h-6 lg:w-7 lg:h-7 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
                       <svg className="w-4 h-4 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
@@ -392,9 +392,9 @@ export default function Testimonials() {
               exit={{ opacity: 0 }} 
               onClick={() => setSelectedTestimonial(null)}
             >
-              <div className="hero-glass-frame relative max-w-lg w-full overflow-visible backdrop-blur-lg bg-white/25 dark:bg-neutral-900/20 dark:border-neutral-600" onClick={(e) => e.stopPropagation()}>
+              <div className="hero-glass-frame relative max-w-lg w-full overflow-visible backdrop-blur-lg dark:border-neutral-600" onClick={(e) => e.stopPropagation()}>
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <motion.div className="modal-content relative flex w-full max-h-[80vh] flex-col overflow-visible rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none bg-white dark:bg-neutral-950" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
+              <motion.div className="modal-content glass-inner-panel relative flex w-full max-h-[80vh] flex-col overflow-visible rounded-bl-2xl rounded-br-none rounded-tl-2xl rounded-tr-none border border-neutral-200 dark:border-neutral-700" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
                 <ModalCloseButton onClose={() => setSelectedTestimonial(null)} className="absolute top-0 right-0 z-[1200] flex-shrink-0 translate-x-1/2 -translate-y-1/2" aria-label="Close" />
                 <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-14">
                 <div className="testimonial-content">

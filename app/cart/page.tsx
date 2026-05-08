@@ -140,12 +140,12 @@ export default function CartPage() {
                 className="hero-glass-frame relative backdrop-blur-md"
               >
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-                <div className="relative overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xl dark:border-primary-500/30 dark:bg-primary-800/30 dark:shadow-xl">
+                <div className="glass-inner-panel relative overflow-hidden rounded-xl border border-neutral-200 shadow-xl dark:border-primary-500/30 dark:shadow-xl">
                   {cart.map((item, index) => (
                     <div key={`${item.id}-${index}`}>
                       <div className="flex flex-col gap-4 p-6 sm:flex-row">
                         {/* Product Image */}
-                        <div className="relative mx-auto h-28 w-28 shrink-0 overflow-hidden rounded-lg bg-neutral-100 dark:bg-primary-900/20 sm:mx-0 sm:h-32 sm:w-32">
+                        <div className="glass-inner-well relative mx-auto h-28 w-28 shrink-0 overflow-hidden rounded-lg sm:mx-0 sm:h-32 sm:w-32">
                           <SafeImage
                             src={item.image}
                             alt={item.name}
@@ -170,7 +170,7 @@ export default function CartPage() {
                           )}
 
                           <div className="flex items-center space-x-4">
-                            <div className="rounded-lg border border-primary-300 bg-primary-100 px-3 py-2 dark:border-primary-500/30 dark:bg-primary-800/30">
+                            <div className="glass-inner-well rounded-lg border border-primary-300 px-3 py-2 dark:border-primary-500/30">
                               <span className="text-sm text-primary-700 dark:text-primary-300">Single Piece</span>
                             </div>
 
@@ -217,7 +217,7 @@ export default function CartPage() {
               >
                 <div className="hero-glass-frame relative backdrop-blur-lg">
                   <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-6 shadow-xl dark:shadow-xl">
+                <div className="glass-inner-panel rounded-xl border border-neutral-200 p-6 shadow-xl dark:border-primary-500/30 dark:shadow-xl">
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Order Summary</h2>
                 
                 <div className="space-y-4 pb-6 border-b border-neutral-200 dark:border-primary-600/50">

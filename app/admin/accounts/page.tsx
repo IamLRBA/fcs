@@ -116,7 +116,7 @@ export default function AdminAccountsPage() {
         />
         <div className="hero-glass-frame relative backdrop-blur-lg rounded-2xl overflow-hidden">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-          <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 p-4 sm:p-6 md:p-8">
+          <div className="glass-inner-panel relative z-10 rounded-2xl border border-neutral-200 p-4 sm:p-6 md:p-8 dark:border-neutral-700">
             <h1 className="text-2xl sm:text-3xl font-bold text-primary-800 dark:text-primary-100 mb-6 text-center">
               Accounts
             </h1>
@@ -326,12 +326,12 @@ export default function AdminAccountsPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="hero-glass-frame relative w-full max-w-md backdrop-blur-lg rounded-2xl bg-white/25 dark:bg-neutral-900/20 border border-neutral-300/80 dark:border-neutral-600 overflow-hidden"
+            className="hero-glass-frame relative w-full max-w-md backdrop-blur-lg rounded-2xl border border-neutral-300/80 dark:border-neutral-600 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
             <ModalCloseButton onClose={() => setResetUserId(null)} className="absolute top-2 right-2 z-40 shrink-0" aria-label="Close" />
-            <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
+            <div className="glass-inner-panel relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 shadow-2xl dark:border-neutral-700">
               <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-10 sm:pt-8 sm:pb-6">
                 <h2 className="mb-4 text-lg font-bold text-primary-800 dark:text-primary-100">Reset password</h2>
                 <input
@@ -367,11 +367,11 @@ export default function AdminAccountsPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="hero-glass-frame relative w-full max-w-md backdrop-blur-lg rounded-2xl bg-white/25 dark:bg-neutral-900/20 border border-neutral-300/80 dark:border-neutral-600 overflow-hidden"
+              className="hero-glass-frame relative w-full max-w-md backdrop-blur-lg rounded-2xl border border-neutral-300/80 dark:border-neutral-600 overflow-hidden"
             >
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
               <ModalCloseButton onClose={() => setPendingDeleteUser(null)} className="absolute top-2 right-2 z-40 shrink-0" aria-label="Close" />
-              <div className="relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-2xl dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="glass-inner-panel relative z-10 flex max-h-[min(90vh,28rem)] flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 shadow-2xl dark:border-neutral-700">
                 <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-6 pt-10 sm:pt-8 sm:pb-6">
                   <h2 className="mb-4 text-lg font-bold text-primary-800 dark:text-primary-100">Delete account</h2>
                   <p className="mb-4 text-sm text-neutral-700 dark:text-neutral-300">

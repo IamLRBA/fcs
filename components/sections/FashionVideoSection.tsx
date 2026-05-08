@@ -246,7 +246,7 @@ export default function FashionVideoSection() {
         
         <div className="hero-glass-frame relative backdrop-blur-sm">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="bg-gradient-to-br from-primary-50/90 to-primary-100/70 dark:from-neutral-900/85 dark:to-neutral-800/80 rounded-2xl p-4 sm:p-6 md:p-8 border border-primary-200/40 dark:border-white/15 shadow-lg">
+        <div className="glass-inner-panel rounded-2xl border border-primary-200/40 p-4 shadow-lg dark:border-white/15 sm:p-6 md:p-8">
           <div 
             ref={containerRef}
             className="relative aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden bg-black"

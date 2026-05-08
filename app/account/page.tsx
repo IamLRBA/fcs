@@ -225,7 +225,7 @@ export default function AccountPage() {
 
         <div className="hero-glass-frame relative backdrop-blur-lg w-full">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="relative z-10 bg-neutral-100/80 dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700">
+        <div className="glass-inner-panel relative z-10 overflow-hidden rounded-2xl border border-neutral-200 shadow-xl dark:border-neutral-700">
           {/* Header - slightly darker shade in light mode */}
           <div className="bg-neutral-200/70 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-600 p-4 sm:p-6 md:p-8">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
@@ -571,11 +571,11 @@ export default function AccountPage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="hero-glass-frame relative flex w-full max-w-md max-h-[min(90vh,36rem)] flex-col overflow-hidden rounded-2xl backdrop-blur-lg bg-white/25 shadow-2xl dark:border-neutral-600 dark:bg-neutral-900/20"
+                className="hero-glass-frame relative flex w-full max-w-md max-h-[min(90vh,36rem)] flex-col overflow-hidden rounded-2xl backdrop-blur-lg shadow-2xl dark:border-neutral-600"
               >
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
                 <ModalCloseButton onClose={() => setShowEditProfile(false)} className="absolute top-2 right-2 z-40 shrink-0" aria-label="Close" />
-                <div className="relative z-10 flex max-h-[min(90vh,36rem)] min-h-0 flex-1 flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-800">
+                <div className="glass-inner-panel relative z-10 flex max-h-[min(90vh,36rem)] min-h-0 flex-1 flex-col overflow-hidden rounded-bl-2xl rounded-tl-2xl border border-neutral-200 shadow-xl dark:border-neutral-700">
                 <div className="modal-scrollbar min-h-0 flex-1 overflow-y-auto p-8 pt-10 sm:pt-8 sm:pb-6">
                 <h2 className="mb-6 text-2xl font-bold text-primary-800 dark:text-primary-100">
                   Edit Profile Picture

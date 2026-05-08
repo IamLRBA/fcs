@@ -85,10 +85,13 @@ export function SkeletonAccountPage() {
   return (
     <div className="min-h-screen bg-unified relative overflow-hidden pt-24 pb-16 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="hero-glass-frame rounded-2xl p-6 flex flex-col items-center gap-4">
+        <div className="hero-glass-frame relative rounded-2xl backdrop-blur-lg">
+          <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
+          <div className="glass-inner-panel flex flex-col items-center gap-4 rounded-2xl p-6">
           <Skeleton className="h-20 w-20 rounded-full" />
           <Skeleton className="h-6 w-48 rounded-lg" />
-          <Skeleton className="h-24 w-full rounded-xl mt-2" />
+          <Skeleton className="mt-2 h-24 w-full rounded-xl" />
+          </div>
         </div>
       </div>
     </div>
@@ -135,7 +138,7 @@ export function SkeletonFeaturedCollections() {
             >
               <div className="hero-glass-frame relative w-full backdrop-blur-md">
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                <div className="flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 bg-primary-100/55 p-1.5 sm:gap-1.5 sm:p-2 dark:bg-primary-800/30">
+                <div className="glass-inner-panel flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2">
                   <Skeleton className="aspect-square w-full rounded-lg" />
                   <div className="space-y-1 px-0.5 pb-0.5 sm:px-1">
                     <Skeleton className="mx-auto h-3 w-4/5 rounded sm:h-3.5" />

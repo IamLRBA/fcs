@@ -169,7 +169,7 @@ export default function LoginPage() {
           className="hero-glass-frame relative backdrop-blur-lg rounded-2xl"
         >
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-          <div className="relative z-10 bg-white/95 dark:bg-neutral-800 rounded-2xl shadow-xl p-6 sm:p-8 border border-neutral-200 dark:border-neutral-700 login-form">
+          <div className="glass-inner-panel relative z-10 rounded-2xl p-6 shadow-xl sm:p-8 border border-neutral-200 dark:border-neutral-700 login-form">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">
               {isLogin ? 'Welcome Back' : 'Create Account'}
