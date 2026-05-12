@@ -365,7 +365,9 @@ export default function FashionProducts() {
                             )
                           })}
                         </div>
-                        <blockquote className="mx-auto mt-4 max-w-full border-t border-primary-500/20 pt-4 text-center dark:border-primary-400/30 sm:max-w-md sm:pb-2 sm:pt-6 md:max-w-lg md:pb-6">
+                      </div>
+                      <div className="glass-inner-panel mt-3 rounded-xl border border-primary-500/20 p-4 dark:border-primary-400/30 sm:mt-4 sm:p-6">
+                        <blockquote className="mx-auto max-w-full text-center sm:max-w-md sm:pb-2 md:max-w-lg md:pb-6">
                           <Quote className="mx-auto mb-2 h-6 w-6 text-primary-700 dark:text-primary-400/50 sm:mb-4 sm:h-8 sm:w-8" />
                           <p className="mb-2 text-sm italic text-primary-700 dark:text-primary-400 sm:mb-3 sm:text-lg md:text-xl">
                             {s.quote.text}
