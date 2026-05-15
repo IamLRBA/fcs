@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ShoppingCart, Sparkles, CircleSlash } from 'lucide-react'
+import { ShoppingCart, Sparkles, CircleSlash, ExternalLink } from 'lucide-react'
 import SafeImage from '@/components/common/SafeImage'
 import Button from '@/components/ui/Button'
 import { SkeletonFeaturedCollections } from '@/components/ui/Skeleton'
@@ -182,9 +182,11 @@ function FeaturedCollectionsRow({
                   className="focus-ring-none absolute right-0 top-0 z-30 shrink-0 translate-x-[calc(var(--hero-frame-padding)*0.42)] -translate-y-[calc(var(--hero-frame-padding)*0.42)]"
                   aria-label={`View ${item.categoryName} collection`}
                 >
-                  <span className="relative z-10 inline-block text-base font-medium leading-none sm:text-lg" aria-hidden>
-                    ⟹
-                  </span>
+                  <ExternalLink
+                    className="relative z-10 h-[1.05rem] w-[1.05rem] shrink-0 sm:h-5 sm:w-5"
+                    strokeWidth={1}
+                    aria-hidden
+                  />
                 </Button>
               </div>
             </motion.div>
