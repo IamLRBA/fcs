@@ -84,18 +84,7 @@ function FeaturedCollectionsRow({
             >
               <div className="hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl">
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                <div className="glass-inner-panel relative flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2">
-                  <Button
-                    href={`/products/${categorySlug}`}
-                    variant="circle"
-                    size="sm"
-                    className="focus-ring-none absolute right-1 top-1 z-30 shrink-0 sm:right-1.5 sm:top-1.5"
-                    aria-label={`View ${item.categoryName} collection`}
-                  >
-                    <span className="relative z-10 inline-block text-base font-medium leading-none sm:text-lg" aria-hidden>
-                      ⟹
-                    </span>
-                  </Button>
+                <div className="glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2">
                   <Link href={`/products/${categorySlug}`} className="focus-ring-none block w-full shrink-0">
                     <div className="glass-inner-well relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg">
                       <SafeImage
@@ -186,6 +175,17 @@ function FeaturedCollectionsRow({
                     </div>
                   </div>
                 </div>
+                <Button
+                  href={`/products/${categorySlug}`}
+                  variant="circle"
+                  size="sm"
+                  className="focus-ring-none absolute right-0 top-0 z-30 shrink-0 translate-x-[calc(var(--hero-frame-padding)*0.42)] -translate-y-[calc(var(--hero-frame-padding)*0.42)]"
+                  aria-label={`View ${item.categoryName} collection`}
+                >
+                  <span className="relative z-10 inline-block text-base font-medium leading-none sm:text-lg" aria-hidden>
+                    ⟹
+                  </span>
+                </Button>
               </div>
             </motion.div>
           )
