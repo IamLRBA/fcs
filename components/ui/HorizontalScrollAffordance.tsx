@@ -102,11 +102,22 @@ export default function HorizontalScrollAffordance({
     }
   }, [updateEdges])
 
-  /** Same semantic “toward strip start” (-1) / “toward strip end” (+1); adapts under RTL scrollport */
-  const scrollByViewport = (direction: -1 | 1) => {
+  /** Explore more content (primary control at rest for LTR rows; matches RTL primary for reversed rows). */
+  const scrollForward = () => {
     const el = scrollerRef.current
     if (!el) return
     const base = Math.max(160, el.clientWidth * 0.75)
+    const direction: -1 | 1 = reverseSlideDirection ? -1 : 1
+    const delta = reverseSlideDirection ? -base * direction : base * direction
+    el.scrollBy({ left: delta, behavior: 'smooth' })
+  }
+
+  /** Move back toward strip start. */
+  const scrollBack = () => {
+    const el = scrollerRef.current
+    if (!el) return
+    const base = Math.max(160, el.clientWidth * 0.75)
+    const direction: -1 | 1 = reverseSlideDirection ? 1 : -1
     const delta = reverseSlideDirection ? -base * direction : base * direction
     el.scrollBy({ left: delta, behavior: 'smooth' })
   }
@@ -115,11 +126,11 @@ export default function HorizontalScrollAffordance({
     if (!keyboardFocusable) return
     if (e.key === 'ArrowLeft') {
       e.preventDefault()
-      scrollByViewport(reverseSlideDirection ? 1 : -1)
+      scrollBack()
     }
     if (e.key === 'ArrowRight') {
       e.preventDefault()
-      scrollByViewport(reverseSlideDirection ? -1 : 1)
+      scrollForward()
     }
   }
 
@@ -203,27 +214,27 @@ export default function HorizontalScrollAffordance({
           </>
         )}
 
-        {(reverseSlideDirection ? canRight : canLeft) && (
+        {canRight && (
           <Button
             variant="circle"
-            aria-label={`Scroll ${scrollAriaLabel} left`}
-            onClick={() => scrollByViewport(reverseSlideDirection ? 1 : -1)}
+            aria-label={`Show more · ${scrollAriaLabel}`}
+            onClick={() => scrollForward()}
             className={arrowLeftClass}
           >
             <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>
-              ⟸
+              ⟹
             </span>
           </Button>
         )}
-        {(reverseSlideDirection ? canLeft : canRight) && (
+        {canLeft && (
           <Button
             variant="circle"
-            aria-label={`Scroll ${scrollAriaLabel} right`}
-            onClick={() => scrollByViewport(reverseSlideDirection ? -1 : 1)}
+            aria-label={`Go back · ${scrollAriaLabel}`}
+            onClick={() => scrollBack()}
             className={arrowRightClass}
           >
             <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>
-              ⟹
+              ⟸
             </span>
           </Button>
         )}
