@@ -137,12 +137,12 @@ function SkeletonFeaturedCollectionsRow({ isFirstRow }: { isFirstRow: boolean })
             >
               <div className="hero-glass-frame relative w-full backdrop-blur-md">
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                <div className="glass-inner-panel flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2">
+                <div className="glass-inner-panel relative flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2">
+                  <Skeleton className="absolute right-1 top-1 z-10 h-8 w-8 shrink-0 rounded-full sm:right-1.5 sm:top-1.5 sm:h-9 sm:w-9" aria-hidden />
                   <Skeleton className="aspect-square w-full rounded-lg" />
                   <div className="space-y-1 px-0.5 pb-0.5 sm:px-1">
                     <Skeleton className="mx-auto h-3 w-4/5 rounded sm:h-3.5" />
                     <Skeleton className="mx-auto h-2.5 w-1/2 rounded sm:h-3" />
-                    <Skeleton className="h-6 w-full rounded-md sm:h-7" />
                     <Skeleton className="h-6 w-full rounded-md sm:h-7" />
                   </div>
                 </div>
