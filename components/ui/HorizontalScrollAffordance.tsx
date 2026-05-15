@@ -222,7 +222,7 @@ export default function HorizontalScrollAffordance({
             className={arrowLeftClass}
           >
             <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>
-              ⟹
+              ⟸
             </span>
           </Button>
         )}
@@ -234,7 +234,7 @@ export default function HorizontalScrollAffordance({
             className={arrowRightClass}
           >
             <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>
-              ⟸
+              ⟹
             </span>
           </Button>
         )}
