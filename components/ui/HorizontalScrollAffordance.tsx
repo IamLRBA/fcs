@@ -17,6 +17,11 @@ type HorizontalScrollAffordanceProps = {
   className?: string
   /** Classes on the scrollable element */
   scrollClassName?: string
+  /**
+   * Reverse horizontal scroll semantics so drag/arrows match “slide left‑to‑right” vs default “right‑to‑left”.
+   * Implemented via RTL scrollport + inner LTR content so layout stays unchanged.
+   */
+  reverseSlideDirection?: boolean
   /** Accessible name for the scroll region */
   scrollAriaLabel: string
   /** When false, no focus ring / keyboard (e.g. loading skeleton) */
@@ -38,6 +43,7 @@ export default function HorizontalScrollAffordance({
   children,
   className = '',
   scrollClassName = '',
+  reverseSlideDirection = false,
   scrollAriaLabel,
   keyboardFocusable = true,
   showEdgeFades = true,
@@ -55,9 +61,24 @@ export default function HorizontalScrollAffordance({
     const { scrollLeft, scrollWidth, clientWidth } = el
     const maxScroll = scrollWidth - clientWidth
     const epsilon = 2
-    setCanLeft(scrollLeft > epsilon)
-    setCanRight(scrollLeft < maxScroll - epsilon)
-  }, [])
+    if (reverseSlideDirection) {
+      /**
+       * RTL scrollports: Blink/WebKit typically use scrollLeft ≤ 0 (0 at one end, −maxScroll at the other).
+       * Safari may use positive scrollLeft; handle both.
+       */
+      if (scrollLeft <= 0) {
+        const maxNeg = -maxScroll
+        setCanLeft(scrollLeft > maxNeg + epsilon)
+        setCanRight(scrollLeft < -epsilon)
+      } else {
+        setCanLeft(scrollLeft < maxScroll - epsilon)
+        setCanRight(scrollLeft > epsilon)
+      }
+    } else {
+      setCanLeft(scrollLeft > epsilon)
+      setCanRight(scrollLeft < maxScroll - epsilon)
+    }
+  }, [reverseSlideDirection])
 
   useEffect(() => {
     const el = scrollerRef.current
@@ -81,10 +102,12 @@ export default function HorizontalScrollAffordance({
     }
   }, [updateEdges])
 
+  /** Same semantic “toward strip start” (-1) / “toward strip end” (+1); adapts under RTL scrollport */
   const scrollByViewport = (direction: -1 | 1) => {
     const el = scrollerRef.current
     if (!el) return
-    const delta = Math.max(160, el.clientWidth * 0.75) * direction
+    const base = Math.max(160, el.clientWidth * 0.75)
+    const delta = reverseSlideDirection ? -base * direction : base * direction
     el.scrollBy({ left: delta, behavior: 'smooth' })
   }
 
@@ -92,11 +115,11 @@ export default function HorizontalScrollAffordance({
     if (!keyboardFocusable) return
     if (e.key === 'ArrowLeft') {
       e.preventDefault()
-      scrollByViewport(-1)
+      scrollByViewport(reverseSlideDirection ? 1 : -1)
     }
     if (e.key === 'ArrowRight') {
       e.preventDefault()
-      scrollByViewport(1)
+      scrollByViewport(reverseSlideDirection ? -1 : 1)
     }
   }
 
@@ -138,9 +161,12 @@ export default function HorizontalScrollAffordance({
           aria-label={scrollAriaLabel}
           tabIndex={keyboardFocusable ? 0 : -1}
           onKeyDown={onKeyDown}
+          dir={reverseSlideDirection ? 'rtl' : 'ltr'}
           className={scrollerClassName}
         >
-          {children}
+          <div dir="ltr" className="min-w-max">
+            {children}
+          </div>
         </div>
 
         {showEdgeFades && (
@@ -148,13 +174,13 @@ export default function HorizontalScrollAffordance({
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-2 left-0 z-[2] w-8 sm:w-12 rounded-l-lg bg-gradient-to-r from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
-                canLeft ? 'opacity-100' : 'opacity-0'
+                reverseSlideDirection ? (canRight ? 'opacity-100' : 'opacity-0') : canLeft ? 'opacity-100' : 'opacity-0'
               }`}
             />
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-2 right-0 z-[2] w-8 sm:w-12 rounded-r-lg bg-gradient-to-l from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
-                canRight ? 'opacity-100' : 'opacity-0'
+                reverseSlideDirection ? (canLeft ? 'opacity-100' : 'opacity-0') : canRight ? 'opacity-100' : 'opacity-0'
               }`}
             />
           </>
@@ -165,23 +191,23 @@ export default function HorizontalScrollAffordance({
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-0 left-0 z-[5] rounded-none ${railBarClass} transition-opacity duration-200 ${
-                canLeft ? 'opacity-100' : 'opacity-0'
+                reverseSlideDirection ? (canRight ? 'opacity-100' : 'opacity-0') : canLeft ? 'opacity-100' : 'opacity-0'
               }`}
             />
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-0 right-0 z-[5] rounded-none ${railBarClass} transition-opacity duration-200 ${
-                canRight ? 'opacity-100' : 'opacity-0'
+                reverseSlideDirection ? (canLeft ? 'opacity-100' : 'opacity-0') : canRight ? 'opacity-100' : 'opacity-0'
               }`}
             />
           </>
         )}
 
-        {canLeft && (
+        {(reverseSlideDirection ? canRight : canLeft) && (
           <Button
             variant="circle"
             aria-label={`Scroll ${scrollAriaLabel} left`}
-            onClick={() => scrollByViewport(-1)}
+            onClick={() => scrollByViewport(reverseSlideDirection ? 1 : -1)}
             className={arrowLeftClass}
           >
             <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>
@@ -189,11 +215,11 @@ export default function HorizontalScrollAffordance({
             </span>
           </Button>
         )}
-        {canRight && (
+        {(reverseSlideDirection ? canLeft : canRight) && (
           <Button
             variant="circle"
             aria-label={`Scroll ${scrollAriaLabel} right`}
-            onClick={() => scrollByViewport(1)}
+            onClick={() => scrollByViewport(reverseSlideDirection ? -1 : 1)}
             className={arrowRightClass}
           >
             <span className="relative z-10 text-lg font-medium leading-none inline-block" aria-hidden>

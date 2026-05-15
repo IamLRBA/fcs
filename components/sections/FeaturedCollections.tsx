@@ -48,11 +48,14 @@ function FeaturedCollectionsRow({
   onAddToCart: (product: Product) => void
   isFirstRow: boolean
 }) {
+  const reverseSlideDirection = rowIndex % 2 === 1
+
   return (
     <HorizontalScrollAffordance
       showEdgeFades={false}
       syncScrollEdgeLines
       hideScrollbar
+      reverseSlideDirection={reverseSlideDirection}
       className={`max-w-6xl mx-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:mb-7 ${isFirstRow ? 'mt-10 mb-6' : 'mt-0 mb-6'}`}
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel={`Featured collections row ${rowIndex + 1}`}
