@@ -169,18 +169,30 @@ async function handleProductsGet(request: Request) {
   const normalized = products.map(toCatalogProduct)
 
   if (featured) {
-    const byCategory = new Map<string, CatalogProduct>()
+    const byCategory = new Map<string, CatalogProduct[]>()
     for (const product of normalized) {
-      if (!byCategory.has(product.category) && product.isActive) {
-        byCategory.set(product.category, product)
+      if (!product.isActive) continue
+      const list = byCategory.get(product.category) ?? []
+      if (list.length < 4) {
+        list.push(product)
+        byCategory.set(product.category, list)
       }
     }
-    const featuredProducts = Array.from(byCategory.entries()).map(([slug, product]) => ({
-      product,
-      categoryName: CATEGORY_META[slug]?.title ?? slug,
-      categorySlug: slug,
-    }))
-    return applyProductCacheHeaders(NextResponse.json(featuredProducts), { privateNoStore })
+    const categoryEntries = Array.from(byCategory.entries())
+    const rows = Array.from({ length: 4 }, (_, rank) =>
+      categoryEntries
+        .map(([slug, products]) => {
+          const product = products[rank]
+          if (!product) return null
+          return {
+            product,
+            categoryName: CATEGORY_META[slug]?.title ?? slug,
+            categorySlug: slug,
+          }
+        })
+        .filter((item): item is NonNullable<typeof item> => item !== null)
+    ).filter((row) => row.length > 0)
+    return applyProductCacheHeaders(NextResponse.json({ rows }), { privateNoStore })
   }
 
   if (!grouped) {

@@ -117,14 +117,13 @@ export function SkeletonAdminDashboard() {
   )
 }
 
-/** Featured collections – card strip only (no outer panel; matches loaded strip spacing) */
-export function SkeletonFeaturedCollections() {
+function SkeletonFeaturedCollectionsRow({ isFirstRow }: { isFirstRow: boolean }) {
   return (
     <HorizontalScrollAffordance
       showEdgeFades={false}
       syncScrollEdgeLines
       hideScrollbar
-      className="mt-10 mb-6 max-w-6xl mx-auto -mx-4 px-4 sm:mx-auto sm:px-0 sm:mb-7"
+      className={`max-w-6xl mx-auto -mx-4 px-4 sm:mx-auto sm:px-0 sm:mb-7 ${isFirstRow ? 'mt-10 mb-6' : 'mt-0 mb-6'}`}
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel="Featured collections loading"
       keyboardFocusable={false}
@@ -153,6 +152,17 @@ export function SkeletonFeaturedCollections() {
         </div>
       </div>
     </HorizontalScrollAffordance>
+  )
+}
+
+/** Featured collections – four card strips (matches loaded layout) */
+export function SkeletonFeaturedCollections() {
+  return (
+    <>
+      {[0, 1, 2, 3].map((row) => (
+        <SkeletonFeaturedCollectionsRow key={row} isFirstRow={row === 0} />
+      ))}
+    </>
   )
 }
 
