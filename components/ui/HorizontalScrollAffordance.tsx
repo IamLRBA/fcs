@@ -174,13 +174,13 @@ export default function HorizontalScrollAffordance({
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-2 left-0 z-[2] w-8 sm:w-12 rounded-l-lg bg-gradient-to-r from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
-                reverseSlideDirection ? (canRight ? 'opacity-100' : 'opacity-0') : canLeft ? 'opacity-100' : 'opacity-0'
+                canLeft ? 'opacity-100' : 'opacity-0'
               }`}
             />
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-2 right-0 z-[2] w-8 sm:w-12 rounded-r-lg bg-gradient-to-l from-black/[0.08] via-black/[0.04] to-transparent transition-opacity duration-200 dark:from-black/45 dark:via-black/20 ${
-                reverseSlideDirection ? (canLeft ? 'opacity-100' : 'opacity-0') : canRight ? 'opacity-100' : 'opacity-0'
+                canRight ? 'opacity-100' : 'opacity-0'
               }`}
             />
           </>
@@ -191,13 +191,13 @@ export default function HorizontalScrollAffordance({
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-0 left-0 z-[5] rounded-none ${railBarClass} transition-opacity duration-200 ${
-                reverseSlideDirection ? (canRight ? 'opacity-100' : 'opacity-0') : canLeft ? 'opacity-100' : 'opacity-0'
+                canLeft ? 'opacity-100' : 'opacity-0'
               }`}
             />
             <div
               aria-hidden
               className={`pointer-events-none absolute inset-y-0 right-0 z-[5] rounded-none ${railBarClass} transition-opacity duration-200 ${
-                reverseSlideDirection ? (canLeft ? 'opacity-100' : 'opacity-0') : canRight ? 'opacity-100' : 'opacity-0'
+                canRight ? 'opacity-100' : 'opacity-0'
               }`}
             />
           </>
