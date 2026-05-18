@@ -48,7 +48,7 @@ function FeaturedCollectionsRow({
   onAddToCart: (product: Product) => void
   isFirstRow: boolean
 }) {
-  const reverseSlideDirection = rowIndex % 2 === 1
+  const reverseSlideDirection = rowIndex >= 2
 
   return (
     <HorizontalScrollAffordance
