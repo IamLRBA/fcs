@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
+import {
+  getFeaturedDayIndex,
+  getFeaturedCacheMaxAgeSec,
+  pickFeaturedByDay,
+} from '@/lib/featured-rotation'
 
 function applyProductCacheHeaders(res: NextResponse, opts: { privateNoStore: boolean }) {
   if (opts.privateNoStore) {
@@ -173,16 +178,15 @@ async function handleProductsGet(request: Request) {
     for (const product of normalized) {
       if (!product.isActive) continue
       const list = byCategory.get(product.category) ?? []
-      if (list.length < 4) {
-        list.push(product)
-        byCategory.set(product.category, list)
-      }
+      list.push(product)
+      byCategory.set(product.category, list)
     }
+    const dayIndex = getFeaturedDayIndex()
     const categoryEntries = Array.from(byCategory.entries())
     const rows = Array.from({ length: 4 }, (_, rank) =>
       categoryEntries
         .map(([slug, products]) => {
-          const product = products[rank]
+          const product = pickFeaturedByDay(products, rank, dayIndex)
           if (!product) return null
           return {
             product,
@@ -192,7 +196,13 @@ async function handleProductsGet(request: Request) {
         })
         .filter((item): item is NonNullable<typeof item> => item !== null)
     ).filter((row) => row.length > 0)
-    return applyProductCacheHeaders(NextResponse.json({ rows }), { privateNoStore })
+    const res = NextResponse.json({ rows })
+    const maxAge = getFeaturedCacheMaxAgeSec()
+    res.headers.set(
+      'Cache-Control',
+      `public, s-maxage=${maxAge}, stale-while-revalidate=86400`
+    )
+    return res
   }
 
   if (!grouped) {
