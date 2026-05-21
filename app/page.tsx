@@ -140,7 +140,7 @@ export default function Home() {
                           </h1>
                           <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full xl:my-1" />
                           <p className="text-lg xl:text-xl text-primary-600 dark:text-primary-300 max-w-2xl xl:mt-1">
-                          Mystical Thrift Fashion & Soulful Style Curators
+                          Thrifted Gentlemen's Clothing
                           </p>
                         </div>
                         {/* Home hero only: semi-transparent glass around each CTA; md+ more gap + padding */}

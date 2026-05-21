@@ -181,7 +181,7 @@ export default function OrderConfirmationPage() {
                   <MysticalPiecesWord />
                 </h1>
                 <p className="text-gray-600 dark:text-primary-300 text-sm">
-                  Mystical Thrift Fashion & Soulful Style Curators
+                Thrifted Gentlemen's Clothing
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm text-gray-600 dark:text-primary-300">

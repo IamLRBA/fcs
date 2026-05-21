@@ -58,7 +58,7 @@ export default function OpenGraphImage() {
             />
           </div>
           <div style={{ fontSize: 30, lineHeight: 1.25, color: '#3f3f46' }}>
-            Mystical Thrift Fashion & Soulful Style Curators
+            Thrifted Gentlemen's Clothing
           </div>
         </div>
 
@@ -88,7 +88,7 @@ export default function OpenGraphImage() {
             />
           </div>
           <div style={{ fontSize: 30, lineHeight: 1.25, color: '#d4d4d8' }}>
-            Mystical Thrift Fashion & Soulful Style Curators
+            Thrifted Gentlemen's Clothing
           </div>
         </div>
 
