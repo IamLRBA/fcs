@@ -34,6 +34,12 @@ enum RemovalReason {
   DISCONTINUED
 }
 
+/// UNIQUE = one thrifted piece (default). MULTI = multiple units with size/color stock.
+enum InventoryMode {
+  UNIQUE
+  MULTI
+}
+
 // ---------------------------------------------------------------------------
 // User (customer)
 // ---------------------------------------------------------------------------
@@ -103,15 +109,17 @@ model Product {
   priceUgx          Int      @map("price_ugx")
   originalPriceUgx  Int?     @map("original_price_ugx")
   stockQty          Int      @default(0) @map("stock_qty")
+  inventoryMode     InventoryMode @default(UNIQUE) @map("inventory_mode")
   sizes             String[]
   colors            String[]
   isActive          Boolean  @default(true) @map("is_active")
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
-  images    ProductImage[]
+  images     ProductImage[]
+  variants   ProductVariant[]
   orderItems OrderItem[]
-  reviews   Review[]
+  reviews    Review[]
   removals   ProductRemoval[]
 
   @@index([category])
@@ -122,6 +130,26 @@ model Product {
   @@index([category, isActive, updatedAt(sort: Desc)])
   @@index([createdAt])
   @@map("products")
+}
+
+// ---------------------------------------------------------------------------
+// Product variant (size + color stock for MULTI inventory products)
+// ---------------------------------------------------------------------------
+
+model ProductVariant {
+  id        String   @id @default(cuid())
+  productId String   @map("product_id")
+  size      String
+  color     String
+  stockQty  Int      @default(0) @map("stock_qty")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, size, color])
+  @@index([productId])
+  @@map("product_variants")
 }
 
 // ---------------------------------------------------------------------------

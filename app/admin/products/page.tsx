@@ -16,6 +16,12 @@ import SafeImage from '@/components/common/SafeImage'
 import { Skeleton } from '@/components/ui/Skeleton'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
+import ProductInventoryFields, {
+  variantsFromRows,
+  type VariantRow,
+} from '@/components/admin/ProductInventoryFields'
+import type { InventoryModeClient, ProductVariantStock } from '@/lib/catalog/types'
+import { isMultiInventory } from '@/lib/inventory'
 
 interface Product {
   id: string
@@ -32,6 +38,8 @@ interface Product {
   condition: string
   sku: string
   stock_qty: number
+  inventory_mode?: InventoryModeClient
+  variants?: ProductVariantStock[]
   isActive?: boolean
 }
 
@@ -161,7 +169,9 @@ export default function AdminProductsPage() {
     description: '',
     condition: 'Perfect',
     sku: '',
-    stock_qty: ''
+    stock_qty: '1',
+    inventory_mode: 'unique' as InventoryModeClient,
+    variants: [{ size: '', color: '', stock_qty: 1 }] as VariantRow[],
   })
   const searchRef = useRef<HTMLDivElement>(null)
   const draggingImageIndexRef = useRef<number | null>(null)
@@ -324,8 +334,11 @@ export default function AdminProductsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reason }),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to remove product')
+      .then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error((data as { error?: string }).error || 'Failed to remove product')
+        }
         return loadProducts()
       })
       .then(() => {
@@ -334,7 +347,7 @@ export default function AdminProductsPage() {
         setEditingProduct(null)
         setUndoDeletedProduct(deletedSnapshot)
       })
-      .catch(() => showErrorFeedback('Failed to remove product. Please try again.'))
+      .catch((err: Error) => showErrorFeedback(err.message || 'Failed to remove product. Please try again.'))
       .finally(() => setDeleteBusy(false))
   }
 
@@ -359,11 +372,25 @@ export default function AdminProductsPage() {
 
   const handleUpdate = (updated: Product) => {
     if (updateSubmitting) return
+    const isMulti = isMultiInventory(updated.inventory_mode ?? 'unique')
+    const variantRows = variantsFromRows(
+      (updated.variants ?? []).map((v) => ({
+        size: v.size,
+        color: v.color,
+        stock_qty: v.stock_qty,
+      }))
+    )
+    if (isMulti && variantRows.length === 0) {
+      showErrorFeedback('Add at least one size, color, and quantity for multi-stock products.')
+      return
+    }
     const sale = updated.price_ugx
     const orig = updated.original_price
     const payload: Product = {
       ...updated,
       original_price: orig != null && Number(orig) > sale ? orig : undefined,
+      variants: isMulti ? variantRows : undefined,
+      stock_qty: isMulti ? variantRows.reduce((s, v) => s + v.stock_qty, 0) : Math.min(1, updated.stock_qty),
     }
     setUpdateSubmitting(true)
     fetch(`/api/products/${payload.id}`, {
@@ -406,6 +433,13 @@ export default function AdminProductsPage() {
     const original_price =
       Number.isFinite(originalParsed) && originalParsed > sale ? originalParsed : undefined
 
+    const isMulti = isMultiInventory(newProduct.inventory_mode)
+    const variantRows = variantsFromRows(newProduct.variants)
+    if (isMulti && variantRows.length === 0) {
+      showErrorFeedback('Add at least one size, color, and quantity for multi-stock products.')
+      return
+    }
+
     const product: Product = {
       id: `${newProduct.category}-${newProduct.section}-${Date.now()}`,
       name: newProduct.name,
@@ -420,8 +454,10 @@ export default function AdminProductsPage() {
       description: newProduct.description,
       condition: newProduct.condition,
       sku: newProduct.sku || `${newProduct.category.slice(0, 3).toUpperCase()}-${newProduct.section.slice(0, 3).toUpperCase()}-${Date.now().toString().slice(-3)}`,
-      stock_qty: parseInt(newProduct.stock_qty) || 1,
-      isActive: true
+      stock_qty: isMulti ? variantRows.reduce((s, v) => s + v.stock_qty, 0) : Math.min(1, parseInt(newProduct.stock_qty, 10) || 1),
+      inventory_mode: newProduct.inventory_mode,
+      variants: isMulti ? variantRows : undefined,
+      isActive: true,
     }
     setAddSubmitting(true)
     fetch('/api/products', {
@@ -433,7 +469,23 @@ export default function AdminProductsPage() {
         if (!res.ok) throw new Error('Failed to add product')
         setShowAddModal(false)
         setProductImages([])
-        setNewProduct({ name: '', brand: '', category: 'shirts', section: 'gentle', price_ugx: '', original_price: '', sizes: [], colors: [], images: [], description: '', condition: 'Perfect', sku: '', stock_qty: '' })
+        setNewProduct({
+          name: '',
+          brand: '',
+          category: 'shirts',
+          section: 'gentle',
+          price_ugx: '',
+          original_price: '',
+          sizes: [],
+          colors: [],
+          images: [],
+          description: '',
+          condition: 'Perfect',
+          sku: '',
+          stock_qty: '1',
+          inventory_mode: 'unique',
+          variants: [{ size: '', color: '', stock_qty: 1 }],
+        })
         return loadProducts()
       })
       .catch(() => showErrorFeedback('Failed to add product. Please try again.'))
@@ -734,7 +786,16 @@ export default function AdminProductsPage() {
                     <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-2">{detailsProduct.name}</h2>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">{detailsProduct.category} / {detailsProduct.section}</p>
                     <p className="text-lg font-semibold text-primary-600 dark:text-primary-300 mb-2">UGX {detailsProduct.price_ugx?.toLocaleString?.()}</p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-300">Stock: {detailsProduct.stock_qty} • Condition: {detailsProduct.condition}</p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                      {isMultiInventory(detailsProduct.inventory_mode ?? 'unique') ? 'Multi-stock' : 'Unique piece'} • Stock: {detailsProduct.stock_qty} • Condition: {detailsProduct.condition}
+                    </p>
+                    {isMultiInventory(detailsProduct.inventory_mode ?? 'unique') && detailsProduct.variants && detailsProduct.variants.length > 0 && (
+                      <ul className="mt-2 text-xs text-neutral-600 dark:text-neutral-400 space-y-0.5">
+                        {detailsProduct.variants.map((v, i) => (
+                          <li key={i}>{v.size} / {v.color}: {v.stock_qty} in stock</li>
+                        ))}
+                      </ul>
+                    )}
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2">Status: {detailsProduct.isActive !== false ? 'Active' : 'Inactive'}</p>
                     <div className="mt-3">
                       <ProductDescriptionDisclosure
@@ -764,6 +825,13 @@ export default function AdminProductsPage() {
                         brand: p.brand ?? '',
                         description: p.description ?? '',
                         sku: p.sku ?? '',
+                        inventory_mode: p.inventory_mode ?? 'unique',
+                        variants:
+                          p.variants?.length
+                            ? p.variants
+                            : isMultiInventory(p.inventory_mode ?? 'unique')
+                              ? [{ size: '', color: '', stock_qty: 1 }]
+                              : undefined,
                       })
                     }}
                     className="focus-ring-none h-10 w-10"
@@ -1113,21 +1181,57 @@ export default function AdminProductsPage() {
                         originalUgx={editingProduct.original_price ?? 0}
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Stock *</label>
-                      <div className="flex items-center gap-2">
-                        <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, stock_qty: Math.max(0, (prev.stock_qty || 0) - 1) } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
-                        <input
-                          type="number"
-                          required
-                          min={0}
-                          value={editingProduct.stock_qty}
-                          onChange={(e) => setEditingProduct(prev => prev ? { ...prev, stock_qty: Math.max(0, parseInt(e.target.value) || 0) } : null)}
-                          className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center"
-                        />
-                        <button type="button" onClick={() => setEditingProduct(prev => prev ? { ...prev, stock_qty: (prev.stock_qty || 0) + 1 } : null)} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
-                      </div>
-                    </div>
+                    <ProductInventoryFields
+                      inventory_mode={editingProduct.inventory_mode ?? 'unique'}
+                      onInventoryModeChange={(mode) =>
+                        setEditingProduct((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                inventory_mode: mode,
+                                variants:
+                                  mode === 'multi' && (!prev.variants || prev.variants.length === 0)
+                                    ? [{ size: '', color: '', stock_qty: 1 }]
+                                    : prev.variants?.map((v) => ({
+                                        size: v.size,
+                                        color: v.color,
+                                        stock_qty: v.stock_qty,
+                                      })),
+                              }
+                            : null
+                        )
+                      }
+                      stock_qty={editingProduct.stock_qty}
+                      onStockQtyChange={(qty) =>
+                        setEditingProduct((prev) => (prev ? { ...prev, stock_qty: qty } : null))
+                      }
+                      sizes={editingProduct.sizes ?? []}
+                      colors={editingProduct.colors ?? []}
+                      onSizesChange={(sizes) =>
+                        setEditingProduct((prev) => (prev ? { ...prev, sizes } : null))
+                      }
+                      onColorsChange={(colors) =>
+                        setEditingProduct((prev) => (prev ? { ...prev, colors } : null))
+                      }
+                      variants={
+                        editingProduct.variants?.map((v) => ({
+                          size: v.size,
+                          color: v.color,
+                          stock_qty: v.stock_qty,
+                        })) ?? [{ size: '', color: '', stock_qty: 1 }]
+                      }
+                      onVariantsChange={(rows) =>
+                        setEditingProduct((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                variants: rows,
+                                stock_qty: rows.reduce((s, r) => s + r.stock_qty, 0),
+                              }
+                            : null
+                        )
+                      }
+                    />
                       <div>
                         <label className="block text-sm font-medium mb-1">Condition *</label>
                         <select
@@ -1151,48 +1255,6 @@ export default function AdminProductsPage() {
                         value={editingProduct.description ?? ''}
                         onChange={(e) => setEditingProduct(prev => prev ? { ...prev, description: e.target.value } : null)}
                         className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Sizes (comma-separated)</label>
-                      <input
-                        value={(editingProduct.sizes ?? []).join(', ')}
-                        onChange={(e) =>
-                          setEditingProduct((prev) =>
-                            prev
-                              ? {
-                                  ...prev,
-                                  sizes: e.target.value
-                                    .split(',')
-                                    .map((s) => s.trim())
-                                    .filter(Boolean),
-                                }
-                              : null
-                          )
-                        }
-                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
-                        placeholder="S, M, L"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Colors (comma-separated)</label>
-                      <input
-                        value={(editingProduct.colors ?? []).join(', ')}
-                        onChange={(e) =>
-                          setEditingProduct((prev) =>
-                            prev
-                              ? {
-                                  ...prev,
-                                  colors: e.target.value
-                                    .split(',')
-                                    .map((c) => c.trim())
-                                    .filter(Boolean),
-                                }
-                              : null
-                          )
-                        }
-                        className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white"
-                        placeholder="Red, Blue"
                       />
                     </div>
                     <div>
@@ -1351,14 +1413,29 @@ export default function AdminProductsPage() {
                           originalUgx={parseInt(newProduct.original_price, 10) || 0}
                         />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">Stock *</label>
-                        <div className="flex items-center gap-2">
-                          <button type="button" onClick={() => setNewProduct(p => ({ ...p, stock_qty: String(Math.max(0, (parseInt(p.stock_qty) || 0) - 1)) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">−</button>
-                          <input required type="number" min={0} value={newProduct.stock_qty} onChange={(e) => setNewProduct({ ...newProduct, stock_qty: e.target.value })} className="input-overlay flex-1 px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white text-center" />
-                          <button type="button" onClick={() => setNewProduct(p => ({ ...p, stock_qty: String((parseInt(p.stock_qty) || 0) + 1) }))} className="focus-ring-none w-10 h-10 rounded-lg border border-neutral-300 dark:border-neutral-600 flex items-center justify-center text-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700">+</button>
-                        </div>
-                      </div>
+                      <ProductInventoryFields
+                        inventory_mode={newProduct.inventory_mode}
+                        onInventoryModeChange={(mode) =>
+                          setNewProduct((p) => ({
+                            ...p,
+                            inventory_mode: mode,
+                            variants:
+                              mode === 'multi' && p.variants.length === 0
+                                ? [{ size: '', color: '', stock_qty: 1 }]
+                                : p.variants,
+                          }))
+                        }
+                        stock_qty={parseInt(newProduct.stock_qty, 10) || 0}
+                        onStockQtyChange={(qty) =>
+                          setNewProduct((p) => ({ ...p, stock_qty: String(qty) }))
+                        }
+                        sizes={newProduct.sizes}
+                        colors={newProduct.colors}
+                        onSizesChange={(sizes) => setNewProduct((p) => ({ ...p, sizes }))}
+                        onColorsChange={(colors) => setNewProduct((p) => ({ ...p, colors }))}
+                        variants={newProduct.variants}
+                        onVariantsChange={(rows) => setNewProduct((p) => ({ ...p, variants: rows }))}
+                      />
                       <div>
                         <label className="block text-sm font-medium mb-1">Condition *</label>
                         <select value={newProduct.condition} onChange={(e) => setNewProduct({ ...newProduct, condition: e.target.value })} className={selectThemeClass}>
@@ -1502,14 +1579,6 @@ export default function AdminProductsPage() {
                       <label className="block text-sm font-medium mb-1">Description *</label>
                       <textarea required rows={3} value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Sizes (comma-separated)</label>
-                      <input value={newProduct.sizes.join(', ')} onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" placeholder="S, M, L" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Colors (comma-separated)</label>
-                      <input value={newProduct.colors.join(', ')} onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value.split(',').map(c => c.trim()).filter(Boolean) })} className="input-overlay w-full px-3 py-2 rounded-lg dark:bg-neutral-700 dark:text-white" placeholder="Red, Blue" />
-                    </div>
                   </div>
                   <div className="pt-4 border-t border-neutral-200 dark:border-primary-600/40 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 flex justify-center flex-shrink-0">
                     <Button
@@ -1569,6 +1638,12 @@ export default function AdminProductsPage() {
                     &ldquo;{deleteTarget.name}&rdquo;
                   </span>
                 </p>
+                {isMultiInventory(deleteTarget.inventory_mode ?? 'unique') && deleteTarget.stock_qty > 0 && (
+                  <p className="mt-3 rounded-lg border border-amber-500/40 bg-amber-50/80 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
+                    This is a multi-stock item ({deleteTarget.stock_qty} units left). It cannot be removed until all
+                    quantities are sold.
+                  </p>
+                )}
                 <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-primary-400">
                   Reason for removal
                 </p>

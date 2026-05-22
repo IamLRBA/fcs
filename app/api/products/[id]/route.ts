@@ -1,32 +1,15 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import type { RemovalReason } from '@prisma/client'
-
-function toCatalogProduct(product: any) {
-  return {
-    id: product.id,
-    name: product.name,
-    brand: product.brand ?? '',
-    category: product.category,
-    section: product.section,
-    price_ugx: product.priceUgx,
-    original_price: product.originalPriceUgx ?? undefined,
-    sizes: product.sizes ?? [],
-    colors: product.colors ?? [],
-    images: (product.images ?? []).map((img: any) => img.url),
-    description: product.description ?? '',
-    condition: product.condition ?? 'Perfect',
-    sku: product.sku ?? '',
-    stock_qty: product.stockQty,
-    isActive: product.isActive,
-  }
-}
+import { toCatalogProduct, productIncludeVariants } from '@/lib/catalog/product-map'
+import { canDeleteMultiProduct, isMultiInventory, sumVariantStock } from '@/lib/inventory'
+import { replaceProductVariants, resolveInventoryFromBody } from '@/lib/catalog/product-persist'
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const product = await prisma.product.findUnique({
     where: { id },
-    include: { images: { orderBy: { sortOrder: 'asc' } } },
+    include: productIncludeVariants,
   })
   if (!product) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 })
@@ -39,35 +22,45 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const body = await request.json()
+  const inv = resolveInventoryFromBody(body)
 
-  const updated = await prisma.product.update({
-    where: { id },
-    data: {
-      name: body.name,
-      brand: body.brand ?? '',
-      category: body.category,
-      section: body.section,
-      description: body.description ?? '',
-      condition: body.condition ?? 'Perfect',
-      sku: body.sku || null,
-      priceUgx: Number(body.price_ugx),
-      originalPriceUgx: body.original_price ? Number(body.original_price) : null,
-      stockQty: Number(body.stock_qty ?? 0),
-      sizes: body.sizes ?? [],
-      colors: body.colors ?? [],
-      isActive: body.isActive !== false,
-      images: {
-        deleteMany: {},
-        create: (body.images ?? []).map((url: string, index: number) => ({
-          url,
-          sortOrder: index,
-        })),
+  const updated = await prisma.$transaction(async (tx) => {
+    const product = await tx.product.update({
+      where: { id },
+      data: {
+        name: body.name,
+        brand: body.brand ?? '',
+        category: body.category,
+        section: body.section,
+        description: body.description ?? '',
+        condition: body.condition ?? 'Perfect',
+        sku: body.sku || null,
+        priceUgx: Number(body.price_ugx),
+        originalPriceUgx: body.original_price ? Number(body.original_price) : null,
+        inventoryMode: inv.inventoryMode,
+        stockQty: inv.stockQty,
+        sizes: inv.sizes,
+        colors: inv.colors,
+        isActive: body.isActive !== false,
+        images: {
+          deleteMany: {},
+          create: (body.images ?? []).map((url: string, index: number) => ({
+            url,
+            sortOrder: index,
+          })),
+        },
       },
-    },
-    include: {
-      images: { orderBy: { sortOrder: 'asc' } },
-    },
+    })
+    await replaceProductVariants(tx, id, inv.variants)
+    return tx.product.findUnique({
+      where: { id: product.id },
+      include: productIncludeVariants,
+    })
   })
+
+  if (!updated) {
+    return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+  }
 
   const res = NextResponse.json(toCatalogProduct(updated))
   res.headers.set('Cache-Control', 'private, no-store, must-revalidate')
@@ -91,10 +84,24 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
 
   const existing = await prisma.product.findUnique({
     where: { id },
-    include: { images: true },
+    include: { images: true, variants: true },
   })
   if (!existing) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+  }
+
+  if (isMultiInventory(existing.inventoryMode)) {
+    const total = sumVariantStock(existing.variants)
+    if (!canDeleteMultiProduct(total)) {
+      return NextResponse.json(
+        {
+          error:
+            'This product still has stock. It can only be removed from the catalog after all sizes and colors are sold out.',
+          stock_remaining: total,
+        },
+        { status: 409 }
+      )
+    }
   }
 
   await prisma.$transaction(async (tx) => {
@@ -107,6 +114,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
           sku: existing.sku,
           category: existing.category,
           section: existing.section,
+          inventoryMode: existing.inventoryMode,
         } as object,
       },
     })

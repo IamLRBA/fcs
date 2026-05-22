@@ -5,7 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ShoppingCart, X, Maximize2, Minimize, Quote, CircleSlash } from 'lucide-react'
-import { CartManager, type CartItem } from '@/lib/cart'
+import { CartManager, buildCartItemFromProduct } from '@/lib/cart'
+import { getVariantStock, isMultiInventory } from '@/lib/inventory'
+import type { InventoryModeClient, ProductVariantStock } from '@/lib/catalog/types'
+import InventoryChips from '@/components/product/InventoryChips'
+import ProductVariantPicker from '@/components/product/ProductVariantPicker'
 import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import ProductDescriptionDisclosure from '@/components/ui/ProductDescriptionDisclosure'
@@ -31,6 +35,8 @@ interface Product {
   condition: string
   sku: string
   stock_qty: number
+  inventory_mode?: InventoryModeClient
+  variants?: ProductVariantStock[]
   isActive?: boolean
 }
 
@@ -80,9 +86,18 @@ const ProductGridCard = memo(function ProductGridCard({
   index: number
   onOpen: (p: Product) => void
 }) {
-  const [isInCart, setIsInCart] = useState(() => CartManager.isProductInCart(product.id))
+  const multi = isMultiInventory(product.inventory_mode ?? 'unique')
+  const [isInCart, setIsInCart] = useState(() =>
+    multi ? false : CartManager.isProductInCart(product.id)
+  )
   useEffect(() => {
-    const sync = () => setIsInCart(CartManager.isProductInCart(product.id))
+    const sync = () => {
+      if (multi) {
+        setIsInCart(false)
+        return
+      }
+      setIsInCart(CartManager.isProductInCart(product.id))
+    }
     sync()
     window.addEventListener('cartUpdated', sync)
     return () => window.removeEventListener('cartUpdated', sync)
@@ -138,6 +153,12 @@ const ProductGridCard = memo(function ProductGridCard({
                 </span>
               )}
             </div>
+            <InventoryChips
+              sizes={product.sizes}
+              colors={product.colors}
+              inventory_mode={product.inventory_mode}
+              className="mb-1"
+            />
             <div className="mt-0.5 flex items-center space-x-1">
               <Button
                 variant="default"
@@ -810,48 +831,59 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
   const [addedToCart, setAddedToCart] = useState(false)
   const [isInCart, setIsInCart] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [cartQty, setCartQty] = useState(1)
 
-  // Get the single size and color for this product (since each product is one piece)
-  const productSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : ''
-  const productColor = product.colors && product.colors.length > 0 ? product.colors[0] : ''
+  const multi = isMultiInventory(product.inventory_mode ?? 'unique')
+  const variants = product.variants ?? []
+  const initialSize = product.sizes?.[0] ?? ''
+  const initialColor = product.colors?.[0] ?? ''
+  const [selectedSize, setSelectedSize] = useState(initialSize)
+  const [selectedColor, setSelectedColor] = useState(initialColor)
 
-  // Check if product is already in cart
+  const variantStock = multi
+    ? getVariantStock(variants, selectedSize, selectedColor)
+    : product.stock_qty
+
   useEffect(() => {
     const checkCartStatus = () => {
+      if (multi) {
+        const line = CartManager.getCartLineForProduct(product.id, selectedSize, selectedColor)
+        setIsInCart(Boolean(line))
+        if (line) setCartQty(line.quantity)
+        return
+      }
       setIsInCart(CartManager.isProductInCart(product.id))
     }
-    
+
     checkCartStatus()
-    
-    // Listen for cart updates
     window.addEventListener('cartUpdated', checkCartStatus)
-    
-    return () => {
-      window.removeEventListener('cartUpdated', checkCartStatus)
-    }
-  }, [product.id])
+    return () => window.removeEventListener('cartUpdated', checkCartStatus)
+  }, [product.id, multi, selectedSize, selectedColor])
+
+  useEffect(() => {
+    setCartQty(1)
+    setAddedToCart(false)
+  }, [selectedSize, selectedColor])
 
   const addToCart = () => {
-    // Check if already in cart
-    if (isInCart || addedToCart) {
-      alert('This product is already in your cart. Each product is a single unique piece.')
+    if (!multi && (isInCart || addedToCart)) {
+      alert('This unique piece is already in your cart.')
+      return
+    }
+    if (multi && (!selectedSize || !selectedColor)) {
+      alert('Please select a size and color.')
+      return
+    }
+    if (variantStock <= 0) {
+      alert('This option is out of stock.')
       return
     }
 
     setIsAddingToCart(true)
-    
-    const cartItem: CartItem = {
-      id: product.id,
-      productId: product.id,
-      name: product.name,
-      price: product.price_ugx,
-      size: productSize,
-      color: productColor,
-      quantity: 1,
-      image: product.images[0],
-      sku: product.sku
-    }
-    
+
+    const built = buildCartItemFromProduct(product, selectedSize, selectedColor)
+    const cartItem = { ...built, quantity: multi ? Math.min(cartQty, variantStock) : 1 }
+
     let success = false
     try {
       success = CartManager.addToCart(cartItem)
@@ -861,19 +893,27 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       alert('Could not add this item right now. Please try again.')
       return
     }
-    
+
     if (!success) {
-      alert('This item is already in your cart, or storage is full.')
+      alert(
+        multi
+          ? 'Could not add — check quantity or this size/color may already be at the maximum in your cart.'
+          : 'This item is already in your cart.'
+      )
       setIsAddingToCart(false)
-      setAddedToCart(true) // Show as already added
+      if (!multi) setAddedToCart(true)
       return
     }
-    
+
     setTimeout(() => {
       setIsAddingToCart(false)
       setAddedToCart(true)
     }, 300)
   }
+
+  const outOfStock = multi ? variantStock <= 0 : product.stock_qty === 0
+  const canAdd = !outOfStock && (!isInCart || multi)
+  const showQtyStepper = multi && variantStock > 1 && !isInCart
 
   const openFullscreen = () => setIsFullscreen(true)
   const closeFullscreen = () => setIsFullscreen(false)
@@ -1021,25 +1061,38 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 description={product.description ?? ''}
               />
 
-              {/* Size Display */}
-              {(productSize || productColor) && (
-                <div className="flex flex-wrap items-center gap-4 text-neutral-700 dark:text-primary-300">
-                  {productSize && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">Size:</span>
-                      <span className="px-3 py-1 rounded-lg bg-primary-700/30">
-                        {productSize}
-                      </span>
-                    </div>
-                  )}
-                  {productColor && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">Color:</span>
-                      <span className="px-3 py-1 rounded-lg bg-primary-100 dark:bg-neutral-700 text-primary-700 dark:text-neutral-300">
-                        {productColor}
-                      </span>
-                    </div>
-                  )}
+              <ProductVariantPicker
+                inventory_mode={product.inventory_mode}
+                sizes={product.sizes ?? []}
+                colors={product.colors ?? []}
+                variants={variants}
+                selectedSize={selectedSize}
+                selectedColor={selectedColor}
+                onSizeChange={setSelectedSize}
+                onColorChange={setSelectedColor}
+              />
+
+              {showQtyStepper && (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-neutral-700 dark:text-primary-300">Quantity</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCartQty((q) => Math.max(1, q - 1))}
+                      className="focus-ring-none flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-300 dark:border-neutral-600"
+                    >
+                      −
+                    </button>
+                    <span className="min-w-[2rem] text-center font-semibold">{cartQty}</span>
+                    <button
+                      type="button"
+                      onClick={() => setCartQty((q) => Math.min(variantStock, q + 1))}
+                      disabled={cartQty >= variantStock}
+                      className="focus-ring-none flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-300 disabled:opacity-40 dark:border-neutral-600"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -1047,29 +1100,37 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             {/* Add to Cart Button */}
             <div className="pt-5 mt-5 border-t border-neutral-200 dark:border-primary-600/40">
               <div
-                className={`relative w-full ${addedToCart || isInCart ? 'group/modaladdcart' : ''}`}
+                className={`relative w-full ${!multi && (addedToCart || isInCart) ? 'group/modaladdcart' : ''}`}
               >
                 <Button
                   variant="default"
                   size="md"
                   onClick={addToCart}
-                  disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
+                  disabled={isAddingToCart || !canAdd || (!multi && (addedToCart || isInCart))}
                   className={`w-full justify-center gap-2 ${
                     isAddingToCart
                       ? 'opacity-60 cursor-wait pointer-events-none'
-                      : product.stock_qty === 0
+                      : !canAdd
                         ? 'opacity-60 cursor-not-allowed pointer-events-none'
-                        : addedToCart || isInCart
+                        : !multi && (addedToCart || isInCart)
                           ? 'opacity-60 disabled:cursor-pointer'
                           : ''
                   }`}
                 >
                   <ShoppingCart className="w-5 h-5" />
                   <span>
-                    {isAddingToCart ? 'Adding...' : (addedToCart || isInCart) ? 'Already in Cart' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
+                    {isAddingToCart
+                      ? 'Adding...'
+                      : outOfStock
+                        ? 'Out of Stock'
+                        : !multi && (addedToCart || isInCart)
+                          ? 'Already in Cart'
+                          : multi && isInCart
+                            ? 'Update quantity in cart'
+                            : 'Add to Cart'}
                   </span>
                 </Button>
-                {(addedToCart || isInCart) && (
+                {!multi && (addedToCart || isInCart) && (
                   <div
                     className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-200 group-hover/modaladdcart:opacity-100 dark:bg-black/50"
                     aria-hidden
