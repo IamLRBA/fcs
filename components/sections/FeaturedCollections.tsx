@@ -8,7 +8,10 @@ import SafeImage from '@/components/common/SafeImage'
 import Button from '@/components/ui/Button'
 import { SkeletonFeaturedCollections } from '@/components/ui/Skeleton'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
-import { CartManager, type CartItem } from '@/lib/cart'
+import { CartManager, buildCartItemFromProduct } from '@/lib/cart'
+import { isMultiInventory } from '@/lib/inventory'
+import type { InventoryModeClient } from '@/lib/catalog/types'
+import InventoryChips from '@/components/product/InventoryChips'
 
 interface Product {
   id: string
@@ -25,6 +28,7 @@ interface Product {
   condition: string
   sku: string
   stock_qty: number
+  inventory_mode?: InventoryModeClient
 }
 
 interface FeaturedProduct {
@@ -70,7 +74,8 @@ function FeaturedCollectionsRow({
         {items.map((item, index) => {
           const { product, categorySlug } = item
           const isAdding = addingToCart === product.id
-          const isInCart = addedToCart.has(product.id) || CartManager.isProductInCart(product.id)
+          const multi = isMultiInventory(product.inventory_mode ?? 'unique')
+          const isInCart = !multi && (addedToCart.has(product.id) || CartManager.isProductInCart(product.id))
           const hasDiscount = Boolean(product.original_price && product.original_price > product.price_ugx)
 
           return (
@@ -128,50 +133,52 @@ function FeaturedCollectionsRow({
                         </span>
                       )}
                     </div>
+                    <InventoryChips
+                      sizes={product.sizes}
+                      colors={product.colors}
+                      inventory_mode={product.inventory_mode}
+                      className="mb-1"
+                    />
 
                     <div className="mt-0.5 flex w-full flex-col gap-1">
-                      <div
-                        className={
-                          product.stock_qty === 0
-                            ? 'pointer-events-none opacity-50'
-                            : isInCart
-                              ? 'opacity-50'
-                              : ''
-                        }
-                      >
+                      {multi ? (
                         <Button
+                          href={`/products/${categorySlug}`}
                           variant="default"
                           size="sm"
-                          onClick={() => onAddToCart(product)}
-                          disabled={isAdding || isInCart || product.stock_qty === 0}
-                          className={`w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs${isInCart ? ' disabled:cursor-pointer' : ''}`}
-                          aria-label={
-                            isAdding
-                              ? 'Adding to cart'
+                          className="w-full justify-center gap-1 py-1 text-[11px] font-medium sm:py-1.5 sm:text-xs"
+                        >
+                          <span>Choose size & color</span>
+                        </Button>
+                      ) : (
+                        <div
+                          className={
+                            product.stock_qty === 0
+                              ? 'pointer-events-none opacity-50'
                               : isInCart
-                                ? 'Already in cart'
-                                : product.stock_qty === 0
-                                  ? 'Out of stock'
-                                  : 'Add to cart'
+                                ? 'opacity-50'
+                                : ''
                           }
                         >
-                          <motion.div
-                            animate={isAdding ? { rotate: 360 } : {}}
-                            transition={{ duration: 0.5, repeat: isAdding ? Infinity : 0 }}
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => onAddToCart(product)}
+                            disabled={isAdding || isInCart || product.stock_qty === 0}
+                            className={`w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs${isInCart ? ' disabled:cursor-pointer' : ''}`}
                           >
-                            <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
-                          </motion.div>
-                          <span>
-                            {isAdding
-                              ? '…'
-                              : isInCart
-                                ? 'Added'
-                                : product.stock_qty === 0
-                                  ? 'Out'
-                                  : 'Add'}
-                          </span>
-                        </Button>
-                      </div>
+                            <motion.div
+                              animate={isAdding ? { rotate: 360 } : {}}
+                              transition={{ duration: 0.5, repeat: isAdding ? Infinity : 0 }}
+                            >
+                              <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                            </motion.div>
+                            <span>
+                              {isAdding ? '…' : isInCart ? 'Added' : product.stock_qty === 0 ? 'Out' : 'Add'}
+                            </span>
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -238,27 +245,22 @@ export default function FeaturedCollections() {
   }, [])
 
   const handleAddToCart = (product: Product) => {
+    if (isMultiInventory(product.inventory_mode ?? 'unique')) return
+
     if (addedToCart.has(product.id) || CartManager.isProductInCart(product.id)) {
-      alert('This product is already in your cart. Each product is a single unique piece.')
+      alert('This unique piece is already in your cart.')
       return
     }
 
     setAddingToCart(product.id)
 
-    const productSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : ''
-    const productColor = product.colors && product.colors.length > 0 ? product.colors[0] : ''
-
-    const cartItem: CartItem = {
-      id: product.id,
-      productId: product.id,
-      name: product.name,
-      price: product.price_ugx,
-      size: productSize,
-      color: productColor,
-      quantity: 1,
-      image: product.images[0] || '/assets/images/placeholder.jpg',
-      sku: product.sku
-    }
+    const productSize = product.sizes?.[0] ?? ''
+    const productColor = product.colors?.[0] ?? ''
+    const cartItem = buildCartItemFromProduct(
+      { ...product, inventory_mode: 'unique' },
+      productSize,
+      productColor
+    )
 
     let success = false
     try {

@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
+import { toCatalogProduct, productIncludeVariants } from '@/lib/catalog/product-map'
+import type { CatalogProduct } from '@/lib/catalog/types'
+import { inventoryModeToClient } from '@/lib/inventory'
+import { replaceProductVariants, resolveInventoryFromBody } from '@/lib/catalog/product-persist'
 import {
   getFeaturedDayIndex,
   getFeaturedCacheMaxAgeSec,
@@ -14,24 +18,6 @@ function applyProductCacheHeaders(res: NextResponse, opts: { privateNoStore: boo
     res.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
   }
   return res
-}
-
-type CatalogProduct = {
-  id: string
-  name: string
-  brand: string
-  category: string
-  section: string
-  price_ugx: number
-  original_price?: number
-  sizes: string[]
-  colors: string[]
-  images: string[]
-  description: string
-  condition: string
-  sku: string
-  stock_qty: number
-  isActive: boolean
 }
 
 const CATEGORY_META: Record<string, { title: string; description: string }> = {
@@ -59,26 +45,6 @@ const CATEGORY_META: Record<string, { title: string; description: string }> = {
     title: 'Accessories',
     description: 'Add the perfect finishing touches with our range of accessories.',
   },
-}
-
-function toCatalogProduct(product: any): CatalogProduct {
-  return {
-    id: product.id,
-    name: product.name,
-    brand: product.brand ?? '',
-    category: product.category,
-    section: product.section,
-    price_ugx: product.priceUgx,
-    original_price: product.originalPriceUgx ?? undefined,
-    sizes: product.sizes ?? [],
-    colors: product.colors ?? [],
-    images: (product.images ?? []).map((img: any) => img.url),
-    description: product.description ?? '',
-    condition: product.condition ?? 'Perfect',
-    sku: product.sku ?? '',
-    stock_qty: product.stockQty,
-    isActive: product.isActive,
-  }
 }
 
 export async function GET(request: Request) {
@@ -133,6 +99,7 @@ async function handleProductsGet(request: Request) {
         priceUgx: true,
         originalPriceUgx: true,
         stockQty: true,
+        inventoryMode: true,
         sizes: true,
         colors: true,
         condition: true,
@@ -155,6 +122,7 @@ async function handleProductsGet(request: Request) {
       condition: p.condition ?? 'Perfect',
       sku: p.sku ?? '',
       stock_qty: p.stockQty,
+      inventory_mode: inventoryModeToClient(p.inventoryMode),
       isActive: p.isActive,
     }))
     return applyProductCacheHeaders(NextResponse.json(normalized), { privateNoStore })
@@ -163,6 +131,7 @@ async function handleProductsGet(request: Request) {
   const products = await prisma.product.findMany({
     where,
     include: {
+      ...productIncludeVariants,
       images: {
         orderBy: { sortOrder: 'asc' },
         ...(takeOneProductImage ? { take: 1 } : {}),
@@ -262,34 +231,44 @@ async function handleProductsGet(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json()
+  const inv = resolveInventoryFromBody(body)
 
-  const created = await prisma.product.create({
-    data: {
-      ...(body.id ? { id: String(body.id) } : {}),
-      name: body.name,
-      brand: body.brand ?? '',
-      category: body.category,
-      section: body.section,
-      description: body.description ?? '',
-      condition: body.condition ?? 'Perfect',
-      sku: body.sku || null,
-      priceUgx: Number(body.price_ugx),
-      originalPriceUgx: body.original_price ? Number(body.original_price) : null,
-      stockQty: Number(body.stock_qty ?? 0),
-      sizes: body.sizes ?? [],
-      colors: body.colors ?? [],
-      isActive: body.isActive !== false,
-      images: {
-        create: (body.images ?? []).map((url: string, index: number) => ({
-          url,
-          sortOrder: index,
-        })),
+  const created = await prisma.$transaction(async (tx) => {
+    const product = await tx.product.create({
+      data: {
+        ...(body.id ? { id: String(body.id) } : {}),
+        name: body.name,
+        brand: body.brand ?? '',
+        category: body.category,
+        section: body.section,
+        description: body.description ?? '',
+        condition: body.condition ?? 'Perfect',
+        sku: body.sku || null,
+        priceUgx: Number(body.price_ugx),
+        originalPriceUgx: body.original_price ? Number(body.original_price) : null,
+        inventoryMode: inv.inventoryMode,
+        stockQty: inv.stockQty,
+        sizes: inv.sizes,
+        colors: inv.colors,
+        isActive: body.isActive !== false,
+        images: {
+          create: (body.images ?? []).map((url: string, index: number) => ({
+            url,
+            sortOrder: index,
+          })),
+        },
       },
-    },
-    include: {
-      images: { orderBy: { sortOrder: 'asc' } },
-    },
+    })
+    await replaceProductVariants(tx, product.id, inv.variants)
+    return tx.product.findUnique({
+      where: { id: product.id },
+      include: productIncludeVariants,
+    })
   })
+
+  if (!created) {
+    return NextResponse.json({ error: 'Failed to create product' }, { status: 500 })
+  }
 
   const res = NextResponse.json(toCatalogProduct(created), { status: 201 })
   res.headers.set('Cache-Control', 'no-store')

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { fulfillDeliveredOrderItems } from '@/lib/catalog/fulfill-order'
 import { prismaOrderToClientOrder } from '@/lib/orders/prisma-order-map'
 import {
   notifyOrderDelivered,
@@ -116,38 +117,7 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
       })
 
       if (step.to === 'delivered') {
-        const soldProductIds = Array.from(
-          new Set(
-            u.items
-              .map((item) => item.productId)
-              .filter((pid): pid is string => typeof pid === 'string' && pid.length > 0)
-          )
-        )
-        for (const productId of soldProductIds) {
-          const p = await tx.product.findUnique({
-            where: { id: productId },
-            include: { images: { orderBy: { sortOrder: 'asc' } } },
-          })
-          if (!p) continue
-          await tx.productRemoval.create({
-            data: {
-              productId,
-              reason: 'PRODUCT_BOUGHT',
-              productSnapshot: {
-                source: 'ORDER_DELIVERED',
-                orderId: u.id,
-                name: p.name,
-                brand: p.brand,
-                sku: p.sku,
-                category: p.category,
-                section: p.section,
-                priceUgx: p.priceUgx,
-                imageUrls: p.images.map((img) => img.url),
-              } as object,
-            },
-          })
-          await tx.product.delete({ where: { id: productId } })
-        }
+        await fulfillDeliveredOrderItems(tx, u.items, u.id)
       }
 
       return u
