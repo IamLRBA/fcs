@@ -14,3 +14,18 @@ export function getFeaturedCacheMaxAgeSec(now = Date.now()): number {
   const nextUtcDayMs = (Math.floor(now / 86_400_000) + 1) * 86_400_000
   return Math.max(60, Math.floor((nextUtcDayMs - now) / 1000))
 }
+
+/**
+ * When the catalog changed today (new/edit), use a short cache so home featured updates quickly.
+ * Otherwise keep the daily cache until UTC midnight for stable rotation rows 1–3.
+ */
+export function getFeaturedCacheMaxAgeSecForCatalog(
+  latestActivityMs: number,
+  now = Date.now()
+): number {
+  const utcDayStartMs = Math.floor(now / 86_400_000) * 86_400_000
+  if (latestActivityMs > utcDayStartMs) {
+    return 60
+  }
+  return getFeaturedCacheMaxAgeSec(now)
+}
