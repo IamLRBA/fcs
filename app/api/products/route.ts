@@ -5,11 +5,8 @@ import { toCatalogProduct, productIncludeVariants } from '@/lib/catalog/product-
 import type { CatalogProduct } from '@/lib/catalog/types'
 import { inventoryModeToClient } from '@/lib/inventory'
 import { replaceProductVariants, resolveInventoryFromBody } from '@/lib/catalog/product-persist'
-import {
-  getFeaturedDayIndex,
-  getFeaturedCacheMaxAgeSec,
-  pickFeaturedByDay,
-} from '@/lib/featured-rotation'
+import { getFeaturedCacheMaxAgeSecForCatalog } from '@/lib/featured-rotation'
+import { buildFeaturedRows, getLatestCatalogActivityMs, type FeaturedCatalogProduct } from '@/lib/featured-selection'
 
 function applyProductCacheHeaders(res: NextResponse, opts: { privateNoStore: boolean }) {
   if (opts.privateNoStore) {
@@ -143,33 +140,20 @@ async function handleProductsGet(request: Request) {
   const normalized = products.map(toCatalogProduct)
 
   if (featured) {
-    const byCategory = new Map<string, CatalogProduct[]>()
-    for (const product of normalized) {
-      if (!product.isActive) continue
-      const list = byCategory.get(product.category) ?? []
-      list.push(product)
-      byCategory.set(product.category, list)
-    }
-    const dayIndex = getFeaturedDayIndex()
-    const categoryEntries = Array.from(byCategory.entries())
-    const rows = Array.from({ length: 4 }, (_, rank) =>
-      categoryEntries
-        .map(([slug, products]) => {
-          const product = pickFeaturedByDay(products, rank, dayIndex)
-          if (!product) return null
-          return {
-            product,
-            categoryName: CATEGORY_META[slug]?.title ?? slug,
-            categorySlug: slug,
-          }
-        })
-        .filter((item): item is NonNullable<typeof item> => item !== null)
-    ).filter((row) => row.length > 0)
+    const featuredInput: FeaturedCatalogProduct[] = products.map((p) => ({
+      ...toCatalogProduct(p),
+      updatedAtMs: p.updatedAt.getTime(),
+      createdAtMs: p.createdAt.getTime(),
+    }))
+
+    const rows = buildFeaturedRows(featuredInput, CATEGORY_META)
+    const latestActivity = getLatestCatalogActivityMs(featuredInput)
+    const maxAge = getFeaturedCacheMaxAgeSecForCatalog(latestActivity)
+
     const res = NextResponse.json({ rows })
-    const maxAge = getFeaturedCacheMaxAgeSec()
     res.headers.set(
       'Cache-Control',
-      `public, s-maxage=${maxAge}, stale-while-revalidate=86400`
+      `public, s-maxage=${maxAge}, stale-while-revalidate=300`
     )
     return res
   }

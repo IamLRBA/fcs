@@ -214,7 +214,7 @@ export default function FeaturedCollections() {
     const loadFeaturedProducts = async () => {
       setIsLoading(true)
       try {
-        const res = await fetch('/api/products?featured=1')
+        const res = await fetch('/api/products?featured=1', { cache: 'no-store' })
         if (!res.ok) {
           setFeaturedRows([])
           return
