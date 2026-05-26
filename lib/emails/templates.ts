@@ -1,16 +1,47 @@
 import type { Order } from '@/lib/cart'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
+import {
+  RECEIPT_INLINE_CID,
+  dataUrlToRawBase64,
+  receiptFilename,
+  receiptMimeFromDataUrl,
+} from '@/lib/emails/receipt-image'
+
+export interface EmailAttachment {
+  filename: string
+  /** Raw base64 (no data: URL prefix) */
+  content: string
+  type: string
+  disposition: 'inline' | 'attachment'
+  contentId?: string
+}
 
 export interface EmailConfig {
   to: string
   subject: string
   html: string
   text: string
-  attachment?: {
-    filename: string
-    content: string
-    type: string
+  attachment?: EmailAttachment
+}
+
+function buildReceiptAttachment(receiptDataUrl: string, orderId: string): EmailAttachment {
+  const type = receiptMimeFromDataUrl(receiptDataUrl)
+  return {
+    filename: receiptFilename(orderId, type),
+    content: dataUrlToRawBase64(receiptDataUrl),
+    type,
+    disposition: 'inline',
+    contentId: RECEIPT_INLINE_CID,
   }
+}
+
+function receiptInlineHtml(orderId: string): string {
+  return `
+    <div style="margin:20px 0;text-align:center;">
+      <div style="font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:${C.muted};margin-bottom:10px;">Your receipt</div>
+      <img src="cid:${RECEIPT_INLINE_CID}" alt="Order receipt ${esc(orderId)}"
+        width="520" style="display:block;max-width:100%;width:100%;height:auto;margin:0 auto;border:1px solid ${C.border};border-radius:8px;" />
+    </div>`
 }
 
 /** MysticalPIECES palette — matches site zinc / grayscale tokens */
@@ -148,35 +179,35 @@ MysticalPIECES · ${SHOP_EMAIL}`
       text: text.trim(),
     }
     if (receiptImage) {
-      emailConfig.attachment = {
-        filename: `receipt-${order.id}.png`,
-        content: receiptImage,
-        type: 'image/png',
-      }
+      emailConfig.html = wrapEmail(
+        'Order confirmation',
+        lead,
+        `${body}${receiptInlineHtml(order.id)}`
+      ).trim()
+      emailConfig.attachment = buildReceiptAttachment(receiptImage, order.id)
     }
     return emailConfig
   }
 
-  /** Second touch: receipt image only (after order API already sent confirmation). */
+  /** Second touch: receipt image inline in the message (visible in Apple Mail, Gmail, etc.). */
   static buyerReceiptAttachment(order: Order, receiptImage: string): EmailConfig {
     const subject = `Your receipt — ${order.id} — MysticalPIECES`
     const lead = `<p style="margin:0 0 16px;">Dear ${esc(order.customer.fullName)},</p>
-      <p style="margin:0 0 16px;">Please find your order receipt attached as a PNG image. Keep it for your records.</p>`
-    const body = `<p style="margin:0;color:${C.muted};font-size:14px;">Order ${esc(order.id)} · Total UGX ${order.total.toLocaleString()} (cash on delivery).</p>`
+      <p style="margin:0 0 16px;">Your order receipt is below. You can also save the image from this email for your records.</p>`
+    const body = `<p style="margin:0 0 16px;color:${C.muted};font-size:14px;">Order ${esc(order.id)} · Total UGX ${order.total.toLocaleString()} (cash on delivery).</p>
+      ${receiptInlineHtml(order.id)}`
     return {
       to: order.customer.email,
       subject,
       html: wrapEmail('Receipt', lead, body).trim(),
       text: `Dear ${order.customer.fullName},
 
-Your receipt for order ${order.id} is attached (PNG). Total UGX ${order.total.toLocaleString()} (cash on delivery).
+Your receipt for order ${order.id} is included in this email. Total UGX ${order.total.toLocaleString()} (cash on delivery).
+
+If the image does not appear, open this message in a browser or contact us at ${SHOP_EMAIL}.
 
 MysticalPIECES · ${SHOP_EMAIL}`.trim(),
-      attachment: {
-        filename: `receipt-${order.id}.png`,
-        content: receiptImage,
-        type: 'image/png',
-      },
+      attachment: buildReceiptAttachment(receiptImage, order.id),
     }
   }
 

@@ -24,7 +24,10 @@ export async function sendEmailWithConfig(emailConfig: EmailConfig): Promise<Sen
               content: emailConfig.attachment.content,
               filename: emailConfig.attachment.filename,
               type: emailConfig.attachment.type,
-              disposition: 'attachment' as const,
+              disposition: emailConfig.attachment.disposition ?? 'inline',
+              ...(emailConfig.attachment.contentId
+                ? { content_id: emailConfig.attachment.contentId }
+                : {}),
             },
           ]
         : []
@@ -72,6 +75,9 @@ export async function sendEmailWithConfig(emailConfig: EmailConfig): Promise<Sen
               filename: emailConfig.attachment.filename,
               content: Buffer.from(emailConfig.attachment.content, 'base64'),
               contentType: emailConfig.attachment.type,
+              ...(emailConfig.attachment.contentId
+                ? { cid: emailConfig.attachment.contentId }
+                : {}),
             },
           ]
         : []
