@@ -8,6 +8,7 @@ import StructuredData from '@/components/common/StructuredData'
 import SkipToContent from '@/components/ui/SkipToContent'
 import AccountPromptPopup from '@/components/ui/AccountPromptPopup'
 import BackToTop from '@/components/ui/BackToTop'
+import XavyrGuide from '@/components/xavyr/XavyrGuide'
 import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
 import BackgroundOverlayPortal from '@/components/common/BackgroundOverlayPortal'
 import ScrollToTopOnRouteChange from '@/components/common/ScrollToTopOnRouteChange'
@@ -105,6 +106,7 @@ export default function RootLayout({
               <Footer />
             </div>
             <AccountPromptPopup />
+            <XavyrGuide />
             <BackToTop />
             <KeyboardShortcuts />
           </ErrorBoundary>

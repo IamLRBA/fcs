@@ -40,7 +40,7 @@ export default function BackToTop() {
             stiffness: 300, 
             damping: 25
           }}
-          className="fixed bottom-8 right-8 z-50"
+          className="fixed bottom-[5.75rem] right-8 z-50 sm:bottom-[6rem]"
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
