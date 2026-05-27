@@ -41,6 +41,24 @@ export function pickConversationResponse(
 
 export const CONVERSATION_POOLS: ConversationMatch[] = [
   {
+    id: 'data-source',
+    priority: 13,
+    patterns: [
+      /where do you get your data from/i,
+      /where do you get your information from/i,
+      /how do you know/i,
+      /are you connected to the internet/i,
+      /do you browse the internet/i,
+    ],
+    responses: [
+      'I use a built-in MysticalPIECES knowledge base (pages, policies, categories) and conversation patterns. When enabled, I can also use a free AI boost for harder questions. I do not browse the web like a search engine.',
+      'Most of what I say comes from this site’s built-in knowledge and rules. If a question is outside that, I can optionally ask a cloud model for help when available.',
+      'I am trained to guide this site using stored knowledge plus safe conversation logic. If you enabled Gemini or Groq, I can use them as a boost when I am not sure.',
+      'My core answers are local to this site. With Gemini or Groq set, I can answer broader questions better when needed.',
+    ],
+    suggestions: DEFAULT_SUGGESTIONS,
+  },
+  {
     id: 'name',
     priority: 14,
     patterns: [
@@ -91,6 +109,9 @@ export const CONVERSATION_POOLS: ConversationMatch[] = [
       /\bwhat\s+products\s+do\s+you\s+(have|sell|stock)\b/i,
       /\bwhat\s+do\s+you\s+sell\b/i,
       /\bwhat\s+do\s+you\s+have\b/i,
+      /\bwhat\s+products\s+are\s+in\s+mystical\s*pieces\b/i,
+      /\bwhat\s+is\s+in\s+the\s+catalog\b/i,
+      /\bwhat\s+is\s+in\s+the\s+catalogue\b/i,
       /\bwhat\s+kind\s+of\s+(clothes|items)\s+do\s+you\s+have\b/i,
       /\bwhat\s+collections\s+do\s+you\s+have\b/i,
     ],
