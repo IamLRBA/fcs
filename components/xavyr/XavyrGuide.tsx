@@ -4,15 +4,17 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { MessageCircle, Send, Sparkles, X } from 'lucide-react'
+import { Baby, MessageCircle, Send, Sparkles, X } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { XAVYR_INTRO } from '@/lib/xavyr/knowledge'
-import { RESIZE_CURSOR, useXavyrPanelSize, XAVYR_PANEL_BOTTOM_OFFSET, type ResizeEdge } from '@/lib/xavyr/use-xavyr-panel-size'
+import { SCROLL_SHOW_BACK_TO_TOP } from '@/lib/xavyr/floating-layout'
+import { RESIZE_CURSOR, useXavyrPanelSize, type ResizeEdge } from '@/lib/xavyr/use-xavyr-panel-size'
 import type { XavyrLink, XavyrMessage } from '@/lib/xavyr/types'
 
 const INTRO_SEEN_KEY = 'xavyr-intro-seen'
 const INTRO_SNOOZE_KEY = 'xavyr-intro-snooze-until'
 const INTRO_DELAY_MS = 6500
+const INTRO_MESSAGE = "Hi, I'm Xavyr. Let's chat if you need any assistance"
 
 const RESIZE_HANDLES: { edge: ResizeEdge; className: string }[] = [
   { edge: 'n', className: 'left-2 right-2 top-0 h-2 cursor-ns-resize' },
@@ -84,9 +86,19 @@ export default function XavyrGuide() {
   const [busy, setBusy] = useState(false)
   const [messages, setMessages] = useState<XavyrMessage[]>([])
   const [lastSuggestions, setLastSuggestions] = useState<string[]>([])
+  const [pageScrolled, setPageScrolled] = useState(false)
 
   const { size, startResize } = useXavyrPanelSize(open)
   const isAdminRoute = pathname?.startsWith('/admin')
+  const fabBottomClass = pageScrolled ? 'bottom-[5.5rem]' : 'bottom-8'
+  const stackBottomClass = pageScrolled ? 'bottom-[9rem]' : 'bottom-[5.5rem]'
+
+  useEffect(() => {
+    const onScroll = () => setPageScrolled(window.pageYOffset > SCROLL_SHOW_BACK_TO_TOP)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const recentAssistantTexts = messages.filter((m) => m.role === 'assistant').map((m) => m.content)
 
@@ -228,30 +240,29 @@ export default function XavyrGuide() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-            className="pointer-events-auto fixed right-8 z-[900] max-w-[min(18rem,calc(100vw-6rem))]"
-            style={{ bottom: XAVYR_PANEL_BOTTOM_OFFSET }}
+            className={`pointer-events-auto fixed right-8 z-[900] max-w-[min(17rem,calc(100vw-5.5rem))] transition-[bottom] duration-300 ease-out ${stackBottomClass}`}
           >
-            <div className="hero-glass-frame relative backdrop-blur-md">
-              <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <div className="glass-inner-panel relative rounded-2xl border border-primary-500/30 px-3.5 py-3 pr-9 shadow-lg dark:border-primary-500/35">
-                <p className="text-xs leading-relaxed text-neutral-800 dark:text-primary-100">
-                  <span className="font-semibold text-primary-700 dark:text-primary-200">Xavyr</span>, your MysticalPIECES
-                  guide. Tap if you need directions or shopping help.
-                </p>
-                <button
-                  type="button"
-                  onClick={dismissIntro}
-                  className="focus-ring-none absolute right-2 top-2 rounded-full p-1 text-neutral-500 hover:bg-neutral-200/60 hover:text-neutral-800 dark:hover:bg-neutral-700/60 dark:hover:text-neutral-100"
-                  aria-label="Dismiss introduction"
+            <div className="flex items-end justify-end gap-2">
+              <div className="flex min-w-0 items-end gap-2">
+                <div
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary-400/50 bg-primary-50 text-primary-700 shadow-sm dark:border-primary-500/40 dark:bg-primary-950/80 dark:text-primary-200"
+                  aria-hidden
                 >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+                  <Baby className="h-5 w-5" strokeWidth={1.75} />
+                </div>
+                <div className="relative max-w-[14rem] rounded-2xl rounded-br-md border border-neutral-200/80 bg-white/95 px-3 py-2.5 pr-8 text-[13px] leading-relaxed text-neutral-800 shadow-md dark:border-neutral-700 dark:bg-neutral-800/90 dark:text-primary-50">
+                  {INTRO_MESSAGE}
+                  <button
+                    type="button"
+                    onClick={dismissIntro}
+                    className="focus-ring-none absolute right-1.5 top-1.5 rounded-full p-1 text-neutral-500 hover:bg-neutral-200/60 hover:text-neutral-800 dark:hover:bg-neutral-700/60 dark:hover:text-neutral-100"
+                    aria-label="Dismiss introduction"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
               </div>
             </div>
-            <div
-              className="absolute -bottom-1.5 right-5 h-3 w-3 rotate-45 border-b border-r border-primary-500/30 bg-white/90 dark:border-primary-500/35 dark:bg-neutral-900/90"
-              aria-hidden
-            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -266,8 +277,8 @@ export default function XavyrGuide() {
             id={panelId}
             role="dialog"
             aria-label="Xavyr site guide"
-            className="pointer-events-auto fixed right-8 z-[900] flex flex-col"
-            style={{ bottom: XAVYR_PANEL_BOTTOM_OFFSET, width: size.width, height: size.height }}
+            className={`pointer-events-auto fixed right-8 z-[900] flex flex-col transition-[bottom] duration-300 ease-out ${stackBottomClass}`}
+            style={{ width: size.width, height: size.height }}
           >
             {RESIZE_HANDLES.map(({ edge, className }) => (
               <div
@@ -356,7 +367,8 @@ export default function XavyrGuide() {
                       onChange={(e) => setInput(e.target.value)}
                       placeholder="Ask about the shop…"
                       maxLength={400}
-                      className="input-overlay min-w-0 flex-1 rounded-xl px-3 py-2 text-sm dark:bg-neutral-800 dark:text-white"
+                      className="input-overlay min-w-0 flex-1 rounded-xl px-3 py-2 text-base dark:bg-neutral-800 dark:text-white"
+                      style={{ fontSize: '16px' }}
                       aria-label="Message to Xavyr"
                     />
                     <Button
@@ -376,7 +388,10 @@ export default function XavyrGuide() {
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-auto fixed bottom-[5.5rem] right-8 z-[901]" aria-live="polite">
+      <div
+        className={`pointer-events-auto fixed right-8 z-[901] transition-[bottom] duration-300 ease-out ${fabBottomClass}`}
+        aria-live="polite"
+      >
         {!open && (
           <motion.span
             className="absolute -right-0.5 -top-0.5 z-10 flex h-3 w-3"
