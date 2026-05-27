@@ -8,23 +8,29 @@ export type PanelSize = { width: number; height: number }
 
 export type ResizeEdge = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
+/** FAB sits at bottom-[5.5rem]; panel stacks above with 0.5rem gap (FAB is 3rem tall) */
+export const XAVYR_PANEL_BOTTOM_OFFSET = '9rem'
+
 function getDefaultSize(): PanelSize {
   if (typeof window === 'undefined') return { width: 352, height: 480 }
   const vw = window.innerWidth
+  const vh = window.innerHeight
+  const reservedBottom = 9 * 16 + 16 // 9rem panel offset + padding
   return {
     width: Math.min(352, vw - 32),
-    height: Math.min(480, window.innerHeight - 120),
+    height: Math.min(480, vh - reservedBottom),
   }
 }
 
 function getLimits(): { minW: number; maxW: number; minH: number; maxH: number } {
   const vw = typeof window !== 'undefined' ? window.innerWidth : 400
   const vh = typeof window !== 'undefined' ? window.innerHeight : 700
+  const reservedBottom = 9 * 16 + 24
   return {
     minW: Math.min(260, vw - 24),
     maxW: Math.min(vw < 640 ? vw - 20 : 560, vw - 16),
-    minH: 300,
-    maxH: Math.min(vh < 640 ? vh - 88 : 680, vh - 72),
+    minH: 280,
+    maxH: Math.min(vh < 640 ? vh - reservedBottom : 680, vh - reservedBottom),
   }
 }
 

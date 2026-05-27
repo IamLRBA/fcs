@@ -1,15 +1,8 @@
-import type { XavyrLink } from '@/lib/xavyr/types'
+import type { ConversationMatch, XavyrLink } from '@/lib/xavyr/types'
 import { DEFAULT_SUGGESTIONS } from '@/lib/xavyr/knowledge'
+import { BANTER_POOLS } from '@/lib/xavyr/conversation-banter'
 
-export type ConversationMatch = {
-  id: string
-  patterns: RegExp[]
-  responses: string[]
-  links?: XavyrLink[]
-  suggestions?: string[]
-  /** Higher priority wins when multiple pools match */
-  priority?: number
-}
+export type { ConversationMatch } from '@/lib/xavyr/types'
 
 function pickFromPool(responses: string[], recent: string[]): string {
   const recentSet = new Set(recent.map((r) => r.trim().toLowerCase()))
@@ -27,7 +20,7 @@ export function pickConversationResponse(
 
   let best: { match: ConversationMatch; priority: number } | null = null
 
-  for (const match of CONVERSATION_POOLS) {
+  for (const match of ALL_CONVERSATION_POOLS) {
     if (match.patterns.some((re) => re.test(q))) {
       const priority = match.priority ?? 0
       if (!best || priority > best.priority) {
@@ -60,6 +53,9 @@ export const CONVERSATION_POOLS: ConversationMatch[] = [
       'Hey! Welcome in. Tell me what you are looking for and I will point you the right way.',
       'Hello and welcome. Ready when you are: shopping, delivery questions, or finding a page.',
       'Hi! I am here to make the site easier to navigate. What would you like to explore?',
+      'Good to meet you. Browse, chat, or ask how something works. I am flexible.',
+      'Welcome to the boutique side of the internet. Where should we start?',
+      'Hey there. Collections, cart, policies, or just a conversation: all fair game.',
     ],
     suggestions: DEFAULT_SUGGESTIONS,
   },
@@ -277,4 +273,12 @@ export const FALLBACK_RESPONSES = [
   'Not sure yet. Pick a suggestion below or name what you want to do on the site.',
   'Let me help another way. Are you trying to buy something, find a page, or contact the team?',
   'I want to get you the right answer. What part of MysticalPIECES are you asking about?',
+  'Hmm, new one for me. Try a category name, a page like Shop or Cart, or ask how ordering works.',
+  'I am still learning how you think. Give me a hint: browse, buy, deliver, or contact?',
+  'Say it another way if you can. Or tap a chip below and we will go from there.',
+  'No stress. Most people ask about collections, checkout, or where something lives on the site.',
+  'We can keep chatting. If you want store facts, mention shop, payment, or account.',
 ]
+
+/** Core + casual pools merged for matching */
+export const ALL_CONVERSATION_POOLS: ConversationMatch[] = [...CONVERSATION_POOLS, ...BANTER_POOLS]
