@@ -218,4 +218,146 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     ],
     suggestions: DEFAULT_SUGGESTIONS,
   },
+  {
+    id: 'quick-view',
+    keywords: ['quick view', 'preview', 'modal', 'product page', 'details', 'view product'],
+    answer:
+      'On collection pages, tap a product card or Quick View to see photos, price, size or color options, and Add to Cart without leaving the grid.',
+    answers: [
+      'Quick View opens a product modal with images and options. Unique pieces show one unit; multi-stock items let you pick size and color.',
+      'Use Quick View from any category grid to inspect a piece before adding it to your cart.',
+    ],
+    links: [{ label: 'Browse Shop', href: '/sections/shop' }],
+  },
+  {
+    id: 'navbar',
+    keywords: ['navbar', 'navigation bar', 'menu', 'header', 'top bar', 'settings', 'theme', 'dark mode', 'light mode'],
+    answer:
+      'The top navigation has Home, Shop, About, search, cart, and account/settings. Settings lets you switch theme and access your profile.',
+    answers: [
+      'Use the menu links for main pages. The bag icon is your cart; the search icon finds products by name, brand, or SKU.',
+      'Account and theme live under the settings area in the nav. Cart count updates as you add items.',
+    ],
+    links: SITE_PAGES.slice(0, 5),
+  },
+  {
+    id: 'keyboard-shortcuts',
+    keywords: ['keyboard', 'shortcut', 'shortcuts', 'hotkey', 'key bind'],
+    answer:
+      'On desktop, tap the keyboard icon at the bottom left for a shortcuts list. Examples: H for home, C for cart, S or / for search, T to scroll to top.',
+    suggestions: ['Browse collections'],
+  },
+  {
+    id: 'guest-checkout',
+    keywords: ['guest', 'without account', 'no account', 'anonymous'],
+    answer:
+      'You can checkout as a guest without registering. An account is optional but helps you track orders and save reviews later.',
+    links: [
+      { label: 'Checkout', href: '/checkout' },
+      { label: 'Sign in', href: '/login' },
+    ],
+  },
+  {
+    id: 'reviews',
+    keywords: ['review', 'reviews', 'rating', 'testimonial', 'feedback'],
+    answer:
+      'Signed-in customers can leave reviews. The home page also showcases testimonials from shoppers who love the curated thrift finds.',
+    links: [{ label: 'Home', href: '/' }],
+  },
+  {
+    id: 'ceo',
+    keywords: ['ceo', 'founder', 'lrba', 'dingwa', 'jerry', 'owner', 'leadership'],
+    answer:
+      'LRBA (Dingwa) founded MysticalPIECES as a future-facing thrift boutique rooted in conscious style. The CEO Profile and About Us pages share the full story.',
+    links: [
+      { label: 'CEO Profile', href: '/ceo-profile' },
+      { label: 'About Us', href: '/about-us' },
+    ],
+  },
+  {
+    id: 'location',
+    keywords: ['location', 'where are you', 'uganda', 'kampala', 'based', 'country', 'address store'],
+    answer:
+      'MysticalPIECES operates from Kampala, Uganda. Online shopping is available with delivery in Kampala (free) and outside Kampala (fee at checkout).',
+    links: [{ label: 'Contact', href: '/#contact' }],
+  },
+  {
+    id: 'sustainability',
+    keywords: ['sustainable', 'eco', 'environment', 'secondhand', 'preloved', 'conscious', 'slow fashion'],
+    answer:
+      'Thrift is at the heart of the brand: extending garment life, reducing waste, and celebrating individuality over mass production.',
+    answers: [
+      'Every curated piece is a step away from disposable fashion. About Us and Core Rules explain the philosophy in depth.',
+      'Secondhand does not mean second best here. It means story, quality, and intention.',
+    ],
+    links: [
+      { label: 'About Us', href: '/about-us' },
+      { label: 'Core Rules', href: '/core-rules' },
+    ],
+  },
+  {
+    id: 'out-of-stock',
+    keywords: ['out of stock', 'sold', 'gone', 'unavailable', 'restock'],
+    answer:
+      'Most listings are unique thrift pieces. When one sells and the order is delivered, it leaves the catalog. Multi-stock items may return if more units exist in that size and color.',
+    suggestions: ['Browse collections'],
+  },
+  {
+    id: 'hold-cart',
+    keywords: ['hold', 'reserved', 'in cart', 'someone else', 'taken'],
+    answer:
+      'Adding a unique piece to your cart holds it while you checkout. If you leave it too long without completing the order, someone else may grab it first.',
+    links: [{ label: 'View Cart', href: '/cart' }],
+  },
+  {
+    id: 'receipt-email',
+    keywords: ['email', 'receipt', 'confirmation email', 'invoice'],
+    answer:
+      'After you confirm an order, you receive email updates including receipt details. Check spam if nothing arrives within a few minutes.',
+    links: [{ label: 'Contact', href: '/#contact' }],
+  },
+  {
+    id: 'whatsapp',
+    keywords: ['whatsapp', 'wa', 'text us', 'message us'],
+    answer: `You can reach the team on WhatsApp at ${SHOP_WHATSAPP_E164} for personal assistance with orders or questions.`,
+    links: [{ label: 'Contact form', href: '/#contact' }],
+  },
+  {
+    id: 'shop-portal',
+    keywords: ['portal', 'moodboard', 'hub', 'sections'],
+    answer:
+      'The Shop portal at /sections/shop is your moodboard entry point with category cards and curated visuals before you dive into a collection.',
+    links: [{ label: 'Shop portal', href: '/sections/shop' }],
+  },
+  {
+    id: 'sizing',
+    keywords: ['fit', 'sizing', 'size guide', 'measurements', 'too small', 'too big'],
+    answer:
+      'Sizes are listed on each product when available. For unique thrift, exact measurements may vary by piece. Check Quick View details before ordering.',
+    suggestions: ['Browse collections', 'Contact the store'],
+  },
+  {
+    id: 'returns',
+    keywords: ['return', 'exchange', 'refund', 'wrong item', 'damaged'],
+    answer:
+      'Because most items are unique thrift, returns are handled case by case. Contact the team with your order details and they will guide you.',
+    links: [
+      { label: 'Terms', href: '/terms-conditions' },
+      { label: 'Contact', href: '/#contact' },
+    ],
+  },
+  {
+    id: 'social',
+    keywords: ['instagram', 'social', 'follow', 'tiktok', 'facebook'],
+    answer:
+      'Follow MysticalPIECES on social channels linked from the site footer and About sections for drops, styling, and behind-the-scenes curation.',
+    links: [{ label: 'About Us', href: '/about-us' }],
+  },
+  {
+    id: 'mobile',
+    keywords: ['mobile', 'phone', 'iphone', 'android', 'tablet'],
+    answer:
+      'The site works on mobile browsers. Use the menu icon for navigation, tap product cards for Quick View, and checkout from your cart like on desktop.',
+    suggestions: ['Browse collections', 'View Cart'],
+  },
 ]

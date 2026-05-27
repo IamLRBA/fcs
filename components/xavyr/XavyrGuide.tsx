@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { MessageCircle, Send, Sparkles, X } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { XAVYR_INTRO } from '@/lib/xavyr/knowledge'
-import { RESIZE_CURSOR, useXavyrPanelSize, type ResizeEdge } from '@/lib/xavyr/use-xavyr-panel-size'
+import { RESIZE_CURSOR, useXavyrPanelSize, XAVYR_PANEL_BOTTOM_OFFSET, type ResizeEdge } from '@/lib/xavyr/use-xavyr-panel-size'
 import type { XavyrLink, XavyrMessage } from '@/lib/xavyr/types'
 
 const INTRO_SEEN_KEY = 'xavyr-intro-seen'
@@ -221,10 +221,6 @@ export default function XavyrGuide() {
         )}
       </AnimatePresence>
 
-      <div
-        className="pointer-events-none fixed bottom-[5.5rem] right-8 z-[900] flex flex-col-reverse items-end gap-2"
-        aria-live="polite"
-      >
       <AnimatePresence>
         {introBubble && !open && (
           <motion.div
@@ -232,7 +228,8 @@ export default function XavyrGuide() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-            className="pointer-events-auto relative max-w-[min(18rem,calc(100vw-6rem))]"
+            className="pointer-events-auto fixed right-8 z-[900] max-w-[min(18rem,calc(100vw-6rem))]"
+            style={{ bottom: XAVYR_PANEL_BOTTOM_OFFSET }}
           >
             <div className="hero-glass-frame relative backdrop-blur-md">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
@@ -269,8 +266,8 @@ export default function XavyrGuide() {
             id={panelId}
             role="dialog"
             aria-label="Xavyr site guide"
-            className="pointer-events-auto relative mb-1 flex flex-col"
-            style={{ width: size.width, height: size.height }}
+            className="pointer-events-auto fixed right-8 z-[900] flex flex-col"
+            style={{ bottom: XAVYR_PANEL_BOTTOM_OFFSET, width: size.width, height: size.height }}
           >
             {RESIZE_HANDLES.map(({ edge, className }) => (
               <div
@@ -379,7 +376,7 @@ export default function XavyrGuide() {
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-auto relative">
+      <div className="pointer-events-auto fixed bottom-[5.5rem] right-8 z-[901]" aria-live="polite">
         {!open && (
           <motion.span
             className="absolute -right-0.5 -top-0.5 z-10 flex h-3 w-3"
@@ -403,7 +400,6 @@ export default function XavyrGuide() {
           {open ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" strokeWidth={1.75} />}
         </Button>
       </div>
-    </div>
     </>
   )
 }

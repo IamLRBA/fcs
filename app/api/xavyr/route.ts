@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { chatWithOpenAI, sanitizeXavyrReply, type ChatTurn } from '@/lib/xavyr/ai-chat'
-import { pickConversationResponse, FALLBACK_RESPONSES } from '@/lib/xavyr/conversation-pools'
+import { chatWithOptionalAi, type ChatTurn } from '@/lib/xavyr/ai-chat'
+import { pickConversationResponse } from '@/lib/xavyr/conversation-pools'
 import { guardrailResponse, isSensitiveQuery } from '@/lib/xavyr/guardrails'
 import { respondToQuery } from '@/lib/xavyr/responder'
 import type { XavyrResponse } from '@/lib/xavyr/types'
@@ -11,25 +11,20 @@ type Body = {
   recentAssistant?: string[]
 }
 
-function pickVaried(pool: string[], recent: string[]): string {
-  const recentSet = new Set(recent.map((r) => r.trim().toLowerCase()))
-  const available = pool.filter((r) => !recentSet.has(r.trim().toLowerCase()))
-  const list = available.length ? available : pool
-  return list[Math.floor(Math.random() * list.length)]
-}
-
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as Body
     const query = String(body.query ?? '').trim()
     const recent = Array.isArray(body.recentAssistant) ? body.recentAssistant : []
     const history = Array.isArray(body.history) ? body.history.slice(-10) : []
+    const historyText = history.map((m) => m.content)
 
     if (!query) {
       return NextResponse.json({ error: 'Empty query' }, { status: 400 })
     }
 
     let response: XavyrResponse
+    let source: 'local' | 'gemini' | 'groq' | 'openai' = 'local'
 
     if (isSensitiveQuery(query)) {
       response = guardrailResponse(query, recent)
@@ -40,28 +35,23 @@ export async function POST(request: Request) {
           content: conversational.content,
           links: conversational.links,
           suggestions: conversational.suggestions,
+          confidence: 'high',
         }
       } else {
-        const aiEnabled = process.env.XAVYR_AI_ENABLED === '1' || Boolean(process.env.OPENAI_API_KEY)
-        let aiText: string | null = null
+        response = respondToQuery(query, recent, historyText)
 
-        if (aiEnabled) {
-          aiText = await chatWithOpenAI(query, history)
-        }
-
-        if (aiText) {
-          response = { content: sanitizeXavyrReply(aiText) }
-        } else {
-          const local = respondToQuery(query, recent)
-          if (local.content.includes('not sure I caught')) {
-            local.content = pickVaried(FALLBACK_RESPONSES, recent)
+        if (response.confidence === 'low') {
+          const { text, provider } = await chatWithOptionalAi(query, history)
+          if (text) {
+            response = { content: text }
+            source = provider ?? 'local'
           }
-          response = local
         }
       }
     }
 
-    const res = NextResponse.json({ ...response, source: process.env.OPENAI_API_KEY ? 'hybrid' : 'local' })
+    const { confidence: _c, ...payload } = response
+    const res = NextResponse.json({ ...payload, source })
     res.headers.set('Cache-Control', 'no-store')
     return res
   } catch (e) {
