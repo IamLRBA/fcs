@@ -4,9 +4,20 @@ import type { XavyrLink } from '@/lib/xavyr/types'
 export type KnowledgeEntry = {
   id: string
   keywords: string[]
+  /** Primary answer (used if answers array is empty) */
   answer: string
+  /** Varied phrasings for the same topic */
+  answers?: string[]
   links?: XavyrLink[]
   suggestions?: string[]
+}
+
+export function pickKnowledgeAnswer(entry: KnowledgeEntry, recent: string[] = []): string {
+  const pool = entry.answers?.length ? [...entry.answers, entry.answer] : [entry.answer]
+  const recentSet = new Set(recent.map((r) => r.trim().toLowerCase()))
+  const available = pool.filter((r) => !recentSet.has(r.trim().toLowerCase()))
+  const list = available.length ? available : pool
+  return list[Math.floor(Math.random() * list.length)]
 }
 
 export const XAVYR_INTRO =
@@ -44,9 +55,14 @@ export const DEFAULT_SUGGESTIONS = [
 export const KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: 'greeting',
-    keywords: ['hi', 'hello', 'hey', 'good morning', 'good evening', 'help', 'start'],
+    keywords: ['help me', 'start', 'begin'],
     answer:
-      "Welcome to MysticalPIECES — a future-facing thrift boutique. Tell me what you're looking for, or pick a quick topic below.",
+      "Welcome to MysticalPIECES, a future-facing thrift boutique. Tell me what you're looking for, or pick a quick topic below.",
+    answers: [
+      'Welcome in. I can point you to collections, checkout, or any page on the site.',
+      'Good to have you here. What would you like to explore first?',
+      'Hello. MysticalPIECES is ready when you are. Ask about shop, cart, or delivery.',
+    ],
     suggestions: DEFAULT_SUGGESTIONS,
   },
   {
@@ -85,7 +101,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: 'unique-pieces',
     keywords: ['unique', 'one of a kind', 'single', 'thrift', 'only one', 'sold out'],
     answer:
-      'Most MysticalPIECES items are single unique thrift pieces — once added to a cart, that exact listing is held for you until checkout. When an order is delivered, unique pieces leave the catalog. If something says Out of Stock, it is no longer available.',
+      'Most MysticalPIECES items are single unique thrift pieces. Once in your cart, that listing is held until checkout. When an order is delivered, unique pieces leave the catalog. Out of Stock means it is gone.',
     suggestions: ['How do I order?', 'Browse collections'],
   },
   {
@@ -119,7 +135,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: 'payment',
     keywords: ['pay', 'payment', 'cash', 'cod', 'money', 'price', 'ugx', 'cost', 'fee'],
     answer:
-      'MysticalPIECES uses cash on delivery. You pay when your order arrives — no online card payment is required on the site. Delivery within Kampala is free; outside Kampala carries a transport fee shown at checkout.',
+      'MysticalPIECES uses cash on delivery. You pay when your order arrives. No online card payment is required. Delivery within Kampala is free; outside Kampala carries a transport fee shown at checkout.',
     suggestions: ['Delivery areas', 'Contact the store'],
   },
   {
@@ -159,7 +175,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: 'core-rules',
     keywords: ['rules', 'sape', 'style guide', 'la sape', 'elegance', 'colour', 'color guide'],
     answer:
-      'Core Rules is our style philosophy — colour with intention, elegance over price tags, immaculate presentation, and grace in the world. It reflects the spirit behind how we curate and wear MysticalPIECES.',
+      'Core Rules is our style philosophy: colour with intention, elegance over price tags, immaculate presentation, and grace in the world. It reflects the spirit behind how we curate and wear MysticalPIECES.',
     links: [{ label: 'Read Core Rules', href: '/core-rules' }],
   },
   {
@@ -172,7 +188,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: 'terms',
     keywords: ['terms', 'conditions', 'policy', 'legal', 'refund', 'return'],
     answer:
-      'Terms & Conditions cover shopping agreements, site use, and policies. Because most items are unique thrift pieces, availability is limited — contact us if you need help with a specific order.',
+      'Terms and Conditions cover shopping agreements, site use, and policies. Because most items are unique thrift pieces, availability is limited. Contact us if you need help with a specific order.',
     links: [
       { label: 'Terms & Conditions', href: '/terms-conditions' },
       { label: 'Contact', href: '/#contact' },
@@ -194,7 +210,12 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: 'xavyr',
     keywords: ['xavyr', 'who are you', 'your name', 'guide', 'assistant', 'bot'],
     answer:
-      "I'm Xavyr — a site guide built for MysticalPIECES shoppers. I help with navigation, collections, and how shopping works here. I don't have access to private store operations or admin tools.",
+      "I'm Xavyr, a site guide built for MysticalPIECES shoppers. I help with navigation, collections, and how shopping works here. I don't have access to private store operations or admin tools.",
+    answers: [
+      'I am Xavyr, your MysticalPIECES guide. Ask me about pages, products, or checkout anytime.',
+      'Xavyr here. I know the public side of the store and I am happy to walk you through it.',
+      'I guide shoppers around this site. No admin access, just helpful directions and answers.',
+    ],
     suggestions: DEFAULT_SUGGESTIONS,
   },
 ]
