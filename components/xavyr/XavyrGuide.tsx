@@ -107,7 +107,8 @@ export default function XavyrGuide() {
   const panelId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const introAutoDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  /** Browser timer id (avoid NodeJS.Timeout vs number mismatch in CI builds) */
+  const introAutoDismissRef = useRef<number | null>(null)
 
   const [open, setOpen] = useState(false)
   const [introBubble, setIntroBubble] = useState(false)
