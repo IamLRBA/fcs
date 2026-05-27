@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { chatWithOpenAI, sanitizeXavyrReply, type ChatTurn } from '@/lib/xavyr/ai-chat'
-import { pickConversationResponse, GUARDRAIL_RESPONSES, FALLBACK_RESPONSES } from '@/lib/xavyr/conversation-pools'
-import { isSensitiveQuery } from '@/lib/xavyr/guardrails'
+import { pickConversationResponse, FALLBACK_RESPONSES } from '@/lib/xavyr/conversation-pools'
+import { guardrailResponse, isSensitiveQuery } from '@/lib/xavyr/guardrails'
 import { respondToQuery } from '@/lib/xavyr/responder'
 import type { XavyrResponse } from '@/lib/xavyr/types'
 
@@ -32,10 +32,7 @@ export async function POST(request: Request) {
     let response: XavyrResponse
 
     if (isSensitiveQuery(query)) {
-      response = {
-        content: pickVaried(GUARDRAIL_RESPONSES, recent),
-        suggestions: ['Browse collections', 'How do I order?', 'Contact the store'],
-      }
+      response = guardrailResponse(query, recent)
     } else {
       const conversational = pickConversationResponse(query, recent)
       if (conversational) {

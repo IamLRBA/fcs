@@ -210,11 +210,11 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: 'xavyr',
     keywords: ['xavyr', 'who are you', 'your name', 'guide', 'assistant', 'bot'],
     answer:
-      "I'm Xavyr, a site guide built for MysticalPIECES shoppers. I help with navigation, collections, and how shopping works here. I don't have access to private store operations or admin tools.",
+      "I'm Xavyr, a site guide built for MysticalPIECES shoppers. I help with navigation, collections, and how shopping works here.",
     answers: [
       'I am Xavyr, your MysticalPIECES guide. Ask me about pages, products, or checkout anytime.',
       'Xavyr here. I know the public side of the store and I am happy to walk you through it.',
-      'I guide shoppers around this site. No admin access, just helpful directions and answers.',
+      'I guide shoppers around this site with directions, collections, and checkout help.',
     ],
     suggestions: DEFAULT_SUGGESTIONS,
   },

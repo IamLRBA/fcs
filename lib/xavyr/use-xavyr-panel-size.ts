@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
 const STORAGE_KEY = 'xavyr-panel-size'
-const GUTTER_PX = 10
 
 export type PanelSize = { width: number; height: number }
 
@@ -106,7 +105,7 @@ export function useXavyrPanelSize(open: boolean) {
     [persistSize, size.height, size.width]
   )
 
-  return { size, gutterPx: GUTTER_PX, startResize }
+  return { size, startResize }
 }
 
 export const RESIZE_CURSOR: Record<ResizeEdge, string> = {
