@@ -40,7 +40,11 @@ export async function POST(request: Request) {
       } else {
         response = respondToQuery(query, recent, historyText)
 
-        if (response.confidence === 'low') {
+        const wantsMoreHelp =
+          response.confidence === 'low' ||
+          (response.confidence === 'medium' && query.trim().split(/\s+/).length >= 4)
+
+        if (wantsMoreHelp) {
           const { text, provider } = await chatWithOptionalAi(query, history)
           if (text) {
             response = { content: text }

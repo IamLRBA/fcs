@@ -41,6 +41,96 @@ export function pickConversationResponse(
 
 export const CONVERSATION_POOLS: ConversationMatch[] = [
   {
+    id: 'name',
+    priority: 14,
+    patterns: [
+      /^what('?s|\s+is)\s+your\s+name[\s!.?]*$/i,
+      /^your\s+name[\s!.?]*$/i,
+      /^what\s+is\s+ur\s+name[\s!.?]*$/i,
+      /^who\s+are\s+you\s+called[\s!.?]*$/i,
+    ],
+    responses: [
+      'My name is Xavyr.',
+      'Xavyr.',
+      'I am Xavyr, your MysticalPIECES site guide.',
+      'Xavyr here. How can I help?',
+    ],
+    suggestions: DEFAULT_SUGGESTIONS,
+  },
+  {
+    id: 'where-located',
+    priority: 14,
+    patterns: [
+      /\bwhere\s+are\s+you\s+(located|based)\b/i,
+      /\bwhere\s+are\s+you\s+guys\s+(located|based)\b/i,
+      /\bwhere\s+can\s+i\s+find\s+you\b/i,
+      /\bwhere\s+can\s+i\s+find\s+you\s+guys\b/i,
+      /\bwhere\s+do\s+i\s+find\s+you\b/i,
+      /\bwhere\s+are\s+you\s+found\b/i,
+      /\byour\s+location\b/i,
+      /\baddress\b/i,
+      /\bcontact\s+you\b/i,
+      /\bhow\s+can\s+i\s+reach\s+you\b/i,
+    ],
+    responses: [
+      'MysticalPIECES is based in Kampala, Uganda. You can also reach the team via the Contact section, WhatsApp, or email.',
+      'We operate from Kampala, Uganda. If you want to reach us quickly, use the Contact section or WhatsApp.',
+      'You can find contact options on the home page Contact section. We are based in Kampala, Uganda.',
+      'Kampala, Uganda. For direct help, use WhatsApp or email from the Contact section.',
+    ],
+    links: [
+      { label: 'Contact', href: '/#contact' },
+      { label: 'About Us', href: '/about-us' },
+    ],
+    suggestions: ['Contact the store', 'Delivery & payment', 'Browse collections'],
+  },
+  {
+    id: 'catalog-what-products',
+    priority: 13,
+    patterns: [
+      /\bwhat\s+products\s+do\s+you\s+(have|sell|stock)\b/i,
+      /\bwhat\s+do\s+you\s+sell\b/i,
+      /\bwhat\s+do\s+you\s+have\b/i,
+      /\bwhat\s+kind\s+of\s+(clothes|items)\s+do\s+you\s+have\b/i,
+      /\bwhat\s+collections\s+do\s+you\s+have\b/i,
+    ],
+    responses: [
+      'We sell curated thrift fashion across Shirts, Tees, Outerwear, Bottoms, Footwear, and Accessories. Want a link to a category?',
+      'Main collections are Shirts, Tees, Outerwear, Bottoms, Footwear, and Accessories. Most pieces are unique, so stock rotates often.',
+      'You can browse six core collections: Shirts, Tees, Outerwear, Bottoms, Footwear, and Accessories. Tell me what you want and I will point you there.',
+      'We stock curated thrift pieces in Shirts, Tees, Outerwear, Bottoms, Footwear, and Accessories. Start with Shop if you want the full view.',
+    ],
+    links: [
+      { label: 'Shop portal', href: '/sections/shop' },
+      { label: 'Shirts', href: '/products/shirts' },
+      { label: 'Tees', href: '/products/tees' },
+      { label: 'Outerwear', href: '/products/coats' },
+    ],
+    suggestions: ['Browse collections', 'Shirts', 'Footwear', 'Accessories'],
+  },
+  {
+    id: 'purchase-suggestions',
+    priority: 13,
+    patterns: [
+      /\bwhat\s+can\s+you\s+suggest\s+(for\s+me\s+to\s+purchase|i\s+buy)\b/i,
+      /\bwhat\s+should\s+i\s+(buy|purchase)\b/i,
+      /\brecommend\s+me\s+(something|a\s+product|an\s+item)\b/i,
+      /\bsuggest\s+me\s+(something|a\s+piece|an\s+item)\b/i,
+      /\bhelp\s+me\s+choose\b/i,
+    ],
+    responses: [
+      'Tell me your vibe (street, vintage, minimal) and your size, and I will suggest which collection to browse first. If you want a quick start, check Featured on Home.',
+      'I can recommend a direction. Are you shopping for Tees, Footwear, Outerwear, or Accessories today?',
+      'Best way is to start with one statement piece. Tell me the occasion and I will point you to a category to explore.',
+      'If you want something easy to style, start with Tees or Accessories. If you want impact, start with Outerwear or Footwear.',
+    ],
+    links: [
+      { label: 'Home (Featured)', href: '/' },
+      { label: 'Shop portal', href: '/sections/shop' },
+    ],
+    suggestions: ['Browse collections', 'Tees', 'Outerwear', 'Footwear'],
+  },
+  {
     id: 'greeting',
     priority: 10,
     patterns: [
@@ -156,7 +246,6 @@ export const CONVERSATION_POOLS: ConversationMatch[] = [
     patterns: [/^where(\s|$|\?)/i, /where (is|are|can|do)/i],
     responses: [
       'Tell me what you are looking for and I will link you to the right page.',
-      'Depends what you need. Shop is under Shop in the menu, cart is the bag icon, account is via Sign in.',
       'I can point you there. Are you looking for a category, your cart, or contact info?',
       'Let me help with directions. What page or section do you want to reach?',
       'Share the destination and I will show you the link.',
