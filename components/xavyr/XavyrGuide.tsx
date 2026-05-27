@@ -85,7 +85,7 @@ export default function XavyrGuide() {
   const [messages, setMessages] = useState<XavyrMessage[]>([])
   const [lastSuggestions, setLastSuggestions] = useState<string[]>([])
 
-  const { size, gutterPx, startResize } = useXavyrPanelSize(open)
+  const { size, startResize } = useXavyrPanelSize(open)
   const isAdminRoute = pathname?.startsWith('/admin')
 
   const recentAssistantTexts = messages.filter((m) => m.role === 'assistant').map((m) => m.content)
@@ -208,10 +208,23 @@ export default function XavyrGuide() {
   if (isAdminRoute) return null
 
   return (
-    <div
-      className="pointer-events-none fixed bottom-[5.5rem] right-8 z-[900] flex flex-col-reverse items-end gap-2"
-      aria-live="polite"
-    >
+    <>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[850] bg-black/50 backdrop-blur-sm"
+            aria-hidden
+          />
+        )}
+      </AnimatePresence>
+
+      <div
+        className="pointer-events-none fixed bottom-[5.5rem] right-8 z-[900] flex flex-col-reverse items-end gap-2"
+        aria-live="polite"
+      >
       <AnimatePresence>
         {introBubble && !open && (
           <motion.div
@@ -274,13 +287,9 @@ export default function XavyrGuide() {
               />
             ))}
 
-            <div className="hero-glass-frame relative flex h-full min-h-0 flex-col backdrop-blur-lg">
+            <div className="hero-glass-frame relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-neutral-200/80 shadow-2xl backdrop-blur-lg dark:border-neutral-600">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <div
-                className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl"
-                style={{ margin: gutterPx }}
-              >
-                <div className="glass-inner-panel relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-primary-500/35 shadow-2xl dark:border-primary-500/40">
+              <div className="glass-inner-panel relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-primary-500/35 dark:border-primary-500/40">
                   <header className="flex shrink-0 items-center gap-2.5 border-b border-neutral-200/80 px-3.5 py-3 dark:border-neutral-700/80">
                     <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-700 to-primary-900 text-white shadow-inner dark:from-primary-500 dark:to-primary-800">
                       <Sparkles className="h-4 w-4" strokeWidth={1.75} />
@@ -364,7 +373,6 @@ export default function XavyrGuide() {
                       <Send className="h-4 w-4" />
                     </Button>
                   </form>
-                </div>
               </div>
             </div>
           </motion.div>
@@ -396,5 +404,6 @@ export default function XavyrGuide() {
         </Button>
       </div>
     </div>
+    </>
   )
 }

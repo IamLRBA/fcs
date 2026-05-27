@@ -253,13 +253,23 @@ export const CONVERSATION_POOLS: ConversationMatch[] = [
   },
 ]
 
-export const GUARDRAIL_RESPONSES = [
-  'I cannot share admin, internal, or confidential information. I can help with public shopping topics instead.',
+export const ADMIN_GUARDRAIL_RESPONSES = [
+  'I cannot help with admin or back-office access. I am here for public shopping guidance on the site.',
+  'Admin areas are separate from what I cover. I can help with collections, checkout, delivery, or finding a page.',
+  'That is outside my role as a shopper guide. Ask me about products, orders, or navigation instead.',
+  'I do not have admin access. For store shopping questions, I am happy to help.',
+]
+
+export const GENERAL_GUARDRAIL_RESPONSES = [
   'That is outside what I am allowed to discuss. Ask me about collections, checkout, delivery, or site pages.',
   'I do not have access to private store systems. For shopping help, I am right here.',
   'I keep customer-facing guidance only. Try a question about products, orders, or navigation.',
   'Sensitive store details stay private. How can I help you shop or explore the site?',
+  'I cannot help with that kind of request. What would you like to know about shopping here?',
 ]
+
+/** @deprecated use ADMIN or GENERAL pools via guardrailResponse */
+export const GUARDRAIL_RESPONSES = [...GENERAL_GUARDRAIL_RESPONSES, ...ADMIN_GUARDRAIL_RESPONSES]
 
 export const FALLBACK_RESPONSES = [
   'I might not have caught that. Try asking about shop, cart, checkout, delivery, or your account.',
