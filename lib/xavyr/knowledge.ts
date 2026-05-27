@@ -50,6 +50,7 @@ export const DEFAULT_SUGGESTIONS = [
   'How do I order?',
   'Delivery & payment',
   'Contact the store',
+  'Style me for an occasion',
 ]
 
 export const KNOWLEDGE: KnowledgeEntry[] = [
