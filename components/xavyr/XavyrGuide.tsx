@@ -209,7 +209,7 @@ export default function XavyrGuide() {
 
   return (
     <div
-      className="pointer-events-none fixed bottom-5 left-5 z-[900] flex flex-col items-start gap-2 sm:bottom-6 sm:left-6"
+      className="pointer-events-none fixed bottom-[5.5rem] right-8 z-[900] flex flex-col-reverse items-end gap-2"
       aria-live="polite"
     >
       <AnimatePresence>
@@ -219,7 +219,7 @@ export default function XavyrGuide() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-            className="pointer-events-auto relative max-w-[min(18rem,calc(100vw-5rem))]"
+            className="pointer-events-auto relative max-w-[min(18rem,calc(100vw-6rem))]"
           >
             <div className="hero-glass-frame relative backdrop-blur-md">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
@@ -239,7 +239,7 @@ export default function XavyrGuide() {
               </div>
             </div>
             <div
-              className="absolute -bottom-1.5 left-5 h-3 w-3 rotate-45 border-b border-l border-primary-500/30 bg-white/90 dark:border-primary-500/35 dark:bg-neutral-900/90"
+              className="absolute -bottom-1.5 right-5 h-3 w-3 rotate-45 border-b border-r border-primary-500/30 bg-white/90 dark:border-primary-500/35 dark:bg-neutral-900/90"
               aria-hidden
             />
           </motion.div>
