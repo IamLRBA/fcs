@@ -122,6 +122,18 @@ export default function XavyrGuide() {
   const fabBottomClass = pageScrolled ? 'bottom-[5.5rem]' : 'bottom-8'
   const stackBottomClass = pageScrolled ? 'bottom-[9rem]' : 'bottom-[5.5rem]'
 
+  const clearIntroAutoDismiss = useCallback(() => {
+    if (introAutoDismissRef.current) {
+      window.clearTimeout(introAutoDismissRef.current)
+      introAutoDismissRef.current = null
+    }
+  }, [])
+
+  const dismissIntro = useCallback(() => {
+    clearIntroAutoDismiss()
+    setIntroBubble(false)
+  }, [clearIntroAutoDismiss])
+
   useEffect(() => {
     const onScroll = () => setPageScrolled(window.pageYOffset > SCROLL_SHOW_BACK_TO_TOP)
     onScroll()
@@ -198,6 +210,15 @@ export default function XavyrGuide() {
   }, [isAdminRoute, pathname])
 
   useEffect(() => {
+    if (!introBubble) return
+    introAutoDismissRef.current = window.setTimeout(() => {
+      setIntroBubble(false)
+      introAutoDismissRef.current = null
+    }, INTRO_AUTO_DISMISS_MS)
+    return clearIntroAutoDismiss
+  }, [introBubble, clearIntroAutoDismiss])
+
+  useEffect(() => {
     if (!open) return
     const el = scrollRef.current
     if (el) el.scrollTop = el.scrollHeight
@@ -210,6 +231,7 @@ export default function XavyrGuide() {
   }, [open])
 
   const openPanel = () => {
+    clearIntroAutoDismiss()
     setOpen(true)
     setIntroBubble(false)
     if (messages.length === 0) {
@@ -221,8 +243,6 @@ export default function XavyrGuide() {
       ])
     }
   }
-
-  const dismissIntro = () => setIntroBubble(false)
 
   if (isAdminRoute) return null
 
