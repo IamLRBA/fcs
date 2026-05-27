@@ -91,6 +91,21 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     links: SHOP_CATEGORIES,
   },
   {
+    id: 'denim-shirts',
+    keywords: ['denim shirt', 'denim shirts', 'jean shirt', 'jean shirts', 'chambray', 'where are denim shirts', 'section for denim shirts'],
+    answer:
+      'Denim shirts live under the Shirts collection. Open Shirts, then browse for denim pieces in the grid, or use Search to find denim listings faster when available.',
+    answers: [
+      'Check Shirts for denim shirts. Inventory rotates, so search for “denim” too if you want a faster find.',
+      'Denim shirts are part of Shirts. Start there and use Quick View to confirm details before adding to cart.',
+    ],
+    links: [
+      { label: 'Shirts', href: '/products/shirts' },
+      { label: 'Shop portal', href: '/sections/shop' },
+    ],
+    suggestions: ['Shirts', 'Browse collections'],
+  },
+  {
     id: 'featured',
     keywords: ['featured', 'home', 'new', 'latest', 'highlight'],
     answer:
