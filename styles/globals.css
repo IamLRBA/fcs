@@ -694,6 +694,13 @@
   .btn-unified-circle-sm::before {
     width: 55%;
   }
+  /* Floating FABs (keyboard shortcuts, Xavyr, back to top): darker border in light mode */
+  .floating-action-circle.btn-unified-circle {
+    border-color: var(--color-border-accent);
+  }
+  .dark .floating-action-circle.btn-unified-circle {
+    border-color: var(--color-neutral-700);
+  }
   /* Shine on parent group hover (e.g. portal Explore button) */
   .group:hover .btn-unified-group-shine::before {
     animation: btn-shine 0.7s ease-out forwards;

@@ -4,16 +4,15 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Baby, MessageCircle, Send, Sparkles, X } from 'lucide-react'
+import { Baby, MessageCircle, Send, X } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { XAVYR_INTRO } from '@/lib/xavyr/knowledge'
 import { SCROLL_SHOW_BACK_TO_TOP } from '@/lib/xavyr/floating-layout'
 import { RESIZE_CURSOR, useXavyrPanelSize, type ResizeEdge } from '@/lib/xavyr/use-xavyr-panel-size'
 import type { XavyrLink, XavyrMessage } from '@/lib/xavyr/types'
 
-const INTRO_SEEN_KEY = 'xavyr-intro-seen'
-const INTRO_SNOOZE_KEY = 'xavyr-intro-snooze-until'
 const INTRO_DELAY_MS = 6500
+const INTRO_AUTO_DISMISS_MS = 4000
 const INTRO_MESSAGE = "Hi, I'm Xavyr. Let's chat if you need any assistance"
 
 const RESIZE_HANDLES: { edge: ResizeEdge; className: string }[] = [
@@ -48,6 +47,35 @@ function MessageLinks({ links }: { links?: XavyrLink[] }) {
   )
 }
 
+function IntroDismissButton({ onDismiss }: { onDismiss: () => void }) {
+  const [spinning, setSpinning] = useState(false)
+
+  const handleClick = () => {
+    setSpinning(true)
+    window.setTimeout(() => {
+      onDismiss()
+      setSpinning(false)
+    }, 300)
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className="focus-ring-none absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100"
+      aria-label="Dismiss introduction"
+    >
+      <motion.span
+        animate={{ rotate: spinning ? 360 : 0 }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className="inline-flex items-center justify-center"
+      >
+        <X className="h-3.5 w-3.5" strokeWidth={2} />
+      </motion.span>
+    </button>
+  )
+}
+
 function SuggestionChips({
   suggestions,
   onPick,
@@ -79,6 +107,7 @@ export default function XavyrGuide() {
   const panelId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const introAutoDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [open, setOpen] = useState(false)
   const [introBubble, setIntroBubble] = useState(false)
@@ -163,23 +192,8 @@ export default function XavyrGuide() {
 
   useEffect(() => {
     if (isAdminRoute) return
-    try {
-      const snooze = localStorage.getItem(INTRO_SNOOZE_KEY)
-      if (snooze && Date.now() < Number.parseInt(snooze, 10)) return
-      if (localStorage.getItem(INTRO_SEEN_KEY) === '1') return
-    } catch {
-      /* storage unavailable */
-    }
-
-    const timer = window.setTimeout(() => {
-      setIntroBubble(true)
-      try {
-        localStorage.setItem(INTRO_SEEN_KEY, '1')
-      } catch {
-        /* ignore */
-      }
-    }, INTRO_DELAY_MS)
-
+    setIntroBubble(false)
+    const timer = window.setTimeout(() => setIntroBubble(true), INTRO_DELAY_MS)
     return () => window.clearTimeout(timer)
   }, [isAdminRoute, pathname])
 
@@ -208,14 +222,7 @@ export default function XavyrGuide() {
     }
   }
 
-  const dismissIntro = () => {
-    setIntroBubble(false)
-    try {
-      localStorage.setItem(INTRO_SNOOZE_KEY, String(Date.now() + 24 * 60 * 60 * 1000))
-    } catch {
-      /* ignore */
-    }
-  }
+  const dismissIntro = () => setIntroBubble(false)
 
   if (isAdminRoute) return null
 
@@ -242,26 +249,14 @@ export default function XavyrGuide() {
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
             className={`pointer-events-auto fixed right-8 z-[900] max-w-[min(17rem,calc(100vw-5.5rem))] transition-[bottom] duration-300 ease-out ${stackBottomClass}`}
           >
-            <div className="flex items-end justify-end gap-2">
-              <div className="flex min-w-0 items-end gap-2">
-                <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary-400/50 bg-primary-50 text-primary-700 shadow-sm dark:border-primary-500/40 dark:bg-primary-950/80 dark:text-primary-200"
-                  aria-hidden
-                >
-                  <Baby className="h-5 w-5" strokeWidth={1.75} />
-                </div>
-                <div className="relative max-w-[14rem] rounded-2xl rounded-br-md border border-neutral-200/80 bg-white/95 px-3 py-2.5 pr-8 text-[13px] leading-relaxed text-neutral-800 shadow-md dark:border-neutral-700 dark:bg-neutral-800/90 dark:text-primary-50">
-                  {INTRO_MESSAGE}
-                  <button
-                    type="button"
-                    onClick={dismissIntro}
-                    className="focus-ring-none absolute right-1.5 top-1.5 rounded-full p-1 text-neutral-500 hover:bg-neutral-200/60 hover:text-neutral-800 dark:hover:bg-neutral-700/60 dark:hover:text-neutral-100"
-                    aria-label="Dismiss introduction"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              </div>
+            <div className="relative flex max-w-[min(16rem,calc(100vw-5.5rem))] items-center gap-2.5 rounded-2xl rounded-br-md border border-neutral-200/80 bg-white/95 py-2.5 pl-2.5 pr-9 text-[13px] leading-relaxed text-neutral-800 shadow-md dark:border-neutral-700 dark:bg-neutral-800/90 dark:text-primary-50">
+              <Baby
+                className="h-5 w-5 shrink-0 text-primary-700 dark:text-primary-300"
+                strokeWidth={1.75}
+                aria-hidden
+              />
+              <p className="min-w-0 flex-1">{INTRO_MESSAGE}</p>
+              <IntroDismissButton onDismiss={dismissIntro} />
             </div>
           </motion.div>
         )}
@@ -299,9 +294,8 @@ export default function XavyrGuide() {
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
               <div className="glass-inner-panel relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-primary-500/35 dark:border-primary-500/40">
                   <header className="flex shrink-0 items-center gap-2.5 border-b border-neutral-200/80 px-3.5 py-3 dark:border-neutral-700/80">
-                    <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-700 to-primary-900 text-white shadow-inner dark:from-primary-500 dark:to-primary-800">
-                      <Sparkles className="h-4 w-4" strokeWidth={1.75} />
-                      <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-accent-500 ring-2 ring-white dark:ring-neutral-900" />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center text-primary-700 dark:text-primary-300">
+                      <Baby className="h-5 w-5" strokeWidth={1.75} aria-hidden />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold text-neutral-900 dark:text-primary-50">Xavyr</p>
@@ -410,7 +404,7 @@ export default function XavyrGuide() {
           aria-expanded={open}
           aria-controls={open ? panelId : undefined}
           aria-label={open ? 'Close Xavyr guide' : 'Open Xavyr guide'}
-          className="focus-ring-none relative"
+          className="focus-ring-none floating-action-circle relative"
         >
           {open ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" strokeWidth={1.75} />}
         </Button>

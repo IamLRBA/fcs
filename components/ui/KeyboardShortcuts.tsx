@@ -178,7 +178,7 @@ export default function KeyboardShortcuts() {
         <Button
           variant="circle"
           onClick={() => setIsOpen(true)}
-          className="focus-ring-none transition-all duration-300"
+          className="focus-ring-none floating-action-circle transition-all duration-300"
           aria-label="Keyboard shortcuts"
           title="Keyboard shortcuts (Ctrl + ?)"
         >
