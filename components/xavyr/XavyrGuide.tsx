@@ -425,7 +425,7 @@ export default function XavyrGuide() {
           aria-expanded={open}
           aria-controls={open ? panelId : undefined}
           aria-label={open ? 'Close Xavyr guide' : 'Open Xavyr guide'}
-          className="focus-ring-none floating-action-circle relative"
+          className="focus-ring-none relative"
         >
           {open ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" strokeWidth={1.75} />}
         </Button>
