@@ -1,6 +1,8 @@
 import type { ConversationMatch, XavyrLink } from '@/lib/xavyr/types'
 import { DEFAULT_SUGGESTIONS } from '@/lib/xavyr/knowledge'
 import { BANTER_POOLS } from '@/lib/xavyr/conversation-banter'
+import { normalizeQuery } from '@/lib/xavyr/query-normalize'
+import { TRAINING_INTENTS } from '@/lib/xavyr/training-intents'
 
 export type { ConversationMatch } from '@/lib/xavyr/types'
 
@@ -15,7 +17,7 @@ export function pickConversationResponse(
   query: string,
   recentAssistantTexts: string[] = []
 ): { id: string; content: string; links?: XavyrLink[]; suggestions?: string[] } | null {
-  const q = query.trim()
+  const q = normalizeQuery(query.trim())
   if (!q) return null
 
   let best: { match: ConversationMatch; priority: number } | null = null
@@ -250,8 +252,12 @@ export const CONVERSATION_POOLS: ConversationMatch[] = [
   },
   {
     id: 'what',
-    priority: 6,
-    patterns: [/^what(\s|$|\?)/i, /what is this/i, /what can you do/i],
+    priority: 4,
+    patterns: [
+      /^what(\s|$|\?)/i,
+      /what is this/i,
+      /what can you do/i,
+    ],
     responses: [
       'I can help you navigate MysticalPIECES, explain how shopping works, and point you to the right pages.',
       'This is MysticalPIECES, a curated thrift boutique online. I guide you through collections, cart, and checkout.',
@@ -390,5 +396,9 @@ export const FALLBACK_RESPONSES = [
   'We can keep chatting. If you want store facts, mention shop, payment, or account.',
 ]
 
-/** Core + casual pools merged for matching */
-export const ALL_CONVERSATION_POOLS: ConversationMatch[] = [...CONVERSATION_POOLS, ...BANTER_POOLS]
+/** Core + training + casual pools merged for matching (training intents highest priority) */
+export const ALL_CONVERSATION_POOLS: ConversationMatch[] = [
+  ...TRAINING_INTENTS,
+  ...CONVERSATION_POOLS,
+  ...BANTER_POOLS,
+]

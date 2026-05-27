@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
+import { shouldUseAiBoost } from '@/lib/xavyr/ai-routing'
 import { chatWithOptionalAi, type ChatTurn } from '@/lib/xavyr/ai-chat'
 import { pickConversationResponse } from '@/lib/xavyr/conversation-pools'
 import { guardrailResponse, isSensitiveQuery } from '@/lib/xavyr/guardrails'
+import { isGeneralKnowledgeQuery, normalizeQuery } from '@/lib/xavyr/query-normalize'
 import { respondToQuery } from '@/lib/xavyr/responder'
 import type { XavyrResponse } from '@/lib/xavyr/types'
 
@@ -26,17 +28,11 @@ export async function POST(request: Request) {
     let response: XavyrResponse
     let source: 'local' | 'gemini' | 'groq' | 'openai' = 'local'
 
-    const lower = query.toLowerCase()
-    const looksLikeGeneralGeo =
-      /^\s*where\s+is\s+[a-z][a-z\s-]{2,}\s*\??\s*$/i.test(query) &&
-      !/(shop|cart|checkout|account|login|contact|delivery|kampala|mysticalpieces|product|products|shirts|tees|outerwear|bottoms|footwear|accessories)/i.test(
-        query
-      )
+    const normalized = normalizeQuery(query)
 
     if (isSensitiveQuery(query)) {
       response = guardrailResponse(query, recent)
-    } else if (looksLikeGeneralGeo && !lower.includes('uganda')) {
-      // General knowledge like "where is Kenya" should use the free AI boost when available
+    } else if (isGeneralKnowledgeQuery(query) && !normalized.includes('uganda')) {
       const { text, provider } = await chatWithOptionalAi(query, history)
       if (text) {
         response = { content: text }
@@ -44,7 +40,7 @@ export async function POST(request: Request) {
       } else {
         response = {
           content:
-            'Kenya is in East Africa. If you want, I can also help with MysticalPIECES: collections, checkout, delivery, and where to find pages.',
+            'That is a geography question. I can answer briefly when my AI boost is available. I can also help with MysticalPIECES shopping, delivery, and collections anytime.',
           suggestions: ['Browse collections', 'How do I order?', 'Contact the store'],
           confidence: 'medium',
         }
@@ -61,14 +57,10 @@ export async function POST(request: Request) {
       } else {
         response = respondToQuery(query, recent, historyText)
 
-        const wantsMoreHelp =
-          response.confidence === 'low' ||
-          (response.confidence === 'medium' && query.trim().split(/\s+/).length >= 4)
-
-        if (wantsMoreHelp) {
+        if (shouldUseAiBoost(query, response)) {
           const { text, provider } = await chatWithOptionalAi(query, history)
           if (text) {
-            response = { content: text }
+            response = { content: text, links: response.links, suggestions: response.suggestions }
             source = provider ?? 'local'
           }
         }

@@ -6,6 +6,7 @@ import {
 } from '@/lib/xavyr/knowledge'
 import { pickConversationResponse, FALLBACK_RESPONSES } from '@/lib/xavyr/conversation-pools'
 import { guardrailResponse, isSensitiveQuery } from '@/lib/xavyr/guardrails'
+import { isBuyIntentNotCheckout, normalizeQuery } from '@/lib/xavyr/query-normalize'
 import type { XavyrResponse } from '@/lib/xavyr/types'
 
 function pickVaried(pool: string[], recent: string[]): string {
@@ -135,6 +136,7 @@ export function respondToQuery(
   history: string[] = []
 ): XavyrResponse {
   const trimmed = query.trim()
+  const normalized = normalizeQuery(trimmed)
   if (!trimmed) {
     return {
       content: 'Ask me anything about shopping, collections, or navigating MysticalPIECES.',
@@ -157,13 +159,13 @@ export function respondToQuery(
     }
   }
 
-  const followUp = followUpHint(trimmed, history)
+  const followUp = followUpHint(normalized, history)
   if (followUp) return followUp
 
-  const tokens = meaningfulTokens(trimmed)
+  const tokens = meaningfulTokens(normalized)
   const scored = KNOWLEDGE.map((entry) => ({
     entry,
-    score: scoreEntry(trimmed, tokens, entry.keywords),
+    score: scoreEntry(normalized, tokens, entry.keywords),
   }))
     .filter((s) => s.score > 0)
     .sort((a, b) => b.score - a.score)
@@ -180,8 +182,22 @@ export function respondToQuery(
     }
   }
 
-  const cat = categoryHint(trimmed)
+  const cat = categoryHint(normalized)
   if (cat) return cat
+
+  if (isBuyIntentNotCheckout(trimmed)) {
+    return {
+      content:
+        'Great place to start: open Shop or Featured on Home, pick a collection, use Quick View for details, then Add to Cart when you are ready.',
+      links: [
+        { label: 'Shop portal', href: '/sections/shop' },
+        { label: 'Home (Featured)', href: '/' },
+        { label: 'Cart', href: '/cart' },
+      ],
+      suggestions: ['Browse collections', 'How do I order?', 'Shirts', 'Outerwear'],
+      confidence: 'high',
+    }
+  }
 
   if (best && best.score >= 3) {
     return {
