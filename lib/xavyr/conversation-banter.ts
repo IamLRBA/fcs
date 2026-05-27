@@ -11,6 +11,25 @@ const CASUAL_SUGGESTIONS = [
 /** Casual, playful, and open-ended pools so visitors can chat beyond strict store Q&A. */
 export const BANTER_POOLS: ConversationMatch[] = [
   {
+    id: 'uganda-geo',
+    priority: 15,
+    patterns: [
+      /^where\s+is\s+uganda[\s!.?]*$/i,
+      /where\s+is\s+uganda\s+located/i,
+      /uganda\s+is\s+where/i,
+    ],
+    responses: [
+      'Uganda is in East Africa. MysticalPIECES is based in Kampala, Uganda, and we deliver within Kampala (free) and outside Kampala (fee at checkout).',
+      'Uganda is an East African country, with Kampala as its capital. That is where MysticalPIECES operates from for deliveries.',
+      'Uganda is in East Africa. If you are shopping here, select Kampala for free delivery, or Outside Kampala for wider delivery options.',
+    ],
+    links: [
+      { label: 'Checkout', href: '/checkout' },
+      { label: 'Contact', href: '/#contact' },
+    ],
+    suggestions: ['Delivery & payment', 'Browse collections'],
+  },
+  {
     id: 'yes-ok',
     priority: 7,
     patterns: [/^(yes|yeah|yep|yup|ok|okay|k|sure|alright|cool|nice|great|perfect|got it|understood|sounds good)[\s!.?]*$/i],
@@ -224,7 +243,10 @@ export const BANTER_POOLS: ConversationMatch[] = [
   {
     id: 'uganda-local',
     priority: 7,
-    patterns: [/\b(uganda|kampala|entebbe|jinja|ugx|shilling|matooke|boda)\b/i],
+    patterns: [
+      /\b(kampala|entebbe|jinja|ugx|shilling|matooke|boda)\b/i,
+      /\buganda\b/i,
+    ],
     responses: [
       'MysticalPIECES is based in Kampala, Uganda. Delivery within Kampala is free; outside Kampala has a fee at checkout.',
       'We serve shoppers in Kampala and beyond. Choose your delivery zone at checkout for accurate fees.',
