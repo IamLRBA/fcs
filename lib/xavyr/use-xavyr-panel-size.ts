@@ -8,14 +8,16 @@ export type PanelSize = { width: number; height: number }
 
 export type ResizeEdge = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
-/** FAB sits at bottom-[5.5rem]; panel stacks above with 0.5rem gap (FAB is 3rem tall) */
-export const XAVYR_PANEL_BOTTOM_OFFSET = '9rem'
+import { introOrPanelBottomCss } from '@/lib/xavyr/floating-layout'
+
+/** Panel stacks above FAB; use scrolled offset for max-height safety */
+export const XAVYR_PANEL_BOTTOM_OFFSET = introOrPanelBottomCss(true)
 
 function getDefaultSize(): PanelSize {
   if (typeof window === 'undefined') return { width: 352, height: 480 }
   const vw = window.innerWidth
   const vh = window.innerHeight
-  const reservedBottom = 9 * 16 + 16 // 9rem panel offset + padding
+  const reservedBottom = 9 * 16 + 16
   return {
     width: Math.min(352, vw - 32),
     height: Math.min(480, vh - reservedBottom),
