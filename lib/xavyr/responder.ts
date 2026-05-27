@@ -1,6 +1,23 @@
-import { DEFAULT_SUGGESTIONS, KNOWLEDGE, SHOP_CATEGORIES } from '@/lib/xavyr/knowledge'
-import { guardrailResponse, isSensitiveQuery } from '@/lib/xavyr/guardrails'
+import {
+  DEFAULT_SUGGESTIONS,
+  KNOWLEDGE,
+  SHOP_CATEGORIES,
+  pickKnowledgeAnswer,
+} from '@/lib/xavyr/knowledge'
+import {
+  pickConversationResponse,
+  GUARDRAIL_RESPONSES,
+  FALLBACK_RESPONSES,
+} from '@/lib/xavyr/conversation-pools'
+import { isSensitiveQuery } from '@/lib/xavyr/guardrails'
 import type { XavyrResponse } from '@/lib/xavyr/types'
+
+function pickVaried(pool: string[], recent: string[]): string {
+  const recentSet = new Set(recent.map((r) => r.trim().toLowerCase()))
+  const available = pool.filter((r) => !recentSet.has(r.trim().toLowerCase()))
+  const list = available.length ? available : pool
+  return list[Math.floor(Math.random() * list.length)]
+}
 
 function tokenize(text: string): string[] {
   return text
@@ -45,7 +62,7 @@ function categoryHint(query: string): XavyrResponse | null {
       const cat = SHOP_CATEGORIES.find((c) => c.href === href)
       if (cat) {
         return {
-          content: `You might like our ${cat.label} collection. Each piece is curated thrift — most are one-of-a-kind, so availability changes often.`,
+          content: `You might like our ${cat.label} collection. Each piece is curated thrift. Most are one of a kind, so availability changes often.`,
           links: [cat, { label: 'All collections', href: '/sections/shop' }],
         }
       }
@@ -54,7 +71,7 @@ function categoryHint(query: string): XavyrResponse | null {
   return null
 }
 
-export function respondToQuery(query: string): XavyrResponse {
+export function respondToQuery(query: string, recentAssistantTexts: string[] = []): XavyrResponse {
   const trimmed = query.trim()
   if (!trimmed) {
     return {
@@ -64,7 +81,19 @@ export function respondToQuery(query: string): XavyrResponse {
   }
 
   if (isSensitiveQuery(trimmed)) {
-    return guardrailResponse()
+    return {
+      content: pickVaried(GUARDRAIL_RESPONSES, recentAssistantTexts),
+      suggestions: ['Browse collections', 'How do I order?', 'Contact the store'],
+    }
+  }
+
+  const conversational = pickConversationResponse(trimmed, recentAssistantTexts)
+  if (conversational) {
+    return {
+      content: conversational.content,
+      links: conversational.links,
+      suggestions: conversational.suggestions,
+    }
   }
 
   const tokens = tokenize(trimmed)
@@ -77,7 +106,7 @@ export function respondToQuery(query: string): XavyrResponse {
 
   if (best.score >= 4) {
     return {
-      content: best.entry.answer,
+      content: pickKnowledgeAnswer(best.entry, recentAssistantTexts),
       links: best.entry.links,
       suggestions: best.entry.suggestions,
     }
@@ -88,15 +117,14 @@ export function respondToQuery(query: string): XavyrResponse {
 
   if (best.score >= 2) {
     return {
-      content: best.entry.answer,
+      content: pickKnowledgeAnswer(best.entry, recentAssistantTexts),
       links: best.entry.links,
       suggestions: best.entry.suggestions ?? DEFAULT_SUGGESTIONS,
     }
   }
 
   return {
-    content:
-      "I'm not sure I caught that. I can help with browsing collections, cart & checkout, delivery, your account, and site policies — try rephrasing or pick a suggestion below.",
+    content: pickVaried(FALLBACK_RESPONSES, recentAssistantTexts),
     suggestions: DEFAULT_SUGGESTIONS,
   }
 }

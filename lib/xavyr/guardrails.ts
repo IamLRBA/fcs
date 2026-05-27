@@ -1,3 +1,5 @@
+import { GUARDRAIL_RESPONSES } from '@/lib/xavyr/conversation-pools'
+
 const SENSITIVE_PATTERNS = [
   /\badmin\b/i,
   /\badministrator\b/i,
@@ -31,10 +33,12 @@ export function isSensitiveQuery(query: string): boolean {
   return SENSITIVE_PATTERNS.some((re) => re.test(q))
 }
 
-export function guardrailResponse(): { content: string; suggestions: string[] } {
+export function guardrailResponse(recent: string[] = []): { content: string; suggestions: string[] } {
+  const recentSet = new Set(recent.map((r) => r.trim().toLowerCase()))
+  const available = GUARDRAIL_RESPONSES.filter((r) => !recentSet.has(r.trim().toLowerCase()))
+  const pool = available.length ? available : GUARDRAIL_RESPONSES
   return {
-    content:
-      "I can't share admin, internal, or confidential information. I'm here for public shopping help — browsing the catalog, cart, checkout, delivery, and general site questions.",
+    content: pool[Math.floor(Math.random() * pool.length)],
     suggestions: ['Browse the shop', 'How checkout works', 'Contact the store'],
   }
 }
