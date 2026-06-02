@@ -53,6 +53,7 @@ function FeaturedCollectionsRow({
   isFirstRow: boolean
 }) {
   const reverseSlideDirection = rowIndex >= 2
+  const accentBottomLeft = rowIndex < 2
 
   return (
     <HorizontalScrollAffordance
@@ -87,9 +88,13 @@ function FeaturedCollectionsRow({
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative flex h-full w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 flex-col sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
             >
-              <div className="hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl">
+              <div
+                className={`hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl${accentBottomLeft ? ' featured-card-bl-accent' : ''}`}
+              >
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                <div className="glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2">
+                <div
+                  className={`glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${accentBottomLeft ? '' : ' rounded-md'}`}
+                >
                   <Link href={`/products/${categorySlug}`} className="focus-ring-none block w-full shrink-0">
                     <div className="glass-inner-well relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg">
                       <SafeImage
