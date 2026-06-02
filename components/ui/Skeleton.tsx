@@ -165,7 +165,11 @@ function SkeletonFeaturedCollectionsRow({
                   </div>
                 </div>
                 <Skeleton
-                  className="absolute right-0 top-0 z-10 h-8 w-8 shrink-0 translate-x-[calc(var(--hero-frame-padding)*0.42)] -translate-y-[calc(var(--hero-frame-padding)*0.42)] rounded-full sm:h-9 sm:w-9"
+                  className={`absolute top-0 z-10 h-8 w-8 shrink-0 -translate-y-[calc(var(--hero-frame-padding)*0.42)] rounded-full sm:h-9 sm:w-9 ${
+                    accent === 'bottom-left'
+                      ? 'left-0 -translate-x-[calc(var(--hero-frame-padding)*0.42)]'
+                      : 'right-0 translate-x-[calc(var(--hero-frame-padding)*0.42)]'
+                  }`}
                   aria-hidden
                 />
               </div>

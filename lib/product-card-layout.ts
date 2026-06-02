@@ -15,6 +15,7 @@ type FeaturedProductCardLayout = {
   multiBtnClass: string
   quickViewBtnClass: string
   accentActionWrapClass: string
+  collectionLinkBtnClass: string
 }
 
 /** Shared layout classes for featured / subcategory product cards with optional corner accent. */
@@ -71,5 +72,8 @@ export function featuredProductCardLayout(accent: FeaturedCardAccent = 'none'): 
       : accentBottomRight
         ? 'mr-auto w-auto shrink-0'
         : '',
+    collectionLinkBtnClass: accentBottomLeft
+      ? 'focus-ring-none absolute left-0 top-0 z-30 shrink-0 -translate-x-[calc(var(--hero-frame-padding)*0.42)] -translate-y-[calc(var(--hero-frame-padding)*0.42)]'
+      : 'focus-ring-none absolute right-0 top-0 z-30 shrink-0 translate-x-[calc(var(--hero-frame-padding)*0.42)] -translate-y-[calc(var(--hero-frame-padding)*0.42)]',
   }
 }
