@@ -151,7 +151,7 @@ const ProductGridCard = memo(function ProductGridCard({
           </div>
 
           <div className={cardLayout.detailsWrapClass}>
-            <div className="mb-px flex w-full items-center justify-start gap-1.5 text-left">
+            <div className="flex w-full items-center gap-1.5">
               <Button
                 variant="default"
                 size="sm"
@@ -165,11 +165,11 @@ const ProductGridCard = memo(function ProductGridCard({
                 <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
                 <span>View</span>
               </Button>
-              <p className="min-w-0 flex-1 line-clamp-1 text-left text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">
+              <p className="min-w-0 flex-1 line-clamp-1 text-right text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">
                 {product.brand}
               </p>
             </div>
-            <h3 className="mb-px w-full self-stretch text-right text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
+            <h3 className="-mt-0.5 mb-px w-full self-stretch text-right text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
               {product.name}
             </h3>
             <div className={cardLayout.priceRowClass}>
