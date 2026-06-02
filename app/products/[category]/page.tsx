@@ -151,12 +151,11 @@ const ProductGridCard = memo(function ProductGridCard({
           </div>
 
           <div className={cardLayout.detailsWrapClass}>
-            <p className="mb-px line-clamp-1 text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">{product.brand}</p>
-            <div className="mb-px flex w-full items-start justify-start gap-1.5 text-left">
+            <div className="mb-px flex w-full items-center justify-start gap-1.5 text-left">
               <Button
                 variant="default"
                 size="sm"
-                className="mt-px shrink-0 justify-center gap-1 px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:py-1 sm:text-xs"
+                className="shrink-0 justify-center gap-1 px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:py-1 sm:text-xs"
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpen(product)
@@ -166,10 +165,13 @@ const ProductGridCard = memo(function ProductGridCard({
                 <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
                 <span>View</span>
               </Button>
-              <h3 className="min-w-0 flex-1 text-left text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
-                {product.name}
-              </h3>
+              <p className="min-w-0 flex-1 line-clamp-1 text-left text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">
+                {product.brand}
+              </p>
             </div>
+            <h3 className="mb-px w-full self-stretch text-right text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
+              {product.name}
+            </h3>
             <div className={cardLayout.priceRowClass}>
               <span className="text-[11px] font-bold text-primary-600 dark:text-primary-300 sm:text-xs">
                 UGX {product.price_ugx.toLocaleString()}
