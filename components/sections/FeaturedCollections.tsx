@@ -202,7 +202,7 @@ function FeaturedCollectionsRow({
                   href={`/products/${categorySlug}`}
                   variant="circle"
                   size="sm"
-                  className="focus-ring-none absolute right-0 top-0 z-30 shrink-0 translate-x-[calc(var(--hero-frame-padding)*0.42)] -translate-y-[calc(var(--hero-frame-padding)*0.42)]"
+                  className={cardLayout.collectionLinkBtnClass}
                   aria-label={`View ${item.categoryName} collection`}
                 >
                   <ExternalLink
