@@ -2,12 +2,31 @@ const actionBtnBase =
   'justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs'
 
 export type FeaturedCardAccent = 'none' | 'bottom-left' | 'bottom-right'
+export type FeaturedCardDetailsAlign = 'start' | 'center' | 'end'
+
+type FeaturedProductCardLayout = {
+  glassFrameClass: string
+  innerPanelRoundedClass: string
+  detailsWrapClass: string
+  priceRowClass: string
+  inventoryChipsAlign: FeaturedCardDetailsAlign
+  actionWrapClass: string
+  actionBtnClass: string
+  multiBtnClass: string
+  quickViewBtnClass: string
+  accentActionWrapClass: string
+}
 
 /** Shared layout classes for featured / subcategory product cards with optional corner accent. */
-export function featuredProductCardLayout(accent: FeaturedCardAccent = 'none') {
+export function featuredProductCardLayout(accent: FeaturedCardAccent = 'none'): FeaturedProductCardLayout {
   const accentBottomLeft = accent === 'bottom-left'
   const accentBottomRight = accent === 'bottom-right'
   const hasAccent = accentBottomLeft || accentBottomRight
+  const inventoryChipsAlign: FeaturedCardDetailsAlign = accentBottomLeft
+    ? 'end'
+    : accentBottomRight
+      ? 'start'
+      : 'center'
 
   return {
     glassFrameClass: accentBottomLeft
@@ -16,6 +35,17 @@ export function featuredProductCardLayout(accent: FeaturedCardAccent = 'none') {
         ? ' featured-card-br-accent'
         : '',
     innerPanelRoundedClass: hasAccent ? '' : ' rounded-md',
+    detailsWrapClass: accentBottomLeft
+      ? 'flex min-h-0 flex-1 flex-col items-end px-0.5 pb-0.5 pt-0 text-right sm:px-1'
+      : accentBottomRight
+        ? 'flex min-h-0 flex-1 flex-col items-start px-0.5 pb-0.5 pt-0 text-left sm:px-1'
+        : 'flex min-h-0 flex-1 flex-col px-0.5 pb-0.5 pt-0 text-center sm:px-1',
+    priceRowClass: accentBottomLeft
+      ? 'mb-1 mt-px flex flex-wrap items-center justify-end gap-x-1 gap-y-0'
+      : accentBottomRight
+        ? 'mb-1 mt-px flex flex-wrap items-center justify-start gap-x-1 gap-y-0'
+        : 'mb-1 mt-px flex flex-wrap items-center justify-center gap-x-1 gap-y-0',
+    inventoryChipsAlign,
     actionWrapClass: accentBottomLeft
       ? 'mt-0.5 flex w-full flex-col items-end gap-1'
       : accentBottomRight

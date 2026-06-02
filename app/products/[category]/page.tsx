@@ -148,10 +148,10 @@ const ProductGridCard = memo(function ProductGridCard({
             )}
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col px-0.5 pb-0.5 pt-0 text-center sm:px-1">
+          <div className={cardLayout.detailsWrapClass}>
             <p className="mb-px line-clamp-1 text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">{product.brand}</p>
             <h3 className="mb-px line-clamp-2 text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">{product.name}</h3>
-            <div className="mb-1 mt-px flex flex-wrap items-center justify-center gap-x-1 gap-y-0">
+            <div className={cardLayout.priceRowClass}>
               <span className="text-[11px] font-bold text-primary-600 dark:text-primary-300 sm:text-xs">
                 UGX {product.price_ugx.toLocaleString()}
               </span>
@@ -165,6 +165,7 @@ const ProductGridCard = memo(function ProductGridCard({
               sizes={product.sizes}
               colors={product.colors}
               inventory_mode={product.inventory_mode}
+              align={cardLayout.inventoryChipsAlign}
               className="mb-1"
             />
             <div className={cardLayout.actionWrapClass}>
@@ -176,11 +177,10 @@ const ProductGridCard = memo(function ProductGridCard({
                   e.stopPropagation()
                   onOpen(product)
                 }}
-                aria-label={`Quick view ${product.name}`}
+                aria-label={`View ${product.name}`}
               >
                 <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Quick View</span>
-                <span className="sm:hidden">View</span>
+                <span>View</span>
               </Button>
             </div>
           </div>

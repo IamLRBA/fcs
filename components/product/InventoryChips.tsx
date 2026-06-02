@@ -8,17 +8,27 @@ type Props = {
   colors: string[]
   inventory_mode?: InventoryModeClient
   className?: string
+  align?: 'start' | 'center' | 'end'
 }
 
 /** Compact size/color labels for product cards */
-export default function InventoryChips({ sizes, colors, inventory_mode, className = '' }: Props) {
+export default function InventoryChips({
+  sizes,
+  colors,
+  inventory_mode,
+  className = '',
+  align = 'center',
+}: Props) {
   const multi = isMultiInventory(inventory_mode ?? 'unique')
   const hasSizes = sizes.length > 0
   const hasColors = colors.length > 0
   if (!hasSizes && !hasColors) return null
 
+  const alignClass =
+    align === 'end' ? 'justify-end' : align === 'start' ? 'justify-start' : 'justify-center'
+
   return (
-    <div className={`flex flex-wrap items-center justify-center gap-1 px-0.5 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-1 px-0.5 ${alignClass} ${className}`}>
       {hasSizes && (
         <span className="rounded-full bg-primary-100/90 px-1.5 py-0.5 text-[9px] font-medium text-primary-800 dark:bg-primary-900/50 dark:text-primary-200 sm:text-[10px]">
           {multi ? 'Sizes' : 'Size'}: {sizes.join(', ')}
