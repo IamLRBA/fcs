@@ -90,7 +90,9 @@ const ProductGridCard = memo(function ProductGridCard({
   accentBottomLeft?: boolean
 }) {
   const multi = isMultiInventory(product.inventory_mode ?? 'unique')
-  const cardLayout = featuredProductCardLayout(accentBottomLeft ? 'bottom-left' : 'none')
+  const cardLayout = featuredProductCardLayout(accentBottomLeft ? 'bottom-left' : 'none', {
+    contentSized: true,
+  })
   const [isInCart, setIsInCart] = useState(() =>
     multi ? false : CartManager.isProductInCart(product.id)
   )
@@ -114,15 +116,15 @@ const ProductGridCard = memo(function ProductGridCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group relative flex h-full w-full flex-col transition-all duration-300 cursor-pointer"
+      className="group relative flex w-full flex-col transition-all duration-300 cursor-pointer"
       onClick={() => onOpen(product)}
     >
       <div
-        className={`hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl${cardLayout.glassFrameClass}`}
+        className={`hero-glass-frame relative w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl${cardLayout.glassFrameClass}`}
       >
         <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
         <div
-          className={`glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${cardLayout.innerPanelRoundedClass}`}
+          className={`glass-inner-panel flex flex-col gap-1.5 border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${cardLayout.innerPanelRoundedClass}`}
         >
           <div className="glass-inner-well relative flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden rounded-lg">
             <SafeImage
@@ -150,11 +152,11 @@ const ProductGridCard = memo(function ProductGridCard({
 
           <div className={cardLayout.detailsWrapClass}>
             <p className="mb-px line-clamp-1 text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">{product.brand}</p>
-            <div className="mb-px flex w-full items-center justify-start gap-1.5 text-left">
+            <div className="mb-px flex w-full items-start justify-start gap-1.5 text-left">
               <Button
                 variant="default"
                 size="sm"
-                className="shrink-0 justify-center gap-1 px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:py-1 sm:text-xs"
+                className="mt-px shrink-0 justify-center gap-1 px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:py-1 sm:text-xs"
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpen(product)
@@ -164,7 +166,7 @@ const ProductGridCard = memo(function ProductGridCard({
                 <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
                 <span>View</span>
               </Button>
-              <h3 className="min-w-0 flex-1 line-clamp-2 text-left text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
+              <h3 className="min-w-0 flex-1 text-left text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
                 {product.name}
               </h3>
             </div>
@@ -183,7 +185,6 @@ const ProductGridCard = memo(function ProductGridCard({
               colors={product.colors}
               inventory_mode={product.inventory_mode}
               align={cardLayout.inventoryChipsAlign}
-              className="mb-0.5"
             />
           </div>
         </div>
@@ -240,7 +241,7 @@ function ProductSectionCards({
   }, [visibleProducts])
 
   const label = section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  const innerClass = `flex min-h-[1px] flex-row items-stretch gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
+  const innerClass = `flex min-h-[1px] flex-row items-start gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
     rowMode === 'center'
       ? 'w-full min-w-0 justify-center md:w-max md:shrink-0 md:justify-start'
       : 'w-max min-w-full justify-start'
