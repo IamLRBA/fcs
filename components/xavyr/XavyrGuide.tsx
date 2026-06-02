@@ -311,9 +311,9 @@ export default function XavyrGuide() {
               />
             ))}
 
-            <div className="hero-glass-frame relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-neutral-200/80 shadow-2xl backdrop-blur-lg dark:border-neutral-600">
+            <div className="hero-glass-frame xavyr-panel-tr-accent relative flex h-full min-h-0 flex-col overflow-hidden border border-neutral-200/80 shadow-2xl backdrop-blur-lg dark:border-neutral-600">
               <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0 rounded-[inherit]" aria-hidden />
-              <div className="glass-inner-panel relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-primary-500/35 dark:border-primary-500/40">
+              <div className="glass-inner-panel relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden border border-primary-500/35 dark:border-primary-500/40">
                   <header className="flex shrink-0 items-center gap-2.5 border-b border-neutral-200/80 px-3.5 py-3 dark:border-neutral-700/80">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center text-primary-700 dark:text-primary-300">
                       <Baby className="h-5 w-5" strokeWidth={1.75} aria-hidden />
