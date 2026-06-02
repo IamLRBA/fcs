@@ -117,7 +117,13 @@ export function SkeletonAdminDashboard() {
   )
 }
 
-function SkeletonFeaturedCollectionsRow({ isFirstRow }: { isFirstRow: boolean }) {
+function SkeletonFeaturedCollectionsRow({
+  isFirstRow,
+  accentBottomLeft = false,
+}: {
+  isFirstRow: boolean
+  accentBottomLeft?: boolean
+}) {
   return (
     <HorizontalScrollAffordance
       showEdgeFades={false}
@@ -135,9 +141,13 @@ function SkeletonFeaturedCollectionsRow({ isFirstRow }: { isFirstRow: boolean })
               key={i}
               className="relative w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
             >
-              <div className="hero-glass-frame relative w-full backdrop-blur-md">
+              <div
+                className={`hero-glass-frame relative w-full backdrop-blur-md${accentBottomLeft ? ' featured-card-bl-accent' : ''}`}
+              >
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
-                <div className="glass-inner-panel flex flex-col gap-1.5 overflow-hidden rounded-md border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2">
+                <div
+                  className={`glass-inner-panel flex flex-col gap-1.5 overflow-hidden border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${accentBottomLeft ? '' : ' rounded-md'}`}
+                >
                   <Skeleton className="aspect-square w-full rounded-lg" />
                   <div className="space-y-1 px-0.5 pb-0.5 sm:px-1">
                     <Skeleton className="mx-auto h-3 w-4/5 rounded sm:h-3.5" />
@@ -163,7 +173,11 @@ export function SkeletonFeaturedCollections() {
   return (
     <>
       {[0, 1, 2, 3].map((row) => (
-        <SkeletonFeaturedCollectionsRow key={row} isFirstRow={row === 0} />
+        <SkeletonFeaturedCollectionsRow
+          key={row}
+          isFirstRow={row === 0}
+          accentBottomLeft={row < 2}
+        />
       ))}
     </>
   )

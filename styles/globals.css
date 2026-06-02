@@ -250,6 +250,22 @@
     border-radius: var(--hero-frame-radius);
   }
 
+  /* Featured collections rows 1–2: accentuated bottom-left corner (4× other corners) */
+  .featured-card-bl-accent.hero-glass-frame {
+    border-radius: var(--hero-frame-radius) var(--hero-frame-radius) var(--hero-frame-radius)
+      calc(var(--hero-frame-radius) * 4);
+  }
+
+  .featured-card-bl-accent.hero-glass-frame .hero-glass-frame-overlay {
+    border-radius: inherit;
+  }
+
+  .featured-card-bl-accent .glass-inner-panel {
+    --featured-inner-radius: 0.375rem;
+    border-radius: var(--featured-inner-radius) var(--featured-inner-radius) var(--featured-inner-radius)
+      calc(var(--featured-inner-radius) * 4);
+  }
+
   /* More transparent glass variant (mobile menu, desktop settings dropdown) */
   .hero-glass-more-transparent {
     background-color: rgb(255 255 255 / 0.02);
