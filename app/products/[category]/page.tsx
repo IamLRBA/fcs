@@ -150,7 +150,24 @@ const ProductGridCard = memo(function ProductGridCard({
 
           <div className={cardLayout.detailsWrapClass}>
             <p className="mb-px line-clamp-1 text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">{product.brand}</p>
-            <h3 className="mb-px line-clamp-2 text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">{product.name}</h3>
+            <div className="mb-px flex w-full items-center justify-start gap-1.5 text-left">
+              <Button
+                variant="default"
+                size="sm"
+                className="shrink-0 justify-center gap-1 px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:py-1 sm:text-xs"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onOpen(product)
+                }}
+                aria-label={`View ${product.name}`}
+              >
+                <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                <span>View</span>
+              </Button>
+              <h3 className="min-w-0 flex-1 line-clamp-2 text-left text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
+                {product.name}
+              </h3>
+            </div>
             <div className={cardLayout.priceRowClass}>
               <span className="text-[11px] font-bold text-primary-600 dark:text-primary-300 sm:text-xs">
                 UGX {product.price_ugx.toLocaleString()}
@@ -166,23 +183,8 @@ const ProductGridCard = memo(function ProductGridCard({
               colors={product.colors}
               inventory_mode={product.inventory_mode}
               align={cardLayout.inventoryChipsAlign}
-              className="mb-1"
+              className="mb-0.5"
             />
-            <div className={cardLayout.actionWrapClass}>
-              <Button
-                variant="default"
-                size="sm"
-                className={cardLayout.quickViewBtnClass}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onOpen(product)
-                }}
-                aria-label={`View ${product.name}`}
-              >
-                <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
-                <span>View</span>
-              </Button>
-            </div>
           </div>
         </div>
       </div>
