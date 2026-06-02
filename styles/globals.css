@@ -284,6 +284,23 @@
       var(--featured-inner-radius);
   }
 
+  /* Xavyr expanded panel: accentuated top-right corner (5× other corners) */
+  .xavyr-panel-tr-accent.hero-glass-frame {
+    border-radius: var(--hero-frame-radius) calc(var(--hero-frame-radius) * 5) var(--hero-frame-radius)
+      var(--hero-frame-radius);
+  }
+
+  .xavyr-panel-tr-accent.hero-glass-frame .hero-glass-frame-overlay {
+    border-radius: inherit;
+  }
+
+  .xavyr-panel-tr-accent .glass-inner-panel {
+    --xavyr-inner-radius: max(0.375rem, calc(var(--hero-frame-radius) - var(--hero-frame-padding)));
+    --xavyr-inner-tr-radius: calc(var(--hero-frame-radius) * 5 - var(--hero-frame-padding));
+    border-radius: var(--xavyr-inner-radius) var(--xavyr-inner-tr-radius) var(--xavyr-inner-radius)
+      var(--xavyr-inner-radius);
+  }
+
   /* More transparent glass variant (mobile menu, desktop settings dropdown) */
   .hero-glass-more-transparent {
     background-color: rgb(255 255 255 / 0.02);
