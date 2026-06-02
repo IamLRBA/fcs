@@ -267,6 +267,23 @@
       var(--featured-inner-bl-radius);
   }
 
+  /* Featured collections rows 3–4: accentuated bottom-right corner (4× other corners) */
+  .featured-card-br-accent.hero-glass-frame {
+    border-radius: var(--hero-frame-radius) var(--hero-frame-radius)
+      calc(var(--hero-frame-radius) * 4) var(--hero-frame-radius);
+  }
+
+  .featured-card-br-accent.hero-glass-frame .hero-glass-frame-overlay {
+    border-radius: inherit;
+  }
+
+  .featured-card-br-accent .glass-inner-panel {
+    --featured-inner-radius: max(0.375rem, calc(var(--hero-frame-radius) - var(--hero-frame-padding)));
+    --featured-inner-br-radius: calc(var(--hero-frame-radius) * 4 - var(--hero-frame-padding));
+    border-radius: var(--featured-inner-radius) var(--featured-inner-radius) var(--featured-inner-br-radius)
+      var(--featured-inner-radius);
+  }
+
   /* More transparent glass variant (mobile menu, desktop settings dropdown) */
   .hero-glass-more-transparent {
     background-color: rgb(255 255 255 / 0.02);

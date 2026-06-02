@@ -90,7 +90,7 @@ const ProductGridCard = memo(function ProductGridCard({
   accentBottomLeft?: boolean
 }) {
   const multi = isMultiInventory(product.inventory_mode ?? 'unique')
-  const cardLayout = featuredProductCardLayout(accentBottomLeft)
+  const cardLayout = featuredProductCardLayout(accentBottomLeft ? 'bottom-left' : 'none')
   const [isInCart, setIsInCart] = useState(() =>
     multi ? false : CartManager.isProductInCart(product.id)
   )

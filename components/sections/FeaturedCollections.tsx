@@ -54,8 +54,8 @@ function FeaturedCollectionsRow({
   isFirstRow: boolean
 }) {
   const reverseSlideDirection = rowIndex >= 2
-  const accentBottomLeft = rowIndex < 2
-  const cardLayout = featuredProductCardLayout(accentBottomLeft)
+  const cardAccent = rowIndex < 2 ? 'bottom-left' : 'bottom-right'
+  const cardLayout = featuredProductCardLayout(cardAccent)
 
   return (
     <HorizontalScrollAffordance
@@ -160,8 +160,8 @@ function FeaturedCollectionsRow({
                       ) : (
                         <div
                           className={
-                            accentBottomLeft
-                              ? `ml-auto w-auto shrink-0${
+                            cardLayout.accentActionWrapClass
+                              ? `${cardLayout.accentActionWrapClass}${
                                   product.stock_qty === 0
                                     ? ' pointer-events-none opacity-50'
                                     : isInCart
