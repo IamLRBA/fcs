@@ -19,7 +19,10 @@ type FeaturedProductCardLayout = {
 }
 
 /** Shared layout classes for featured / subcategory product cards with optional corner accent. */
-export function featuredProductCardLayout(accent: FeaturedCardAccent = 'none'): FeaturedProductCardLayout {
+export function featuredProductCardLayout(
+  accent: FeaturedCardAccent = 'none',
+  { contentSized = false }: { contentSized?: boolean } = {}
+): FeaturedProductCardLayout {
   const accentBottomLeft = accent === 'bottom-left'
   const accentBottomRight = accent === 'bottom-right'
   const hasAccent = accentBottomLeft || accentBottomRight
@@ -28,6 +31,7 @@ export function featuredProductCardLayout(accent: FeaturedCardAccent = 'none'): 
     : accentBottomRight
       ? 'start'
       : 'center'
+  const detailsFlexClass = contentSized ? 'flex flex-col' : 'flex min-h-0 flex-1 flex-col'
 
   return {
     glassFrameClass: accentBottomLeft
@@ -37,10 +41,10 @@ export function featuredProductCardLayout(accent: FeaturedCardAccent = 'none'): 
         : '',
     innerPanelRoundedClass: hasAccent ? '' : ' rounded-md',
     detailsWrapClass: accentBottomLeft
-      ? 'flex min-h-0 flex-1 flex-col items-end px-0.5 pb-0.5 pt-0 text-right sm:px-1'
+      ? `${detailsFlexClass} items-end px-0.5 pb-0.5 pt-0 text-right sm:px-1`
       : accentBottomRight
-        ? 'flex min-h-0 flex-1 flex-col items-start px-0.5 pb-0.5 pt-0 text-left sm:px-1'
-        : 'flex min-h-0 flex-1 flex-col px-0.5 pb-0.5 pt-0 text-center sm:px-1',
+        ? `${detailsFlexClass} items-start px-0.5 pb-0.5 pt-0 text-left sm:px-1`
+        : `${detailsFlexClass} px-0.5 pb-0.5 pt-0 text-center sm:px-1`,
     priceRowClass: accentBottomLeft
       ? 'mb-1 mt-px flex flex-wrap items-center justify-end gap-x-1 gap-y-0'
       : accentBottomRight
