@@ -54,6 +54,15 @@ function FeaturedCollectionsRow({
 }) {
   const reverseSlideDirection = rowIndex >= 2
   const accentBottomLeft = rowIndex < 2
+  const cardActionWrapClass = accentBottomLeft
+    ? 'mt-0.5 flex w-full flex-col items-end gap-1'
+    : 'mt-0.5 flex w-full flex-col gap-1'
+  const cardActionBtnClass = accentBottomLeft
+    ? 'ml-auto w-auto min-w-[3.75rem] shrink-0 justify-center gap-1 px-2.5 py-1 text-[11px] font-medium sm:gap-1 sm:px-3 sm:py-1.5 sm:text-xs'
+    : 'w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs'
+  const cardMultiBtnClass = accentBottomLeft
+    ? 'ml-auto w-auto max-w-[88%] shrink-0 justify-center gap-1 px-2 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs'
+    : 'w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs'
 
   return (
     <HorizontalScrollAffordance
@@ -145,24 +154,32 @@ function FeaturedCollectionsRow({
                       className="mb-1"
                     />
 
-                    <div className="mt-0.5 flex w-full flex-col gap-1">
+                    <div className={cardActionWrapClass}>
                       {multi ? (
                         <Button
                           href={`/products/${categorySlug}`}
                           variant="default"
                           size="sm"
-                          className="w-full justify-center gap-1 py-1 text-[11px] font-medium sm:py-1.5 sm:text-xs"
+                          className={cardMultiBtnClass}
                         >
                           <span>Choose size & color</span>
                         </Button>
                       ) : (
                         <div
                           className={
-                            product.stock_qty === 0
-                              ? 'pointer-events-none opacity-50'
-                              : isInCart
-                                ? 'opacity-50'
-                                : ''
+                            accentBottomLeft
+                              ? `ml-auto w-auto shrink-0${
+                                  product.stock_qty === 0
+                                    ? ' pointer-events-none opacity-50'
+                                    : isInCart
+                                      ? ' opacity-50'
+                                      : ''
+                                }`
+                              : product.stock_qty === 0
+                                ? 'pointer-events-none opacity-50'
+                                : isInCart
+                                  ? 'opacity-50'
+                                  : ''
                           }
                         >
                           <Button
@@ -170,7 +187,7 @@ function FeaturedCollectionsRow({
                             size="sm"
                             onClick={() => onAddToCart(product)}
                             disabled={isAdding || isInCart || product.stock_qty === 0}
-                            className={`w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs${isInCart ? ' disabled:cursor-pointer' : ''}`}
+                            className={`${cardActionBtnClass}${isInCart ? ' disabled:cursor-pointer' : ''}`}
                           >
                             <motion.div
                               animate={isAdding ? { rotate: 360 } : {}}

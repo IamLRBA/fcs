@@ -152,7 +152,9 @@ function SkeletonFeaturedCollectionsRow({
                   <div className="space-y-1 px-0.5 pb-0.5 sm:px-1">
                     <Skeleton className="mx-auto h-3 w-4/5 rounded sm:h-3.5" />
                     <Skeleton className="mx-auto h-2.5 w-1/2 rounded sm:h-3" />
-                    <Skeleton className="h-6 w-full rounded-md sm:h-7" />
+                    <Skeleton
+                      className={`h-6 rounded-md sm:h-7 ${accentBottomLeft ? 'ml-auto w-[42%]' : 'w-full'}`}
+                    />
                   </div>
                 </div>
                 <Skeleton
