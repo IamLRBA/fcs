@@ -12,6 +12,7 @@ import { CartManager, buildCartItemFromProduct } from '@/lib/cart'
 import { isMultiInventory } from '@/lib/inventory'
 import type { InventoryModeClient } from '@/lib/catalog/types'
 import InventoryChips from '@/components/product/InventoryChips'
+import { featuredProductCardLayout } from '@/lib/product-card-layout'
 
 interface Product {
   id: string
@@ -53,7 +54,8 @@ function FeaturedCollectionsRow({
   isFirstRow: boolean
 }) {
   const reverseSlideDirection = rowIndex >= 2
-  const accentBottomLeft = rowIndex < 2
+  const cardAccent = rowIndex < 2 ? 'bottom-left' : 'bottom-right'
+  const cardLayout = featuredProductCardLayout(cardAccent)
 
   return (
     <HorizontalScrollAffordance
@@ -89,11 +91,11 @@ function FeaturedCollectionsRow({
               className="group relative flex h-full w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 flex-col sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
             >
               <div
-                className={`hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl${accentBottomLeft ? ' featured-card-bl-accent' : ''}`}
+                className={`hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl${cardLayout.glassFrameClass}`}
               >
                 <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
                 <div
-                  className={`glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${accentBottomLeft ? '' : ' rounded-md'}`}
+                  className={`glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${cardLayout.innerPanelRoundedClass}`}
                 >
                   <Link href={`/products/${categorySlug}`} className="focus-ring-none block w-full shrink-0">
                     <div className="glass-inner-well relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg">
@@ -145,24 +147,32 @@ function FeaturedCollectionsRow({
                       className="mb-1"
                     />
 
-                    <div className="mt-0.5 flex w-full flex-col gap-1">
+                    <div className={cardLayout.actionWrapClass}>
                       {multi ? (
                         <Button
                           href={`/products/${categorySlug}`}
                           variant="default"
                           size="sm"
-                          className="w-full justify-center gap-1 py-1 text-[11px] font-medium sm:py-1.5 sm:text-xs"
+                          className={cardLayout.multiBtnClass}
                         >
                           <span>Choose size & color</span>
                         </Button>
                       ) : (
                         <div
                           className={
-                            product.stock_qty === 0
-                              ? 'pointer-events-none opacity-50'
-                              : isInCart
-                                ? 'opacity-50'
-                                : ''
+                            cardLayout.accentActionWrapClass
+                              ? `${cardLayout.accentActionWrapClass}${
+                                  product.stock_qty === 0
+                                    ? ' pointer-events-none opacity-50'
+                                    : isInCart
+                                      ? ' opacity-50'
+                                      : ''
+                                }`
+                              : product.stock_qty === 0
+                                ? 'pointer-events-none opacity-50'
+                                : isInCart
+                                  ? 'opacity-50'
+                                  : ''
                           }
                         >
                           <Button
@@ -170,7 +180,7 @@ function FeaturedCollectionsRow({
                             size="sm"
                             onClick={() => onAddToCart(product)}
                             disabled={isAdding || isInCart || product.stock_qty === 0}
-                            className={`w-full justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs${isInCart ? ' disabled:cursor-pointer' : ''}`}
+                            className={`${cardLayout.actionBtnClass}${isInCart ? ' disabled:cursor-pointer' : ''}`}
                           >
                             <motion.div
                               animate={isAdding ? { rotate: 360 } : {}}
