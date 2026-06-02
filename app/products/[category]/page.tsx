@@ -19,6 +19,7 @@ import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
+import { featuredProductCardLayout } from '@/lib/product-card-layout'
 
 interface Product {
   id: string
@@ -81,12 +82,15 @@ const ProductGridCard = memo(function ProductGridCard({
   product,
   index,
   onOpen,
+  accentBottomLeft = true,
 }: {
   product: Product
   index: number
   onOpen: (p: Product) => void
+  accentBottomLeft?: boolean
 }) {
   const multi = isMultiInventory(product.inventory_mode ?? 'unique')
+  const cardLayout = featuredProductCardLayout(accentBottomLeft)
   const [isInCart, setIsInCart] = useState(() =>
     multi ? false : CartManager.isProductInCart(product.id)
   )
@@ -110,13 +114,17 @@ const ProductGridCard = memo(function ProductGridCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="w-full transition-all duration-300 group cursor-pointer"
+      className="group relative flex h-full w-full flex-col transition-all duration-300 cursor-pointer"
       onClick={() => onOpen(product)}
     >
-      <div className="hero-glass-frame relative h-full backdrop-blur-md group-hover:shadow-xl transition-shadow duration-300">
-        <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="glass-inner-panel rounded-md overflow-hidden border border-primary-500/30 h-full flex flex-col gap-1.5 p-1.5 sm:gap-1.5 sm:p-2">
-          <div className="glass-inner-well relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg">
+      <div
+        className={`hero-glass-frame relative h-full w-full backdrop-blur-md transition-shadow duration-300 group-hover:shadow-xl${cardLayout.glassFrameClass}`}
+      >
+        <div className="hero-glass-frame-overlay pointer-events-none absolute inset-0" aria-hidden />
+        <div
+          className={`glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${cardLayout.innerPanelRoundedClass}`}
+        >
+          <div className="glass-inner-well relative flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden rounded-lg">
             <SafeImage
               src={product.images[0]}
               alt={product.name}
@@ -140,7 +148,7 @@ const ProductGridCard = memo(function ProductGridCard({
             )}
           </div>
 
-          <div className="px-0.5 pb-0.5 pt-0 text-center sm:px-1">
+          <div className="flex min-h-0 flex-1 flex-col px-0.5 pb-0.5 pt-0 text-center sm:px-1">
             <p className="mb-px line-clamp-1 text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">{product.brand}</p>
             <h3 className="mb-px line-clamp-2 text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">{product.name}</h3>
             <div className="mb-1 mt-px flex flex-wrap items-center justify-center gap-x-1 gap-y-0">
@@ -159,11 +167,11 @@ const ProductGridCard = memo(function ProductGridCard({
               inventory_mode={product.inventory_mode}
               className="mb-1"
             />
-            <div className="mt-0.5 flex items-center space-x-1">
+            <div className={cardLayout.actionWrapClass}>
               <Button
                 variant="default"
                 size="sm"
-                className="flex-1 justify-center gap-1 py-1 text-[11px] font-medium sm:gap-1 sm:py-1.5 sm:text-xs"
+                className={cardLayout.quickViewBtnClass}
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpen(product)
@@ -260,7 +268,12 @@ function ProductSectionCards({
               key={product.id}
               className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
             >
-              <ProductGridCard product={product} index={index} onOpen={openProductModal} />
+              <ProductGridCard
+                product={product}
+                index={index}
+                onOpen={openProductModal}
+                accentBottomLeft
+              />
             </div>
           ))}
         </div>
