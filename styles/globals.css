@@ -261,9 +261,10 @@
   }
 
   .featured-card-bl-accent .glass-inner-panel {
-    --featured-inner-radius: 0.375rem;
+    --featured-inner-radius: max(0.375rem, calc(var(--hero-frame-radius) - var(--hero-frame-padding)));
+    --featured-inner-bl-radius: calc(var(--hero-frame-radius) * 4 - var(--hero-frame-padding));
     border-radius: var(--featured-inner-radius) var(--featured-inner-radius) var(--featured-inner-radius)
-      calc(var(--featured-inner-radius) * 4);
+      var(--featured-inner-bl-radius);
   }
 
   /* More transparent glass variant (mobile menu, desktop settings dropdown) */
