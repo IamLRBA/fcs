@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { HiMiniShoppingBag } from 'react-icons/hi2'
@@ -17,15 +17,9 @@ const portals = [
 ]
 
 export default function PortalNavigation() {
-  const containerRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [transitioningPortal, setTransitioningPortal] = useState<any>(null)
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  })
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -69,7 +63,6 @@ export default function PortalNavigation() {
   return (
     <>
       <motion.div
-        ref={containerRef}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -80,9 +73,6 @@ export default function PortalNavigation() {
             key={portal.id}
             variants={portalVariants}
             className="group"
-            style={{
-              scale: useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
-            }}
           >
             <div onClick={(e) => handlePortalClick(e, portal)}>
             <div

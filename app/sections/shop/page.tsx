@@ -1,13 +1,14 @@
 'use client'
 
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
+import ScrollScale from '@/components/motion/ScrollScale'
 import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
 
 const FashionVideoSection = dynamic(
@@ -102,15 +103,6 @@ const SHOP_PROCEDURES = [
 ] as const
 
 export default function ShopPage() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  })
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-
   // Lookbook Carousel state
   const [currentLookIndex, setCurrentLookIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
@@ -329,7 +321,7 @@ export default function ShopPage() {
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-unified relative overflow-x-clip">
+    <div className="min-h-screen bg-unified relative overflow-x-clip">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -345,9 +337,13 @@ export default function ShopPage() {
       </motion.div>
 
       {/* Hero Section */}
-      <section className="relative flex min-h-screen items-center justify-center overflow-visible pt-20">
+      <ScrollScale
+        as="section"
+        variant="heroExit"
+        disableOnMobile
+        className="relative flex min-h-screen items-center justify-center overflow-visible pt-20"
+      >
         <motion.div
-          style={{ y, opacity }}
           className="z-20 overflow-visible px-4 text-center lg:px-8"
         >
           <motion.h1
@@ -383,10 +379,10 @@ export default function ShopPage() {
           <div className="absolute bottom-20 right-20 w-24 h-24 border border-accent-500/20 rounded-full animate-pulse-slow" style={{ animationDelay: '1s' }} />
           <div className="absolute top-1/2 left-10 w-16 h-16 border border-primary-400/30 rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }} />
         </div>
-      </section>
+      </ScrollScale>
 
       {/* Shop Philosophy Section */}
-      <section className="py-20 px-4">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -503,13 +499,13 @@ export default function ShopPage() {
             </div>
           </div>
         </motion.div>
-      </section>
+      </ScrollScale>
 
       {/* ⏣ Our Catalogue */}
       <FashionProducts />
 
       {/* Moodboard Section */}
-      <section className="py-20 px-4">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -621,10 +617,10 @@ export default function ShopPage() {
           </div>
           </div>
         </motion.div>
-      </section>
+      </ScrollScale>
 
       {/* Shop Video Gallery Section */}
-      <section className="py-20 px-4">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -638,10 +634,10 @@ export default function ShopPage() {
           </h2>
           <FashionVideoSection />
         </motion.div>
-      </section>
+      </ScrollScale>
 
       {/* Call to Action Section */}
-      <section className="py-20 px-4">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -668,7 +664,7 @@ export default function ShopPage() {
             </Button>
           </div>
         </motion.div>
-      </section>
+      </ScrollScale>
     </div>
   )
 }

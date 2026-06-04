@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button'
 import { AuthManager } from '@/lib/auth'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import SafeImage from '@/components/common/SafeImage'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -174,7 +175,7 @@ export default function CheckoutPage() {
           <span className="text-sm font-medium">Back to Cart</span>
         </Link>
       </motion.div>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20">
+      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-6xl mx-auto px-4 sm:px-6 pt-20">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -467,7 +468,7 @@ export default function CheckoutPage() {
             </motion.div>
           </div>
         </div>
-      </div>
+      </ScrollScale>
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { Mail, Lock, User, Phone, Eye, EyeOff, Image as ImageIcon, Camera } from
 import { AuthManager } from '@/lib/auth'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import Button from '@/components/ui/Button'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -161,7 +162,7 @@ export default function LoginPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="w-full max-w-md">
+      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="w-full max-w-md">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -475,7 +476,7 @@ export default function LoginPage() {
           </div>
         </div>
         </motion.div>
-      </div>
+      </ScrollScale>
     </div>
   )
 }

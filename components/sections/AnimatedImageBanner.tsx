@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export default function AnimatedImageBanner() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -19,7 +20,7 @@ export default function AnimatedImageBanner() {
   }, [])
 
   return (
-    <section className="relative w-full py-8 md:py-12 overflow-hidden">
+    <ScrollScale as="section" variant="centerPeak" intensity="normal" className="relative w-full py-8 md:py-12 overflow-hidden">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -138,7 +139,7 @@ export default function AnimatedImageBanner() {
           </div>
         </motion.div>
       </div>
-    </section>
+    </ScrollScale>
   )
 }
 

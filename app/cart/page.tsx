@@ -8,6 +8,7 @@ import { CartManager } from '@/lib/cart'
 import { isMultiInventory } from '@/lib/inventory'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export default function CartPage() {
   const [cart, setCart] = useState(CartManager.getCart())
@@ -85,7 +86,7 @@ export default function CartPage() {
           <span className="text-sm font-medium">Continue Shopping</span>
         </Link>
       </motion.div>
-      <div className="max-w-7xl mx-auto px-4">
+      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -308,7 +309,7 @@ export default function CartPage() {
             </div>
           </div>
         )}
-      </div>
+      </ScrollScale>
     </div>
   )
 }

@@ -3,10 +3,8 @@
 import { 
   motion, 
   AnimatePresence, 
-  useScroll, 
-  useTransform 
 } from 'framer-motion'
-import { useRef, useState, useEffect, useLayoutEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 import PortalNavigation from '@/components/ui/PortalNavigation'
 import FeaturedCollections from '@/components/sections/FeaturedCollections'
@@ -17,49 +15,13 @@ import AnimatedImageBanner from '@/components/sections/AnimatedImageBanner'
 import LogoMark from '@/components/ui/LogoMark'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import Button from '@/components/ui/Button'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 const VISITED_KEY = 'mysticalpieces-visited'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPortals, setShowPortals] = useState(true)
-  
-  // Scroll-based effects
-  const heroRef = useRef<HTMLElement>(null)
-  const portalsRef = useRef<HTMLDivElement>(null)
-  const testimonialsRef = useRef<HTMLDivElement>(null)
-  
-  const { scrollYProgress: heroScrollY } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  })
-
-  const { scrollYProgress: portalsScrollY } = useScroll({
-    target: portalsRef,
-    offset: ["start end", "end start"]
-  })
-
-  const { scrollYProgress: testimonialsScrollY } = useScroll({
-    target: testimonialsRef,
-    offset: ["start end", "end start"]
-  })
-
-  const heroScale = useTransform(heroScrollY, [0, 1], [1, 0.8])
-  const heroY = useTransform(heroScrollY, [0, 1], [0, -100])
-
-  /** Scroll-linked hero motion reads as background “zoom” on phones; keep desktop only. */
-  const [heroScrollMotionEnabled, setHeroScrollMotionEnabled] = useState(true)
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const mq = window.matchMedia('(min-width: 768px)')
-    const sync = () => setHeroScrollMotionEnabled(mq.matches)
-    sync()
-    mq.addEventListener('change', sync)
-    return () => mq.removeEventListener('change', sync)
-  }, [])
-  
-  const portalsScale = useTransform(portalsScrollY, [0, 0.5, 1], [1, 1.1, 1])
-  const testimonialsScale = useTransform(testimonialsScrollY, [0, 0.5, 1], [1, 1.05, 1])
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return
@@ -114,68 +76,64 @@ export default function Home() {
           aria-hidden={isLoading}
         >
               {/* Hero Section */}
-              <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12">
-                <div className="relative z-10 text-center">
+              <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12">
+                <ScrollScale
+                  as="div"
+                  variant="heroExit"
+                  disableOnMobile
+                  className="relative z-10 text-center w-full"
+                >
                   <motion.div 
                     className="container-custom"
-                    style={
-                      heroScrollMotionEnabled
-                        ? { scale: heroScale, y: heroY }
-                        : { scale: 1, y: 0 }
-                    }
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
                   >
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.2 }}
-                      className="mb-8"
-                    >
-                      <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4 xl:gap-7 2xl:gap-9">
-                        <LogoMark animated size={250} className="md:scale-[0.8] md:-mb-16 xl:-mb-20 2xl:-mb-24" />
-                        <div className="flex flex-col items-center gap-2 xl:gap-4 w-full">
-                          <h1 className="relative text-3xl sm:text-4xl md:text-7xl font-light leading-tight mb-1 xl:mb-3">
-                            <span className="relative z-10">
-                            <MysticalPiecesWord mysticalClassName="text-primary-800 dark:text-primary-100" piecesClassName="text-accent-600 dark:text-accent-400" />
-                            </span>
-                          </h1>
-                          <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full xl:my-1" />
-                          <p className="text-lg xl:text-xl text-primary-600 dark:text-primary-300 max-w-2xl xl:mt-1">
-                          Thrifted Gentlemen's Clothing
-                          </p>
-                        </div>
-                        {/* Home hero only: semi-transparent glass around each CTA; md+ more gap + padding */}
-                        <div className="hero-cta-buttons hero-cta-home-glass mt-2 xl:mt-6 2xl:mt-8 flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 lg:gap-12 xl:gap-16 2xl:gap-20 justify-center items-stretch sm:items-center">
-                          <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-lg rounded-full shrink-0">
-                            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
-                            <div className="relative rounded-full p-1 sm:p-1.5 md:p-2">
-                              <Button
-                                variant="default"
-                                size="lg"
-                                className="text-sm sm:text-lg px-5 sm:px-8 md:px-10 py-2.5 sm:py-4 md:py-4"
-                                onClick={() => scrollToSection('portals-section')}
-                              >
-                                EᑎTEᖇ ᔕᕼOᑭ
-                              </Button>
-                            </div>
+                    <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4 xl:gap-7 2xl:gap-9">
+                      <LogoMark animated size={250} className="md:scale-[0.8] md:-mb-16 xl:-mb-20 2xl:-mb-24" />
+                      <div className="flex flex-col items-center gap-2 xl:gap-4 w-full">
+                        <h1 className="relative text-3xl sm:text-4xl md:text-7xl font-light leading-tight mb-1 xl:mb-3">
+                          <span className="relative z-10">
+                          <MysticalPiecesWord mysticalClassName="text-primary-800 dark:text-primary-100" piecesClassName="text-accent-600 dark:text-accent-400" />
+                          </span>
+                        </h1>
+                        <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full xl:my-1" />
+                        <p className="text-lg xl:text-xl text-primary-600 dark:text-primary-300 max-w-2xl xl:mt-1">
+                        Thrifted Gentlemen's Clothing
+                        </p>
+                      </div>
+                      {/* Home hero only: semi-transparent glass around each CTA; md+ more gap + padding */}
+                      <div className="hero-cta-buttons hero-cta-home-glass mt-2 xl:mt-6 2xl:mt-8 flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 lg:gap-12 xl:gap-16 2xl:gap-20 justify-center items-stretch sm:items-center">
+                        <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-lg rounded-full shrink-0">
+                          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
+                          <div className="relative rounded-full p-1 sm:p-1.5 md:p-2">
+                            <Button
+                              variant="default"
+                              size="lg"
+                              className="text-sm sm:text-lg px-5 sm:px-8 md:px-10 py-2.5 sm:py-4 md:py-4"
+                              onClick={() => scrollToSection('portals-section')}
+                            >
+                              EᑎTEᖇ ᔕᕼOᑭ
+                            </Button>
                           </div>
-                          <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-lg rounded-full shrink-0">
-                            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
-                            <div className="relative rounded-full p-1 sm:p-1.5 md:p-2">
-                              <Button
-                                variant="filled"
-                                size="lg"
-                                className="text-sm sm:text-lg px-5 sm:px-8 md:px-10 py-2.5 sm:py-4 md:py-4"
-                                onClick={() => scrollToSection('contact-section')}
-                              >
-                                GET Iᑎ TOᑌᑕᕼ
-                              </Button>
-                            </div>
+                        </div>
+                        <div className="hero-glass-frame hero-glass-frame-compact relative backdrop-blur-lg rounded-full shrink-0">
+                          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
+                          <div className="relative rounded-full p-1 sm:p-1.5 md:p-2">
+                            <Button
+                              variant="filled"
+                              size="lg"
+                              className="text-sm sm:text-lg px-5 sm:px-8 md:px-10 py-2.5 sm:py-4 md:py-4"
+                              onClick={() => scrollToSection('contact-section')}
+                            >
+                              GET Iᑎ TOᑌᑕᕼ
+                            </Button>
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   </motion.div>
-                </div>
+                </ScrollScale>
 
                 {/* Scroll Indicator */}
                 <motion.div
@@ -204,7 +162,13 @@ export default function Home() {
               {/* Featured + shop entry: one visual section (tight internal gap) */}
               <FeaturedCollections />
 
-              <section ref={portalsRef} id="portals-section" className="relative overflow-visible px-4 pb-16 pt-0 md:pb-20">
+              <ScrollScale
+                as="section"
+                id="portals-section"
+                variant="centerPeak"
+                intensity="emphasis"
+                className="relative overflow-visible px-4 pb-16 pt-0 md:pb-20"
+              >
                 <div className="container-custom relative z-10">
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -223,28 +187,19 @@ export default function Home() {
 
                   <AnimatePresence>
                     {showPortals && (
-                      <motion.div
-                        style={{ scale: portalsScale }}
-                        transition={{ duration: 0.3 }}
-                      >
+                      <motion.div transition={{ duration: 0.3 }}>
                         <PortalNavigation />
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-              </section>
+              </ScrollScale>
 
               {/* Stats Section */}
               <Stats />
 
               {/* Testimonials Section */}
-              <motion.div
-                ref={testimonialsRef}
-                style={{ scale: testimonialsScale }}
-                transition={{ duration: 0.3 }}
-              >
-                <Testimonials />
-              </motion.div>
+              <Testimonials />
 
               {/* Contact Section */}
               <div id="contact-section">

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 interface ProductSubcategory {
   name: string
@@ -223,7 +224,7 @@ export default function FashionProducts() {
   }
   
   return (
-    <section id={CATALOGUE_SECTION_ID} className="py-20 px-4">
+    <ScrollScale as="section" id={CATALOGUE_SECTION_ID} variant="centerPeak" intensity="emphasis" className="py-20 px-4">
       <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true }} className="max-w-7xl mx-auto">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-8 sm:mb-10">
           <span className="text-primary-500 dark:text-primary-100">⏣ Our</span>{' '}
@@ -386,7 +387,7 @@ export default function FashionProducts() {
           })}
         </div>
       </motion.div>
-    </section>
+    </ScrollScale>
   )
 }
 

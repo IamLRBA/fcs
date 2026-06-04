@@ -16,6 +16,7 @@ import { SkeletonAccountPage } from '@/components/ui/Skeleton'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import OrderItemsDetail from '@/components/orders/OrderItemsDetail'
 import { formatOrderReceiptDisplayName } from '@/lib/utils/order-display'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export default function AccountPage() {
   const [user, setUser] = useState<UserType | null>(null)
@@ -221,7 +222,7 @@ export default function AccountPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <div className="container-custom mt-12 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="container-custom mt-12 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
 
         <div className="hero-glass-frame relative backdrop-blur-lg w-full">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
@@ -630,7 +631,7 @@ export default function AccountPage() {
           variant={feedback?.variant ?? 'success'}
           onClose={() => setFeedback(null)}
         />
-      </div>
+      </ScrollScale>
     </div>
   )
 }

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 type RuleBlock = {
   id: string
@@ -178,7 +179,7 @@ export default function CoreRulesPage() {
         </Link>
       </motion.div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-20">
+      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-20">
         <motion.header
           initial="hidden"
           animate="show"
@@ -312,7 +313,7 @@ export default function CoreRulesPage() {
             </Button>
           </div>
         </motion.div>
-      </div>
+      </ScrollScale>
     </div>
   )
 }

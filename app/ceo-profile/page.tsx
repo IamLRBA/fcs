@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { IconBrandWhatsapp, IconBrandTiktok, IconBrandSnapchat, IconBrandX } from '@tabler/icons-react'
 import { CEO_EMAIL } from '@/lib/constants/brand-contact'
 import { 
@@ -31,15 +31,11 @@ import Button from '@/components/ui/Button'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export default function CEOProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  })
 
   const skills = [
     {
@@ -110,11 +106,6 @@ export default function CEOProfile() {
     setSelectedImage(null)
   }
 
-  // Scroll-based animations
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8])
-
   const [expandedSkills, setExpandedSkills] = useState<{ [key: string]: boolean }>({})
   const [showBackButton, setShowBackButton] = useState(true)
   const [phoneDialogOpen, setPhoneDialogOpen] = useState(false)
@@ -165,7 +156,7 @@ export default function CEOProfile() {
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-unified relative overflow-hidden">
+    <div className="min-h-screen bg-unified relative overflow-hidden">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -181,9 +172,13 @@ export default function CEOProfile() {
       </motion.div>
 
       {/* Hero Section — extra top padding so avatar sits lower from fixed Back link */}
-      <section className="relative min-h-screen flex items-center justify-center pt-44 md:pt-52 pb-16">
+      <ScrollScale
+        as="section"
+        variant="heroExit"
+        disableOnMobile
+        className="relative min-h-screen flex items-center justify-center pt-44 md:pt-52 pb-16"
+      >
         <motion.div
-          style={{ y, opacity, scale }}
           className="text-center z-20 px-4"
         >
           <motion.div
@@ -239,10 +234,10 @@ export default function CEOProfile() {
             style={{ animationDelay: '2s' }}
           />
         </div>
-      </section>
+      </ScrollScale>
 
       {/* Skills Section - Our Missions Style */}
-      <section className="py-20 px-4">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -395,7 +390,7 @@ export default function CEOProfile() {
             ))}
           </div>
         </motion.div>
-      </section>
+      </ScrollScale>
 
       {/* Educational Journey Section */}
       <EducationalJourney />
@@ -403,7 +398,7 @@ export default function CEOProfile() {
       <CEOTopGoatLists />
 
       {/* Gallery Section — tighter gap below Educational Journey */}
-      <section className="pt-10 md:pt-14 pb-36 px-4 mt-6 md:mt-8">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="pt-10 md:pt-14 pb-36 px-4 mt-6 md:mt-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -502,10 +497,10 @@ export default function CEOProfile() {
             )}
           </div>
         </motion.div>
-      </section>
+      </ScrollScale>
 
       {/* Social — same pattern as Footer (social-links + Button circle) */}
-      <section className="mb-16 px-4">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="mb-16 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -526,10 +521,10 @@ export default function CEOProfile() {
             })}
           </div>
         </motion.div>
-      </section>
+      </ScrollScale>
 
       {/* Contact Section — same card design & grid as Home Contact.tsx */}
-      <section className="section relative overflow-hidden mb-16">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section relative overflow-hidden mb-16">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -634,7 +629,7 @@ export default function CEOProfile() {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </ScrollScale>
 
       {/* Image Modal */}
       <AnimatePresence>

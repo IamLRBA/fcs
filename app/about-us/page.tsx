@@ -3,6 +3,7 @@
 import AboutUs from '@/components/sections/AboutUs'
 import { motion } from 'framer-motion'
 import Button from '@/components/ui/Button'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export default function AboutUsPage() {
   return (
@@ -10,7 +11,7 @@ export default function AboutUsPage() {
       <AboutUs />
       
       {/* CTA Section */}
-      <section className="section bg-unified py-20">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified py-20">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -38,7 +39,7 @@ export default function AboutUsPage() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </ScrollScale>
     </>
   )
 }

@@ -21,6 +21,7 @@ import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories
 import { useCategoryDeepLink } from '@/lib/catalog/use-category-deep-link'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 import { featuredProductCardLayout } from '@/lib/product-card-layout'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 interface Product {
   id: string
@@ -628,7 +629,7 @@ export default function ProductCategoryPage() {
       </motion.div>
 
       {/* Hero Section */}
-      <section className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4 overflow-hidden">
+      <ScrollScale as="section" variant="centerPeak" intensity="emphasis" className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4 overflow-hidden">
         <div className="relative max-w-6xl mx-auto">
           {/* Main Product Image and Title */}
           <motion.div
@@ -703,20 +704,19 @@ export default function ProductCategoryPage() {
             />
           </motion.div>
         </div>
-      </section>
+      </ScrollScale>
 
       {/* Products Grid by Section */}
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {productsBySection.map(([section, products]) => {
           const visibleProducts = products.filter((product: any) => product.isActive !== false)
           return (
-          <motion.section
+          <ScrollScale
+            as="section"
             key={section}
             id={section}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            variant="centerPeak"
+            intensity="subtle"
             className="mb-32 scroll-mt-24 md:scroll-mt-28"
           >
             {/* Subcategory Image */}
@@ -776,7 +776,7 @@ export default function ProductCategoryPage() {
                 highlightProductId={highlightProductId}
               />
             )}
-          </motion.section>
+          </ScrollScale>
           )
         })}
       </div>
