@@ -13,8 +13,47 @@ type Options = {
   loading: boolean
   categoryKey: string
   sectionKeys: string[]
-  /** ms between section scroll and product strip scroll */
+  /** ms after section scroll before centering product in strip */
   productScrollDelay?: number
+}
+
+const MAX_ATTEMPTS = 80
+const RETRY_MS = 50
+
+function waitForElement(
+  selector: string,
+  onFound: (el: HTMLElement) => void,
+  onGiveUp: () => void,
+  signal: { cancelled: boolean },
+  attempt = 0
+): void {
+  if (signal.cancelled) return
+  const el = document.querySelector<HTMLElement>(selector)
+  if (el) {
+    onFound(el)
+    return
+  }
+  if (attempt >= MAX_ATTEMPTS) {
+    onGiveUp()
+    return
+  }
+  window.setTimeout(() => waitForElement(selector, onFound, onGiveUp, signal, attempt + 1), RETRY_MS)
+}
+
+function waitForSectionId(
+  sectionId: string,
+  onFound: (el: HTMLElement) => void,
+  signal: { cancelled: boolean },
+  attempt = 0
+): void {
+  if (signal.cancelled) return
+  const el = document.getElementById(sectionId)
+  if (el) {
+    onFound(el)
+    return
+  }
+  if (attempt >= MAX_ATTEMPTS) return
+  window.setTimeout(() => waitForSectionId(sectionId, onFound, signal, attempt + 1), RETRY_MS)
 }
 
 /**
@@ -25,7 +64,7 @@ export function useCategoryDeepLink({
   loading,
   categoryKey,
   sectionKeys,
-  productScrollDelay = 160,
+  productScrollDelay = 280,
 }: Options) {
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
   const [highlightProductId, setHighlightProductId] = useState<string | null>(null)
@@ -41,7 +80,8 @@ export function useCategoryDeepLink({
       return
     }
 
-    const hash = typeof window !== 'undefined' ? parseCategorySectionFromHash(window.location.hash) : ''
+    const hash =
+      typeof window !== 'undefined' ? parseCategorySectionFromHash(window.location.hash) : ''
     const productId =
       typeof window !== 'undefined'
         ? getCategoryProductIdFromSearch(window.location.search)
@@ -71,42 +111,42 @@ export function useCategoryDeepLink({
     handledKeyRef.current = runKey
     setSelectedSection(hash)
 
-    let cancelled = false
-    let highlightTimer: number | undefined
+    const signal = { cancelled: false }
     let clearHighlightTimer: number | undefined
 
-    const run = () => {
-      if (cancelled) return
-      scrollSegmentPillIntoView(hash)
-      const sectionEl = document.getElementById(hash)
-      if (sectionEl) scrollToElementFast(sectionEl, 360)
-
-      if (productId) {
-        highlightTimer = window.setTimeout(() => {
-          if (cancelled) return
-          const card = document.querySelector<HTMLElement>(
-            `[data-section="${hash}"] [data-product-id="${productId}"]`
-          )
-          if (card) {
-            scrollElementInHorizontalStrip(card, 'smooth')
-            setHighlightProductId(productId)
-            clearHighlightTimer = window.setTimeout(() => setHighlightProductId(null), 2200)
-          }
+    const scrollToProduct = () => {
+      if (!productId || signal.cancelled) return
+      waitForElement(
+        `[data-section="${hash}"] [data-product-id="${productId}"]`,
+        (card) => {
+          if (signal.cancelled) return
+          scrollElementInHorizontalStrip(card, 'smooth')
+          setHighlightProductId(productId)
+          clearHighlightTimer = window.setTimeout(() => setHighlightProductId(null), 2200)
           const url = new URL(window.location.href)
           url.searchParams.delete('product')
           window.history.replaceState(null, '', `${url.pathname}${url.hash}`)
-        }, productScrollDelay)
-      }
+        },
+        () => {},
+        signal
+      )
     }
 
-    const raf = requestAnimationFrame(() => requestAnimationFrame(run))
-    const fallback = window.setTimeout(run, 120)
+    waitForSectionId(
+      hash,
+      (sectionEl) => {
+        if (signal.cancelled) return
+        scrollSegmentPillIntoView(hash)
+        scrollToElementFast(sectionEl, 420)
+        if (productId) {
+          window.setTimeout(scrollToProduct, productScrollDelay)
+        }
+      },
+      signal
+    )
 
     return () => {
-      cancelled = true
-      cancelAnimationFrame(raf)
-      window.clearTimeout(fallback)
-      if (highlightTimer) window.clearTimeout(highlightTimer)
+      signal.cancelled = true
       if (clearHighlightTimer) window.clearTimeout(clearHighlightTimer)
     }
   }, [loading, categoryKey, sectionKeys, productScrollDelay])
@@ -118,11 +158,10 @@ export function useCategoryDeepLink({
       const hash = parseCategorySectionFromHash(window.location.hash)
       if (!hash || !sectionKeys.includes(hash)) return
       setSelectedSection(hash)
-      requestAnimationFrame(() => {
+      waitForSectionId(hash, (el) => {
         scrollSegmentPillIntoView(hash)
-        const el = document.getElementById(hash)
-        if (el) scrollToElementFast(el, 320)
-      })
+        scrollToElementFast(el, 320)
+      }, { cancelled: false })
     }
 
     window.addEventListener('hashchange', onHash)
@@ -134,11 +173,10 @@ export function useCategoryDeepLink({
     if (typeof window !== 'undefined') {
       window.history.replaceState(null, '', `#${section}`)
     }
-    requestAnimationFrame(() => {
+    waitForSectionId(section, (el) => {
       scrollSegmentPillIntoView(section)
-      const el = document.getElementById(section)
-      if (el) scrollToElementFast(el, 320)
-    })
+      scrollToElementFast(el, 320)
+    }, { cancelled: false })
   }
 
   return {
