@@ -379,10 +379,10 @@ export default function ProductCategoryPage() {
         <section className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4">
           <div className="relative max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-6">
-              <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
-                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                <div className="glass-inner-panel rounded-2xl border border-primary-500/30 p-6 sm:p-8 dark:border-primary-500/40">
-                  <div className="skeleton w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl" />
+              <div className="hero-glass-frame hero-glass-frame-compact category-hero-br-accent relative flex-shrink-0 backdrop-blur-md">
+                <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                <div className="glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden">
+                  <div className="skeleton w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40" />
                 </div>
               </div>
               <div className="skeleton h-14 w-64 md:w-96 rounded-xl" />
@@ -638,15 +638,15 @@ export default function ProductCategoryPage() {
             className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-1 md:mb-6"
           >
             {/* Main Product Image */}
-            <div className="hero-glass-frame relative flex-shrink-0 backdrop-blur-md">
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-              <div className="glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
-                <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shrink-0 mx-auto">
+            <div className="hero-glass-frame hero-glass-frame-compact category-hero-br-accent relative flex-shrink-0 backdrop-blur-md">
+              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+              <div className="glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 overflow-hidden shrink-0 mx-auto">
                   <SafeImage
                     src={getMainProductImage(category)}
                     alt={`${categoryData.title} - Main Product Image`}
                     fill
-                    className="w-full h-full object-cover rounded-2xl"
+                    className="object-cover"
                     sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
                     priority
                   />

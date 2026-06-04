@@ -335,6 +335,26 @@
       var(--shop-accent-inner-br-radius) var(--shop-accent-inner-radius);
   }
 
+  /* Category page hero (small image beside title): compact bottom-right accent */
+  .category-hero-br-accent.hero-glass-frame {
+    --category-hero-r: 0.625rem;
+    --category-hero-p: var(--hero-frame-padding-compact);
+    padding: var(--category-hero-p);
+    border-radius: var(--category-hero-r) var(--category-hero-r)
+      calc(var(--category-hero-r) * 3.5) var(--category-hero-r);
+  }
+
+  .category-hero-br-accent.hero-glass-frame .hero-glass-frame-overlay {
+    border-radius: inherit;
+  }
+
+  .category-hero-br-accent .glass-inner-panel {
+    --category-hero-inner-r: max(0.25rem, calc(var(--category-hero-r) - var(--category-hero-p)));
+    --category-hero-inner-br: calc(var(--category-hero-r) * 3.5 - var(--category-hero-p));
+    border-radius: var(--category-hero-inner-r) var(--category-hero-inner-r) var(--category-hero-inner-br)
+      var(--category-hero-inner-r);
+  }
+
   /* More transparent glass variant (mobile menu, desktop settings dropdown) */
   .hero-glass-more-transparent {
     background-color: rgb(255 255 255 / 0.02);
