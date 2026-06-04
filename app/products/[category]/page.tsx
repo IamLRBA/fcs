@@ -315,7 +315,7 @@ export default function ProductCategoryPage() {
     loading,
     categoryKey: category,
     sectionKeys,
-    productScrollDelay: 320,
+    productScrollDelay: 450,
   })
 
   useEffect(() => {

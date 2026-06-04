@@ -46,8 +46,8 @@ export function scrollElementInHorizontalStrip(
 
 /** Fast eased scroll to an element's document position (shorter than default smooth). */
 export function scrollToElementFast(el: HTMLElement, durationMs = 380): void {
-  const target =
-    el.getBoundingClientRect().top + window.scrollY - parseFloat(getComputedStyle(el).scrollMarginTop || '0')
+  const scrollMarginTop = parseFloat(getComputedStyle(el).scrollMarginTop) || 0
+  const target = el.getBoundingClientRect().top + window.scrollY - scrollMarginTop
   const start = window.scrollY
   const distance = target - start
   if (Math.abs(distance) < 2) return
@@ -58,7 +58,7 @@ export function scrollToElementFast(el: HTMLElement, durationMs = 380): void {
   const step = (now: number) => {
     const elapsed = now - startTime
     const t = Math.min(1, elapsed / durationMs)
-    window.scrollTo(0, start + distance * easeOutCubic(t))
+    window.scrollTo({ top: start + distance * easeOutCubic(t), left: 0, behavior: 'instant' as ScrollBehavior })
     if (t < 1) requestAnimationFrame(step)
   }
   requestAnimationFrame(step)
