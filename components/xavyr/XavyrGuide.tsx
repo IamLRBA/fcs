@@ -7,13 +7,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Baby, MessageCircle, Send, X } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { XAVYR_INTRO } from '@/lib/xavyr/knowledge'
+import { pickIntroBubbleMessage } from '@/lib/xavyr/intro-bubble'
 import { SCROLL_SHOW_BACK_TO_TOP } from '@/lib/xavyr/floating-layout'
 import { RESIZE_CURSOR, useXavyrPanelSize, type ResizeEdge } from '@/lib/xavyr/use-xavyr-panel-size'
 import type { XavyrLink, XavyrMessage } from '@/lib/xavyr/types'
 
 const INTRO_DELAY_MS = 6500
 const INTRO_AUTO_DISMISS_MS = 4000
-const INTRO_MESSAGE = "Hi, I'm Xavyr. Let's chat if you need any assistance"
 
 const RESIZE_HANDLES: { edge: ResizeEdge; className: string }[] = [
   { edge: 'n', className: 'left-2 right-2 top-0 h-2 cursor-ns-resize' },
@@ -112,6 +112,7 @@ export default function XavyrGuide() {
 
   const [open, setOpen] = useState(false)
   const [introBubble, setIntroBubble] = useState(false)
+  const [introMessage, setIntroMessage] = useState('')
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [messages, setMessages] = useState<XavyrMessage[]>([])
@@ -206,6 +207,7 @@ export default function XavyrGuide() {
   useEffect(() => {
     if (isAdminRoute) return
     setIntroBubble(false)
+    setIntroMessage(pickIntroBubbleMessage(pathname ?? '/'))
     const timer = window.setTimeout(() => setIntroBubble(true), INTRO_DELAY_MS)
     return () => window.clearTimeout(timer)
   }, [isAdminRoute, pathname])
@@ -276,7 +278,7 @@ export default function XavyrGuide() {
                 strokeWidth={1.75}
                 aria-hidden
               />
-              <p className="min-w-0 flex-1">{INTRO_MESSAGE}</p>
+              <p className="min-w-0 flex-1">{introMessage}</p>
               <IntroDismissButton onDismiss={dismissIntro} />
             </div>
           </motion.div>
