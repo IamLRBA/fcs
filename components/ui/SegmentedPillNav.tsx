@@ -63,6 +63,7 @@ export default function SegmentedPillNav({
               onClick={() => {
                 if (!disabled) onSelect(item.id)
               }}
+              data-segment-id={item.id}
               className={`focus-ring-none relative z-10 !rounded-full border border-transparent px-1.5 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-colors duration-300 whitespace-nowrap truncate outline-none focus:outline-none focus-visible:ring-0 ring-0 max-w-full disabled:cursor-not-allowed ${
                 active
                   ? 'text-primary-800 dark:text-primary-100'
