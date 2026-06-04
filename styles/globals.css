@@ -301,6 +301,40 @@
       var(--xavyr-inner-radius);
   }
 
+  /* Shop category hero images: accentuated bottom-left corner (5× other corners) */
+  .shop-category-bl-accent.hero-glass-frame {
+    border-radius: var(--hero-frame-radius) var(--hero-frame-radius) var(--hero-frame-radius)
+      calc(var(--hero-frame-radius) * 5);
+  }
+
+  .shop-category-bl-accent.hero-glass-frame .hero-glass-frame-overlay {
+    border-radius: inherit;
+  }
+
+  .shop-category-bl-accent .glass-inner-panel {
+    --shop-accent-inner-radius: max(0.375rem, calc(var(--hero-frame-radius) - var(--hero-frame-padding)));
+    --shop-accent-inner-bl-radius: calc(var(--hero-frame-radius) * 5 - var(--hero-frame-padding));
+    border-radius: var(--shop-accent-inner-radius) var(--shop-accent-inner-radius)
+      var(--shop-accent-inner-radius) var(--shop-accent-inner-bl-radius);
+  }
+
+  /* Shop category hero images: accentuated bottom-right corner (5× other corners) */
+  .shop-category-br-accent.hero-glass-frame {
+    border-radius: var(--hero-frame-radius) var(--hero-frame-radius)
+      calc(var(--hero-frame-radius) * 5) var(--hero-frame-radius);
+  }
+
+  .shop-category-br-accent.hero-glass-frame .hero-glass-frame-overlay {
+    border-radius: inherit;
+  }
+
+  .shop-category-br-accent .glass-inner-panel {
+    --shop-accent-inner-radius: max(0.375rem, calc(var(--hero-frame-radius) - var(--hero-frame-padding)));
+    --shop-accent-inner-br-radius: calc(var(--hero-frame-radius) * 5 - var(--hero-frame-padding));
+    border-radius: var(--shop-accent-inner-radius) var(--shop-accent-inner-radius)
+      var(--shop-accent-inner-br-radius) var(--shop-accent-inner-radius);
+  }
+
   /* More transparent glass variant (mobile menu, desktop settings dropdown) */
   .hero-glass-more-transparent {
     background-color: rgb(255 255 255 / 0.02);
