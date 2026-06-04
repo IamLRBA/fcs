@@ -29,7 +29,7 @@ export default function ProductDescriptionDisclosure({
 
   return (
     <div
-      className={`w-full text-left border border-neutral-200/90 dark:border-neutral-600/50 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${bodyClassName}`}
+      className={`w-full text-left border border-neutral-200/90 dark:border-neutral-600/50 rounded-xl ${bodyClassName}`}
     >
       {/* pl-0 pr-0: align with unboxed headings/body in the same modal column */}
       <div className="flex w-full min-h-[2.5rem] items-center justify-start gap-1.5 py-2.5 pl-0 pr-0 sm:py-2.5">
