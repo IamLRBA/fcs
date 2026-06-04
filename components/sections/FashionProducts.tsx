@@ -354,7 +354,7 @@ export default function FashionProducts() {
                                         initial={{ y: 10, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{ delay: 0.15 }}
-                                        className="btn-unified inline-flex items-center justify-center text-center px-3 py-1 md:px-6 md:py-2 text-xs md:text-sm font-medium pointer-events-none"
+                                        className="btn-unified inline-flex items-center justify-center text-center px-3 py-1 md:px-6 md:py-2 text-xs md:text-sm font-medium pointer-events-none text-neutral-50"
                                       >
                                         View Collection
                                       </motion.div>
