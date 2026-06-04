@@ -263,6 +263,7 @@ export default function FashionProducts() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-8">
           {products.map((s, i) => { 
             const isRight = i % 2 === 1
+            const cornerAccent = i % 2 === 0 ? 'shop-category-br-accent' : 'shop-category-bl-accent'
             return (
               <motion.div
                 key={s.id}
@@ -279,10 +280,10 @@ export default function FashionProducts() {
                     <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300">{s.title}</h3>
                   </Link>
                   <Link href={`/products/${s.slug}`} className={`focus-ring-none block w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[300px] md:h-[300px] lg:w-[352px] lg:h-[352px] aspect-square flex-shrink-0 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:scale-[1.02] transition-all duration-300`}>
-                    <div className="hero-glass-frame relative w-full h-full backdrop-blur-md">
-                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-                    <div className="glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl w-full h-full flex items-center justify-center">
-                      <img src={s.image} alt={s.title} className="w-full h-full object-cover rounded-2xl group-hover:scale-110 transition-transform duration-300" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = 'none'; const f = (t.parentElement?.nextElementSibling as HTMLElement); if (f) f.style.display = 'flex' }} />
+                    <div className={`hero-glass-frame relative w-full h-full backdrop-blur-md ${cornerAccent}`}>
+                      <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                    <div className="glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl w-full h-full flex items-center justify-center">
+                      <img src={s.image} alt={s.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = 'none'; const f = (t.parentElement?.nextElementSibling as HTMLElement); if (f) f.style.display = 'flex' }} />
                     </div>
                     </div>
                   </Link>
