@@ -18,6 +18,7 @@ import SafeImage from '@/components/common/SafeImage'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
+import { useCategoryDeepLink } from '@/lib/catalog/use-category-deep-link'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 import { featuredProductCardLayout } from '@/lib/product-card-layout'
 
@@ -83,11 +84,13 @@ const ProductGridCard = memo(function ProductGridCard({
   index,
   onOpen,
   accentBottomLeft = true,
+  highlighted = false,
 }: {
   product: Product
   index: number
   onOpen: (p: Product) => void
   accentBottomLeft?: boolean
+  highlighted?: boolean
 }) {
   const multi = isMultiInventory(product.inventory_mode ?? 'unique')
   const cardLayout = featuredProductCardLayout(accentBottomLeft ? 'bottom-left' : 'none', {
@@ -116,7 +119,10 @@ const ProductGridCard = memo(function ProductGridCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group relative flex w-full flex-col transition-all duration-300 cursor-pointer"
+      data-product-id={product.id}
+      className={`group relative flex w-full flex-col transition-all duration-300 cursor-pointer rounded-lg ${
+        highlighted ? 'ring-2 ring-accent-500 shadow-lg shadow-accent-500/25' : ''
+      }`}
       onClick={() => onOpen(product)}
     >
       <div
@@ -199,10 +205,12 @@ function ProductSectionCards({
   section,
   visibleProducts,
   openProductModal,
+  highlightProductId,
 }: {
   section: string
   visibleProducts: Product[]
   openProductModal: (p: Product) => void
+  highlightProductId?: string | null
 }) {
   const innerRef = useRef<HTMLDivElement>(null)
   /** 'center' = few cards fit in row (center them); 'scroll' = horizontal strip */
@@ -256,6 +264,7 @@ function ProductSectionCards({
       : 'contents'
 
   return (
+    <div data-section={section}>
     <HorizontalScrollAffordance
       showEdgeFades={false}
       syncScrollEdgeLines
@@ -278,12 +287,14 @@ function ProductSectionCards({
                 index={index}
                 onOpen={openProductModal}
                 accentBottomLeft
+                highlighted={highlightProductId === product.id}
               />
             </div>
           ))}
         </div>
       </div>
     </HorizontalScrollAffordance>
+    </div>
   )
 }
 
@@ -291,12 +302,21 @@ export default function ProductCategoryPage() {
   const params = useParams()
   const category = params.category as string
   
-  const [selectedSection, setSelectedSection] = useState<string | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [catalog, setCatalog] = useState<any>({ products: {} })
   const [loading, setLoading] = useState(true)
   const [showBackButton, setShowBackButton] = useState(true)
   const quickViewFetchGen = useRef(0)
+
+  const categoryData = catalog.products?.[category]
+  const sectionKeys = categoryData ? Object.keys(categoryData.subcategories) : []
+
+  const { selectedSection, highlightProductId, scrollToSection } = useCategoryDeepLink({
+    loading,
+    categoryKey: category,
+    sectionKeys,
+    productScrollDelay: 320,
+  })
 
   useEffect(() => {
     let active = true
@@ -320,67 +340,6 @@ export default function ProductCategoryPage() {
       active = false
     }
   }, [category])
-
-  const categoryData = catalog.products?.[category]
-
-  useEffect(() => {
-    setSelectedSection(null)
-  }, [category])
-
-  useEffect(() => {
-    if (!categoryData) return
-    const keys = Object.keys(categoryData.subcategories)
-    if (keys.length === 0) return
-
-    const hash =
-      typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : ''
-
-    if (hash && keys.includes(hash)) {
-      setSelectedSection(hash)
-    } else {
-      setSelectedSection(keys[0])
-    }
-  }, [category, categoryData])
-
-  /** Deep-link from home/shop (#subcategory) — scroll after sections exist (client nav may not trigger native hash scroll). */
-  useEffect(() => {
-    if (loading || !categoryData) return
-    const keys = Object.keys(categoryData.subcategories)
-    const hash = typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : ''
-    if (!hash || !keys.includes(hash)) return
-
-    let cancelled = false
-    const run = () => {
-      if (cancelled) return
-      const el = document.getElementById(hash)
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-    const raf1 = requestAnimationFrame(() => {
-      requestAnimationFrame(run)
-    })
-    const t = window.setTimeout(run, 400)
-    return () => {
-      cancelled = true
-      cancelAnimationFrame(raf1)
-      window.clearTimeout(t)
-    }
-  }, [loading, categoryData])
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !categoryData) return
-    const keys = Object.keys(categoryData.subcategories)
-    const onHash = () => {
-      const hash = window.location.hash.replace(/^#/, '')
-      if (hash && keys.includes(hash)) {
-        setSelectedSection(hash)
-        requestAnimationFrame(() => {
-          document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        })
-      }
-    }
-    window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
-  }, [categoryData])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -412,17 +371,6 @@ export default function ProductCategoryPage() {
 
   const closeProductModal = useCallback(() => {
     setSelectedProduct(null)
-  }, [])
-
-  const scrollToSection = useCallback((section: string) => {
-    setSelectedSection(section)
-    if (typeof window !== 'undefined') {
-      window.history.replaceState(null, '', `#${section}`)
-    }
-    const element = document.getElementById(section)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
   }, [])
 
   if (loading) {
@@ -745,13 +693,13 @@ export default function ProductCategoryPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="w-full max-w-4xl mx-auto px-1"
+            className="w-full max-w-4xl mx-auto px-1 overflow-x-auto scrollbar-hide"
           >
             <SegmentedPillNav
               items={sectionNavItems}
               value={selectedSection ?? sections[0] ?? null}
               onSelect={(id) => scrollToSection(id)}
-              className="focus-ring-none"
+              className="focus-ring-none min-w-max"
             />
           </motion.div>
         </div>
@@ -825,6 +773,7 @@ export default function ProductCategoryPage() {
                 section={section}
                 visibleProducts={visibleProducts}
                 openProductModal={openProductModal}
+                highlightProductId={highlightProductId}
               />
             )}
           </motion.section>

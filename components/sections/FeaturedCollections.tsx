@@ -13,6 +13,7 @@ import { isMultiInventory } from '@/lib/inventory'
 import type { InventoryModeClient } from '@/lib/catalog/types'
 import InventoryChips from '@/components/product/InventoryChips'
 import { featuredProductCardLayout } from '@/lib/product-card-layout'
+import { buildProductCategoryHref } from '@/lib/catalog/product-deep-link'
 
 interface Product {
   id: string
@@ -80,6 +81,10 @@ function FeaturedCollectionsRow({
           const multi = isMultiInventory(product.inventory_mode ?? 'unique')
           const isInCart = !multi && (addedToCart.has(product.id) || CartManager.isProductInCart(product.id))
           const hasDiscount = Boolean(product.original_price && product.original_price > product.price_ugx)
+          const productPageHref = buildProductCategoryHref(categorySlug, {
+            section: product.section,
+            productId: product.id,
+          })
 
           return (
             <motion.div
@@ -97,7 +102,7 @@ function FeaturedCollectionsRow({
                 <div
                   className={`glass-inner-panel flex h-full min-h-0 flex-1 flex-col gap-1.5 overflow-hidden border border-primary-500/30 p-1.5 sm:gap-1.5 sm:p-2${cardLayout.innerPanelRoundedClass}`}
                 >
-                  <Link href={`/products/${categorySlug}`} className="focus-ring-none block w-full shrink-0">
+                  <Link href={productPageHref} className="focus-ring-none block w-full shrink-0">
                     <div className="glass-inner-well relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg">
                       <SafeImage
                         src={product.images[0]}
@@ -124,7 +129,7 @@ function FeaturedCollectionsRow({
                   </Link>
 
                   <div className={cardLayout.detailsWrapClass}>
-                    <Link href={`/products/${categorySlug}`} className="focus-ring-none">
+                    <Link href={productPageHref} className="focus-ring-none">
                       <h3 className="mb-px line-clamp-2 text-[11px] font-bold leading-snug text-neutral-850 dark:text-primary-50 sm:text-xs">
                         {product.name}
                       </h3>
@@ -151,7 +156,7 @@ function FeaturedCollectionsRow({
                     <div className={cardLayout.actionWrapClass}>
                       {multi ? (
                         <Button
-                          href={`/products/${categorySlug}`}
+                          href={productPageHref}
                           variant="default"
                           size="sm"
                           className={cardLayout.multiBtnClass}
@@ -199,7 +204,7 @@ function FeaturedCollectionsRow({
                   </div>
                 </div>
                 <Button
-                  href={`/products/${categorySlug}`}
+                  href={productPageHref}
                   variant="circle"
                   size="sm"
                   className={cardLayout.collectionLinkBtnClass}
