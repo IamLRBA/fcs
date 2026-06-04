@@ -169,7 +169,7 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
 export default function Stats() {
   const { ref, style, scrollYProgress } = useScrollScale({ variant: 'centerPeak', intensity: 'subtle' })
   const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
-  const backgroundScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
+  const backgroundScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.97, 1, 0.97])
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -50])
 
   const [deliveredLineItemsQty, setDeliveredLineItemsQty] = useState<number | null>(null)
