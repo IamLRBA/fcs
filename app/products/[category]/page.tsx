@@ -151,18 +151,18 @@ const ProductGridCard = memo(function ProductGridCard({
           </div>
 
           <div className={cardLayout.detailsWrapClass}>
-            <div className="flex w-full items-center gap-1.5">
+            <div className="flex w-full items-center gap-1 sm:gap-1.5">
               <Button
                 variant="default"
                 size="sm"
-                className="shrink-0 justify-center gap-1 px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:py-1 sm:text-xs"
+                className="shrink-0 justify-center gap-0.5 px-1.5 py-px text-[9px] font-medium leading-tight sm:gap-1 sm:px-2 sm:py-0.5 sm:text-[10px] md:px-2.5 md:py-1 md:text-[11px] lg:px-2.5 lg:py-1 lg:text-xs"
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpen(product)
                 }}
                 aria-label={`View ${product.name}`}
               >
-                <ShoppingCart className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                <ShoppingCart className="h-2.5 w-2.5 shrink-0 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 lg:h-4 lg:w-4" />
                 <span>View</span>
               </Button>
               <p className="min-w-0 flex-1 line-clamp-1 text-right text-[10px] leading-tight text-primary-700 dark:text-primary-400 sm:text-xs">
