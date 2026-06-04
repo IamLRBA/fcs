@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 const GOAT_LISTS: { title: string; image: string; items: string[] }[] = [
   {
@@ -134,7 +135,7 @@ export default function CEOTopGoatLists() {
   }, [openId])
 
   return (
-    <section className="py-16 md:py-24 px-4 relative">
+    <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-16 md:py-24 px-4 relative">
       <div className="max-w-4xl lg:max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -266,6 +267,6 @@ export default function CEOTopGoatLists() {
           })}
         </ul>
       </div>
-    </section>
+    </ScrollScale>
   )
 }

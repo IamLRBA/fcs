@@ -2,6 +2,7 @@
 
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState, useEffect, type ReactNode } from 'react'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 export const education = [
   {
@@ -149,12 +150,13 @@ function TimelineCard({
 }
 
 export default function EducationalJourney() {
-  const containerRef = useRef<HTMLDivElement>(null)
   const reducedMotion = useReducedMotion()
 
   return (
-    <section
-      ref={containerRef}
+    <ScrollScale
+      as="section"
+      variant="centerPeak"
+      intensity="normal"
       className="pt-20 pb-10 px-4 md:px-8 lg:px-16 bg-transparent md:pb-12"
       aria-label="Educational journey timeline"
     >
@@ -276,6 +278,6 @@ export default function EducationalJourney() {
           </div>
         </div>
       </div>
-    </section>
+    </ScrollScale>
   )
 }

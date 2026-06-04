@@ -6,6 +6,7 @@ import { FileText, CheckCircle, AlertCircle, Scale, Users, Shield } from 'lucide
 import Button from '@/components/ui/Button'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
+import ScrollScale from '@/components/motion/ScrollScale'
 
 function renderWithMysticalPieces(content: ReactNode, keyPrefix = 'mysticalpieces'): ReactNode {
   // If content is already a React element, return it as-is
@@ -85,7 +86,7 @@ export default function TermsConditions() {
 
   return (
     <div className="min-h-screen bg-unified">
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+      <ScrollScale as="main" variant="centerPeak" intensity="subtle" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -206,7 +207,7 @@ export default function TermsConditions() {
             Return to Homepage
           </Button>
         </motion.div>
-      </main>
+      </ScrollScale>
     </div>
   )
 }

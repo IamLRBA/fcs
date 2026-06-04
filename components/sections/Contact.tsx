@@ -2,6 +2,7 @@
 
 import { useState, type ComponentType } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import ScrollScale from '@/components/motion/ScrollScale'
 import { Mail, Phone, MapPin, Copy, Check } from 'lucide-react'
 import { IconBrandWhatsapp } from '@tabler/icons-react'
 import Button from '@/components/ui/Button'
@@ -96,7 +97,7 @@ export default function Contact() {
     'input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300'
 
   return (
-    <section id="contact" className="section relative overflow-hidden">
+    <ScrollScale as="section" id="contact" variant="centerPeak" intensity="normal" className="section relative overflow-hidden">
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="section-title">
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span></h2>
@@ -236,7 +237,7 @@ export default function Contact() {
           </div>
         </motion.div>
       </div>
-    </section>
+    </ScrollScale>
   )
 }
 

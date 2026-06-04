@@ -8,6 +8,7 @@ import { OrderManager, type Order } from '@/lib/cart'
 import { downloadReceipt, generateReceiptImage } from '@/lib/utils/receipt-generator'
 import { EmailTemplates } from '@/lib/emails/templates'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import ScrollScale from '@/components/motion/ScrollScale'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
@@ -122,7 +123,7 @@ export default function OrderConfirmationPage() {
 
   return (
     <div className="min-h-screen bg-unified py-20 px-4 print:bg-white print:py-0">
-      <div className="max-w-4xl mx-auto">
+      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-4xl mx-auto">
         {/* Success Icon */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
@@ -366,7 +367,7 @@ export default function OrderConfirmationPage() {
             <span>Go Home</span>
           </Button>
         </motion.div>
-      </div>
+      </ScrollScale>
 
       {/* Receipt Styles */}
       <style jsx global>{`

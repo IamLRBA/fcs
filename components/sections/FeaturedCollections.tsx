@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import ScrollScale from '@/components/motion/ScrollScale'
 import Link from 'next/link'
 import { ShoppingCart, Sparkles, CircleSlash, ExternalLink } from 'lucide-react'
 import SafeImage from '@/components/common/SafeImage'
@@ -309,7 +310,7 @@ export default function FeaturedCollections() {
   const hasFeatured = featuredRows.some((row) => row.length > 0)
 
   return (
-    <section className="relative overflow-hidden px-4 pt-20 pb-0 sm:pb-0">
+    <ScrollScale as="section" variant="centerPeak" intensity="normal" className="relative overflow-hidden px-4 pt-20 pb-0 sm:pb-0">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -367,7 +368,7 @@ export default function FeaturedCollections() {
           </motion.div>
         )}
       </div>
-    </section>
+    </ScrollScale>
   )
 }
 

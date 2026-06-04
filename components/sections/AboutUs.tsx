@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useState } from 'react'
+import { motion, useTransform } from 'framer-motion'
+import { useScrollScale } from '@/hooks/useScrollScale'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import Image from 'next/image'
@@ -95,17 +96,11 @@ const teamMembers: Array<{
 
 export default function AboutUs() {
   const [hoveredMember, setHoveredMember] = useState<number | null>(null)
-  const containerRef = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  })
-
+  const { ref, style, scrollYProgress } = useScrollScale({ variant: 'centerPeak', intensity: 'emphasis' })
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -50])
-  const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
 
   return (
-    <section ref={containerRef} className="section bg-unified">
+    <motion.section ref={ref} style={style} className="section bg-unified">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
@@ -114,7 +109,7 @@ export default function AboutUs() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="section-title"
-          style={{ y: titleY, scale: titleScale }}
+          style={{ y: titleY }}
         >
           <h2 className="text-5xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
           ᗩᗷOᑌT <span className="text-accent-600 dark:text-accent-100">Us</span>
@@ -519,6 +514,6 @@ export default function AboutUs() {
           </div>
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   )
 }

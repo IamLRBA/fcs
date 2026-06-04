@@ -232,7 +232,7 @@ export default function FashionVideoSection() {
   }
 
   return (
-    <section className="py-20 px-4">
+    <>
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -588,6 +588,6 @@ export default function FashionVideoSection() {
           border: none;
         }
       `}</style>
-    </section>
+    </>
   )
 }

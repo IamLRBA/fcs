@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import ScrollScale from '@/components/motion/ScrollScale'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
@@ -291,7 +292,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="section relative overflow-hidden">
+    <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="section relative overflow-hidden">
       <div className="container-custom relative z-10">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-16 text-center">TEᔕTIᗰOᑎIᗩᒪᔕ</motion.h2>
         <div className="slider-container relative" ref={containerRef}>
@@ -447,6 +448,6 @@ export default function Testimonials() {
           )}
         </AnimatePresence>
       </div>
-    </section>
+    </ScrollScale>
   )
 }
