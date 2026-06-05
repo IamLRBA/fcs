@@ -222,8 +222,9 @@ export default function AccountPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="container-custom mt-12 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <div className="container-custom mt-12 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
 
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle">
         <div className="hero-glass-frame relative backdrop-blur-lg w-full">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
         <div className="glass-inner-panel relative z-10 overflow-hidden rounded-2xl border border-neutral-200 shadow-xl dark:border-neutral-700">
@@ -556,6 +557,7 @@ export default function AccountPage() {
           </div>
         </div>
         </div>
+        </ScrollScale>
 
         {/* Edit Profile Picture Modal */}
         <AnimatePresence>
@@ -631,7 +633,7 @@ export default function AccountPage() {
           variant={feedback?.variant ?? 'success'}
           onClose={() => setFeedback(null)}
         />
-      </ScrollScale>
+      </div>
     </div>
   )
 }

@@ -123,7 +123,8 @@ export default function OrderConfirmationPage() {
 
   return (
     <div className="min-h-screen bg-unified py-20 px-4 print:bg-white print:py-0">
-      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto">
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-12 print:mb-8">
         {/* Success Icon */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
@@ -155,7 +156,9 @@ export default function OrderConfirmationPage() {
             </p>
           )}
         </motion.div>
+        </ScrollScale>
 
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle">
         {/* Order Receipt - semi-transparent glass container for details */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -367,7 +370,8 @@ export default function OrderConfirmationPage() {
             <span>Go Home</span>
           </Button>
         </motion.div>
-      </ScrollScale>
+        </ScrollScale>
+      </div>
 
       {/* Receipt Styles */}
       <style jsx global>{`

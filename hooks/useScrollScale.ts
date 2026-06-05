@@ -10,7 +10,7 @@ import {
 } from 'framer-motion'
 import {
   SCROLL_SCALE_OFFSETS,
-  SCROLL_SCALE_EDGE_MIN,
+  SCROLL_SCALE_PEAK,
   HERO_EXIT_MIN_SCALE,
   HERO_EXIT_Y,
   type ScrollScaleVariant,
@@ -65,12 +65,12 @@ export function useScrollScale(options: UseScrollScaleOptions = {}): ScrollScale
     offset: resolvedOffset as ['start end', 'end start'],
   })
 
-  const edgeMin = SCROLL_SCALE_EDGE_MIN[intensity]
+  const peak = SCROLL_SCALE_PEAK[intensity]
 
   const scale = useTransform(
     scrollYProgress,
     variant === 'centerPeak' ? [0, 0.5, 1] : [0, 1],
-    variant === 'centerPeak' ? [edgeMin, 1, edgeMin] : [1, heroMinScale]
+    variant === 'centerPeak' ? [1, peak, 1] : [1, heroMinScale]
   )
 
   const y = useTransform(scrollYProgress, [0, 1], [0, heroExitY])

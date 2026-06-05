@@ -86,11 +86,11 @@ export default function CartPage() {
           <span className="text-sm font-medium">Continue Shopping</span>
         </Link>
       </motion.div>
-      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8 mt-10 sm:mt-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 mt-10 sm:mt-12"
         >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0 flex-1">
@@ -115,7 +115,9 @@ export default function CartPage() {
             )}
           </div>
         </motion.div>
+        </ScrollScale>
 
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle">
         {cart.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -309,7 +311,8 @@ export default function CartPage() {
             </div>
           </div>
         )}
-      </ScrollScale>
+        </ScrollScale>
+      </div>
     </div>
   )
 }

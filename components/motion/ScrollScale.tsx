@@ -10,21 +10,14 @@ import { useScrollScale, type UseScrollScaleOptions } from '@/hooks/useScrollSca
 
 type MotionTag = 'section' | 'div' | 'article' | 'main'
 
-const motionComponents = {
-  section: motion.section,
-  div: motion.div,
-  article: motion.article,
-  main: motion.main,
-} as const
-
 export type ScrollScaleProps = UseScrollScaleOptions & {
   as?: MotionTag
   children: ReactNode
   className?: string
   id?: string
   'aria-label'?: string
-  /** Apply scroll scale to an inner wrapper instead of the root element (hero content). */
-  scaleChildren?: boolean
+  /** Class on the inner scaled wrapper */
+  innerClassName?: string
 }
 
 function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
@@ -37,11 +30,16 @@ function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
   }
 }
 
+/**
+ * Per-section scroll animation (Home hero + Enter Shop style).
+ * The outer element tracks scroll; only the inner wrapper is transformed.
+ */
 function ScrollScaleInner(
   {
-    as = 'div',
+    as = 'section',
     children,
     className,
+    innerClassName,
     id,
     'aria-label': ariaLabel,
     variant,
@@ -50,7 +48,6 @@ function ScrollScaleInner(
     disableOnMobile,
     heroMinScale,
     heroExitY,
-    scaleChildren = false,
   }: ScrollScaleProps,
   forwardedRef: Ref<HTMLElement>
 ) {
@@ -63,32 +60,19 @@ function ScrollScaleInner(
     heroExitY,
   })
 
-  const MotionComponent = motionComponents[as]
-
-  if (scaleChildren) {
-    const Outer = as
-    return (
-      <Outer
-        ref={mergeRefs(ref, forwardedRef)}
-        className={className}
-        id={id}
-        aria-label={ariaLabel}
-      >
-        <motion.div style={style}>{children}</motion.div>
-      </Outer>
-    )
-  }
+  const Outer = as
 
   return (
-    <MotionComponent
+    <Outer
       ref={mergeRefs(ref, forwardedRef)}
       className={className}
-      style={style}
       id={id}
       aria-label={ariaLabel}
     >
-      {children}
-    </MotionComponent>
+      <motion.div style={style} className={innerClassName}>
+        {children}
+      </motion.div>
+    </Outer>
   )
 }
 
