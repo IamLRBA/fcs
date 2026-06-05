@@ -4,6 +4,7 @@ import { useRef, useEffect, useState, type RefObject } from 'react'
 import {
   useScroll,
   useTransform,
+  useSpring,
   useReducedMotion,
   type MotionValue,
   type MotionStyle,
@@ -11,18 +12,24 @@ import {
 import {
   SCROLL_SCALE_OFFSETS,
   SCROLL_SCALE_PEAK,
+  SCROLL_SCALE_REST_MIN,
   HERO_EXIT_MIN_SCALE,
   HERO_EXIT_Y,
   type ScrollScaleVariant,
   type ScrollScaleIntensity,
+  type ScrollScaleMode,
 } from '@/lib/motion/scroll-scale'
 
 export interface UseScrollScaleOptions {
   variant?: ScrollScaleVariant
   intensity?: ScrollScaleIntensity
+  /** peak: 1 → peak → 1; rest: min → 1 → min (never larger than natural layout) */
+  scaleMode?: ScrollScaleMode
   offset?: readonly [string, string]
   /** Hero exit: disable scroll-linked motion below md */
   disableOnMobile?: boolean
+  /** Spring-smooth scroll progress for less choppy scale updates */
+  smooth?: boolean
   heroMinScale?: number
   heroExitY?: number
 }
@@ -38,8 +45,10 @@ export function useScrollScale(options: UseScrollScaleOptions = {}): ScrollScale
   const {
     variant = 'centerPeak',
     intensity = 'normal',
+    scaleMode = 'peak',
     offset,
     disableOnMobile = false,
+    smooth = false,
     heroMinScale = HERO_EXIT_MIN_SCALE,
     heroExitY = HERO_EXIT_Y,
   } = options
@@ -65,15 +74,26 @@ export function useScrollScale(options: UseScrollScaleOptions = {}): ScrollScale
     offset: resolvedOffset as ['start end', 'end start'],
   })
 
-  const peak = SCROLL_SCALE_PEAK[intensity]
+  const springProgress = useSpring(scrollYProgress, {
+    stiffness: smooth ? 90 : 1000,
+    damping: smooth ? 28 : 100,
+    restDelta: 0.0005,
+  })
+  const progress = smooth ? springProgress : scrollYProgress
 
-  const scale = useTransform(
-    scrollYProgress,
+  const peak = SCROLL_SCALE_PEAK[intensity]
+  const restMin = SCROLL_SCALE_REST_MIN[intensity]
+
+  const peakScale = useTransform(
+    progress,
     variant === 'centerPeak' ? [0, 0.5, 1] : [0, 1],
     variant === 'centerPeak' ? [1, peak, 1] : [1, heroMinScale]
   )
+  const restScale = useTransform(progress, [0, 0.5, 1], [restMin, 1, restMin])
+  const scale =
+    variant === 'centerPeak' && scaleMode === 'rest' ? restScale : peakScale
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, heroExitY])
+  const y = useTransform(progress, [0, 1], [0, heroExitY])
 
   const style: MotionStyle | undefined = enabled
     ? variant === 'heroExit'

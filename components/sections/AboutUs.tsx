@@ -106,16 +106,16 @@ export default function AboutUs() {
   const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
 
   return (
-    <>
-      <ScrollScale ref={headerRef} as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
-        <div className="container-custom">
+    <section ref={headerRef} className="section bg-unified">
+      <div className="container-custom">
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="section-title"
+          className="section-title !mb-6"
           style={{ y: titleY, scale: titleScale }}
         >
           <h2 className="text-5xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
@@ -125,28 +125,22 @@ export default function AboutUs() {
             We discover hidden treasures in fashion aimed at unveiling unique pieces that reveal your authentic style.
           </p>
         </motion.div>
-        </div>
       </ScrollScale>
 
-      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
-        <div className="container-custom">
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Animated Image Banner */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative w-full py-8 md:py-12 overflow-hidden mb-16"
+          className="relative w-full pt-0 pb-8 md:pb-12 overflow-hidden mb-16"
         >
-          <div className="container-custom relative z-10">
             <AnimatedImageBannerAboutUs />
-          </div>
         </motion.div>
-        </div>
       </ScrollScale>
 
-      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
-        <div className="container-custom">
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Company Description */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -187,11 +181,9 @@ export default function AboutUs() {
             </div>
           </div>
         </motion.div>
-        </div>
       </ScrollScale>
 
-      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
-        <div className="container-custom">
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Meet the team — CEO + team (single section title) */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -349,11 +341,9 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
-        </div>
       </ScrollScale>
 
-      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
-        <div className="container-custom">
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Values Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -421,11 +411,9 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
-        </div>
       </ScrollScale>
 
-      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
-        <div className="container-custom">
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Missions Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -508,11 +496,9 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
-        </div>
       </ScrollScale>
 
-      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
-        <div className="container-custom">
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Mission & Vision Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -544,8 +530,8 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
-        </div>
       </ScrollScale>
-    </>
+      </div>
+    </section>
   )
 }
