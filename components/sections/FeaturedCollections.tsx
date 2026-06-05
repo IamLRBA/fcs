@@ -356,7 +356,12 @@ export default function FeaturedCollections() {
               key={rowIndex}
               as="div"
               variant="centerPeak"
-              intensity="normal"
+              scaleMode="rest"
+              intensity="subtle"
+              smooth
+              contain={false}
+              edgeToEdge
+              offset={['start 0.92', 'end 0.08']}
               className="relative"
             >
               <FeaturedCollectionsRow

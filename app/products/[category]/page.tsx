@@ -629,7 +629,15 @@ export default function ProductCategoryPage() {
       </motion.div>
 
       {/* Hero Section */}
-      <ScrollScale as="section" variant="centerPeak" intensity="emphasis" className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4 overflow-hidden">
+      <ScrollScale
+        as="section"
+        variant="centerPeak"
+        scaleMode="rest"
+        intensity="emphasis"
+        smooth
+        contain={false}
+        className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4"
+      >
         <div className="relative max-w-6xl mx-auto">
           {/* Main Product Image and Title */}
           <motion.div
@@ -716,7 +724,10 @@ export default function ProductCategoryPage() {
             key={section}
             id={section}
             variant="centerPeak"
+            scaleMode="rest"
             intensity="subtle"
+            smooth
+            contain={false}
             className="mb-32 scroll-mt-24 md:scroll-mt-28"
           >
             {/* Subcategory Image */}

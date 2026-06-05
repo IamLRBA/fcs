@@ -7,6 +7,7 @@ import React, {
 } from 'react'
 import { motion } from 'framer-motion'
 import { useScrollScale, type UseScrollScaleOptions } from '@/hooks/useScrollScale'
+import type { ScrollScaleMode } from '@/lib/motion/scroll-scale'
 
 type MotionTag = 'section' | 'div' | 'article' | 'main'
 
@@ -22,6 +23,8 @@ export type ScrollScaleProps = UseScrollScaleOptions & {
   contain?: boolean
   /** Allow scaled content to extend toward viewport edges (e.g. testimonials) */
   edgeToEdge?: boolean
+  scaleMode?: ScrollScaleMode
+  smooth?: boolean
 }
 
 function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
@@ -52,6 +55,8 @@ function ScrollScaleInner(
     disableOnMobile,
     heroMinScale,
     heroExitY,
+    scaleMode,
+    smooth,
     contain = true,
     edgeToEdge = false,
   }: ScrollScaleProps,
@@ -60,14 +65,16 @@ function ScrollScaleInner(
   const { ref, style } = useScrollScale({
     variant,
     intensity,
+    scaleMode,
     offset,
     disableOnMobile,
+    smooth,
     heroMinScale,
     heroExitY,
   })
 
   const Outer = as
-  const shouldContain = contain && !edgeToEdge
+  const shouldContain = contain && !edgeToEdge && scaleMode !== 'rest'
   const outerClassName = [className, shouldContain ? 'overflow-hidden' : null].filter(Boolean).join(' ')
   const scaledClassName = [
     innerClassName,

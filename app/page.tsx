@@ -180,7 +180,14 @@ export default function Home() {
 
                   <AnimatePresence>
                     {showPortals && (
-                      <ScrollScale as="div" variant="centerPeak" intensity="emphasis">
+                      <ScrollScale
+                        as="div"
+                        variant="centerPeak"
+                        scaleMode="rest"
+                        intensity="emphasis"
+                        smooth
+                        contain={false}
+                      >
                         <PortalNavigation />
                       </ScrollScale>
                     )}
