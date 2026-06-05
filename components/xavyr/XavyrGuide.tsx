@@ -14,6 +14,8 @@ import type { XavyrLink, XavyrMessage } from '@/lib/xavyr/types'
 
 const INTRO_DELAY_MS = 6500
 const INTRO_AUTO_DISMISS_MS = 4000
+const XAVYR_PAGE_VISIT_KEY = 'xavyr-page-visits'
+const XAVYR_INTRO_EVERY_N_PAGES = 3
 
 const RESIZE_HANDLES: { edge: ResizeEdge; className: string }[] = [
   { edge: 'n', className: 'left-2 right-2 top-0 h-2 cursor-ns-resize' },
@@ -207,6 +209,17 @@ export default function XavyrGuide() {
   useEffect(() => {
     if (isAdminRoute) return
     setIntroBubble(false)
+
+    let visitCount = 0
+    try {
+      visitCount = Number.parseInt(sessionStorage.getItem(XAVYR_PAGE_VISIT_KEY) ?? '0', 10) + 1
+      sessionStorage.setItem(XAVYR_PAGE_VISIT_KEY, String(visitCount))
+    } catch {
+      visitCount = 1
+    }
+
+    if (visitCount % XAVYR_INTRO_EVERY_N_PAGES !== 0) return
+
     setIntroMessage(pickIntroBubbleMessage(pathname ?? '/'))
     const timer = window.setTimeout(() => setIntroBubble(true), INTRO_DELAY_MS)
     return () => window.clearTimeout(timer)

@@ -380,7 +380,7 @@ export default function ProductCategoryPage() {
         <section className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4">
           <div className="relative max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-6">
-              <div className="hero-glass-frame hero-glass-frame-compact category-hero-br-accent relative flex-shrink-0 backdrop-blur-md">
+              <div className="hero-glass-frame hero-glass-frame-compact category-hero-bl-accent relative flex-shrink-0 backdrop-blur-md">
                 <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
                 <div className="glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden">
                   <div className="skeleton w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40" />
@@ -639,7 +639,7 @@ export default function ProductCategoryPage() {
             className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-1 md:mb-6"
           >
             {/* Main Product Image */}
-            <div className="hero-glass-frame hero-glass-frame-compact category-hero-br-accent relative flex-shrink-0 backdrop-blur-md">
+            <div className="hero-glass-frame hero-glass-frame-compact category-hero-bl-accent relative flex-shrink-0 backdrop-blur-md">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
               <div className="glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 overflow-hidden shrink-0 mx-auto">

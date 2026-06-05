@@ -80,7 +80,6 @@ export default function Home() {
                 <ScrollScale
                   as="div"
                   variant="heroExit"
-                  disableOnMobile
                   className="relative z-10 text-center w-full"
                 >
                   <motion.div 
@@ -193,7 +192,7 @@ export default function Home() {
               <Stats />
 
               {/* Testimonials Section */}
-              <ScrollScale as="div" variant="centerPeak" intensity="subtle">
+              <ScrollScale as="div" variant="centerPeak" intensity="subtle" edgeToEdge>
                 <Testimonials />
               </ScrollScale>
 

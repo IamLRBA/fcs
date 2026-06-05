@@ -51,7 +51,12 @@ const fashionVideos = [
   }
 ]
 
-export default function FashionVideoSection() {
+type FashionVideoSectionProps = {
+  /** When true, render only the player + thumbnails (parent supplies title and glass frame). */
+  embedded?: boolean
+}
+
+export default function FashionVideoSection({ embedded = false }: FashionVideoSectionProps) {
   const [selectedVideo, setSelectedVideo] = useState(fashionVideos[0])
   /** No network load until user presses play */
   const [mediaSrc, setMediaSrc] = useState<string | null>(null)
@@ -231,22 +236,8 @@ export default function FashionVideoSection() {
     }
   }
 
-  return (
+  const playerBlock = (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        viewport={{ once: true }}
-        className="max-w-7xl mx-auto"
-      >
-        <h2 className="text-4xl md:text-4xl font-bold text-center mb-16">
-        <span className="text-primary-500">↻ ◁ |</span><span className="text-neutral-700 dark:text-primary-300">| ▷ ↺</span>
-        </h2>
-        
-        <div className="hero-glass-frame relative backdrop-blur-sm">
-          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="glass-inner-panel rounded-2xl border border-primary-200/40 p-4 shadow-lg dark:border-white/15 sm:p-6 md:p-8">
           <div 
             ref={containerRef}
             className="relative aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden bg-black"
@@ -565,6 +556,53 @@ export default function FashionVideoSection() {
               </div>
             </HorizontalScrollAffordance>
           </div>
+    </>
+  )
+
+  if (embedded) {
+    return (
+      <>
+        {playerBlock}
+        <style jsx>{`
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: var(--color-primary-300);
+          cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: var(--color-primary-300);
+          cursor: pointer;
+          border: none;
+        }
+      `}</style>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: true }}
+        className="max-w-6xl mx-auto"
+      >
+        <h2 className="text-4xl md:text-4xl font-bold text-center mb-16">
+        <span className="text-primary-500">↻ ◁ |</span><span className="text-neutral-700 dark:text-primary-300">| ▷ ↺</span>
+        </h2>
+        
+        <div className="hero-glass-frame relative backdrop-blur-sm">
+          <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+        <div className="glass-inner-panel rounded-2xl border border-primary-200/40 p-4 shadow-lg dark:border-white/15 sm:p-6 md:p-8">
+          {playerBlock}
         </div>
         </div>
       </motion.div>

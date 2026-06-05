@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import ScrollScale from '@/components/motion/ScrollScale'
 import { 
   Users, 
   Award, 
@@ -197,7 +198,7 @@ export default function Stats() {
   }, [deliveredLineItemsQty])
 
   return (
-    <section ref={containerRef} className="section relative overflow-hidden">
+    <ScrollScale ref={containerRef} as="section" variant="centerPeak" intensity="normal" className="section relative">
       <div className="container-custom relative z-10">
         <motion.div style={{ y: titleY, scale: titleScale }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
           <div className="hero-glass-frame relative inline-flex flex-shrink-0 backdrop-blur-lg mx-auto mb-6">
@@ -226,7 +227,7 @@ export default function Stats() {
         </motion.div>
         <Companies />
       </div>
-    </section>
+    </ScrollScale>
   )
 }
 

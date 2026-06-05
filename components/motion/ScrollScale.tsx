@@ -18,6 +18,10 @@ export type ScrollScaleProps = UseScrollScaleOptions & {
   'aria-label'?: string
   /** Class on the inner scaled wrapper */
   innerClassName?: string
+  /** Clip scale overflow and keep content within max-w-6xl margins (default true) */
+  contain?: boolean
+  /** Allow scaled content to extend toward viewport edges (e.g. testimonials) */
+  edgeToEdge?: boolean
 }
 
 function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
@@ -48,6 +52,8 @@ function ScrollScaleInner(
     disableOnMobile,
     heroMinScale,
     heroExitY,
+    contain = true,
+    edgeToEdge = false,
   }: ScrollScaleProps,
   forwardedRef: Ref<HTMLElement>
 ) {
@@ -61,15 +67,23 @@ function ScrollScaleInner(
   })
 
   const Outer = as
+  const shouldContain = contain && !edgeToEdge
+  const outerClassName = [className, shouldContain ? 'overflow-hidden' : null].filter(Boolean).join(' ')
+  const scaledClassName = [
+    innerClassName,
+    shouldContain ? 'w-full max-w-6xl mx-auto' : 'w-full',
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <Outer
       ref={mergeRefs(ref, forwardedRef)}
-      className={className}
+      className={outerClassName || undefined}
       id={id}
       aria-label={ariaLabel}
     >
-      <motion.div style={style} className={innerClassName}>
+      <motion.div style={style} className={scaledClassName || undefined}>
         {children}
       </motion.div>
     </Outer>
