@@ -7,11 +7,11 @@ export const SCROLL_SCALE_OFFSETS = {
   heroExit: ['start start', 'end start'],
 } as const satisfies Record<ScrollScaleVariant, readonly [string, string]>
 
-/** Peak scale when a section is centered in the viewport */
-export const SCROLL_SCALE_PEAK: Record<ScrollScaleIntensity, number> = {
-  subtle: 1.05,
-  normal: 1.08,
-  emphasis: 1.1,
+/** Minimum scale at section edges (entry/exit). Center of scroll range stays at 1 — never magnifies. */
+export const SCROLL_SCALE_EDGE_MIN: Record<ScrollScaleIntensity, number> = {
+  subtle: 0.97,
+  normal: 0.95,
+  emphasis: 0.92,
 }
 
 export const HERO_EXIT_MIN_SCALE = 0.8
