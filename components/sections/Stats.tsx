@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { motion, useTransform } from 'framer-motion'
-import { useScrollScale } from '@/hooks/useScrollScale'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { 
   Users, 
   Award, 
@@ -167,10 +166,12 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
 }
 
 export default function Stats() {
-  const { ref, style, scrollYProgress } = useScrollScale({ variant: 'centerPeak', intensity: 'subtle' })
+  const containerRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start end', 'end start'] })
   const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
-  const backgroundScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.97, 1, 0.97])
+  const backgroundScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 1])
 
   const [deliveredLineItemsQty, setDeliveredLineItemsQty] = useState<number | null>(null)
 
@@ -196,9 +197,9 @@ export default function Stats() {
   }, [deliveredLineItemsQty])
 
   return (
-    <motion.section ref={ref} style={style} className="section relative overflow-hidden">
+    <section ref={containerRef} className="section relative overflow-hidden">
       <div className="container-custom relative z-10">
-        <motion.div style={{ y: titleY }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
+        <motion.div style={{ y: titleY, scale: titleScale }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
           <div className="hero-glass-frame relative inline-flex flex-shrink-0 backdrop-blur-lg mx-auto mb-6">
             <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
             <motion.div initial={{ scale: 0, rotate: -180 }} whileInView={{ scale: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }} className="w-40 h-40 glass-inner-panel rounded-2xl border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl flex items-center justify-center">
@@ -225,7 +226,7 @@ export default function Stats() {
         </motion.div>
         <Companies />
       </div>
-    </motion.section>
+    </section>
   )
 }
 

@@ -337,14 +337,12 @@ export default function ShopPage() {
       </motion.div>
 
       {/* Hero Section */}
-      <ScrollScale
-        as="section"
-        variant="heroExit"
-        disableOnMobile
-        className="relative flex min-h-screen items-center justify-center overflow-visible pt-20"
-      >
-        <motion.div
-          className="z-20 overflow-visible px-4 text-center lg:px-8"
+      <section className="relative flex min-h-screen items-center justify-center overflow-visible pt-20">
+        <ScrollScale
+          as="div"
+          variant="heroExit"
+          disableOnMobile
+          className="z-20 overflow-visible px-4 text-center lg:px-8 w-full"
         >
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
@@ -371,7 +369,7 @@ export default function ShopPage() {
           >
             "Build a wardrobe that Is authentically yours"
           </motion.p>
-        </motion.div>
+        </ScrollScale>
 
         {/* Background Elements */}
         <div className="absolute inset-0 -z-10">
@@ -379,7 +377,7 @@ export default function ShopPage() {
           <div className="absolute bottom-20 right-20 w-24 h-24 border border-accent-500/20 rounded-full animate-pulse-slow" style={{ animationDelay: '1s' }} />
           <div className="absolute top-1/2 left-10 w-16 h-16 border border-primary-400/30 rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }} />
         </div>
-      </ScrollScale>
+      </section>
 
       {/* Shop Philosophy Section */}
       <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-20 px-4">

@@ -162,13 +162,7 @@ export default function Home() {
               {/* Featured + shop entry: one visual section (tight internal gap) */}
               <FeaturedCollections />
 
-              <ScrollScale
-                as="section"
-                id="portals-section"
-                variant="centerPeak"
-                intensity="emphasis"
-                className="relative overflow-visible px-4 pb-16 pt-0 md:pb-20"
-              >
+              <section id="portals-section" className="relative overflow-visible px-4 pb-16 pt-0 md:pb-20">
                 <div className="container-custom relative z-10">
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -187,19 +181,21 @@ export default function Home() {
 
                   <AnimatePresence>
                     {showPortals && (
-                      <motion.div transition={{ duration: 0.3 }}>
+                      <ScrollScale as="div" variant="centerPeak" intensity="emphasis">
                         <PortalNavigation />
-                      </motion.div>
+                      </ScrollScale>
                     )}
                   </AnimatePresence>
                 </div>
-              </ScrollScale>
+              </section>
 
               {/* Stats Section */}
               <Stats />
 
               {/* Testimonials Section */}
-              <Testimonials />
+              <ScrollScale as="div" variant="centerPeak" intensity="subtle">
+                <Testimonials />
+              </ScrollScale>
 
               {/* Contact Section */}
               <div id="contact-section">

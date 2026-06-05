@@ -63,13 +63,13 @@ export default function PrivacyPolicy() {
 
   return (
     <div className="min-h-screen bg-unified">
-      <ScrollScale as="main" variant="centerPeak" intensity="subtle" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        {/* Header */}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center"
         >
           <div className="w-20 h-20 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center">
             <Shield className="w-10 h-10 text-primary-600" />
@@ -84,13 +84,14 @@ export default function PrivacyPolicy() {
             Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </motion.div>
+        </ScrollScale>
 
-        {/* Introduction */}
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 mb-8"
+          className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
         >
           <h2 className="text-2xl font-bold text-primary-900 dark:text-primary-100 mb-4">Introduction</h2>
           <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed mb-4">
@@ -102,12 +103,12 @@ export default function PrivacyPolicy() {
             If you have any questions about this Privacy Policy, please contact us.
           </p>
         </motion.div>
+        </ScrollScale>
 
-        {/* Policy Sections */}
         <div className="space-y-8">
           {sections.map((section, index) => (
+            <ScrollScale as="section" key={section.title} variant="centerPeak" intensity="subtle">
             <motion.div
-              key={section.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
@@ -128,15 +129,16 @@ export default function PrivacyPolicy() {
                 ))}
               </ul>
             </motion.div>
+            </ScrollScale>
           ))}
         </div>
 
-        {/* Contact Information */}
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mt-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 mt-8"
+          className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
         >
           <h2 className="text-2xl font-bold text-primary-900 dark:text-primary-100 mb-4">Contact Us</h2>
           <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed mb-4">
@@ -148,19 +150,21 @@ export default function PrivacyPolicy() {
             <p><strong>Address:</strong> Kampala, Uganda</p>
           </div>
         </motion.div>
+        </ScrollScale>
 
-        {/* Footer */}
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mt-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.0 }}
-          className="text-center mt-12"
+          className="text-center"
         >
           <Button href="/" variant="filled" className="inline-flex items-center justify-center px-8">
             Return to Homepage
           </Button>
         </motion.div>
-      </ScrollScale>
+        </ScrollScale>
+      </main>
     </div>
   )
 }

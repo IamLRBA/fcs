@@ -162,8 +162,9 @@ export default function LoginPage() {
           <span className="text-sm font-medium">Back to Home</span>
         </Link>
       </motion.div>
-      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="w-full max-w-md">
+      <div className="w-full max-w-md">
 
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -476,7 +477,8 @@ export default function LoginPage() {
           </div>
         </div>
         </motion.div>
-      </ScrollScale>
+        </ScrollScale>
+      </div>
     </div>
   )
 }

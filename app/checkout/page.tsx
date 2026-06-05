@@ -175,16 +175,16 @@ export default function CheckoutPage() {
           <span className="text-sm font-medium">Back to Cart</span>
         </Link>
       </motion.div>
-      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-6xl mx-auto px-4 sm:px-6 pt-20">
-        {/* Header */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20">
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-primary-50 mb-2">Checkout</h1>
           <p className="text-neutral-600 dark:text-primary-300">Complete your order with secure checkout</p>
         </motion.div>
+        </ScrollScale>
 
         {submitError && (
           <div
@@ -203,6 +203,7 @@ export default function CheckoutPage() {
           </div>
         )}
 
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle">
         <div className="grid md:grid-cols-3 gap-4 md:gap-8 max-w-full md:max-w-6xl mx-auto">
           {/* Order Summary */}
           <div className="md:col-span-2">
@@ -468,7 +469,8 @@ export default function CheckoutPage() {
             </motion.div>
           </div>
         </div>
-      </ScrollScale>
+        </ScrollScale>
+      </div>
     </div>
   )
 }

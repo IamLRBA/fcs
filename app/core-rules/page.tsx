@@ -179,7 +179,8 @@ export default function CoreRulesPage() {
         </Link>
       </motion.div>
 
-      <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-20">
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-12 md:mb-14">
         <motion.header
           initial="hidden"
           animate="show"
@@ -207,19 +208,16 @@ export default function CoreRulesPage() {
             </p>
           </div>
         </motion.header>
+        </ScrollScale>
 
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: '-60px' }}
-          variants={listVariants}
-          className="space-y-8 md:space-y-10"
-        >
-          {rules.map((rule) => {
+        {rules.map((rule) => {
             const Icon = rule.icon
             return (
+              <ScrollScale as="section" key={rule.id} variant="centerPeak" intensity="subtle" className="mb-8 md:mb-10">
               <motion.article
-                key={rule.id}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: '-60px' }}
                 variants={itemVariants}
                 layout={!reduceMotion}
                 className="group relative rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-7 md:p-9 shadow-md hover:shadow-xl transition-shadow duration-500"
@@ -262,10 +260,11 @@ export default function CoreRulesPage() {
                   </div>
                 </div>
               </motion.article>
+              </ScrollScale>
             )
           })}
-        </motion.div>
 
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mt-10 md:mt-12">
         <motion.section
           initial="hidden"
           whileInView="show"
@@ -299,7 +298,9 @@ export default function CoreRulesPage() {
             </div>
           </div>
         </motion.section>
+        </ScrollScale>
 
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mt-12">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -313,7 +314,8 @@ export default function CoreRulesPage() {
             </Button>
           </div>
         </motion.div>
-      </ScrollScale>
+        </ScrollScale>
+      </div>
     </div>
   )
 }

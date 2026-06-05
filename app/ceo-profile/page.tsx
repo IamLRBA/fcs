@@ -172,14 +172,12 @@ export default function CEOProfile() {
       </motion.div>
 
       {/* Hero Section — extra top padding so avatar sits lower from fixed Back link */}
-      <ScrollScale
-        as="section"
-        variant="heroExit"
-        disableOnMobile
-        className="relative min-h-screen flex items-center justify-center pt-44 md:pt-52 pb-16"
-      >
-        <motion.div
-          className="text-center z-20 px-4"
+      <section className="relative min-h-screen flex items-center justify-center pt-44 md:pt-52 pb-16">
+        <ScrollScale
+          as="div"
+          variant="heroExit"
+          disableOnMobile
+          className="text-center z-20 px-4 w-full"
         >
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -212,7 +210,7 @@ export default function CEOProfile() {
               A visionary creative leader who materializes ideas through structural ingenuity across multiple dimensions of human expression.
             </p>
           </motion.div>
-        </motion.div>
+        </ScrollScale>
 
         {/* Background Elements */}
         <div className="absolute inset-0 -z-10">
@@ -234,7 +232,7 @@ export default function CEOProfile() {
             style={{ animationDelay: '2s' }}
           />
         </div>
-      </ScrollScale>
+      </section>
 
       {/* Skills Section - Our Missions Style */}
       <ScrollScale as="section" variant="centerPeak" intensity="normal" className="py-20 px-4">
