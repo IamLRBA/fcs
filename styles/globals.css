@@ -335,7 +335,27 @@
       var(--shop-accent-inner-br-radius) var(--shop-accent-inner-radius);
   }
 
-  /* Category page hero (small image beside title): compact bottom-right accent */
+  /* Category page hero (small image beside title): bottom-left accent matching product cards (4×) */
+  .category-hero-bl-accent.hero-glass-frame {
+    --category-hero-r: var(--hero-frame-radius);
+    --category-hero-p: var(--hero-frame-padding-compact);
+    padding: var(--category-hero-p);
+    border-radius: var(--category-hero-r) var(--category-hero-r) var(--category-hero-r)
+      calc(var(--category-hero-r) * 4);
+  }
+
+  .category-hero-bl-accent.hero-glass-frame .hero-glass-frame-overlay {
+    border-radius: inherit;
+  }
+
+  .category-hero-bl-accent .glass-inner-panel {
+    --category-hero-inner-r: max(0.25rem, calc(var(--category-hero-r) - var(--category-hero-p)));
+    --category-hero-inner-bl: calc(var(--category-hero-r) * 4 - var(--category-hero-p));
+    border-radius: var(--category-hero-inner-r) var(--category-hero-inner-r) var(--category-hero-inner-r)
+      var(--category-hero-inner-bl);
+  }
+
+  /* @deprecated — use category-hero-bl-accent */
   .category-hero-br-accent.hero-glass-frame {
     --category-hero-r: 0.625rem;
     --category-hero-p: var(--hero-frame-padding-compact);

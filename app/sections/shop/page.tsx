@@ -341,7 +341,6 @@ export default function ShopPage() {
         <ScrollScale
           as="div"
           variant="heroExit"
-          disableOnMobile
           className="z-20 overflow-visible px-4 text-center lg:px-8 w-full"
         >
           <motion.h1
@@ -624,13 +623,18 @@ export default function ShopPage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
-          className="max-w-7xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
             <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭ</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Video Gallery</span>{' '}
           </h2>
-          <FashionVideoSection />
+
+          <div className="hero-glass-frame relative backdrop-blur-lg">
+            <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none" aria-hidden />
+            <div className="glass-inner-panel border border-primary-500/30 p-8 rounded-2xl dark:border-primary-500/40">
+              <FashionVideoSection embedded />
+            </div>
+          </div>
         </motion.div>
       </ScrollScale>
 

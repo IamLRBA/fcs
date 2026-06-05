@@ -176,7 +176,6 @@ export default function CEOProfile() {
         <ScrollScale
           as="div"
           variant="heroExit"
-          disableOnMobile
           className="text-center z-20 px-4 w-full"
         >
           <motion.div
@@ -522,8 +521,8 @@ export default function CEOProfile() {
       </ScrollScale>
 
       {/* Contact Section — same card design & grid as Home Contact.tsx */}
-      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section relative overflow-hidden mb-16">
-        <div className="container-custom">
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section mb-16 px-4">
+        <div className="container-custom !px-0 sm:!px-0 lg:!px-0">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

@@ -8,6 +8,7 @@ import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import AnimatedImageBannerAboutUs from './AnimatedImageBannerAboutUs'
+import ScrollScale from '@/components/motion/ScrollScale'
 import { Linkedin, Instagram, Mail, ExternalLink, Github } from 'lucide-react'
 import { IconBrandWhatsapp, IconBrandX, IconBrandTiktok } from '@tabler/icons-react'
 
@@ -95,9 +96,9 @@ const teamMembers: Array<{
 
 export default function AboutUs() {
   const [hoveredMember, setHoveredMember] = useState<number | null>(null)
-  const containerRef = useRef<HTMLElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: headerRef,
     offset: ['start end', 'end start'],
   })
 
@@ -105,8 +106,9 @@ export default function AboutUs() {
   const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
 
   return (
-    <section ref={containerRef} className="section bg-unified">
-      <div className="container-custom">
+    <>
+      <ScrollScale ref={headerRef} as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
+        <div className="container-custom">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -123,7 +125,11 @@ export default function AboutUs() {
             We discover hidden treasures in fashion aimed at unveiling unique pieces that reveal your authentic style.
           </p>
         </motion.div>
+        </div>
+      </ScrollScale>
 
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
+        <div className="container-custom">
         {/* Animated Image Banner */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -136,7 +142,11 @@ export default function AboutUs() {
             <AnimatedImageBannerAboutUs />
           </div>
         </motion.div>
+        </div>
+      </ScrollScale>
 
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
+        <div className="container-custom">
         {/* Company Description */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -177,7 +187,11 @@ export default function AboutUs() {
             </div>
           </div>
         </motion.div>
+        </div>
+      </ScrollScale>
 
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
+        <div className="container-custom">
         {/* Meet the team — CEO + team (single section title) */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -335,7 +349,11 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
+        </div>
+      </ScrollScale>
 
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
+        <div className="container-custom">
         {/* Values Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -403,7 +421,11 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
+        </div>
+      </ScrollScale>
 
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
+        <div className="container-custom">
         {/* Missions Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -486,7 +508,11 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
+        </div>
+      </ScrollScale>
 
+      <ScrollScale as="section" variant="centerPeak" intensity="normal" className="section bg-unified">
+        <div className="container-custom">
         {/* Mission & Vision Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -518,7 +544,8 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
-      </div>
-    </section>
+        </div>
+      </ScrollScale>
+    </>
   )
 }

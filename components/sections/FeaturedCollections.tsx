@@ -310,7 +310,7 @@ export default function FeaturedCollections() {
   const hasFeatured = featuredRows.some((row) => row.length > 0)
 
   return (
-    <ScrollScale as="section" variant="centerPeak" intensity="normal" className="relative overflow-hidden px-4 pt-20 pb-0 sm:pb-0">
+    <section className="relative px-4 pt-20 pb-0 sm:pb-0">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -352,15 +352,22 @@ export default function FeaturedCollections() {
           <SkeletonFeaturedCollections />
         ) : hasFeatured ? (
           featuredRows.map((row, rowIndex) => (
-            <FeaturedCollectionsRow
+            <ScrollScale
               key={rowIndex}
-              items={row}
-              rowIndex={rowIndex}
-              isFirstRow={rowIndex === 0}
-              addingToCart={addingToCart}
-              addedToCart={addedToCart}
-              onAddToCart={handleAddToCart}
-            />
+              as="div"
+              variant="centerPeak"
+              intensity="normal"
+              className="relative"
+            >
+              <FeaturedCollectionsRow
+                items={row}
+                rowIndex={rowIndex}
+                isFirstRow={rowIndex === 0}
+                addingToCart={addingToCart}
+                addedToCart={addedToCart}
+                onAddToCart={handleAddToCart}
+              />
+            </ScrollScale>
           ))
         ) : (
           <motion.div className="mt-10 mb-6 max-w-6xl mx-auto text-center sm:mb-7">
@@ -368,7 +375,7 @@ export default function FeaturedCollections() {
           </motion.div>
         )}
       </div>
-    </ScrollScale>
+    </section>
   )
 }
 

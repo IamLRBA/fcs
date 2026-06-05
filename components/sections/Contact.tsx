@@ -97,8 +97,8 @@ export default function Contact() {
     'input-overlay w-full px-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300'
 
   return (
-    <ScrollScale as="section" id="contact" variant="centerPeak" intensity="normal" className="section relative overflow-hidden">
-      <div className="container-custom">
+    <ScrollScale as="section" id="contact" variant="centerPeak" intensity="normal" className="section relative px-4">
+      <div className="container-custom !px-0 sm:!px-0 lg:!px-0">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="section-title">
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span></h2>
           <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">Any questions about our fashion collection? Need styling advice? Contact us and we're here to help you find answers.</p>
