@@ -287,7 +287,7 @@ export default function XavyrGuide() {
             className={`pointer-events-auto fixed right-8 z-[900] max-w-[min(17rem,calc(100vw-5.5rem))] transition-[bottom] duration-300 ease-out ${stackBottomClass}`}
           >
             <div className="relative max-w-[min(16rem,calc(100vw-5.5rem))] drop-shadow-md">
-              <div className="relative flex items-center gap-2.5 rounded-2xl rounded-bl-md border border-neutral-200/80 bg-white/95 py-2.5 pl-2.5 pr-9 text-[13px] leading-relaxed text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800/90 dark:text-primary-50">
+              <div className="relative flex items-center gap-2.5 rounded-2xl rounded-br-md border border-neutral-200/80 bg-white/95 py-2.5 pl-2.5 pr-9 text-[13px] leading-relaxed text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800/90 dark:text-primary-50">
                 <Baby
                   className="h-5 w-5 shrink-0 text-primary-700 dark:text-primary-300"
                   strokeWidth={1.75}
@@ -296,14 +296,14 @@ export default function XavyrGuide() {
                 <p className="min-w-0 flex-1">{introMessage}</p>
                 <IntroDismissButton onDismiss={dismissIntro} />
               </div>
-              {/* Speech tail — left end, tip angled toward the message button below-right */}
+              {/* Speech tail — straight down on the right, aligned above the message button */}
               <span
                 aria-hidden
-                className="pointer-events-none absolute bottom-0 left-5 block h-0 w-0 origin-top -translate-y-[calc(100%-1px)] rotate-[22deg] border-x-[8px] border-x-transparent border-t-[9px] border-t-neutral-200/80 dark:border-t-neutral-700"
+                className="pointer-events-none absolute -bottom-[7px] right-6 block h-0 w-0 border-x-[8px] border-x-transparent border-t-[8px] border-t-neutral-200/80 dark:border-t-neutral-700"
               />
               <span
                 aria-hidden
-                className="pointer-events-none absolute bottom-0 left-[21px] block h-0 w-0 origin-top -translate-y-[calc(100%-2px)] rotate-[22deg] border-x-[7px] border-x-transparent border-t-[8px] border-t-white/95 dark:border-t-neutral-800/90"
+                className="pointer-events-none absolute -bottom-[6px] right-[25px] block h-0 w-0 border-x-[7px] border-x-transparent border-t-[7px] border-t-white/95 dark:border-t-neutral-800/90"
               />
             </div>
           </motion.div>
