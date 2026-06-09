@@ -167,7 +167,7 @@ export default function LoginPage() {
 
         <ScrollScale as="section" variant="centerPeak" intensity="subtle">
         <HeroEntrance variant="gate">
-        <HeroEntrance.Piece role="container" className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
+        <HeroEntrance.Piece role="container" className="hero-glass-frame relative overflow-hidden rounded-2xl backdrop-blur-lg">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <div className="glass-inner-panel relative z-10 rounded-2xl p-6 shadow-xl sm:p-8 border border-neutral-200 dark:border-neutral-700 login-form">
           <div className="text-center mb-8">

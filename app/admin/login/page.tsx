@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="hero-glass-frame relative backdrop-blur-lg rounded-2xl"
+          className="hero-glass-frame relative overflow-hidden rounded-2xl backdrop-blur-lg"
         >
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <div className="glass-inner-panel relative z-10 rounded-2xl p-6 shadow-xl sm:p-8 border border-neutral-200 dark:border-neutral-700">
