@@ -4,8 +4,9 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import LogoMark from '@/components/ui/LogoMark'
 import Button from '@/components/ui/Button'
-import ScrollScale from '@/components/motion/ScrollScale'
 import ThreadConvergenceField from './ThreadConvergenceField'
+import HeroScrollLagLayer from './HeroScrollLagLayer'
+import { useHomeHeroScroll } from '@/hooks/useHomeHeroScroll'
 
 type HomeHeroEntranceProps = {
   /** When false (first-visit loader), entrance waits; when true, choreography begins. */
@@ -18,6 +19,7 @@ const EASE_OUT_QUART: [number, number, number, number] = [0.25, 1, 0.5, 1]
 
 export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroEntranceProps) {
   const reduceMotion = useReducedMotion()
+  const { sectionRef, scrollYProgress, heroExitStyle } = useHomeHeroScroll()
   const [entranceStarted, setEntranceStarted] = useState(false)
 
   useEffect(() => {
@@ -32,10 +34,13 @@ export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroE
   const t = (seconds: number) => (instant ? 0 : seconds)
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12">
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12"
+    >
       <ThreadConvergenceField active={entranceStarted && !instant} />
 
-      <ScrollScale as="div" variant="heroExit" className="relative z-10 text-center w-full">
+      <motion.div style={heroExitStyle} className="relative z-10 text-center w-full">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4 xl:gap-7 2xl:gap-9">
             {/* Logo — crystallizes from woven light */}
@@ -96,35 +101,38 @@ export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroE
                 </span>
               </h1>
 
-              {/* Divider — golden thread pulled across */}
-              <motion.div
-                className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full xl:my-1 origin-center"
-                initial={instant ? false : { scaleX: 0, opacity: 0 }}
-                animate={
-                  entranceStarted ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }
-                }
-                transition={{ duration: t(0.65), delay: t(1.62), ease: EASE_OUT_QUART }}
-              />
-
-              <motion.p
-                className="text-lg xl:text-xl text-primary-600 dark:text-primary-300 max-w-2xl xl:mt-1"
-                initial={instant ? false : { opacity: 0, y: 18, filter: 'blur(6px)' }}
-                animate={
-                  entranceStarted
-                    ? { opacity: 1, y: 0, filter: 'blur(0px)' }
-                    : { opacity: 0, y: 18, filter: 'blur(6px)' }
-                }
-                transition={{ duration: t(0.75), delay: t(1.78), ease: EASE_OUT_EXPO }}
-              >
-                Thrifted Gentlemen&apos;s Clothing
-              </motion.p>
             </div>
 
-            <motion.div
+            <HeroScrollLagLayer tier="trail" scrollYProgress={scrollYProgress}>
+              <div className="flex flex-col items-center gap-2 xl:gap-4 w-full">
+                <motion.div
+                  className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full xl:my-1 origin-center"
+                  initial={instant ? false : { scaleX: 0, opacity: 0 }}
+                  animate={
+                    entranceStarted ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }
+                  }
+                  transition={{ duration: t(0.65), delay: t(1.62), ease: EASE_OUT_QUART }}
+                />
+
+                <motion.p
+                  className="text-lg xl:text-xl text-primary-600 dark:text-primary-300 max-w-2xl xl:mt-1"
+                  initial={instant ? false : { opacity: 0, y: 18, filter: 'blur(6px)' }}
+                  animate={
+                    entranceStarted
+                      ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+                      : { opacity: 0, y: 18, filter: 'blur(6px)' }
+                  }
+                  transition={{ duration: t(0.75), delay: t(1.78), ease: EASE_OUT_EXPO }}
+                >
+                  Thrifted Gentlemen&apos;s Clothing
+                </motion.p>
+              </div>
+            </HeroScrollLagLayer>
+
+            <HeroScrollLagLayer
+              tier="drag"
+              scrollYProgress={scrollYProgress}
               className="hero-cta-buttons hero-cta-home-glass mt-2 xl:mt-6 2xl:mt-8 flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 lg:gap-12 xl:gap-16 2xl:gap-20 justify-center items-stretch sm:items-center"
-              initial={instant ? false : { opacity: 0 }}
-              animate={entranceStarted ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ duration: t(0.4), delay: t(2.0) }}
             >
               {[
                 {
@@ -179,29 +187,34 @@ export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroE
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
+            </HeroScrollLagLayer>
           </div>
         </div>
-      </ScrollScale>
+      </motion.div>
 
-      <motion.div
-        initial={instant ? false : { opacity: 0 }}
-        animate={entranceStarted ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: t(0.6), delay: t(2.65) }}
+      <HeroScrollLagLayer
+        tier="anchor"
+        scrollYProgress={scrollYProgress}
         className="absolute bottom-2 md:bottom-1 left-1/2 -translate-x-1/2"
       >
         <motion.div
-          animate={entranceStarted ? { y: [0, 10, 0] } : { y: 0 }}
-          transition={{ duration: 2, repeat: Infinity, delay: t(2.65) }}
-          className="w-6 h-10 border-2 border-primary-600 dark:border-primary-400 rounded-full flex justify-center"
+          initial={instant ? false : { opacity: 0 }}
+          animate={entranceStarted ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: t(0.6), delay: t(2.65) }}
         >
           <motion.div
-            animate={entranceStarted ? { y: [0, 12, 0] } : { y: 0 }}
+            animate={entranceStarted ? { y: [0, 10, 0] } : { y: 0 }}
             transition={{ duration: 2, repeat: Infinity, delay: t(2.65) }}
-            className="w-1 h-3 bg-primary-600 dark:bg-primary-400 rounded-full mt-2"
-          />
+            className="w-6 h-10 border-2 border-primary-600 dark:border-primary-400 rounded-full flex justify-center"
+          >
+            <motion.div
+              animate={entranceStarted ? { y: [0, 12, 0] } : { y: 0 }}
+              transition={{ duration: 2, repeat: Infinity, delay: t(2.65) }}
+              className="w-1 h-3 bg-primary-600 dark:bg-primary-400 rounded-full mt-2"
+            />
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </HeroScrollLagLayer>
     </section>
   )
 }
