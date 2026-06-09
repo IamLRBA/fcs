@@ -9,6 +9,7 @@ import { isMultiInventory } from '@/lib/inventory'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 export default function CartPage() {
   const [cart, setCart] = useState(CartManager.getCart())
@@ -88,33 +89,36 @@ export default function CartPage() {
       </motion.div>
       <div className="max-w-7xl mx-auto px-4">
         <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8 mt-10 sm:mt-12">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <HeroEntrance variant="pulse">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0 flex-1">
-              <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">
-                Shopping Cart
-              </h1>
-              <p className="text-neutral-600 dark:text-primary-300">
-                {cart.length === 0
-                  ? 'Your cart is empty'
-                  : `${itemCount} ${itemCount === 1 ? 'item' : 'items'} in your cart`}
-              </p>
+              <HeroEntrance.Piece role="title">
+                <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">
+                  Shopping Cart
+                </h1>
+              </HeroEntrance.Piece>
+              <HeroEntrance.Piece role="subtitle">
+                <p className="text-neutral-600 dark:text-primary-300">
+                  {cart.length === 0
+                    ? 'Your cart is empty'
+                    : `${itemCount} ${itemCount === 1 ? 'item' : 'items'} in your cart`}
+                </p>
+              </HeroEntrance.Piece>
             </div>
             {cart.length > 0 && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={clearCart}
-                className="shrink-0 self-start sm:mt-2 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300"
-              >
-                Clear Cart
-              </Button>
+              <HeroEntrance.Piece role="actions">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={clearCart}
+                  className="shrink-0 self-start sm:mt-2 !border-red-400 !text-red-400 hover:!bg-red-500/20 hover:!text-red-300 dark:!border-red-400 dark:!text-red-400 dark:hover:!bg-red-500/20 dark:hover:!text-red-300"
+                >
+                  Clear Cart
+                </Button>
+              </HeroEntrance.Piece>
             )}
           </div>
-        </motion.div>
+        </HeroEntrance>
         </ScrollScale>
 
         <ScrollScale as="section" variant="centerPeak" intensity="subtle">

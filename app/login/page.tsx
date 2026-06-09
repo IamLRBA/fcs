@@ -9,6 +9,7 @@ import { AuthManager } from '@/lib/auth'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import Button from '@/components/ui/Button'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -165,20 +166,21 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
 
         <ScrollScale as="section" variant="centerPeak" intensity="subtle">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="hero-glass-frame relative backdrop-blur-lg rounded-2xl"
-        >
+        <HeroEntrance variant="gate">
+        <HeroEntrance.Piece role="container" className="hero-glass-frame relative backdrop-blur-lg rounded-2xl">
           <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
           <div className="glass-inner-panel relative z-10 rounded-2xl p-6 shadow-xl sm:p-8 border border-neutral-200 dark:border-neutral-700 login-form">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
-            </h1>
-            <p className="text-primary-600 dark:text-primary-300">
-              {isLogin ? 'Sign in to your account' : <>Join <MysticalPiecesWord /></>}
-            </p>
+            <HeroEntrance.Piece role="title">
+              <h1 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">
+                {isLogin ? 'Welcome Back' : 'Create Account'}
+              </h1>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="subtitle">
+              <p className="text-primary-600 dark:text-primary-300">
+                {isLogin ? 'Sign in to your account' : <>Join <MysticalPiecesWord /></>}
+              </p>
+            </HeroEntrance.Piece>
           </div>
 
           <div className="mb-6 !rounded-full bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(0,0,0,0.4)] p-[1px] shadow-none">
@@ -310,7 +312,7 @@ export default function LoginPage() {
                       value={signupData.fullName}
                       onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
                       className="input-overlay w-full pl-10 pr-4 py-3 rounded-lg text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 dark:bg-neutral-700 dark:text-white"
-                      placeholder="John Doe"
+                      placeholder="Alinda Leticia"
                     />
                   </div>
                 </div>
@@ -476,7 +478,8 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
-        </motion.div>
+        </HeroEntrance.Piece>
+        </HeroEntrance>
         </ScrollScale>
       </div>
     </div>

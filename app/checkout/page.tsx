@@ -10,6 +10,7 @@ import { AuthManager } from '@/lib/auth'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import SafeImage from '@/components/common/SafeImage'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -177,13 +178,14 @@ export default function CheckoutPage() {
       </motion.div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20">
         <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-primary-50 mb-2">Checkout</h1>
-          <p className="text-neutral-600 dark:text-primary-300">Complete your order with secure checkout</p>
-        </motion.div>
+        <HeroEntrance variant="pulse">
+          <HeroEntrance.Piece role="title">
+            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-primary-50 mb-2">Checkout</h1>
+          </HeroEntrance.Piece>
+          <HeroEntrance.Piece role="subtitle">
+            <p className="text-neutral-600 dark:text-primary-300">Complete your order with secure checkout</p>
+          </HeroEntrance.Piece>
+        </HeroEntrance>
         </ScrollScale>
 
         {submitError && (

@@ -9,6 +9,7 @@ import { downloadReceipt, generateReceiptImage } from '@/lib/utils/receipt-gener
 import { EmailTemplates } from '@/lib/emails/templates'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
@@ -125,37 +126,30 @@ export default function OrderConfirmationPage() {
     <div className="min-h-screen bg-unified py-20 px-4 print:bg-white print:py-0">
       <div className="max-w-4xl mx-auto">
         <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-12 print:mb-8">
-        {/* Success Icon */}
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, type: 'spring' }}
-          className="flex justify-center mb-8 print:hidden"
-        >
-          <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center">
-            <CheckCircle className="w-12 h-12 text-neutral-850 dark:text-white" />
-          </div>
-        </motion.div>
-
-        {/* Confirmation Message */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-center mb-12 print:mb-8"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-4 print:text-gray-900">
-            Order Confirmed!
-          </h1>
-          <p className="text-xl text-neutral-700 dark:text-primary-300 print:text-gray-600 mb-2">
-            Thank you for your order. We've received your order and will process it shortly.
-          </p>
-          {notificationsSent && (
-            <p className="text-sm text-green-600 dark:text-green-400 mt-2">
-              ✓ Receipt sent to your email (if you provided one)
+        <HeroEntrance variant="triumph" className="text-center mb-12 print:mb-8">
+          <HeroEntrance.Piece role="icon" className="flex justify-center mb-8 print:hidden">
+            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-12 h-12 text-neutral-850 dark:text-white" />
+            </div>
+          </HeroEntrance.Piece>
+          <HeroEntrance.Piece role="title">
+            <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-4 print:text-gray-900">
+              Order Confirmed!
+            </h1>
+          </HeroEntrance.Piece>
+          <HeroEntrance.Piece role="subtitle">
+            <p className="text-xl text-neutral-700 dark:text-primary-300 print:text-gray-600 mb-2">
+              Thank you for your order. We&apos;ve received your order and will process it shortly.
             </p>
+          </HeroEntrance.Piece>
+          {notificationsSent && (
+            <HeroEntrance.Piece role="meta">
+              <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                ✓ Receipt sent to your email (if you provided one)
+              </p>
+            </HeroEntrance.Piece>
           )}
-        </motion.div>
+        </HeroEntrance>
         </ScrollScale>
 
         <ScrollScale as="section" variant="centerPeak" intensity="subtle">

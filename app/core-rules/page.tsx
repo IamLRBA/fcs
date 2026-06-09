@@ -17,6 +17,7 @@ import {
 import Button from '@/components/ui/Button'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 type RuleBlock = {
   id: string
@@ -143,17 +144,6 @@ export default function CoreRulesPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const introVariants = reduceMotion
-    ? { hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.2 } } }
-    : {
-        hidden: { opacity: 0, y: 24 },
-        show: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
-        },
-      }
-
   const listVariants = reduceMotion
     ? { hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.2 } } }
     : containerVariants
@@ -181,33 +171,29 @@ export default function CoreRulesPage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-20">
         <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-12 md:mb-14">
-        <motion.header
-          initial="hidden"
-          animate="show"
-          variants={introVariants}
-          className="text-center mb-12 md:mb-14"
-        >
-          <motion.div
-            initial={reduceMotion ? false : { scale: 0.92, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 22, delay: 0.05 }}
-            className="mx-auto mb-6 flex justify-center"
-          >
-            <Crown className="w-12 h-12 md:w-14 md:h-14 text-primary-700 dark:text-primary-200" strokeWidth={1.5} aria-hidden />
-          </motion.div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-900 dark:text-primary-100 mb-5 tracking-tight">
-            The core rules of <MysticalPiecesWord />
-          </h1>
-          <div className="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto leading-relaxed space-y-4 text-left sm:text-center">
-            <p>
-              Pull up a chair. Picture a voice: warm, exact, a little playful, walking you through the creed we keep when we dress in the spirit of{' '}
-              <span className="text-primary-800 dark:text-primary-200 font-medium">La Sapeur</span>: colour, poise, presence.
-            </p>
-            <p>
-              At <MysticalPiecesWord /> we follow, and gently stretch, the traditions of La Sapeur: craft, not costume. These lines are not a cage; they are the rhythm behind what we curate and the mirror moments we hope you borrow. Read them slowly, let them settle, then take your best walk.
-            </p>
-          </div>
-        </motion.header>
+        <HeroEntrance variant="seal">
+          <header className="text-center mb-12 md:mb-14">
+            <HeroEntrance.Piece role="icon" className="mx-auto mb-6 flex justify-center">
+              <Crown className="w-12 h-12 md:w-14 md:h-14 text-primary-700 dark:text-primary-200" strokeWidth={1.5} aria-hidden />
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="title">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-900 dark:text-primary-100 mb-5 tracking-tight">
+                The core rules of <MysticalPiecesWord />
+              </h1>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="subtitle">
+              <div className="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto leading-relaxed space-y-4 text-left sm:text-center">
+                <p>
+                  Pull up a chair. Picture a voice: warm, exact, a little playful, walking you through the creed we keep when we dress in the spirit of{' '}
+                  <span className="text-primary-800 dark:text-primary-200 font-medium">La Sapeur</span>: colour, poise, presence.
+                </p>
+                <p>
+                  At <MysticalPiecesWord /> we follow, and gently stretch, the traditions of La Sapeur: craft, not costume. These lines are not a cage; they are the rhythm behind what we curate and the mirror moments we hope you borrow. Read them slowly, let them settle, then take your best walk.
+                </p>
+              </div>
+            </HeroEntrance.Piece>
+          </header>
+        </HeroEntrance>
         </ScrollScale>
 
         {rules.map((rule) => {

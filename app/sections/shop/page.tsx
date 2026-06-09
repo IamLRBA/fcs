@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button'
 import SafeImage from '@/components/common/SafeImage'
 import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
 
 const FashionVideoSection = dynamic(
@@ -343,31 +344,29 @@ export default function ShopPage() {
           variant="heroExit"
           className="z-20 overflow-visible px-4 text-center lg:px-8 w-full"
         >
-          <motion.h1
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="text-8xl sm:text-6xl md:text-8xl font-bold mb-8 overflow-visible pb-2 sm:pb-3 lg:pb-4"
-          >
-            {/* Tablet follows mobile stacking (icon above text); desktop keeps side-by-side composition. */}
-            <span className="flex w-full max-w-full items-center justify-center">
-              <span className="inline-flex max-w-full shrink-0 flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:-translate-x-8 lg:flex-row lg:items-center lg:gap-20 xl:-translate-x-10 xl:gap-28">
-                <HiOutlineShoppingBag
-                  className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80"
-                  aria-hidden="true"
-                />
-                <span className="text-gradient shrink-0 lg:origin-center lg:scale-[2] lg:leading-none">ᔕᕼOᑭ</span>
+          <HeroEntrance variant="curtain">
+            <h1 className="text-8xl sm:text-6xl md:text-8xl font-bold mb-8 overflow-visible pb-2 sm:pb-3 lg:pb-4">
+              <span className="flex w-full max-w-full items-center justify-center">
+                <span className="inline-flex max-w-full shrink-0 flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:-translate-x-8 lg:flex-row lg:items-center lg:gap-20 xl:-translate-x-10 xl:gap-28">
+                  <HeroEntrance.Piece role="media">
+                    <HiOutlineShoppingBag
+                      className="h-64 w-64 shrink-0 text-neutral-700 drop-shadow-lg dark:text-primary-200 sm:h-64 sm:w-64 md:h-80 md:w-80"
+                      aria-hidden="true"
+                    />
+                  </HeroEntrance.Piece>
+                  <HeroEntrance.Piece role="title">
+                    <span className="text-gradient shrink-0 lg:origin-center lg:scale-[2] lg:leading-none">ᔕᕼOᑭ</span>
+                  </HeroEntrance.Piece>
+                </span>
               </span>
-            </span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="text-base sm:text-xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed px-4 mt-2 sm:mt-3"
-          >
-            "Build a wardrobe that Is authentically yours"
-          </motion.p>
+            </h1>
+            <HeroEntrance.Piece
+              role="subtitle"
+              className="text-base sm:text-xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed px-4 mt-2 sm:mt-3"
+            >
+              &ldquo;Build a wardrobe that Is authentically yours&rdquo;
+            </HeroEntrance.Piece>
+          </HeroEntrance>
         </ScrollScale>
 
         {/* Background Elements */}
