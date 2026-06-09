@@ -88,17 +88,23 @@ export default function CartPage() {
         </Link>
       </motion.div>
       <div className="max-w-7xl mx-auto px-4">
-        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8 mt-10 sm:mt-12">
-        <HeroEntrance variant="pulse">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0 flex-1">
-              <HeroEntrance.Piece role="title">
-                <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">
+        <ScrollScale
+          as="section"
+          variant="centerPeak"
+          intensity="subtle"
+          contain={false}
+          className="mb-8 mt-10 sm:mt-12 overflow-x-clip"
+        >
+        <HeroEntrance variant="pulse" className="w-full min-w-0">
+          <div className="flex w-full min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0 w-full flex-1">
+              <HeroEntrance.Piece role="title" className="w-full min-w-0">
+                <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2 break-words">
                   Shopping Cart
                 </h1>
               </HeroEntrance.Piece>
-              <HeroEntrance.Piece role="subtitle">
-                <p className="text-neutral-600 dark:text-primary-300">
+              <HeroEntrance.Piece role="subtitle" className="w-full min-w-0">
+                <p className="text-neutral-600 dark:text-primary-300 break-words">
                   {cart.length === 0
                     ? 'Your cart is empty'
                     : `${itemCount} ${itemCount === 1 ? 'item' : 'items'} in your cart`}
