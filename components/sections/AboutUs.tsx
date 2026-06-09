@@ -9,6 +9,7 @@ import MissionVisionCard from './MissionVisionCard'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import AnimatedImageBannerAboutUs from './AnimatedImageBannerAboutUs'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 import { Linkedin, Instagram, Mail, ExternalLink, Github } from 'lucide-react'
 import { IconBrandWhatsapp, IconBrandX, IconBrandTiktok } from '@tabler/icons-react'
 
@@ -110,21 +111,26 @@ export default function AboutUs() {
       <div className="container-custom">
       <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="section-title !mb-6"
-          style={{ y: titleY, scale: titleScale }}
-        >
-          <h2 className="text-5xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
-          ᗩᗷOᑌT <span className="text-accent-600 dark:text-accent-100">Us</span>
-          </h2>
-          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
-            We discover hidden treasures in fashion aimed at unveiling unique pieces that reveal your authentic style.
-          </p>
-        </motion.div>
+        <HeroEntrance variant="reveal">
+          <motion.div
+            className="section-title !mb-6"
+            style={{ y: titleY, scale: titleScale }}
+          >
+            <h2 className="text-5xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
+              <HeroEntrance.Piece role="titleLeft" className="inline-block">
+                ᗩᗷOᑌT
+              </HeroEntrance.Piece>{' '}
+              <HeroEntrance.Piece role="titleRight" className="inline-block text-accent-600 dark:text-accent-100">
+                Us
+              </HeroEntrance.Piece>
+            </h2>
+            <HeroEntrance.Piece role="subtitle">
+              <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
+                We discover hidden treasures in fashion aimed at unveiling unique pieces that reveal your authentic style.
+              </p>
+            </HeroEntrance.Piece>
+          </motion.div>
+        </HeroEntrance>
       </ScrollScale>
 
       <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>

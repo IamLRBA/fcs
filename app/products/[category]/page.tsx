@@ -22,6 +22,7 @@ import { useCategoryDeepLink } from '@/lib/catalog/use-category-deep-link'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 import { featuredProductCardLayout } from '@/lib/product-card-layout'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 interface Product {
   id: string
@@ -424,91 +425,6 @@ export default function ProductCategoryPage() {
     label: formatSectionLabel(section),
   }))
 
-  // Get category-specific animation config (opening transitions only)
-  const getCategoryConfig = () => {
-    const configs: Record<string, { 
-      titleAnimation: any,
-      descriptionAnimation: any
-    }> = {
-      'shirts': {
-        titleAnimation: {
-          initial: { opacity: 0, x: -100 },
-          animate: { opacity: 1, x: 0 },
-          transition: { duration: 0.8, delay: 0.2 }
-        },
-        descriptionAnimation: {
-          initial: { opacity: 0, y: 20 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.8, delay: 0.4 }
-        }
-      },
-      'tees': {
-        titleAnimation: {
-          initial: { opacity: 0, scale: 0.8 },
-          animate: { opacity: 1, scale: 1 },
-          transition: { duration: 0.7, delay: 0.15, type: 'spring' }
-        },
-        descriptionAnimation: {
-          initial: { opacity: 0, x: 50 },
-          animate: { opacity: 1, x: 0 },
-          transition: { duration: 0.7, delay: 0.3 }
-        }
-      },
-      'coats': {
-        titleAnimation: {
-          initial: { opacity: 0, y: 50 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.8, delay: 0.25, type: 'spring' }
-        },
-        descriptionAnimation: {
-          initial: { opacity: 0, scale: 0.9 },
-          animate: { opacity: 1, scale: 1 },
-          transition: { duration: 0.7, delay: 0.45 }
-        }
-      },
-      'pants-and-shorts': {
-        titleAnimation: {
-          initial: { opacity: 0, x: 100 },
-          animate: { opacity: 1, x: 0 },
-          transition: { duration: 0.75, delay: 0.2, type: 'spring' }
-        },
-        descriptionAnimation: {
-          initial: { opacity: 0, y: -20 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.7, delay: 0.35 }
-        }
-      },
-      'footwear': {
-        titleAnimation: {
-          initial: { opacity: 0, y: -30, scale: 0.9 },
-          animate: { opacity: 1, y: 0, scale: 1 },
-          transition: { duration: 0.8, delay: 0.3, type: 'spring' }
-        },
-        descriptionAnimation: {
-          initial: { opacity: 0, x: -30 },
-          animate: { opacity: 1, x: 0 },
-          transition: { duration: 0.7, delay: 0.5 }
-        }
-      },
-      'accessories': {
-        titleAnimation: {
-          initial: { opacity: 0, scale: 0.5, rotate: -10 },
-          animate: { opacity: 1, scale: 1, rotate: 0 },
-          transition: { duration: 0.9, delay: 0.2, type: 'spring', bounce: 0.4 }
-        },
-        descriptionAnimation: {
-          initial: { opacity: 0, rotateX: 90 },
-          animate: { opacity: 1, rotateX: 0 },
-          transition: { duration: 0.8, delay: 0.4 }
-        }
-      }
-    }
-    return configs[category] || configs['shirts']
-  }
-
-  const categoryConfig = getCategoryConfig()
-  const { titleAnimation, descriptionAnimation } = categoryConfig
-
   // Helper function to get main product image based on category
   const getMainProductImage = (categorySlug: string): string => {
     const imageMap: Record<string, string> = {
@@ -639,78 +555,71 @@ export default function ProductCategoryPage() {
         className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4"
       >
         <div className="relative max-w-6xl mx-auto">
-          {/* Main Product Image and Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-1 md:mb-6"
-          >
-            {/* Main Product Image */}
-            <div className="hero-glass-frame hero-glass-frame-compact category-hero-bl-accent relative flex-shrink-0 backdrop-blur-md">
-              <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
-              <div className="glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
-                <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 overflow-hidden shrink-0 mx-auto">
-                  <SafeImage
-                    src={getMainProductImage(category)}
-                    alt={`${categoryData.title} - Main Product Image`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
-                    priority
-                  />
+          <HeroEntrance variant="catalogue">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-1 md:mb-6">
+              <HeroEntrance.Piece role="media">
+                <div className="hero-glass-frame hero-glass-frame-compact category-hero-bl-accent relative flex-shrink-0 backdrop-blur-md">
+                  <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-[inherit]" aria-hidden />
+                  <div className="glass-inner-panel border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl">
+                    <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 overflow-hidden shrink-0 mx-auto">
+                      <SafeImage
+                        src={getMainProductImage(category)}
+                        alt={`${categoryData.title} - Main Product Image`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
+                        priority
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </HeroEntrance.Piece>
+
+              <HeroEntrance.Piece role="title">
+                <h1
+                  className={`font-bold tracking-tight ${
+                    category === 'coats' || category === 'accessories'
+                      ? 'text-5xl sm:text-5xl md:text-7xl lg:text-8xl'
+                      : 'text-6xl md:text-7xl lg:text-8xl'
+                  }`}
+                >
+                  <span className="bg-gradient-to-r from-primary-800 via-primary-600 to-primary-800 dark:from-primary-200 dark:via-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
+                    {categoryData.title.toUpperCase()}
+                  </span>
+                </h1>
+              </HeroEntrance.Piece>
             </div>
 
-            {/* Title */}
-            <motion.h1
-              {...titleAnimation}
-              className={`font-bold tracking-tight ${
-                category === 'coats' || category === 'accessories'
-                  ? 'text-5xl sm:text-5xl md:text-7xl lg:text-8xl'
-                  : 'text-6xl md:text-7xl lg:text-8xl'
-              }`}
+            <HeroEntrance.Piece
+              role="body"
+              className="text-lg md:text-xl text-primary-600 dark:text-primary-300 max-w-[99%] sm:max-w-2xl md:max-w-4xl mx-auto -mt-2 md:mt-0 mb-6 md:mb-8 font-light leading-relaxed"
             >
-              <span className="bg-gradient-to-r from-primary-800 via-primary-600 to-primary-800 dark:from-primary-200 dark:via-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
-                {categoryData.title.toUpperCase()}
-              </span>
-            </motion.h1>
-          </motion.div>
+              {(() => {
+                const quote = getCategoryQuote(category)
+                return quote.text ? (
+                  <blockquote className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-1">
+                    <Quote className="w-6 h-6 md:w-8 md:h-8 md:mt-3 flex-shrink-0 text-primary-400/50 dark:text-primary-500/50 order-1 md:order-none" />
+                    <div className="flex-1 order-2 md:order-none">
+                      <p className="mb-3 italic text-lg md:text-xl">&ldquo;{quote.text}&rdquo;</p>
+                      <p className="text-base md:text-lg">— {quote.author}</p>
+                    </div>
+                  </blockquote>
+                ) : null
+              })()}
+            </HeroEntrance.Piece>
 
-          {/* Quote */}
-          <motion.div
-            {...descriptionAnimation}
-            className="text-lg md:text-xl text-primary-600 dark:text-primary-300 max-w-[99%] sm:max-w-2xl md:max-w-4xl mx-auto -mt-2 md:mt-0 mb-6 md:mb-8 font-light leading-relaxed"
-          >
-            {(() => {
-              const quote = getCategoryQuote(category)
-              return quote.text ? (
-                <blockquote className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-1">
-                  <Quote className="w-6 h-6 md:w-8 md:h-8 md:mt-3 flex-shrink-0 text-primary-400/50 dark:text-primary-500/50 order-1 md:order-none" />
-                  <div className="flex-1 order-2 md:order-none">
-                    <p className="mb-3 italic text-lg md:text-xl">&ldquo;{quote.text}&rdquo;</p>
-                    <p className="text-base md:text-lg">— {quote.author}</p>
-                  </div>
-                </blockquote>
-              ) : null
-            })()}
-          </motion.div>
-
-          {/* Section Navigation */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="w-full max-w-4xl mx-auto px-1 overflow-x-auto scrollbar-hide"
-          >
-            <SegmentedPillNav
-              items={sectionNavItems}
-              value={selectedSection ?? sections[0] ?? null}
-              onSelect={(id) => scrollToSection(id)}
-              className="focus-ring-none min-w-max"
-            />
-          </motion.div>
+            <HeroEntrance.Piece
+              role="actions"
+              className="w-full max-w-4xl mx-auto px-1 overflow-x-auto scrollbar-hide"
+            >
+              <SegmentedPillNav
+                items={sectionNavItems}
+                value={selectedSection ?? sections[0] ?? null}
+                onSelect={(id) => scrollToSection(id)}
+                className="focus-ring-none min-w-max"
+              />
+            </HeroEntrance.Piece>
+          </HeroEntrance>
         </div>
       </ScrollScale>
 

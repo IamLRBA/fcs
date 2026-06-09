@@ -32,6 +32,7 @@ import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 export default function CEOProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -178,13 +179,8 @@ export default function CEOProfile() {
           variant="heroExit"
           className="text-center z-20 px-4 w-full"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="mb-8"
-          >
-            <div className="hero-glass-frame relative inline-block backdrop-blur-lg rounded-full mx-auto mb-8">
+          <HeroEntrance variant="portrait" className="mb-8">
+            <HeroEntrance.Piece role="media" className="hero-glass-frame relative inline-block backdrop-blur-lg rounded-full mx-auto mb-8">
               <div className="hero-glass-frame-overlay absolute inset-0 pointer-events-none rounded-full" aria-hidden />
               <div className="relative p-2 sm:p-3 rounded-full">
                 <div className="w-44 h-44 sm:w-48 sm:h-48 relative overflow-hidden rounded-full border-4 border-primary-200/60 dark:border-primary-700/50 shadow-2xl">
@@ -198,17 +194,23 @@ export default function CEOProfile() {
                   />
                 </div>
               </div>
-            </div>
-            <h1 className="text-8xl md:text-8xl font-bold mb-6">
-              <span className="text-primary-800 dark:text-primary-100">ᒪᖇᗷᗩ</span>
-            </h1>
-            <p className="text-2xl md:text-3xl text-primary-700 dark:text-primary-300 mb-6 max-w-4xl mx-auto leading-relaxed">
-            ᑕEO & ᖴOᑌᑎᗪEᖇ
-            </p>
-            <p className="text-lg text-primary-600 dark:text-primary-400 max-w-3xl mx-auto">
-              A visionary creative leader who materializes ideas through structural ingenuity across multiple dimensions of human expression.
-            </p>
-          </motion.div>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="title">
+              <h1 className="text-8xl md:text-8xl font-bold mb-6">
+                <span className="text-primary-800 dark:text-primary-100">ᒪᖇᗷᗩ</span>
+              </h1>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="subtitle">
+              <p className="text-2xl md:text-3xl text-primary-700 dark:text-primary-300 mb-6 max-w-4xl mx-auto leading-relaxed">
+                ᑕEO & ᖴOᑌᑎᗪEᖇ
+              </p>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="body">
+              <p className="text-lg text-primary-600 dark:text-primary-400 max-w-3xl mx-auto">
+                A visionary creative leader who materializes ideas through structural ingenuity across multiple dimensions of human expression.
+              </p>
+            </HeroEntrance.Piece>
+          </HeroEntrance>
         </ScrollScale>
 
         {/* Background Elements */}

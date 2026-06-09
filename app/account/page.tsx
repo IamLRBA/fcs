@@ -17,6 +17,7 @@ import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import OrderItemsDetail from '@/components/orders/OrderItemsDetail'
 import { formatOrderReceiptDisplayName } from '@/lib/utils/order-display'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 export default function AccountPage() {
   const [user, setUser] = useState<UserType | null>(null)
@@ -230,34 +231,40 @@ export default function AccountPage() {
         <div className="glass-inner-panel relative z-10 overflow-hidden rounded-2xl border border-neutral-200 shadow-xl dark:border-neutral-700">
           {/* Header - slightly darker shade in light mode */}
           <div className="bg-neutral-200/70 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-600 p-4 sm:p-6 md:p-8">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-              <div className="relative flex-shrink-0">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 border-neutral-300/80 dark:border-neutral-700 flex items-center justify-center text-2xl sm:text-3xl font-bold bg-neutral-300/60 dark:bg-neutral-700">
-                  {user.profileImage ? (
-                    <img
-                      src={user.profileImage}
-                      alt={user.fullName}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-primary-600 dark:text-primary-400">{user.fullName.charAt(0).toUpperCase()}</span>
-                  )}
+            <HeroEntrance variant="portrait" ready={Boolean(user)}>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
+                <HeroEntrance.Piece role="media" className="relative flex-shrink-0">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 border-neutral-300/80 dark:border-neutral-700 flex items-center justify-center text-2xl sm:text-3xl font-bold bg-neutral-300/60 dark:bg-neutral-700">
+                    {user.profileImage ? (
+                      <img
+                        src={user.profileImage}
+                        alt={user.fullName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-primary-600 dark:text-primary-400">{user.fullName.charAt(0).toUpperCase()}</span>
+                    )}
+                  </div>
+                  <Button
+                    variant="filled"
+                    size="icon"
+                    onClick={() => { setShowEditProfile(true); setProfileImage(user.profileImage || '') }}
+                    className="absolute bottom-0 right-0 w-8 h-8 min-w-0 rounded-full border-2 border-white dark:border-neutral-800 shadow-md"
+                    title="Edit profile picture"
+                  >
+                    <Camera className="w-4 h-4 text-white" />
+                  </Button>
+                </HeroEntrance.Piece>
+                <div className="flex-1 min-w-0">
+                  <HeroEntrance.Piece role="title">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-100 break-words">{user.fullName}</h1>
+                  </HeroEntrance.Piece>
+                  <HeroEntrance.Piece role="subtitle">
+                    <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 truncate sm:whitespace-normal">{user.email}</p>
+                  </HeroEntrance.Piece>
                 </div>
-                <Button
-                  variant="filled"
-                  size="icon"
-                  onClick={() => { setShowEditProfile(true); setProfileImage(user.profileImage || '') }}
-                  className="absolute bottom-0 right-0 w-8 h-8 min-w-0 rounded-full border-2 border-white dark:border-neutral-800 shadow-md"
-                  title="Edit profile picture"
-                >
-                  <Camera className="w-4 h-4 text-white" />
-                </Button>
               </div>
-              <div className="flex-1 min-w-0">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-100 break-words">{user.fullName}</h1>
-                <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 truncate sm:whitespace-normal">{user.email}</p>
-              </div>
-            </div>
+            </HeroEntrance>
           </div>
 
           <div className="border-b border-neutral-200 dark:border-neutral-700 px-3 py-4 sm:px-4 sm:py-5">

@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import { SHOP_EMAIL } from '@/lib/constants/brand-contact'
 import ScrollScale from '@/components/motion/ScrollScale'
+import { HeroEntrance } from '@/components/motion/HeroEntrance'
 
 function renderWithMysticalPieces(content: ReactNode, keyPrefix = 'mysticalpieces'): ReactNode {
   if (typeof content !== 'string') {
@@ -86,25 +87,28 @@ export default function TermsConditions() {
     <div className="min-h-screen bg-unified">
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <div className="w-20 h-20 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center">
-              <FileText className="w-10 h-10 text-primary-600" />
-            </div>
-            <h1 className="text-4xl font-bold text-primary-900 dark:text-primary-100 mb-4">
-              Terms and Conditions
-            </h1>
-            <p className="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
-              Please read these terms and conditions carefully before using our website and services.
-            </p>
-            <p className="text-sm text-neutral-500 mt-4">
-              Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-          </motion.div>
+          <HeroEntrance variant="seal" className="text-center">
+            <HeroEntrance.Piece role="icon">
+              <div className="w-20 h-20 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center">
+                <FileText className="w-10 h-10 text-primary-600" />
+              </div>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="title">
+              <h1 className="text-4xl font-bold text-primary-900 dark:text-primary-100 mb-4">
+                Terms and Conditions
+              </h1>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="subtitle">
+              <p className="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
+                Please read these terms and conditions carefully before using our website and services.
+              </p>
+            </HeroEntrance.Piece>
+            <HeroEntrance.Piece role="meta">
+              <p className="text-sm text-neutral-500 mt-4">
+                Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </HeroEntrance.Piece>
+          </HeroEntrance>
         </ScrollScale>
 
         <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8">
