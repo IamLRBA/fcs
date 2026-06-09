@@ -1,17 +1,22 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { motion, useReducedMotion, type HTMLMotionProps } from 'framer-motion'
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { motion, useReducedMotion, type HTMLMotionProps, type MotionValue } from 'framer-motion'
 import {
   getHeroEntranceMotion,
   type HeroEntranceRole,
   type HeroEntranceVariant,
 } from '@/lib/motion/hero-entrance'
+import { getHeroRoleLagTier } from '@/lib/motion/hero-scroll-lag'
+import HeroScrollLagLayer from './HeroScrollLagLayer'
+import { useHeroScroll } from '@/hooks/useHeroScroll'
 
 type HeroEntranceContextValue = {
   variant: HeroEntranceVariant
   started: boolean
   instant: boolean
+  scrollLag: boolean
+  scrollYProgress: MotionValue<number>
 }
 
 const HeroEntranceContext = createContext<HeroEntranceContextValue | null>(null)
@@ -30,11 +35,22 @@ export type HeroEntranceProps = {
   className?: string
   /** When false, entrance waits (e.g. first-visit loader). Defaults to true. */
   ready?: boolean
+  /** Scroll-linked elastic lag on lower hero pieces. Defaults to true. */
+  scrollLag?: boolean
 }
 
-export function HeroEntrance({ variant, children, className, ready = true }: HeroEntranceProps) {
+export function HeroEntrance({
+  variant,
+  children,
+  className,
+  ready = true,
+  scrollLag = true,
+}: HeroEntranceProps) {
   const reduceMotion = useReducedMotion()
   const [started, setStarted] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useHeroScroll(sectionRef)
+  const lagActive = scrollLag && !reduceMotion
 
   useEffect(() => {
     if (!ready) {
@@ -46,9 +62,17 @@ export function HeroEntrance({ variant, children, className, ready = true }: Her
 
   return (
     <HeroEntranceContext.Provider
-      value={{ variant, started, instant: Boolean(reduceMotion) }}
+      value={{
+        variant,
+        started,
+        instant: Boolean(reduceMotion),
+        scrollLag: lagActive,
+        scrollYProgress,
+      }}
     >
-      <div className={className}>{children}</div>
+      <div ref={sectionRef} className={className}>
+        {children}
+      </div>
     </HeroEntranceContext.Provider>
   )
 }
@@ -67,13 +91,24 @@ export function HeroEntrancePiece({
   className,
   ...rest
 }: HeroEntrancePieceProps) {
-  const { variant, started, instant } = useHeroEntranceContext()
+  const { variant, started, instant, scrollLag, scrollYProgress } = useHeroEntranceContext()
   const motionProps = getHeroEntranceMotion(variant, role, { started, instant, index })
+  const lagTier = scrollLag ? getHeroRoleLagTier(role) : null
 
-  return (
-    <motion.div className={className} {...motionProps} {...rest}>
+  const piece = (
+    <motion.div className={lagTier ? undefined : className} {...motionProps} {...rest}>
       {children}
     </motion.div>
+  )
+
+  if (!lagTier) {
+    return piece
+  }
+
+  return (
+    <HeroScrollLagLayer tier={lagTier} scrollYProgress={scrollYProgress} className={className}>
+      {piece}
+    </HeroScrollLagLayer>
   )
 }
 
