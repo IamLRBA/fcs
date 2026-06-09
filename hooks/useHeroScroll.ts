@@ -10,12 +10,15 @@ import {
 } from 'framer-motion'
 import { HERO_EXIT_MIN_SCALE, HERO_EXIT_Y } from '@/lib/motion/scroll-scale'
 
-export function useHomeHeroScroll(): {
-  sectionRef: RefObject<HTMLElement | null>
+export function useHeroScroll<T extends HTMLElement = HTMLElement>(
+  externalRef?: RefObject<T | null>
+): {
+  sectionRef: RefObject<T | null>
   scrollYProgress: MotionValue<number>
   heroExitStyle: MotionStyle | undefined
 } {
-  const sectionRef = useRef<HTMLElement>(null)
+  const internalRef = useRef<T | null>(null)
+  const sectionRef = externalRef ?? internalRef
   const reduceMotion = useReducedMotion()
 
   const { scrollYProgress } = useScroll({

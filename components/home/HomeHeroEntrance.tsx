@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import LogoMark from '@/components/ui/LogoMark'
 import Button from '@/components/ui/Button'
 import ThreadConvergenceField from './ThreadConvergenceField'
-import HeroScrollLagLayer from './HeroScrollLagLayer'
-import { useHomeHeroScroll } from '@/hooks/useHomeHeroScroll'
+import HeroScrollLagLayer from '@/components/motion/HeroScrollLagLayer'
+import { useHeroScroll } from '@/hooks/useHeroScroll'
 
 type HomeHeroEntranceProps = {
   /** When false (first-visit loader), entrance waits; when true, choreography begins. */
@@ -19,7 +19,7 @@ const EASE_OUT_QUART: [number, number, number, number] = [0.25, 1, 0.5, 1]
 
 export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroEntranceProps) {
   const reduceMotion = useReducedMotion()
-  const { sectionRef, scrollYProgress, heroExitStyle } = useHomeHeroScroll()
+  const { sectionRef, scrollYProgress, heroExitStyle } = useHeroScroll()
   const [entranceStarted, setEntranceStarted] = useState(false)
 
   useEffect(() => {
