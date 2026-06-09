@@ -154,13 +154,13 @@ const PRESETS: Record<HeroEntranceVariant, PresetMap> = {
   },
   pulse: {
     title: {
-      initial: { opacity: 0, x: -28, filter: 'blur(4px)' },
-      animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+      initial: { opacity: 0, y: 14, filter: 'blur(4px)' },
+      animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
       transition: { duration: 0.68, delay: 0.14, ease: HERO_EASE_OUT_EXPO },
     },
     subtitle: {
-      initial: { opacity: 0, x: -18 },
-      animate: { opacity: 1, x: 0 },
+      initial: { opacity: 0, y: 10 },
+      animate: { opacity: 1, y: 0 },
       transition: { duration: 0.58, delay: 0.34, ease: HERO_EASE_OUT_QUART },
     },
     actions: {
