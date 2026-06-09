@@ -205,13 +205,40 @@ export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroE
           <motion.div
             animate={entranceStarted ? { y: [0, 10, 0] } : { y: 0 }}
             transition={{ duration: 2, repeat: Infinity, delay: t(2.65) }}
-            className="w-6 h-10 border-2 border-primary-600 dark:border-primary-400 rounded-full flex justify-center"
+            className="text-primary-600 dark:text-primary-400"
+            aria-hidden="true"
           >
-            <motion.div
-              animate={entranceStarted ? { y: [0, 12, 0] } : { y: 0 }}
-              transition={{ duration: 2, repeat: Infinity, delay: t(2.65) }}
-              className="w-1 h-3 bg-primary-600 dark:bg-primary-400 rounded-full mt-2"
-            />
+            <svg
+              width="24"
+              height="40"
+              viewBox="0 0 24 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="block"
+            >
+              <rect
+                x="1"
+                y="1"
+                width="22"
+                height="38"
+                rx="11"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <motion.g
+                animate={entranceStarted ? { y: [0, 12, 0] } : { y: 0 }}
+                transition={{ duration: 2, repeat: Infinity, delay: t(2.65) }}
+              >
+                <rect
+                  x="10.5"
+                  y="9"
+                  width="3"
+                  height="7"
+                  rx="1.5"
+                  fill="currentColor"
+                />
+              </motion.g>
+            </svg>
           </motion.div>
         </motion.div>
       </HeroScrollLagLayer>
