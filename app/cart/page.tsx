@@ -88,13 +88,7 @@ export default function CartPage() {
         </Link>
       </motion.div>
       <div className="max-w-7xl mx-auto px-4">
-        <ScrollScale
-          as="section"
-          variant="centerPeak"
-          intensity="subtle"
-          contain={false}
-          className="mb-8 mt-10 sm:mt-12 overflow-x-clip"
-        >
+        <ScrollScale as="section" variant="centerPeak" intensity="subtle" className="mb-8 mt-10 sm:mt-12">
         <HeroEntrance variant="pulse" className="w-full min-w-0">
           <div className="flex w-full min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0 w-full flex-1">

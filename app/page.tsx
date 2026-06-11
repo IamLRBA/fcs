@@ -106,7 +106,6 @@ export default function Home() {
                         scaleMode="rest"
                         intensity="emphasis"
                         smooth
-                        contain={false}
                       >
                         <PortalNavigation />
                       </ScrollScale>

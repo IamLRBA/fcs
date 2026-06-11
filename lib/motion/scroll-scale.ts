@@ -25,3 +25,25 @@ export const SCROLL_SCALE_REST_MIN: Record<ScrollScaleIntensity, number> = {
 
 export const HERO_EXIT_MIN_SCALE = 0.8
 export const HERO_EXIT_Y = -100
+
+/** Matches container-custom horizontal padding (px-4 / sm:px-6 / lg:px-8). */
+export const SCROLL_SCALE_MAX_WIDTH = 1152 // max-w-6xl (72rem)
+
+export function getScrollScaleGutter(viewportWidth: number): number {
+  if (viewportWidth < 640) return 32
+  if (viewportWidth < 1024) return 48
+  return 64
+}
+
+/** Cap peak scale so scaled content never exceeds the universal side margins. */
+export function capScrollScalePeak(desiredPeak: number, viewportWidth: number): number {
+  if (viewportWidth <= 0 || desiredPeak <= 1) return 1
+
+  const gutter = getScrollScaleGutter(viewportWidth)
+  const contentWidth = Math.min(viewportWidth - gutter, SCROLL_SCALE_MAX_WIDTH)
+  if (contentWidth <= 0) return 1
+
+  const sideGutter = (viewportWidth - contentWidth) / 2
+  const maxPeak = 1 + (2 * sideGutter) / contentWidth
+  return Math.min(desiredPeak, maxPeak)
+}

@@ -74,8 +74,8 @@ function ScrollScaleInner(
   })
 
   const Outer = as
-  const shouldContain = contain && !edgeToEdge && scaleMode !== 'rest'
-  const outerClassName = [className, shouldContain ? 'overflow-hidden' : null].filter(Boolean).join(' ')
+  const shouldContain = contain && !edgeToEdge
+  const outerClassName = [className, shouldContain ? 'overflow-x-clip' : null].filter(Boolean).join(' ')
   const scaledClassName = [
     innerClassName,
     shouldContain ? 'w-full max-w-6xl mx-auto' : 'w-full',
