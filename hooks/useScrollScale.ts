@@ -15,6 +15,7 @@ import {
   SCROLL_SCALE_REST_MIN,
   HERO_EXIT_MIN_SCALE,
   HERO_EXIT_Y,
+  capScrollScalePeak,
   type ScrollScaleVariant,
   type ScrollScaleIntensity,
   type ScrollScaleMode,
@@ -56,6 +57,9 @@ export function useScrollScale(options: UseScrollScaleOptions = {}): ScrollScale
   const ref = useRef<HTMLElement>(null)
   const reduceMotion = useReducedMotion()
   const [mobileDisabled, setMobileDisabled] = useState(false)
+  const cappedPeakRef = useRef(
+    capScrollScalePeak(SCROLL_SCALE_PEAK[intensity], typeof window !== 'undefined' ? window.innerWidth : 1280)
+  )
 
   useEffect(() => {
     if (!disableOnMobile || typeof window === 'undefined') return
@@ -65,6 +69,17 @@ export function useScrollScale(options: UseScrollScaleOptions = {}): ScrollScale
     mq.addEventListener('change', sync)
     return () => mq.removeEventListener('change', sync)
   }, [disableOnMobile])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const desiredPeak = SCROLL_SCALE_PEAK[intensity]
+    const sync = () => {
+      cappedPeakRef.current = capScrollScalePeak(desiredPeak, window.innerWidth)
+    }
+    sync()
+    window.addEventListener('resize', sync)
+    return () => window.removeEventListener('resize', sync)
+  }, [intensity])
 
   const enabled = !reduceMotion && !mobileDisabled
   const resolvedOffset = offset ?? SCROLL_SCALE_OFFSETS[variant]
@@ -81,14 +96,18 @@ export function useScrollScale(options: UseScrollScaleOptions = {}): ScrollScale
   })
   const progress = smooth ? springProgress : scrollYProgress
 
-  const peak = SCROLL_SCALE_PEAK[intensity]
   const restMin = SCROLL_SCALE_REST_MIN[intensity]
 
-  const peakScale = useTransform(
-    progress,
-    variant === 'centerPeak' ? [0, 0.5, 1] : [0, 1],
-    variant === 'centerPeak' ? [1, peak, 1] : [1, heroMinScale]
-  )
+  const peakScale = useTransform(progress, (p) => {
+    if (variant !== 'centerPeak') {
+      return 1 + p * (heroMinScale - 1)
+    }
+    const peak = cappedPeakRef.current
+    if (p <= 0.5) {
+      return 1 + (peak - 1) * (p / 0.5)
+    }
+    return peak - (peak - 1) * ((p - 0.5) / 0.5)
+  })
   const restScale = useTransform(progress, [0, 0.5, 1], [restMin, 1, restMin])
   const scale =
     variant === 'centerPeak' && scaleMode === 'rest' ? restScale : peakScale

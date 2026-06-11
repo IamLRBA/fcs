@@ -273,7 +273,7 @@ function ProductSectionCards({
       syncScrollEdgeLineClassName={SLIDER_SYNC_EDGE_LINE_CLASS}
       hideScrollbar
       keyboardFocusable={false}
-      className="mx-auto mb-8 w-full max-w-6xl -mx-4 px-4 sm:mx-auto sm:mb-10 sm:px-0 md:mb-12"
+      className="mx-auto mb-8 w-full max-w-6xl sm:mb-10 md:mb-12"
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel={`${label} products`}
     >
@@ -551,7 +551,6 @@ export default function ProductCategoryPage() {
         scaleMode="rest"
         intensity="emphasis"
         smooth
-        contain={false}
         className="relative text-center pt-16 pb-12 md:pt-12 md:pb-20 px-4"
       >
         <div className="relative max-w-6xl mx-auto">
@@ -636,7 +635,6 @@ export default function ProductCategoryPage() {
             scaleMode="rest"
             intensity="subtle"
             smooth
-            contain={false}
             className="mb-32 scroll-mt-24 md:scroll-mt-28"
           >
             {/* Subcategory Image */}

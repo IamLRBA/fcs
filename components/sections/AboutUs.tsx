@@ -109,7 +109,7 @@ export default function AboutUs() {
   return (
     <section ref={headerRef} className="section bg-unified">
       <div className="container-custom">
-      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth >
         {/* Section Header */}
         <HeroEntrance variant="reveal">
           <motion.div
@@ -133,7 +133,7 @@ export default function AboutUs() {
         </HeroEntrance>
       </ScrollScale>
 
-      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth >
         {/* Animated Image Banner */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -146,7 +146,7 @@ export default function AboutUs() {
         </motion.div>
       </ScrollScale>
 
-      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth >
         {/* Company Description */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -189,7 +189,7 @@ export default function AboutUs() {
         </motion.div>
       </ScrollScale>
 
-      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth >
         {/* Meet the team — CEO + team (single section title) */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -349,7 +349,7 @@ export default function AboutUs() {
         </motion.div>
       </ScrollScale>
 
-      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth >
         {/* Values Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -419,7 +419,7 @@ export default function AboutUs() {
         </motion.div>
       </ScrollScale>
 
-      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth >
         {/* Missions Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -504,7 +504,7 @@ export default function AboutUs() {
         </motion.div>
       </ScrollScale>
 
-      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth contain={false}>
+      <ScrollScale as="div" variant="centerPeak" scaleMode="rest" intensity="normal" smooth >
         {/* Mission & Vision Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

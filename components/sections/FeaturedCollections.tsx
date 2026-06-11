@@ -65,7 +65,7 @@ function FeaturedCollectionsRow({
       syncScrollEdgeLines
       hideScrollbar
       reverseSlideDirection={reverseSlideDirection}
-      className={`max-w-6xl mx-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:mb-7 ${isFirstRow ? 'mt-10 mb-6' : 'mt-0 mb-6'}`}
+      className={`max-w-6xl mx-auto sm:mb-7 ${isFirstRow ? 'mt-10 mb-6' : 'mt-0 mb-6'}`}
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel={`Featured collections row ${rowIndex + 1}`}
     >
@@ -359,8 +359,6 @@ export default function FeaturedCollections() {
               scaleMode="rest"
               intensity="subtle"
               smooth
-              contain={false}
-              edgeToEdge
               offset={['start 0.92', 'end 0.08']}
               className="relative"
             >

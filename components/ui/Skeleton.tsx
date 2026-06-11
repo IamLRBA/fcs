@@ -138,7 +138,7 @@ function SkeletonFeaturedCollectionsRow({
       showEdgeFades={false}
       syncScrollEdgeLines
       hideScrollbar
-      className={`max-w-6xl mx-auto -mx-4 px-4 sm:mx-auto sm:px-0 sm:mb-7 ${isFirstRow ? 'mt-10 mb-6' : 'mt-0 mb-6'}`}
+      className={`max-w-6xl mx-auto sm:mb-7 ${isFirstRow ? 'mt-10 mb-6' : 'mt-0 mb-6'}`}
       scrollClassName="pt-6 pb-8"
       scrollAriaLabel="Featured collections loading"
       keyboardFocusable={false}

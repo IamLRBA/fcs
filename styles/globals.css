@@ -1463,12 +1463,6 @@
   }
 }
 
-@media (max-width: 768px) {
-  .container-custom {
-    @apply px-4;
-  }
-}
-
 /* Focus States */
 *:focus {
   outline: 2px solid var(--color-accent-400);
