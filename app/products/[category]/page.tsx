@@ -19,6 +19,7 @@ import SegmentedPillNav from '@/components/ui/SegmentedPillNav'
 import HorizontalScrollAffordance from '@/components/ui/HorizontalScrollAffordance'
 import { CATEGORY_SUBCATEGORY_SLUGS } from '@/lib/catalog/category-subcategories'
 import { useCategoryDeepLink } from '@/lib/catalog/use-category-deep-link'
+import { scrollElementInHorizontalStrip } from '@/lib/catalog/product-deep-link'
 import { SLIDER_SYNC_EDGE_LINE_CLASS } from '@/lib/constants/slider-edge'
 import { featuredProductCardLayout } from '@/lib/product-card-layout'
 import ScrollScale from '@/components/motion/ScrollScale'
@@ -121,7 +122,6 @@ const ProductGridCard = memo(function ProductGridCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      data-product-id={product.id}
       className={`group relative flex w-full flex-col transition-all duration-300 cursor-pointer rounded-lg ${
         highlighted ? 'ring-2 ring-accent-500 shadow-lg shadow-accent-500/25' : ''
       }`}
@@ -252,6 +252,33 @@ function ProductSectionCards({
     }
   }, [visibleProducts])
 
+  useEffect(() => {
+    if (!highlightProductId) return
+    if (!visibleProducts.some((p) => p.id === highlightProductId)) return
+
+    let cancelled = false
+    let attempts = 0
+
+    const tryScroll = () => {
+      if (cancelled) return
+      const card = document.querySelector<HTMLElement>(
+        `[data-section="${section}"] [data-product-id="${highlightProductId}"]`
+      )
+      if (!card) {
+        if (attempts++ < 60) window.setTimeout(tryScroll, 50)
+        return
+      }
+      scrollElementInHorizontalStrip(card, 'smooth')
+    }
+
+    const timer = window.setTimeout(() => requestAnimationFrame(tryScroll), 100)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+    }
+  }, [highlightProductId, section, visibleProducts, rowMode])
+
   const label = section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const innerClass = `flex min-h-[1px] flex-row items-start gap-2.5 px-2.5 sm:gap-3 sm:px-5 md:gap-4 lg:gap-5 ${
     rowMode === 'center'
@@ -282,6 +309,7 @@ function ProductSectionCards({
           {visibleProducts.map((product: Product, index: number) => (
             <div
               key={product.id}
+              data-product-id={product.id}
               className="w-[min(180px,calc(100vw-2.25rem))] flex-shrink-0 sm:w-[min(204px,calc((min(72rem,100vw)-6.5rem)/2))] md:w-[min(220px,calc((min(72rem,100vw)-9rem)/3))]"
             >
               <ProductGridCard
@@ -317,7 +345,7 @@ export default function ProductCategoryPage() {
     loading,
     categoryKey: category,
     sectionKeys,
-    productScrollDelay: 450,
+    productScrollDelay: 520,
   })
 
   useEffect(() => {
@@ -353,22 +381,23 @@ export default function ProductCategoryPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const openProductModal = useCallback(async (product: Product) => {
-    const gen = ++quickViewFetchGen.current
-    try {
-      const res = await fetch(`/api/products/${encodeURIComponent(product.id)}`, { cache: 'no-store' })
-      if (gen !== quickViewFetchGen.current) return
-      if (res.ok) {
-        const full = (await res.json()) as Product
-        setSelectedProduct(full)
-      } else {
-        setSelectedProduct(product)
-      }
-    } catch {
-      if (gen !== quickViewFetchGen.current) return
-      setSelectedProduct(product)
-    }
+  const openProductModal = useCallback((product: Product) => {
+    setSelectedProduct(product)
     AuthManager.addViewedItem(product.id)
+
+    const gen = ++quickViewFetchGen.current
+    void (async () => {
+      try {
+        const res = await fetch(`/api/products/${encodeURIComponent(product.id)}`, { cache: 'no-store' })
+        if (gen !== quickViewFetchGen.current) return
+        if (res.ok) {
+          const full = (await res.json()) as Product
+          setSelectedProduct(full)
+        }
+      } catch {
+        /* keep catalog snapshot already shown in modal */
+      }
+    })()
   }, [])
 
   const closeProductModal = useCallback(() => {
