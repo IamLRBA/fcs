@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import {
   getCategoryProductIdFromSearch,
   parseCategorySectionFromHash,
-  scrollElementInHorizontalStrip,
   scrollSegmentPillIntoView,
   scrollToElementFast,
 } from '@/lib/catalog/product-deep-link'
@@ -19,26 +18,6 @@ type Options = {
 
 const MAX_ATTEMPTS = 80
 const RETRY_MS = 50
-
-function waitForElement(
-  selector: string,
-  onFound: (el: HTMLElement) => void,
-  onGiveUp: () => void,
-  signal: { cancelled: boolean },
-  attempt = 0
-): void {
-  if (signal.cancelled) return
-  const el = document.querySelector<HTMLElement>(selector)
-  if (el) {
-    onFound(el)
-    return
-  }
-  if (attempt >= MAX_ATTEMPTS) {
-    onGiveUp()
-    return
-  }
-  window.setTimeout(() => waitForElement(selector, onFound, onGiveUp, signal, attempt + 1), RETRY_MS)
-}
 
 function waitForSectionId(
   sectionId: string,
@@ -114,24 +93,6 @@ export function useCategoryDeepLink({
     const signal = { cancelled: false }
     let clearHighlightTimer: number | undefined
 
-    const scrollToProduct = () => {
-      if (!productId || signal.cancelled) return
-      waitForElement(
-        `[data-section="${hash}"] [data-product-id="${productId}"]`,
-        (card) => {
-          if (signal.cancelled) return
-          scrollElementInHorizontalStrip(card, 'smooth')
-          setHighlightProductId(productId)
-          clearHighlightTimer = window.setTimeout(() => setHighlightProductId(null), 2200)
-          const url = new URL(window.location.href)
-          url.searchParams.delete('product')
-          window.history.replaceState(null, '', `${url.pathname}${url.hash}`)
-        },
-        () => {},
-        signal
-      )
-    }
-
     waitForSectionId(
       hash,
       (sectionEl) => {
@@ -139,7 +100,14 @@ export function useCategoryDeepLink({
         scrollSegmentPillIntoView(hash)
         scrollToElementFast(sectionEl, 420)
         if (productId) {
-          window.setTimeout(scrollToProduct, productScrollDelay)
+          window.setTimeout(() => {
+            if (signal.cancelled) return
+            setHighlightProductId(productId)
+            clearHighlightTimer = window.setTimeout(() => setHighlightProductId(null), 2200)
+            const url = new URL(window.location.href)
+            url.searchParams.delete('product')
+            window.history.replaceState(null, '', `${url.pathname}${url.hash}`)
+          }, productScrollDelay)
         }
       },
       signal
