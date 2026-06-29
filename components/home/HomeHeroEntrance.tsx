@@ -36,7 +36,7 @@ export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroE
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12 pb-24 md:pb-28 mb-6 md:mb-10"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12"
     >
       <ThreadConvergenceField active={entranceStarted && !instant} />
 
@@ -195,13 +195,12 @@ export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroE
       <HeroScrollLagLayer
         tier="anchor"
         scrollYProgress={scrollYProgress}
-        className="absolute bottom-10 md:bottom-12 left-1/2 z-20 -translate-x-1/2"
+        className="absolute bottom-2 md:bottom-1 left-1/2 -translate-x-1/2"
       >
         <motion.div
           initial={instant ? false : { opacity: 0 }}
           animate={entranceStarted ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: t(0.6), delay: t(2.65) }}
-          className="pb-4"
         >
           <motion.div
             animate={entranceStarted ? { y: [0, 10, 0] } : { y: 0 }}
