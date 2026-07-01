@@ -20,7 +20,7 @@ export default function AnimatedImageBanner() {
   }, [])
 
   return (
-    <ScrollScale as="section" variant="centerPeak" intensity="normal" className="relative w-full py-8 md:py-12 overflow-hidden">
+    <ScrollScale as="section" variant="centerPeak" intensity="normal" className="relative mt-10 w-full overflow-hidden pb-8 pt-8 md:mt-14 md:pb-12 md:pt-12">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
