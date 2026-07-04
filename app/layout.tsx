@@ -65,6 +65,11 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-verification-code',
   },
+  icons: {
+    icon: '/assets/images/branding/logo-dark.png',
+    shortcut: '/assets/images/branding/logo-dark.png',
+    apple: '/assets/images/branding/logo-dark.png',
+  },
 }
 
 export default function RootLayout({
@@ -83,8 +88,7 @@ export default function RootLayout({
         <meta property="og:image:alt" content="MysticalPIECES social brand image" />
         <meta name="twitter:image" content="https://www.mysticalpieces.com/social-brand.jpg" />
         <meta name="twitter:image:alt" content="MysticalPIECES social brand image" />
-        <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="/assets/images/branding/logo-dark.png" />
-        <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)" href="/assets/images/branding/logo-light.png" />
+        <link rel="icon" type="image/png" href="/assets/images/branding/logo-dark.png" />
         <link rel="shortcut icon" href="/assets/images/branding/logo-dark.png" />
         <link rel="apple-touch-icon" href="/assets/images/branding/logo-dark.png" />
         <link rel="manifest" href="/manifest.json" />
