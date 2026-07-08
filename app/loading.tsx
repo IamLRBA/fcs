@@ -15,7 +15,6 @@ export default function Loading() {
     setShowSkeleton(!!localStorage.getItem(VISITED_KEY))
   }, [])
 
-  // First paint before hydration: avoid skeleton flash on first entry
   if (!showSkeleton) {
     return (
       <div className="min-h-screen bg-unified relative overflow-hidden" aria-hidden />
