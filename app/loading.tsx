@@ -5,11 +5,7 @@ import { SkeletonHomeHero } from '@/components/ui/Skeleton'
 
 const VISITED_KEY = 'mysticalpieces-visited'
 
-/**
- * Route loading UI.
- * First visit to the site: no skeleton – blank/minimal so Home can own the full LoadingScreen.
- * Return visits: home-style skeleton while segment loads.
- */
+
 export default function Loading() {
   const [showSkeleton, setShowSkeleton] = useState(false)
 
