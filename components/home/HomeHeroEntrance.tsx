@@ -36,7 +36,7 @@ export default function HomeHeroEntrance({ ready, onScrollToSection }: HomeHeroE
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-x-hidden pt-8 md:pt-12"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8 md:pt-12"
     >
       <ThreadConvergenceField active={entranceStarted && !instant} />
 
